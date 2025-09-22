@@ -1,0 +1,3 @@
+# Add moderator usernames here, one per line
+# Lines starting with # are comments
+marrowofalbion
