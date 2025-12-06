@@ -72,6 +72,33 @@ async function fightBoss(){
   }
 }
 
+async function loadPlayerProgress() {
+  try {
+    const response = await fetch('/api/player/progress');
+    if (response.ok) {
+      const data = await response.json();
+      return data.progress;
+    }
+  } catch (err) {
+    console.error('Failed to load progress:', err);
+  }
+  return null;
+}
+
+async function savePlayerProgress(playerData) {
+  try {
+    const response = await fetch('/api/player/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(playerData)
+    });
+    return response.ok;
+  } catch (err) {
+    console.error('Failed to save progress:', err);
+    return false;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () =>{
   initThemes();
   await updateUser();

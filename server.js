@@ -138,20 +138,73 @@ app.get('/api/me', (req, res) => {
   res.json({ user: req.session.user });
 });
 
-app.post('/api/action', (req, res) => {
+// Get player progress
+app.get('/api/player/progress', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
-  const { actionId } = req.body;
 
+  try {
+    let progress = await db.loadPlayerProgress(user.id);
+    
+    // If no progress exists, create a new player
+    if (!progress) {
+      progress = await db.initializeNewPlayer(user.id, user.displayName, "Town Square", 100);
+    }
+
+    res.json({ progress });
+  } catch (err) {
+    console.error('Load progress error:', err);
+    res.status(500).json({ error: 'Failed to load progress' });
+  }
+});
+
+// Save player progress
+app.post('/api/player/progress', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  try {
+    const playerData = req.body;
+    await db.savePlayerProgress(user.id, playerData);
+    res.json({ status: 'ok', message: 'Progress saved' });
+  } catch (err) {
+    console.error('Save progress error:', err);
+    res.status(500).json({ error: 'Failed to save progress' });
+  }
+});
+
+// Update the existing /api/action endpoint to save after each action
+app.post('/api/action', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  const { actionId, playerState } = req.body;
+
+  // Load current progress
+  let progress = await db.loadPlayerProgress(user.id);
+  if (!progress) {
+    progress = await db.initializeNewPlayer(user.id, user.displayName);
+  }
+
+  // Handle actions and update progress
   if (actionId === 'fightBoss') {
     const bossName = 'The Nameless One';
-    // Check cooldowns before announcing
     if (canAnnounce(user.id)) {
       rawAnnounce(`${user.displayName} is fighting ${bossName}! 🔥`);
-    } else {
-      console.log('Announcement skipped due to cooldown for', user.id);
     }
-    return res.json({ status: 'ok', newState: { result: 'victory' }, eventsToBroadcast: [{ type: 'BOSS_ENCOUNTER', payload: { bossName } }] });
+    
+    // Update player state (example: reduce HP, add XP, etc.)
+    progress.in_combat = true;
+    progress.xp += 50;
+    progress.hp = Math.max(0, progress.hp - 20);
+    
+    // Save updated progress
+    await db.savePlayerProgress(user.id, progress);
+    
+    return res.json({ 
+      status: 'ok', 
+      newState: progress,
+      eventsToBroadcast: [{ type: 'BOSS_ENCOUNTER', payload: { bossName } }] 
+    });
   }
 
   res.json({ status: 'ok', message: 'no-op' });
