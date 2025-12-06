@@ -31,8 +31,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Simple announcement cooldowns
 const LAST_GLOBAL = { ts: 0 };
 const LAST_USER = {}; // userId -> ts
-const GLOBAL_MIN_MS = parseInt(process.env.GLOBAL_COOLDOWN_MS || '2000', 10); // 5s
-const USER_MIN_MS = parseInt(process.env.USER_COOLDOWN_MS || '5000', 10); // 5s
+const GLOBAL_MIN_MS = parseInt(process.env.GLOBAL_COOLDOWN_MS || '2000', 10); // 2s
+const USER_MIN_MS = parseInt(process.env.USER_COOLDOWN_MS || '3000', 10); // 3s
 
 function canAnnounce(userId){
   const now = Date.now();
@@ -86,10 +86,18 @@ app.get('/auth/twitch/callback', async (req, res) => {
     const playerId = `twitch-${user.id}`;
     
     // Insert or update player
-    await db.query(
-      'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO UPDATE SET twitch_id=$2, display_name=$3, access_token=$4, refresh_token=$5',
-      [playerId, user.id, user.display_name, access_token, refresh_token]
-    );
+    const dbType = db.getType();
+    if (dbType === 'sqlite') {
+      await db.query(
+        'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET twitch_id=?, display_name=?, access_token=?, refresh_token=?',
+        [playerId, user.id, user.display_name, access_token, refresh_token, user.id, user.display_name, access_token, refresh_token]
+      );
+    } else {
+      await db.query(
+        'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO UPDATE SET twitch_id=$2, display_name=$3, access_token=$4, refresh_token=$5',
+        [playerId, user.id, user.display_name, access_token, refresh_token]
+      );
+    }
 
     req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
     res.redirect('/adventure');
@@ -105,10 +113,18 @@ app.get('/auth/fake', async (req, res) => {
   const id = 'stub-' + name;
   try {
     // Insert or ignore player
-    await db.query(
-      'INSERT INTO players(id, display_name) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-      [id, name]
-    );
+    const dbType = db.getType();
+    if (dbType === 'sqlite') {
+      await db.query(
+        'INSERT INTO players(id, display_name) VALUES (?, ?) ON CONFLICT(id) DO NOTHING',
+        [id, name]
+      );
+    } else {
+      await db.query(
+        'INSERT INTO players(id, display_name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING',
+        [id, name]
+      );
+    }
     req.session.user = { id, displayName: name };
     res.redirect('/adventure');
   } catch (err) {
