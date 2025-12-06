@@ -8,13 +8,31 @@ const db = require('./db');
 
 const app = express();
 app.use(express.json());
-app.use(session({
+
+// Session store configuration
+let sessionConfig = {
   secret: process.env.SESSION_SECRET || 'dev-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
-}));
+  cookie: { 
+    secure: false,
+    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+  }
+};
 
+// Use PostgreSQL session store in production
+if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
+  const pgSession = require('connect-pg-simple')(session);
+  sessionConfig.store = new pgSession({
+    conString: process.env.DATABASE_URL,
+    createTableIfMissing: true
+  });
+  console.log('📦 Using PostgreSQL session store');
+} else {
+  console.warn('⚠️ Using MemoryStore for sessions (development only)');
+}
+
+app.use(session(sessionConfig));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Initialize database (PostgreSQL or SQLite)
