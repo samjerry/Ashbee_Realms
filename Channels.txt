@@ -1,3 +1,0 @@
-# Add your Twitch channel name here (one per line)
-# Example:
-MarrowOfAlbion
