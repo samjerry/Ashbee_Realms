@@ -1,0 +1,339 @@
+{
+  "off_hand": {
+    "common": [
+      {
+        "id": "wooden_buckler",
+        "name": "Wooden Buckler",
+        "description": "Small round wooden shield",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 2
+        },
+        "value": 8
+      },
+      {
+        "id": "pot_lid",
+        "name": "Pot Lid",
+        "description": "Makeshift shield from a large pot",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 3
+      },
+      {
+        "id": "wicker_shield",
+        "name": "Wicker Shield",
+        "description": "Woven plant fiber shield",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "value": 6
+      },
+      {
+        "id": "hide_shield",
+        "name": "Hide Shield",
+        "description": "Animal hide stretched over frame",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "value": 12
+      },
+      {
+        "id": "rusty_buckler",
+        "name": "Rusty Buckler",
+        "description": "Corroded metal buckler",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "value": 7
+      },
+      {
+        "id": "torch",
+        "name": "Torch",
+        "description": "Burning stick for light and defense",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "attack": 1
+        },
+        "passive": {
+          "fire_damage": 3,
+          "light_radius": 5
+        },
+        "value": 5
+      },
+      {
+        "id": "dagger",
+        "name": "Dagger",
+        "description": "Small blade for off-hand fighting",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "attack": 2
+        },
+        "value": 8
+      },
+      {
+        "id": "book",
+        "name": "Spellbook",
+        "description": "Tome of basic spells",
+        "slot": "off_hand",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "magic": 3
+        },
+        "value": 15
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "iron_shield",
+        "name": "Iron Shield",
+        "description": "Solid iron round shield",
+        "slot": "off_hand",
+        "rarity": "uncommon",
+        "required_level": 6,
+        "stats": {
+          "defense": 5
+        },
+        "value": 45
+      },
+      {
+        "id": "kite_shield",
+        "name": "Kite Shield",
+        "description": "Large tear-drop shaped shield",
+        "slot": "off_hand",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 6,
+          "hp": 15
+        },
+        "value": 60
+      },
+      {
+        "id": "steel_buckler",
+        "name": "Steel Buckler",
+        "description": "Well-crafted steel buckler",
+        "slot": "off_hand",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 5,
+          "agility": 3
+        },
+        "value": 50
+      },
+      {
+        "id": "parrying_dagger",
+        "name": "Parrying Dagger",
+        "description": "Specialized dagger for defense",
+        "slot": "off_hand",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "attack": 3,
+          "defense": 2
+        },
+        "passive": {
+          "parry_chance": 0.08
+        },
+        "value": 55
+      },
+      {
+        "id": "crystal_orb",
+        "name": "Crystal Orb",
+        "description": "Amplifies magical power",
+        "slot": "off_hand",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "magic": 8
+        },
+        "passive": {
+          "spell_power": 0.05
+        },
+        "value": 65
+      }
+    ],
+    "rare": [
+      {
+        "id": "tower_shield",
+        "name": "Tower Shield",
+        "description": "Massive protective shield",
+        "slot": "off_hand",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 12,
+          "hp": 40
+        },
+        "passive": {
+          "damage_reduction": 0.10
+        },
+        "value": 180
+      },
+      {
+        "id": "dragon_scale_shield",
+        "name": "Dragon Scale Shield",
+        "description": "Shield reinforced with dragon scales",
+        "slot": "off_hand",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 14,
+          "hp": 30
+        },
+        "passive": {
+          "fire_resist": 0.30,
+          "reflect_damage": 0.05
+        },
+        "value": 250
+      },
+      {
+        "id": "enchanted_grimoire",
+        "name": "Enchanted Grimoire",
+        "description": "Ancient book of powerful spells",
+        "slot": "off_hand",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "magic": 15,
+          "defense": 3
+        },
+        "passive": {
+          "spell_power": 0.12,
+          "mana_regen": 3
+        },
+        "value": 220
+      },
+      {
+        "id": "spiked_shield",
+        "name": "Spiked Shield",
+        "description": "Shield with deadly spikes",
+        "slot": "off_hand",
+        "rarity": "rare",
+        "required_level": 13,
+        "stats": {
+          "defense": 10,
+          "attack": 5
+        },
+        "passive": {
+          "reflect_damage": 0.15
+        },
+        "value": 200
+      }
+    ],
+    "epic": [
+      {
+        "id": "aegis_of_valor",
+        "name": "Aegis of Valor",
+        "description": "Legendary shield of heroes",
+        "slot": "off_hand",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 25,
+          "hp": 80,
+          "strength": 10
+        },
+        "passive": {
+          "damage_reduction": 0.20,
+          "all_resist": 0.15
+        },
+        "value": 1800
+      },
+      {
+        "id": "tome_of_ancients",
+        "name": "Tome of Ancients",
+        "description": "Contains forbidden knowledge",
+        "slot": "off_hand",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "magic": 35,
+          "intelligence": 15
+        },
+        "passive": {
+          "spell_power": 0.25,
+          "mana_regen": 10,
+          "cooldown_reduction": 0.10
+        },
+        "value": 2200
+      },
+      {
+        "id": "void_blade",
+        "name": "Void Blade",
+        "description": "Dagger forged in the void",
+        "slot": "off_hand",
+        "rarity": "epic",
+        "required_level": 26,
+        "stats": {
+          "attack": 18,
+          "agility": 12
+        },
+        "passive": {
+          "critical_chance": 0.15,
+          "void_damage": 25
+        },
+        "value": 1900
+      }
+    ],
+    "legendary": [
+      {
+        "id": "shield_of_eternity",
+        "name": "Shield of Eternity",
+        "description": "Indestructible shield from the dawn of time",
+        "slot": "off_hand",
+        "rarity": "legendary",
+        "required_level": 35,
+        "stats": {
+          "defense": 40,
+          "hp": 150
+        },
+        "passive": {
+          "damage_reduction": 0.35,
+          "all_resist": 0.30,
+          "indestructible": true
+        },
+        "value": 5000
+      },
+      {
+        "id": "codex_of_creation",
+        "name": "Codex of Creation",
+        "description": "The first book ever written",
+        "slot": "off_hand",
+        "rarity": "legendary",
+        "required_level": 38,
+        "stats": {
+          "magic": 60,
+          "intelligence": 25
+        },
+        "passive": {
+          "spell_power": 0.50,
+          "infinite_mana": true,
+          "reality_bending": 0.20
+        },
+        "value": 8000
+      }
+    ],
+    "mythic": []
+  }
+}

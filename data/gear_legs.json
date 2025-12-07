@@ -1,0 +1,346 @@
+{
+  "legs": {
+    "common": [
+      {
+        "id": "torn_pants",
+        "name": "Torn Pants",
+        "description": "Tattered cloth pants",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 2
+      },
+      {
+        "id": "burlap_pants",
+        "name": "Burlap Pants",
+        "description": "Rough fabric leg coverings",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 3
+      },
+      {
+        "id": "leather_pants",
+        "name": "Leather Pants",
+        "description": "Basic leather leg protection",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "value": 8
+      },
+      {
+        "id": "canvas_trousers",
+        "name": "Canvas Trousers",
+        "description": "Sturdy work pants",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2,
+          "agility": 1
+        },
+        "value": 7
+      },
+      {
+        "id": "padded_leggings",
+        "name": "Padded Leggings",
+        "description": "Quilted cloth leg armor",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "value": 10
+      },
+      {
+        "id": "wool_trousers",
+        "name": "Wool Trousers",
+        "description": "Warm woolen pants",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "passive": {
+          "cold_resist": 0.08
+        },
+        "value": 9
+      },
+      {
+        "id": "hide_pants",
+        "name": "Hide Pants",
+        "description": "Rough animal hide leggings",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "value": 11
+      },
+      {
+        "id": "chain_leggings",
+        "name": "Chain Leggings",
+        "description": "Simple chainmail leg protection",
+        "slot": "legs",
+        "rarity": "common",
+        "required_level": 5,
+        "stats": {
+          "defense": 4
+        },
+        "value": 18
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "reinforced_leather_pants",
+        "name": "Reinforced Leather Pants",
+        "description": "Leather with metal studs",
+        "slot": "legs",
+        "rarity": "uncommon",
+        "required_level": 6,
+        "stats": {
+          "defense": 5,
+          "agility": 3
+        },
+        "value": 40
+      },
+      {
+        "id": "steel_greaves",
+        "name": "Steel Greaves",
+        "description": "Solid steel leg armor",
+        "slot": "legs",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 7,
+          "hp": 20
+        },
+        "value": 55
+      },
+      {
+        "id": "ranger_leggings",
+        "name": "Ranger Leggings",
+        "description": "Light armor for mobility",
+        "slot": "legs",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 5,
+          "agility": 5
+        },
+        "passive": {
+          "movement_speed": 0.05
+        },
+        "value": 48
+      },
+      {
+        "id": "mystic_robes_lower",
+        "name": "Mystic Robes",
+        "description": "Enchanted cloth leg coverings",
+        "slot": "legs",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 4,
+          "magic": 6
+        },
+        "passive": {
+          "mana_regen": 2
+        },
+        "value": 50
+      },
+      {
+        "id": "brigandine_leggings",
+        "name": "Brigandine Leggings",
+        "description": "Layered armor plates",
+        "slot": "legs",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 6,
+          "strength": 3
+        },
+        "value": 52
+      }
+    ],
+    "rare": [
+      {
+        "id": "dragonhide_leggings",
+        "name": "Dragonhide Leggings",
+        "description": "Made from dragon scales",
+        "slot": "legs",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 10,
+          "hp": 35
+        },
+        "passive": {
+          "fire_resist": 0.25,
+          "physical_resist": 0.10
+        },
+        "value": 200
+      },
+      {
+        "id": "plate_leggings",
+        "name": "Plate Leggings",
+        "description": "Heavy full plate leg armor",
+        "slot": "legs",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "defense": 12,
+          "hp": 40,
+          "strength": 5
+        },
+        "value": 240
+      },
+      {
+        "id": "shadow_walker_pants",
+        "name": "Shadow Walker Pants",
+        "description": "Blend into darkness",
+        "slot": "legs",
+        "rarity": "rare",
+        "required_level": 13,
+        "stats": {
+          "defense": 8,
+          "agility": 10
+        },
+        "passive": {
+          "stealth": 0.20,
+          "movement_speed": 0.12
+        },
+        "value": 220
+      },
+      {
+        "id": "archmage_leggings",
+        "name": "Archmage Leggings",
+        "description": "Woven with pure magic",
+        "slot": "legs",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 7,
+          "magic": 18,
+          "intelligence": 8
+        },
+        "passive": {
+          "spell_power": 0.10,
+          "mana_regen": 5
+        },
+        "value": 260
+      }
+    ],
+    "epic": [
+      {
+        "id": "titans_greaves",
+        "name": "Titan's Greaves",
+        "description": "Leg armor of the ancient titans",
+        "slot": "legs",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 20,
+          "hp": 100,
+          "strength": 15
+        },
+        "passive": {
+          "damage_reduction": 0.15,
+          "immovable": true
+        },
+        "value": 2000
+      },
+      {
+        "id": "void_striders",
+        "name": "Void Striders",
+        "description": "Walk between dimensions",
+        "slot": "legs",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "defense": 15,
+          "agility": 20,
+          "magic": 15
+        },
+        "passive": {
+          "teleport_charges": 3,
+          "phase_walk": true,
+          "movement_speed": 0.30
+        },
+        "value": 2500
+      },
+      {
+        "id": "celestial_leggings",
+        "name": "Celestial Leggings",
+        "description": "Blessed by the stars",
+        "slot": "legs",
+        "rarity": "epic",
+        "required_level": 26,
+        "stats": {
+          "defense": 18,
+          "magic": 25,
+          "intelligence": 12
+        },
+        "passive": {
+          "spell_power": 0.25,
+          "holy_damage": 30,
+          "all_resist": 0.15
+        },
+        "value": 2200
+      }
+    ],
+    "legendary": [
+      {
+        "id": "worldwalker_greaves",
+        "name": "Worldwalker Greaves",
+        "description": "Travel between worlds with ease",
+        "slot": "legs",
+        "rarity": "legendary",
+        "required_level": 35,
+        "stats": {
+          "defense": 30,
+          "agility": 30,
+          "hp": 120
+        },
+        "passive": {
+          "infinite_movement": true,
+          "dimension_walk": true,
+          "movement_speed": 0.50
+        },
+        "value": 6000
+      },
+      {
+        "id": "immortal_leggings",
+        "name": "Immortal Leggings",
+        "description": "Never fall, never tire",
+        "slot": "legs",
+        "rarity": "legendary",
+        "required_level": 38,
+        "stats": {
+          "defense": 35,
+          "hp": 200,
+          "strength": 20
+        },
+        "passive": {
+          "damage_reduction": 0.40,
+          "regeneration": 10,
+          "knockback_immunity": true
+        },
+        "value": 7500
+      }
+    ],
+    "mythic": []
+  }
+}

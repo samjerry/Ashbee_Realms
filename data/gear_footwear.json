@@ -1,0 +1,360 @@
+{
+  "footwear": {
+    "common": [
+      {
+        "id": "worn_sandals",
+        "name": "Worn Sandals",
+        "description": "Old leather sandals",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 2
+      },
+      {
+        "id": "cloth_shoes",
+        "name": "Cloth Shoes",
+        "description": "Simple fabric footwear",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1,
+          "agility": 1
+        },
+        "value": 3
+      },
+      {
+        "id": "leather_boots",
+        "name": "Leather Boots",
+        "description": "Basic leather boots",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "value": 8
+      },
+      {
+        "id": "wooden_clogs",
+        "name": "Wooden Clogs",
+        "description": "Carved wooden shoes",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 4
+      },
+      {
+        "id": "fur_boots",
+        "name": "Fur Boots",
+        "description": "Warm animal fur boots",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "passive": {
+          "cold_resist": 0.10
+        },
+        "value": 9
+      },
+      {
+        "id": "canvas_shoes",
+        "name": "Canvas Shoes",
+        "description": "Light canvas footwear",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2,
+          "agility": 2
+        },
+        "value": 7
+      },
+      {
+        "id": "hide_boots",
+        "name": "Hide Boots",
+        "description": "Rough animal hide boots",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "value": 11
+      },
+      {
+        "id": "studded_boots",
+        "name": "Studded Boots",
+        "description": "Leather boots with metal studs",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 4,
+        "stats": {
+          "defense": 3
+        },
+        "value": 14
+      },
+      {
+        "id": "chain_boots",
+        "name": "Chain Boots",
+        "description": "Chainmail foot protection",
+        "slot": "footwear",
+        "rarity": "common",
+        "required_level": 5,
+        "stats": {
+          "defense": 4
+        },
+        "value": 16
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "steel_sabatons",
+        "name": "Steel Sabatons",
+        "description": "Heavy armored boots",
+        "slot": "footwear",
+        "rarity": "uncommon",
+        "required_level": 6,
+        "stats": {
+          "defense": 6,
+          "hp": 15
+        },
+        "value": 42
+      },
+      {
+        "id": "rangers_boots",
+        "name": "Ranger's Boots",
+        "description": "Silent and swift",
+        "slot": "footwear",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 4,
+          "agility": 5
+        },
+        "passive": {
+          "movement_speed": 0.08,
+          "stealth": 0.05
+        },
+        "value": 48
+      },
+      {
+        "id": "mystic_slippers",
+        "name": "Mystic Slippers",
+        "description": "Enchanted soft footwear",
+        "slot": "footwear",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 3,
+          "magic": 6
+        },
+        "passive": {
+          "mana_regen": 2
+        },
+        "value": 45
+      },
+      {
+        "id": "reinforced_boots",
+        "name": "Reinforced Boots",
+        "description": "Extra durable leather boots",
+        "slot": "footwear",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 5,
+          "strength": 3
+        },
+        "value": 50
+      },
+      {
+        "id": "winged_sandals",
+        "name": "Winged Sandals",
+        "description": "Light as a feather",
+        "slot": "footwear",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "agility": 8
+        },
+        "passive": {
+          "movement_speed": 0.12
+        },
+        "value": 55
+      }
+    ],
+    "rare": [
+      {
+        "id": "boots_of_striding",
+        "name": "Boots of Striding",
+        "description": "Cover great distances with ease",
+        "slot": "footwear",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 8,
+          "agility": 10
+        },
+        "passive": {
+          "movement_speed": 0.20,
+          "sprint_duration": 0.30
+        },
+        "value": 190
+      },
+      {
+        "id": "dragonscale_boots",
+        "name": "Dragonscale Boots",
+        "description": "Boots of dragon scales",
+        "slot": "footwear",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "defense": 10,
+          "hp": 30
+        },
+        "passive": {
+          "fire_resist": 0.30,
+          "fire_trail": true
+        },
+        "value": 230
+      },
+      {
+        "id": "shadow_step_boots",
+        "name": "Shadow Step Boots",
+        "description": "Step through shadows",
+        "slot": "footwear",
+        "rarity": "rare",
+        "required_level": 13,
+        "stats": {
+          "defense": 7,
+          "agility": 12
+        },
+        "passive": {
+          "stealth": 0.25,
+          "teleport_short": 3
+        },
+        "value": 210
+      },
+      {
+        "id": "plate_sabatons",
+        "name": "Plate Sabatons",
+        "description": "Full plate foot armor",
+        "slot": "footwear",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 12,
+          "hp": 40,
+          "strength": 6
+        },
+        "value": 250
+      }
+    ],
+    "epic": [
+      {
+        "id": "boots_of_haste",
+        "name": "Boots of Haste",
+        "description": "Move at impossible speeds",
+        "slot": "footwear",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 15,
+          "agility": 25
+        },
+        "passive": {
+          "movement_speed": 0.50,
+          "double_step": true,
+          "dodge_chance": 0.15
+        },
+        "value": 2100
+      },
+      {
+        "id": "earth_shaker_boots",
+        "name": "Earth Shaker Boots",
+        "description": "Each step shakes the ground",
+        "slot": "footwear",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "defense": 22,
+          "strength": 20,
+          "hp": 80
+        },
+        "passive": {
+          "earthquake_step": true,
+          "knockback_immunity": true,
+          "earth_damage": 40
+        },
+        "value": 2400
+      },
+      {
+        "id": "celestial_treads",
+        "name": "Celestial Treads",
+        "description": "Walk on air and light",
+        "slot": "footwear",
+        "rarity": "epic",
+        "required_level": 26,
+        "stats": {
+          "defense": 18,
+          "magic": 20,
+          "agility": 15
+        },
+        "passive": {
+          "flight": true,
+          "holy_aura": 0.20,
+          "levitation": true
+        },
+        "value": 2300
+      }
+    ],
+    "legendary": [
+      {
+        "id": "boots_of_omnipresence",
+        "name": "Boots of Omnipresence",
+        "description": "Be everywhere at once",
+        "slot": "footwear",
+        "rarity": "legendary",
+        "required_level": 35,
+        "stats": {
+          "defense": 30,
+          "agility": 40
+        },
+        "passive": {
+          "infinite_teleport": true,
+          "omnipresence": 0.30,
+          "movement_speed": 1.0
+        },
+        "value": 6500
+      },
+      {
+        "id": "boots_of_eternity",
+        "name": "Boots of Eternity",
+        "description": "Stride through time itself",
+        "slot": "footwear",
+        "rarity": "legendary",
+        "required_level": 38,
+        "stats": {
+          "defense": 35,
+          "agility": 35,
+          "magic": 35
+        },
+        "passive": {
+          "time_step": true,
+          "eternal_movement": true,
+          "reality_walk": 0.50
+        },
+        "value": 8000
+      }
+    ],
+    "mythic": []
+  }
+}

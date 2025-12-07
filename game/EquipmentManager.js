@@ -22,9 +22,9 @@ class EquipmentManager {
     RING1: 'ring1',
     RING2: 'ring2',
     BELT: 'belt',
-    FLAVOR1: 'flavor1',
-    FLAVOR2: 'flavor2',
-    FLAVOR3: 'flavor3'
+    RELIC1: 'relic1',
+    RELIC2: 'relic2',
+    RELIC3: 'relic3'
   };
 
   /**
@@ -45,9 +45,9 @@ class EquipmentManager {
       ring1: null,
       ring2: null,
       belt: null,
-      flavor1: null,
-      flavor2: null,
-      flavor3: null,
+      relic1: null,
+      relic2: null,
+      relic3: null,
       ...equipped
     };
 
@@ -74,6 +74,11 @@ class EquipmentManager {
     const armor = loadData('gear_armor');
     const headgear = loadData('gear_headgear');
     const accessories = loadData('gear_accessories');
+    const offhand = loadData('gear_shields_offhand');
+    const legs = loadData('gear_legs');
+    const footwear = loadData('gear_footwear');
+    const hands = loadData('gear_hands');
+    const capes = loadData('gear_capes');
 
     let item = null;
 
@@ -124,6 +129,61 @@ class EquipmentManager {
             }
           }
           if (item) break;
+        }
+      }
+    }
+
+    // Search in off-hand items
+    if (!item && offhand && offhand.off_hand) {
+      for (const rarity of Object.keys(offhand.off_hand)) {
+        const found = offhand.off_hand[rarity].find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
+        }
+      }
+    }
+
+    // Search in legs
+    if (!item && legs && legs.legs) {
+      for (const rarity of Object.keys(legs.legs)) {
+        const found = legs.legs[rarity].find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
+        }
+      }
+    }
+
+    // Search in footwear
+    if (!item && footwear && footwear.footwear) {
+      for (const rarity of Object.keys(footwear.footwear)) {
+        const found = footwear.footwear[rarity].find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
+        }
+      }
+    }
+
+    // Search in hands
+    if (!item && hands && hands.hands) {
+      for (const rarity of Object.keys(hands.hands)) {
+        const found = hands.hands[rarity].find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
+        }
+      }
+    }
+
+    // Search in capes
+    if (!item && capes && capes.capes) {
+      for (const rarity of Object.keys(capes.capes)) {
+        const found = capes.capes[rarity].find(i => i.id === itemId);
+        if (found) {
+          item = found;
+          break;
         }
       }
     }
@@ -189,6 +249,19 @@ class EquipmentManager {
         // Both slots occupied, replace ring1
         targetSlot = 'ring1';
         unequippedItem = this.equipped.ring1;
+      }
+    } else if (slot === 'trinket' || slot === 'relic') {
+      // Handle trinket/relic slots (can go in relic1, relic2, or relic3)
+      if (!this.equipped.relic1) {
+        targetSlot = 'relic1';
+      } else if (!this.equipped.relic2) {
+        targetSlot = 'relic2';
+      } else if (!this.equipped.relic3) {
+        targetSlot = 'relic3';
+      } else {
+        // All slots occupied, replace relic1
+        targetSlot = 'relic1';
+        unequippedItem = this.equipped.relic1;
       }
     } else {
       // Standard slot handling
@@ -433,9 +506,9 @@ class EquipmentManager {
       ring1: null,
       ring2: null,
       belt: null,
-      flavor1: null,
-      flavor2: null,
-      flavor3: null,
+      relic1: null,
+      relic2: null,
+      relic3: null,
       ...equipped
     };
     this._itemCache.clear(); // Clear cache on import

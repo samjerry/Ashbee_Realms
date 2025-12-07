@@ -63,10 +63,27 @@ async function initPostgres() {
       step INTEGER DEFAULT 0,
       is_player BOOLEAN DEFAULT true,
       in_combat BOOLEAN DEFAULT false,
-      equipped JSONB DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"flavor1":null,"flavor2":null,"flavor3":null}',
+      equipped JSONB DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"relic1":null,"relic2":null,"relic3":null}',
       base_stats JSONB DEFAULT '{}',
+      skills JSONB DEFAULT '{"skills":{},"globalCooldown":0}',
+      skill_points INTEGER DEFAULT 0,
+      travel_state JSONB DEFAULT NULL,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (player_id, channel_name),
+      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS permanent_stats (
+      player_id TEXT PRIMARY KEY,
+      unlocked_passives JSONB DEFAULT '[]',
+      account_stats JSONB DEFAULT '{}',
+      total_deaths INTEGER DEFAULT 0,
+      total_kills INTEGER DEFAULT 0,
+      total_gold_earned BIGINT DEFAULT 0,
+      total_xp_earned BIGINT DEFAULT 0,
+      highest_level_reached INTEGER DEFAULT 1,
+      total_crits INTEGER DEFAULT 0,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
     );
 
@@ -122,7 +139,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       headgear: null, armor: null, legs: null, footwear: null,
       hands: null, cape: null, off_hand: null, amulet: null,
       ring1: null, ring2: null, belt: null, main_hand: null,
-      flavor1: null, flavor2: null, flavor3: null
+      relic1: null, relic2: null, relic3: null
     }
   } = playerData;
 
@@ -209,7 +226,7 @@ async function initializeNewPlayer(playerId, channelName, playerName, startLocat
       headgear: null, armor: null, legs: null, footwear: null,
       hands: null, cape: null, off_hand: null, amulet: null,
       ring1: null, ring2: null, belt: null, main_hand: null,
-      flavor1: null, flavor2: null, flavor3: null
+      relic1: null, relic2: null, relic3: null
     }
   };
 
@@ -266,6 +283,106 @@ async function createCharacter(playerId, channelName, playerName, classType, loc
   return character;
 }
 
+/**
+ * Delete a character
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ */
+async function deleteCharacter(playerId, channelName) {
+  await query(
+    'DELETE FROM player_progress WHERE player_id = $1 AND channel_name = $2',
+    [playerId, channelName.toLowerCase()]
+  );
+}
+
+/**
+ * Get permanent stats for a player (account-wide progression)
+ * @param {string} playerId - Player ID
+ * @returns {Object|null} Permanent stats object
+ */
+async function getPermanentStats(playerId) {
+  const result = await query(
+    'SELECT * FROM permanent_stats WHERE player_id = $1',
+    [playerId]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const row = result.rows[0];
+  return {
+    unlockedPassives: row.unlocked_passives || [],
+    accountStats: row.account_stats || {},
+    totalDeaths: row.total_deaths || 0,
+    totalKills: row.total_kills || 0,
+    totalGoldEarned: row.total_gold_earned || 0,
+    totalXPEarned: row.total_xp_earned || 0,
+    highestLevelReached: row.highest_level_reached || 1,
+    totalCrits: row.total_crits || 0
+  };
+}
+
+/**
+ * Save permanent stats for a player
+ * @param {string} playerId - Player ID
+ * @param {Object} stats - Stats object
+ */
+async function savePermanentStats(playerId, stats) {
+  await query(
+    `INSERT INTO permanent_stats (
+      player_id, unlocked_passives, account_stats, total_deaths, total_kills,
+      total_gold_earned, total_xp_earned, highest_level_reached, total_crits, updated_at
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+    ON CONFLICT (player_id) DO UPDATE SET
+      unlocked_passives = $2,
+      account_stats = $3,
+      total_deaths = $4,
+      total_kills = $5,
+      total_gold_earned = $6,
+      total_xp_earned = $7,
+      highest_level_reached = $8,
+      total_crits = $9,
+      updated_at = NOW()`,
+    [
+      playerId,
+      JSON.stringify(stats.unlockedPassives || []),
+      JSON.stringify(stats.accountStats || {}),
+      stats.totalDeaths || 0,
+      stats.totalKills || 0,
+      stats.totalGoldEarned || 0,
+      stats.totalXPEarned || 0,
+      stats.highestLevelReached || 1,
+      stats.totalCrits || 0
+    ]
+  );
+}
+
+/**
+ * Update account-wide stat (e.g., increment kill count)
+ * @param {string} playerId - Player ID
+ * @param {string} statName - Stat field name
+ * @param {number} increment - Amount to increment
+ */
+async function incrementPermanentStat(playerId, statName, increment = 1) {
+  const validStats = ['total_deaths', 'total_kills', 'total_gold_earned', 'total_xp_earned', 'total_crits'];
+  if (!validStats.includes(statName)) {
+    throw new Error(`Invalid stat name: ${statName}`);
+  }
+
+  // Ensure row exists
+  await query(
+    `INSERT INTO permanent_stats (player_id) VALUES ($1) ON CONFLICT (player_id) DO NOTHING`,
+    [playerId]
+  );
+
+  // Increment stat
+  await query(
+    `UPDATE permanent_stats SET ${statName} = ${statName} + $1, updated_at = NOW() WHERE player_id = $2`,
+    [increment, playerId]
+  );
+}
+
 module.exports = {
   initDB,
   query,
@@ -278,5 +395,9 @@ module.exports = {
   initializeNewPlayer,
   getCharacter,
   saveCharacter,
-  createCharacter
+  createCharacter,
+  deleteCharacter,
+  getPermanentStats,
+  savePermanentStats,
+  incrementPermanentStat
 };

@@ -178,9 +178,9 @@ class CharacterInitializer {
       ring2: null,
       belt: null,
       main_hand: startingEquipment.main_hand || null,
-      flavor1: null,
-      flavor2: null,
-      flavor3: null
+      relic1: null,
+      relic2: null,
+      relic3: null
     };
     
     return {

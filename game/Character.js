@@ -6,6 +6,7 @@
 
 const EquipmentManager = require('./EquipmentManager');
 const InventoryManager = require('./InventoryManager');
+const SkillManager = require('./SkillManager');
 const { loadData } = require('../data/data_loader');
 
 class Character {
@@ -37,10 +38,13 @@ class Character {
     this.skillCd = data.skill_cd || 0;
     this.step = data.step || 0;
     this.pending = data.pending || null;
+    this.skillPoints = data.skill_points || 0;
+    this.travelState = data.travel_state || null;
 
     // Initialize managers
     this.equipment = new EquipmentManager(data.equipped || {});
     this.inventory = new InventoryManager(data.inventory || ["Potion"], 30); // Default 30 slots
+    this.skills = data.skills ? SkillManager.fromJSON(data.skills) : new SkillManager();
 
     // Load class data
     this.classData = null;
@@ -251,7 +255,8 @@ class Character {
   }
 
   /**
-   * Gain experience points and handle leveling
+   * Gain experience points (use ProgressionManager for leveling logic)
+   * This is a simple version for backward compatibility
    * @param {number} amount - Amount of XP to gain
    * @returns {Object} Result with levelUp flag and new level
    */
@@ -266,6 +271,7 @@ class Character {
       levelsGained++;
       leveledUp = true;
       this.xpToNext = Math.floor(this.xpToNext * 1.5); // 50% increase per level
+      this.skillPoints++; // Award skill point on level up
     }
 
     if (leveledUp) {
@@ -280,8 +286,54 @@ class Character {
       levelsGained,
       newLevel: this.level,
       xp: this.xp,
-      xpToNext: this.xpToNext
+      xpToNext: this.xpToNext,
+      skillPoints: this.skillPoints
     };
+  }
+
+  /**
+   * Use a skill
+   * @param {string} skillId - Skill identifier
+   * @param {number} cooldownDuration - Cooldown in turns
+   * @param {number} currentTurn - Current turn number
+   * @returns {Object} Result
+   */
+  useSkill(skillId, cooldownDuration, currentTurn = 0) {
+    return this.skills.useSkill(skillId, cooldownDuration, currentTurn);
+  }
+
+  /**
+   * Check if a skill is available
+   * @param {string} skillId - Skill identifier
+   * @param {number} currentTurn - Current turn number
+   * @returns {boolean}
+   */
+  isSkillAvailable(skillId, currentTurn = 0) {
+    return this.skills.isAvailable(skillId, currentTurn);
+  }
+
+  /**
+   * Tick all skill cooldowns (call at end of turn)
+   */
+  tickSkillCooldowns() {
+    this.skills.tickCooldowns();
+  }
+
+  /**
+   * Reset all skill cooldowns
+   */
+  resetSkillCooldowns() {
+    this.skills.resetAllCooldowns();
+  }
+
+  /**
+   * Learn a new skill
+   * @param {string} skillId - Skill identifier
+   * @param {Object} skillData - Skill data
+   * @returns {Object} Result
+   */
+  learnSkill(skillId, skillData = {}) {
+    return this.skills.learnSkill(skillId, skillData);
   }
 
   /**
@@ -363,6 +415,9 @@ class Character {
       location: this.location,
       inventory: this.inventory.toArray(),
       equipped: this.equipment.toObject(),
+      skills: this.skills.toJSON(),
+      skill_points: this.skillPoints,
+      travel_state: this.travelState,
       in_combat: this.inCombat,
       combat: this.combat,
       skill_cd: this.skillCd,
@@ -394,7 +449,7 @@ class Character {
       headgear: null, armor: null, legs: null, footwear: null,
       hands: null, cape: null, off_hand: null, amulet: null,
       ring1: null, ring2: null, belt: null, main_hand: null,
-      flavor1: null, flavor2: null, flavor3: null
+      relic1: null, relic2: null, relic3: null
     };
 
     // Equip starting equipment

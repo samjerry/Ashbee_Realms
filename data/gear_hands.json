@@ -1,0 +1,351 @@
+{
+  "hands": {
+    "common": [
+      {
+        "id": "cloth_wraps",
+        "name": "Cloth Wraps",
+        "description": "Simple cloth hand wrappings",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 2
+      },
+      {
+        "id": "leather_gloves",
+        "name": "Leather Gloves",
+        "description": "Basic leather hand protection",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "value": 6
+      },
+      {
+        "id": "wool_mittens",
+        "name": "Wool Mittens",
+        "description": "Warm woolen hand coverings",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "passive": {
+          "cold_resist": 0.10
+        },
+        "value": 5
+      },
+      {
+        "id": "fingerless_gloves",
+        "name": "Fingerless Gloves",
+        "description": "Leather gloves with exposed fingers",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 1,
+          "agility": 2
+        },
+        "value": 7
+      },
+      {
+        "id": "canvas_gloves",
+        "name": "Canvas Gloves",
+        "description": "Heavy canvas work gloves",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "value": 6
+      },
+      {
+        "id": "hide_gloves",
+        "name": "Hide Gloves",
+        "description": "Rough animal hide gloves",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "value": 10
+      },
+      {
+        "id": "padded_gloves",
+        "name": "Padded Gloves",
+        "description": "Quilted hand protection",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "value": 9
+      },
+      {
+        "id": "chain_gloves",
+        "name": "Chain Gloves",
+        "description": "Chainmail hand protection",
+        "slot": "hands",
+        "rarity": "common",
+        "required_level": 5,
+        "stats": {
+          "defense": 4
+        },
+        "value": 15
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "steel_gauntlets",
+        "name": "Steel Gauntlets",
+        "description": "Solid steel hand armor",
+        "slot": "hands",
+        "rarity": "uncommon",
+        "required_level": 6,
+        "stats": {
+          "defense": 5,
+          "attack": 2
+        },
+        "value": 40
+      },
+      {
+        "id": "archers_bracers",
+        "name": "Archer's Bracers",
+        "description": "Enhance bow accuracy",
+        "slot": "hands",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 3,
+          "agility": 5,
+          "attack": 3
+        },
+        "passive": {
+          "ranged_damage": 0.08
+        },
+        "value": 48
+      },
+      {
+        "id": "mages_gloves",
+        "name": "Mage's Gloves",
+        "description": "Enhance spellcasting",
+        "slot": "hands",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 2,
+          "magic": 7
+        },
+        "passive": {
+          "spell_power": 0.05
+        },
+        "value": 45
+      },
+      {
+        "id": "reinforced_gauntlets",
+        "name": "Reinforced Gauntlets",
+        "description": "Extra tough hand armor",
+        "slot": "hands",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 6,
+          "strength": 4
+        },
+        "value": 50
+      },
+      {
+        "id": "silk_gloves",
+        "name": "Silk Gloves",
+        "description": "Fine enchanted silk",
+        "slot": "hands",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 3,
+          "magic": 5,
+          "agility": 3
+        },
+        "value": 46
+      }
+    ],
+    "rare": [
+      {
+        "id": "dragonscale_gauntlets",
+        "name": "Dragonscale Gauntlets",
+        "description": "Made from dragon claws",
+        "slot": "hands",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 9,
+          "attack": 8,
+          "strength": 6
+        },
+        "passive": {
+          "fire_damage": 20,
+          "claw_attack": 15
+        },
+        "value": 210
+      },
+      {
+        "id": "plate_gauntlets",
+        "name": "Plate Gauntlets",
+        "description": "Full plate hand armor",
+        "slot": "hands",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "defense": 11,
+          "hp": 30,
+          "strength": 7
+        },
+        "value": 240
+      },
+      {
+        "id": "shadow_gloves",
+        "name": "Shadow Gloves",
+        "description": "Strike from the darkness",
+        "slot": "hands",
+        "rarity": "rare",
+        "required_level": 13,
+        "stats": {
+          "defense": 7,
+          "agility": 11,
+          "attack": 6
+        },
+        "passive": {
+          "critical_chance": 0.12,
+          "stealth_attack": 20
+        },
+        "value": 220
+      },
+      {
+        "id": "arcane_handwraps",
+        "name": "Arcane Handwraps",
+        "description": "Woven with pure arcane energy",
+        "slot": "hands",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 6,
+          "magic": 16,
+          "intelligence": 8
+        },
+        "passive": {
+          "spell_power": 0.15,
+          "arcane_damage": 25
+        },
+        "value": 260
+      }
+    ],
+    "epic": [
+      {
+        "id": "gauntlets_of_might",
+        "name": "Gauntlets of Might",
+        "description": "Crush mountains with your grip",
+        "slot": "hands",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 18,
+          "attack": 20,
+          "strength": 25
+        },
+        "passive": {
+          "grip_strength": 50,
+          "crush_damage": 0.30,
+          "stun_chance": 0.20
+        },
+        "value": 2200
+      },
+      {
+        "id": "reality_benders",
+        "name": "Reality Benders",
+        "description": "Shape reality with your hands",
+        "slot": "hands",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "defense": 15,
+          "magic": 30,
+          "intelligence": 20
+        },
+        "passive": {
+          "reality_manipulation": 0.25,
+          "spell_power": 0.35,
+          "cosmic_damage": 40
+        },
+        "value": 2600
+      },
+      {
+        "id": "void_claws",
+        "name": "Void Claws",
+        "description": "Tear through dimensions",
+        "slot": "hands",
+        "rarity": "epic",
+        "required_level": 26,
+        "stats": {
+          "defense": 16,
+          "attack": 25,
+          "agility": 18
+        },
+        "passive": {
+          "void_rend": true,
+          "critical_chance": 0.25,
+          "armor_pierce": 0.40
+        },
+        "value": 2400
+      }
+    ],
+    "legendary": [
+      {
+        "id": "hands_of_creation",
+        "name": "Hands of Creation",
+        "description": "Create anything from nothing",
+        "slot": "hands",
+        "rarity": "legendary",
+        "required_level": 35,
+        "stats": {
+          "defense": 30,
+          "magic": 50,
+          "intelligence": 30
+        },
+        "passive": {
+          "creation_power": true,
+          "infinite_crafting": true,
+          "matter_manipulation": 0.60
+        },
+        "value": 7000
+      },
+      {
+        "id": "fists_of_eternity",
+        "name": "Fists of Eternity",
+        "description": "Strike with the force of time itself",
+        "slot": "hands",
+        "rarity": "legendary",
+        "required_level": 38,
+        "stats": {
+          "defense": 35,
+          "attack": 60,
+          "strength": 40
+        },
+        "passive": {
+          "time_strike": true,
+          "instant_kill_chance": 0.10,
+          "infinite_power": 0.50
+        },
+        "value": 8500
+      }
+    ],
+    "mythic": []
+  }
+}

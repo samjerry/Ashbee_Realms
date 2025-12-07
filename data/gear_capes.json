@@ -1,0 +1,384 @@
+{
+  "capes": {
+    "common": [
+      {
+        "id": "torn_cloak",
+        "name": "Torn Cloak",
+        "description": "Tattered fabric cape",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 3
+      },
+      {
+        "id": "burlap_cape",
+        "name": "Burlap Cape",
+        "description": "Rough fabric shoulder covering",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 4
+      },
+      {
+        "id": "wool_cloak",
+        "name": "Wool Cloak",
+        "description": "Warm woolen cape",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2
+        },
+        "passive": {
+          "cold_resist": 0.15
+        },
+        "value": 8
+      },
+      {
+        "id": "leather_cape",
+        "name": "Leather Cape",
+        "description": "Durable leather shoulder guard",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 2,
+          "agility": 1
+        },
+        "value": 9
+      },
+      {
+        "id": "canvas_cloak",
+        "name": "Canvas Cloak",
+        "description": "Heavy canvas traveling cape",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "value": 10
+      },
+      {
+        "id": "fur_cape",
+        "name": "Fur Cape",
+        "description": "Animal fur shoulder covering",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 3
+        },
+        "passive": {
+          "cold_resist": 0.20
+        },
+        "value": 12
+      },
+      {
+        "id": "travelers_cloak",
+        "name": "Traveler's Cloak",
+        "description": "Practical adventuring cape",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 4,
+        "stats": {
+          "defense": 3,
+          "agility": 2
+        },
+        "value": 14
+      },
+      {
+        "id": "hooded_cape",
+        "name": "Hooded Cape",
+        "description": "Cape with attached hood",
+        "slot": "cape",
+        "rarity": "common",
+        "required_level": 4,
+        "stats": {
+          "defense": 3
+        },
+        "passive": {
+          "stealth": 0.03
+        },
+        "value": 13
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "scouts_cloak",
+        "name": "Scout's Cloak",
+        "description": "Lightweight and maneuverable",
+        "slot": "cape",
+        "rarity": "uncommon",
+        "required_level": 6,
+        "stats": {
+          "defense": 4,
+          "agility": 5
+        },
+        "passive": {
+          "stealth": 0.08,
+          "movement_speed": 0.05
+        },
+        "value": 42
+      },
+      {
+        "id": "mages_mantle",
+        "name": "Mage's Mantle",
+        "description": "Enchanted shoulder covering",
+        "slot": "cape",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 4,
+          "magic": 6
+        },
+        "passive": {
+          "mana_regen": 2
+        },
+        "value": 48
+      },
+      {
+        "id": "knights_cape",
+        "name": "Knight's Cape",
+        "description": "Noble warrior's cape",
+        "slot": "cape",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 6,
+          "hp": 20
+        },
+        "value": 50
+      },
+      {
+        "id": "elven_cloak",
+        "name": "Elven Cloak",
+        "description": "Light and elegant",
+        "slot": "cape",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 4,
+          "agility": 6,
+          "magic": 3
+        },
+        "passive": {
+          "stealth": 0.10
+        },
+        "value": 55
+      },
+      {
+        "id": "reinforced_cloak",
+        "name": "Reinforced Cloak",
+        "description": "Extra protective layered cape",
+        "slot": "cape",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 7,
+          "hp": 15
+        },
+        "value": 52
+      }
+    ],
+    "rare": [
+      {
+        "id": "shadow_cloak",
+        "name": "Shadow Cloak",
+        "description": "Blend into darkness",
+        "slot": "cape",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 8,
+          "agility": 10
+        },
+        "passive": {
+          "stealth": 0.30,
+          "shadow_form": true,
+          "dodge_chance": 0.10
+        },
+        "value": 200
+      },
+      {
+        "id": "dragonwing_cape",
+        "name": "Dragonwing Cape",
+        "description": "Made from dragon wing membrane",
+        "slot": "cape",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "defense": 10,
+          "hp": 35,
+          "agility": 8
+        },
+        "passive": {
+          "glide": true,
+          "fire_resist": 0.30
+        },
+        "value": 240
+      },
+      {
+        "id": "archmages_cloak",
+        "name": "Archmage's Cloak",
+        "description": "Radiates magical power",
+        "slot": "cape",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 8,
+          "magic": 18,
+          "intelligence": 10
+        },
+        "passive": {
+          "spell_power": 0.15,
+          "mana_regen": 5,
+          "all_resist": 0.10
+        },
+        "value": 260
+      },
+      {
+        "id": "champions_mantle",
+        "name": "Champion's Mantle",
+        "description": "Worn by legendary warriors",
+        "slot": "cape",
+        "rarity": "rare",
+        "required_level": 13,
+        "stats": {
+          "defense": 11,
+          "hp": 40,
+          "strength": 8
+        },
+        "passive": {
+          "damage_reduction": 0.08
+        },
+        "value": 220
+      }
+    ],
+    "epic": [
+      {
+        "id": "cloak_of_invisibility",
+        "name": "Cloak of Invisibility",
+        "description": "Become completely unseen",
+        "slot": "cape",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 15,
+          "agility": 20
+        },
+        "passive": {
+          "invisibility": true,
+          "perfect_stealth": 1.0,
+          "undetectable": true
+        },
+        "value": 2500
+      },
+      {
+        "id": "phoenix_feather_cloak",
+        "name": "Phoenix Feather Cloak",
+        "description": "Rise from death itself",
+        "slot": "cape",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "defense": 18,
+          "hp": 100,
+          "magic": 20
+        },
+        "passive": {
+          "auto_revive": true,
+          "fire_immunity": true,
+          "regeneration": 8
+        },
+        "value": 2800
+      },
+      {
+        "id": "void_mantle",
+        "name": "Void Mantle",
+        "description": "Wrap yourself in the void",
+        "slot": "cape",
+        "rarity": "epic",
+        "required_level": 26,
+        "stats": {
+          "defense": 20,
+          "magic": 25,
+          "agility": 15
+        },
+        "passive": {
+          "void_immunity": true,
+          "phase_shift": true,
+          "all_resist": 0.25
+        },
+        "value": 2600
+      },
+      {
+        "id": "celestial_wings",
+        "name": "Celestial Wings",
+        "description": "Blessed wings of angels",
+        "slot": "cape",
+        "rarity": "epic",
+        "required_level": 27,
+        "stats": {
+          "defense": 16,
+          "magic": 22,
+          "agility": 18
+        },
+        "passive": {
+          "flight": true,
+          "holy_aura": 0.30,
+          "divine_protection": 0.20
+        },
+        "value": 2700
+      }
+    ],
+    "legendary": [
+      {
+        "id": "mantle_of_gods",
+        "name": "Mantle of the Gods",
+        "description": "Divine power flows through you",
+        "slot": "cape",
+        "rarity": "legendary",
+        "required_level": 35,
+        "stats": {
+          "defense": 30,
+          "magic": 40,
+          "hp": 150
+        },
+        "passive": {
+          "divine_power": true,
+          "all_resist": 0.50,
+          "damage_reduction": 0.30,
+          "aura_of_power": 0.50
+        },
+        "value": 7500
+      },
+      {
+        "id": "cloak_of_eternity",
+        "name": "Cloak of Eternity",
+        "description": "Exists outside of time",
+        "slot": "cape",
+        "rarity": "legendary",
+        "required_level": 38,
+        "stats": {
+          "defense": 35,
+          "agility": 35,
+          "magic": 35
+        },
+        "passive": {
+          "time_immunity": true,
+          "eternal_existence": true,
+          "reality_anchor": 1.0
+        },
+        "value": 9000
+      }
+    ],
+    "mythic": []
+  }
+}

@@ -5,6 +5,9 @@ const { rawAnnounce } = require('./bot');
 const path = require('path');
 const axios = require('axios');
 const db = require('./db');
+const Combat = require('./game/Combat');
+const { Character, ProgressionManager, ExplorationManager } = require('./game');
+const { loadData } = require('./data/data_loader');
 
 const app = express();
 app.use(express.json());
@@ -492,6 +495,937 @@ app.post('/api/action', async (req, res) => {
 
   res.json({ status: 'ok', message: 'no-op' });
 });
+
+// ==================== COMBAT ENDPOINTS ====================
+
+/**
+ * Start combat with a monster
+ * POST /api/combat/start
+ * Body: { monsterId: string, channelName?: string }
+ */
+app.post('/api/combat/start', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const { monsterId, channelName } = req.body;
+    if (!monsterId) {
+      return res.status(400).json({ error: 'monsterId is required' });
+    }
+
+    const channel = channelName || user.channels?.[0] || 'default';
+
+    // Load player progress
+    const playerData = await db.getPlayerProgress(user.id, channel);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Player progress not found. Create a character first.' });
+    }
+
+    // Check if already in combat
+    if (req.session.combat) {
+      return res.status(400).json({ error: 'Already in combat. Finish current combat first.' });
+    }
+
+    // Load monster data
+    const monstersData = loadData('monsters');
+    let monster = null;
+
+    // Search for monster
+    for (const rarity of Object.keys(monstersData.monsters)) {
+      const found = monstersData.monsters[rarity].find(m => m.id === monsterId);
+      if (found) {
+        monster = found;
+        break;
+      }
+    }
+
+    if (!monster) {
+      return res.status(404).json({ error: 'Monster not found' });
+    }
+
+    // Create Character instance
+    const character = Character.fromObject(playerData);
+
+    // Start combat
+    const combat = new Combat(character, monster);
+    
+    // Store combat in session
+    req.session.combat = {
+      combatInstance: combat,
+      playerId: user.id,
+      channelName: channel,
+      monsterId: monsterId
+    };
+
+    // Save session
+    await new Promise((resolve, reject) => {
+      req.session.save((err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+
+    res.json({
+      success: true,
+      message: `Combat started with ${monster.name}!`,
+      state: combat.getState()
+    });
+
+  } catch (error) {
+    console.error('Combat start error:', error);
+    res.status(500).json({ error: 'Failed to start combat', details: error.message });
+  }
+});
+
+/**
+ * Get current combat state
+ * GET /api/combat/state
+ */
+app.get('/api/combat/state', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    if (!req.session.combat) {
+      return res.json({ inCombat: false });
+    }
+
+    const combat = req.session.combat.combatInstance;
+    res.json({
+      inCombat: true,
+      state: combat.getState()
+    });
+
+  } catch (error) {
+    console.error('Combat state error:', error);
+    res.status(500).json({ error: 'Failed to get combat state' });
+  }
+});
+
+/**
+ * Perform combat action - Attack
+ * POST /api/combat/attack
+ */
+app.post('/api/combat/attack', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    if (!req.session.combat) {
+      return res.status(400).json({ error: 'No active combat' });
+    }
+
+    const combat = req.session.combat.combatInstance;
+    const result = combat.playerAttack();
+
+    // If combat ended, save results and clean up
+    if (result.victory || result.defeat) {
+      await handleCombatEnd(req.session, result);
+    } else {
+      // Save session with updated combat state
+      await new Promise((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    }
+
+    res.json(result);
+
+  } catch (error) {
+    console.error('Combat attack error:', error);
+    res.status(500).json({ error: 'Failed to perform attack', details: error.message });
+  }
+});
+
+/**
+ * Perform combat action - Use Skill
+ * POST /api/combat/skill
+ * Body: { skillId: string }
+ */
+app.post('/api/combat/skill', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const { skillId } = req.body;
+    if (!skillId) {
+      return res.status(400).json({ error: 'skillId is required' });
+    }
+
+    if (!req.session.combat) {
+      return res.status(400).json({ error: 'No active combat' });
+    }
+
+    const combat = req.session.combat.combatInstance;
+    const result = combat.playerSkill(skillId);
+
+    // If combat ended, save results and clean up
+    if (result.victory || result.defeat) {
+      await handleCombatEnd(req.session, result);
+    } else {
+      await new Promise((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    }
+
+    res.json(result);
+
+  } catch (error) {
+    console.error('Combat skill error:', error);
+    res.status(500).json({ error: 'Failed to use skill', details: error.message });
+  }
+});
+
+/**
+ * Perform combat action - Use Item
+ * POST /api/combat/item
+ * Body: { itemId: string }
+ */
+app.post('/api/combat/item', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const { itemId } = req.body;
+    if (!itemId) {
+      return res.status(400).json({ error: 'itemId is required' });
+    }
+
+    if (!req.session.combat) {
+      return res.status(400).json({ error: 'No active combat' });
+    }
+
+    const combat = req.session.combat.combatInstance;
+    const result = combat.playerUseItem(itemId);
+
+    if (result.victory || result.defeat) {
+      await handleCombatEnd(req.session, result);
+    } else {
+      await new Promise((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    }
+
+    res.json(result);
+
+  } catch (error) {
+    console.error('Combat item error:', error);
+    res.status(500).json({ error: 'Failed to use item', details: error.message });
+  }
+});
+
+/**
+ * Perform combat action - Flee
+ * POST /api/combat/flee
+ */
+app.post('/api/combat/flee', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    if (!req.session.combat) {
+      return res.status(400).json({ error: 'No active combat' });
+    }
+
+    const combat = req.session.combat.combatInstance;
+    const result = combat.playerFlee();
+
+    // Clean up combat session if fled successfully
+    if (result.success && result.state === Combat.STATES.FLED) {
+      delete req.session.combat;
+      await new Promise((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    } else {
+      await new Promise((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    }
+
+    res.json(result);
+
+  } catch (error) {
+    console.error('Combat flee error:', error);
+    res.status(500).json({ error: 'Failed to flee', details: error.message });
+  }
+});
+
+/**
+ * Helper function to handle combat end (victory/defeat)
+ * @param {Object} session - Express session
+ * @param {Object} result - Combat result
+ */
+async function handleCombatEnd(session, result) {
+  const { playerId, channelName } = session.combat;
+  const combat = session.combat.combatInstance;
+
+  if (result.victory) {
+    // Award rewards
+    const character = combat.character;
+    
+    // Add gold
+    character.gold += result.rewards.gold;
+
+    // Add items to inventory
+    for (const item of result.rewards.items) {
+      character.inventory.addItem(item.id, item.quantity || 1);
+    }
+
+    // Save updated character
+    const playerData = character.toObject();
+    await db.savePlayerProgress(playerId, channelName, playerData);
+  }
+
+  if (result.defeat) {
+    // Handle death (optional: respawn with penalty)
+    const character = combat.character;
+    character.current_hp = Math.floor(character.max_hp * 0.5); // Respawn with 50% HP
+    
+    // Optional: gold penalty
+    character.gold = Math.max(0, character.gold - Math.floor(character.gold * 0.1));
+
+    const playerData = character.toObject();
+    await db.savePlayerProgress(playerId, channelName, playerData);
+  }
+
+  // Clear combat from session
+  delete session.combat;
+  
+  await new Promise((resolve, reject) => {
+    session.save((err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
+// ==================== PROGRESSION ENDPOINTS ====================
+
+/**
+ * GET /api/progression/xp-info
+ * Get XP information for current level
+ */
+app.get('/api/progression/xp-info', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const progressionMgr = new ProgressionManager();
+    const nextLevelXP = progressionMgr.calculateXPToNextLevel(character.level);
+    const totalXP = progressionMgr.calculateTotalXPToLevel(character.level);
+
+    res.json({
+      success: true,
+      level: character.level,
+      currentXP: character.xp,
+      xpToNext: character.xpToNext,
+      xpProgress: ((character.xp / character.xpToNext) * 100).toFixed(1) + '%',
+      totalXPEarned: totalXP + character.xp
+    });
+  } catch (error) {
+    console.error('Error fetching XP info:', error);
+    res.status(500).json({ error: 'Failed to fetch XP information' });
+  }
+});
+
+/**
+ * POST /api/progression/add-xp
+ * Add XP to character (admin/testing endpoint)
+ */
+app.post('/api/progression/add-xp', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, amount } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+  if (!amount || amount < 1) return res.status(400).json({ error: 'Valid XP amount required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const progressionMgr = new ProgressionManager();
+    const result = progressionMgr.addXP(character, amount);
+
+    // Save updated character
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      ...result,
+      character: {
+        level: character.level,
+        xp: character.xp,
+        xpToNext: character.xpToNext,
+        hp: character.hp,
+        maxHp: character.maxHp,
+        skillPoints: character.skillPoints
+      }
+    });
+  } catch (error) {
+    console.error('Error adding XP:', error);
+    res.status(500).json({ error: 'Failed to add XP' });
+  }
+});
+
+/**
+ * POST /api/progression/death
+ * Handle character death
+ */
+app.post('/api/progression/death', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, isHardcore } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    // Get permanent stats from database
+    const permanentStats = await db.getPermanentStats(user.id) || {};
+
+    const progressionMgr = new ProgressionManager();
+    const deathResult = progressionMgr.handleDeath(character, isHardcore || false, permanentStats);
+
+    if (deathResult.characterDeleted) {
+      // Save permanent stats and delete character
+      await db.savePermanentStats(user.id, deathResult.permanentStatsToRetain);
+      await db.deleteCharacter(user.id, channel.toLowerCase());
+    } else {
+      // Save character with penalties
+      await db.saveCharacter(user.id, channel.toLowerCase(), character);
+    }
+
+    res.json({
+      success: true,
+      ...deathResult
+    });
+  } catch (error) {
+    console.error('Error handling death:', error);
+    res.status(500).json({ error: 'Failed to handle death' });
+  }
+});
+
+/**
+ * POST /api/progression/respawn
+ * Respawn character after death
+ */
+app.post('/api/progression/respawn', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const progressionMgr = new ProgressionManager();
+    const respawnResult = progressionMgr.respawn(character);
+
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      ...respawnResult
+    });
+  } catch (error) {
+    console.error('Error respawning:', error);
+    res.status(500).json({ error: 'Failed to respawn' });
+  }
+});
+
+/**
+ * GET /api/progression/passives
+ * Get all passives with unlock status
+ */
+app.get('/api/progression/passives', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const permanentStats = await db.getPermanentStats(user.id) || {};
+    const unlockedPassives = permanentStats.unlockedPassives || [];
+    const accountStats = permanentStats.accountStats || {};
+
+    const progressionMgr = new ProgressionManager();
+    const passives = progressionMgr.getAvailablePassives(character, accountStats, unlockedPassives);
+
+    res.json({
+      success: true,
+      passives,
+      accountStats
+    });
+  } catch (error) {
+    console.error('Error fetching passives:', error);
+    res.status(500).json({ error: 'Failed to fetch passives' });
+  }
+});
+
+/**
+ * POST /api/progression/unlock-passive
+ * Unlock a permanent passive
+ */
+app.post('/api/progression/unlock-passive', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, passiveId } = req.body;
+  if (!channel || !passiveId) {
+    return res.status(400).json({ error: 'Channel and passiveId required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const permanentStats = await db.getPermanentStats(user.id) || {};
+    const unlockedPassives = permanentStats.unlockedPassives || [];
+    const accountStats = permanentStats.accountStats || {};
+
+    // Check if already unlocked
+    if (unlockedPassives.includes(passiveId)) {
+      return res.status(400).json({ error: 'Passive already unlocked' });
+    }
+
+    const progressionMgr = new ProgressionManager();
+    const allPassives = [
+      ...(progressionMgr.passives.combat_passives || []),
+      ...(progressionMgr.passives.survival_passives || []),
+      ...(progressionMgr.passives.progression_passives || []),
+      ...(progressionMgr.passives.resource_passives || [])
+    ];
+
+    const passive = allPassives.find(p => p.id === passiveId);
+    if (!passive) {
+      return res.status(404).json({ error: 'Passive not found' });
+    }
+
+    // Check unlock requirements
+    const unlockStatus = progressionMgr.canUnlockPassive(passive, character, accountStats);
+    if (!unlockStatus.canUnlock) {
+      return res.status(400).json({ 
+        error: 'Cannot unlock passive',
+        message: unlockStatus.message
+      });
+    }
+
+    // Unlock passive
+    unlockedPassives.push(passiveId);
+    permanentStats.unlockedPassives = unlockedPassives;
+
+    await db.savePermanentStats(user.id, permanentStats);
+
+    res.json({
+      success: true,
+      message: `Unlocked ${passive.name}!`,
+      passive,
+      unlockedPassives
+    });
+  } catch (error) {
+    console.error('Error unlocking passive:', error);
+    res.status(500).json({ error: 'Failed to unlock passive' });
+  }
+});
+
+/**
+ * GET /api/progression/skills
+ * Get character skills and cooldown status
+ */
+app.get('/api/progression/skills', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const progressionMgr = new ProgressionManager();
+    const abilities = progressionMgr.getUnlockedAbilities(character.classType, character.level);
+
+    res.json({
+      success: true,
+      skillPoints: character.skillPoints || 0,
+      skills: character.skills.getAllSkills(),
+      abilities
+    });
+  } catch (error) {
+    console.error('Error fetching skills:', error);
+    res.status(500).json({ error: 'Failed to fetch skills' });
+  }
+});
+
+// ==================== END PROGRESSION ENDPOINTS ====================
+
+// ==================== EXPLORATION ENDPOINTS ====================
+
+/**
+ * GET /api/exploration/biomes
+ * Get all available biomes
+ */
+app.get('/api/exploration/biomes', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const explorationMgr = new ExplorationManager();
+    const biomes = explorationMgr.getAvailableBiomes(character.level);
+
+    res.json({
+      success: true,
+      currentLocation: character.location,
+      biomes
+    });
+  } catch (error) {
+    console.error('Error fetching biomes:', error);
+    res.status(500).json({ error: 'Failed to fetch biomes' });
+  }
+});
+
+/**
+ * GET /api/exploration/current
+ * Get current location information
+ */
+app.get('/api/exploration/current', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const explorationMgr = new ExplorationManager();
+    const currentBiome = explorationMgr.getBiome(character.location);
+
+    if (!currentBiome) {
+      return res.status(404).json({ error: 'Current location not found' });
+    }
+
+    // Get travel summary if traveling
+    const travelSummary = character.travelState ? 
+      explorationMgr.getTravelSummary(character.travelState) : null;
+
+    res.json({
+      success: true,
+      location: {
+        id: currentBiome.id,
+        name: currentBiome.name,
+        description: currentBiome.description,
+        dangerLevel: currentBiome.danger_level,
+        recommendedLevel: currentBiome.recommended_level,
+        environmentalEffects: currentBiome.environmental_effects
+      },
+      travelState: travelSummary,
+      canExplore: !character.inCombat && !character.travelState
+    });
+  } catch (error) {
+    console.error('Error fetching current location:', error);
+    res.status(500).json({ error: 'Failed to fetch current location' });
+  }
+});
+
+/**
+ * POST /api/exploration/travel/start
+ * Start travel to a new biome
+ */
+app.post('/api/exploration/travel/start', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, destination } = req.body;
+  if (!channel || !destination) {
+    return res.status(400).json({ error: 'Channel and destination required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    // Can't travel while in combat
+    if (character.inCombat) {
+      return res.status(400).json({ error: 'Cannot travel while in combat' });
+    }
+
+    // Can't travel if already traveling
+    if (character.travelState && character.travelState.inTravel) {
+      return res.status(400).json({ error: 'Already traveling' });
+    }
+
+    const explorationMgr = new ExplorationManager();
+    const result = explorationMgr.startTravel(character, destination);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.message });
+    }
+
+    // Save travel state
+    character.travelState = result.travelState;
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      message: result.message,
+      warnings: result.warnings,
+      travelState: explorationMgr.getTravelSummary(result.travelState)
+    });
+  } catch (error) {
+    console.error('Error starting travel:', error);
+    res.status(500).json({ error: 'Failed to start travel' });
+  }
+});
+
+/**
+ * POST /api/exploration/travel/advance
+ * Advance one move during travel
+ */
+app.post('/api/exploration/travel/advance', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    if (!character.travelState || !character.travelState.inTravel) {
+      return res.status(400).json({ error: 'Not currently traveling' });
+    }
+
+    const explorationMgr = new ExplorationManager();
+    const result = explorationMgr.advanceTravel(character.travelState);
+
+    // Check if arrived
+    if (result.arrived) {
+      character.location = character.travelState.to;
+      character.travelState = null;
+      await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+      return res.json({
+        success: true,
+        arrived: true,
+        message: result.message,
+        newLocation: result.destination
+      });
+    }
+
+    // Check for encounter
+    if (result.encounter) {
+      // Save state before encounter
+      await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+      return res.json({
+        success: true,
+        arrived: false,
+        encounter: result.encounter,
+        message: result.message,
+        travelState: explorationMgr.getTravelSummary(character.travelState)
+      });
+    }
+
+    // Continue travel
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      arrived: false,
+      message: result.message,
+      travelState: explorationMgr.getTravelSummary(character.travelState)
+    });
+  } catch (error) {
+    console.error('Error advancing travel:', error);
+    res.status(500).json({ error: 'Failed to advance travel' });
+  }
+});
+
+/**
+ * POST /api/exploration/travel/cancel
+ * Cancel current travel
+ */
+app.post('/api/exploration/travel/cancel', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    if (!character.travelState || !character.travelState.inTravel) {
+      return res.status(400).json({ error: 'Not currently traveling' });
+    }
+
+    const explorationMgr = new ExplorationManager();
+    const result = explorationMgr.cancelTravel(character.travelState);
+
+    character.travelState = null;
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      message: result.message,
+      progressLost: result.progressLost
+    });
+  } catch (error) {
+    console.error('Error canceling travel:', error);
+    res.status(500).json({ error: 'Failed to cancel travel' });
+  }
+});
+
+/**
+ * POST /api/exploration/explore
+ * Explore current biome (find sub-locations and encounters)
+ */
+app.post('/api/exploration/explore', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    // Can't explore while in combat or traveling
+    if (character.inCombat) {
+      return res.status(400).json({ error: 'Cannot explore while in combat' });
+    }
+
+    if (character.travelState && character.travelState.inTravel) {
+      return res.status(400).json({ error: 'Cannot explore while traveling' });
+    }
+
+    const explorationMgr = new ExplorationManager();
+    const result = explorationMgr.exploreLocation(character.location);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.message });
+    }
+
+    // Save character state
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      message: result.message,
+      subLocation: result.subLocation,
+      encounter: result.encounter
+    });
+  } catch (error) {
+    console.error('Error exploring:', error);
+    res.status(500).json({ error: 'Failed to explore' });
+  }
+});
+
+/**
+ * GET /api/exploration/travel-info
+ * Get travel information between two biomes
+ */
+app.get('/api/exploration/travel-info', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, from, to } = req.query;
+  if (!channel || !to) {
+    return res.status(400).json({ error: 'Channel and destination required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const fromBiome = from || character.location;
+    const explorationMgr = new ExplorationManager();
+    const travelInfo = explorationMgr.calculateTravelDistance(fromBiome, to);
+
+    res.json({
+      success: true,
+      from: fromBiome,
+      to: to,
+      ...travelInfo
+    });
+  } catch (error) {
+    console.error('Error getting travel info:', error);
+    res.status(500).json({ error: 'Failed to get travel info' });
+  }
+});
+
+// ==================== END EXPLORATION ENDPOINTS ====================
+
+// ==================== END COMBAT ENDPOINTS ====================
 
 app.get('/adventure', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
