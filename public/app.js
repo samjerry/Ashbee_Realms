@@ -1,5 +1,22 @@
 async function $(sel){ return document.querySelector(sel); }
 
+// Get channel from URL parameter
+function getChannelFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('channel');
+}
+
+// Store channel in session storage for persistence
+function getChannel() {
+  let channel = getChannelFromURL();
+  if (channel) {
+    sessionStorage.setItem('gameChannel', channel);
+  } else {
+    channel = sessionStorage.getItem('gameChannel');
+  }
+  return channel;
+}
+
 // Theme management
 function initThemes() {
   const savedTheme = localStorage.getItem('theme') || 'greek';
@@ -57,11 +74,18 @@ async function logout(){
 }
 
 async function fightBoss(){
+  const channel = getChannel();
+  if (!channel) {
+    const log = await $("#log");
+    log.textContent = 'Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
+    return;
+  }
+
   const res = await fetch('/api/action', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'same-origin',
-    body: JSON.stringify({ actionId: 'fightBoss' })
+    body: JSON.stringify({ actionId: 'fightBoss', channel })
   });
   const data = await res.json();
   const log = await $("#log");
@@ -73,8 +97,14 @@ async function fightBoss(){
 }
 
 async function loadPlayerProgress() {
+  const channel = getChannel();
+  if (!channel) {
+    console.warn('No channel specified for loading progress');
+    return null;
+  }
+
   try {
-    const response = await fetch('/api/player/progress');
+    const response = await fetch(`/api/player/progress?channel=${encodeURIComponent(channel)}`);
     if (response.ok) {
       const data = await response.json();
       return data.progress;
@@ -86,11 +116,17 @@ async function loadPlayerProgress() {
 }
 
 async function savePlayerProgress(playerData) {
+  const channel = getChannel();
+  if (!channel) {
+    console.warn('No channel specified for saving progress');
+    return false;
+  }
+
   try {
-    const response = await fetch('/api/player/progress', {
+    const response = await fetch(`/api/player/progress?channel=${encodeURIComponent(channel)}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(playerData)
+      body: JSON.stringify({ progress: playerData, channel })
     });
     return response.ok;
   } catch (err) {
@@ -102,6 +138,17 @@ async function savePlayerProgress(playerData) {
 document.addEventListener('DOMContentLoaded', async () =>{
   initThemes();
   await updateUser();
+  
+  // Display channel info if available
+  const channel = getChannel();
+  if (channel) {
+    const channelInfoEl = document.getElementById('channelInfo');
+    if (channelInfoEl) {
+      channelInfoEl.textContent = `Playing on ${channel}'s channel`;
+      channelInfoEl.style.display = 'block';
+    }
+  }
+  
   (await $('#loginBtn')).addEventListener('click', loginWithTwitch);
   (await $('#fightBtn')).addEventListener('click', fightBoss);
 });

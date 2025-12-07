@@ -161,15 +161,19 @@ app.get('/api/player/progress', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
+  // Get channel from query parameter (required for multi-channel support)
+  const channelName = req.query.channel;
+  if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
+
   try {
-    let progress = await db.loadPlayerProgress(user.id);
+    let progress = await db.loadPlayerProgress(user.id, channelName.toLowerCase());
     
-    // If no progress exists, create a new player
+    // If no progress exists, create a new player for this channel
     if (!progress) {
-      progress = await db.initializeNewPlayer(user.id, user.displayName, "Town Square", 100);
+      progress = await db.initializeNewPlayer(user.id, channelName.toLowerCase(), user.displayName, "Town Square", 100);
     }
 
-    res.json({ progress });
+    res.json({ progress, channel: channelName });
   } catch (err) {
     console.error('Load progress error:', err);
     res.status(500).json({ error: 'Failed to load progress' });
@@ -181,9 +185,13 @@ app.post('/api/player/progress', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
+  // Get channel from body or query parameter
+  const channelName = req.body.channel || req.query.channel;
+  if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
+
   try {
-    const playerData = req.body;
-    await db.savePlayerProgress(user.id, playerData);
+    const playerData = req.body.progress || req.body;
+    await db.savePlayerProgress(user.id, channelName.toLowerCase(), playerData);
     res.json({ status: 'ok', message: 'Progress saved' });
   } catch (err) {
     console.error('Save progress error:', err);
@@ -195,19 +203,24 @@ app.post('/api/player/progress', async (req, res) => {
 app.post('/api/action', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
-  const { actionId, playerState } = req.body;
+  const { actionId, playerState, channel } = req.body;
 
-  // Load current progress
-  let progress = await db.loadPlayerProgress(user.id);
+  // Channel is required for multi-channel support
+  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+  const channelName = channel.toLowerCase();
+
+  // Load current progress for this specific channel
+  let progress = await db.loadPlayerProgress(user.id, channelName);
   if (!progress) {
-    progress = await db.initializeNewPlayer(user.id, user.displayName);
+    progress = await db.initializeNewPlayer(user.id, channelName, user.displayName);
   }
 
   // Handle actions and update progress
   if (actionId === 'fightBoss') {
     const bossName = 'The Nameless One';
     if (canAnnounce(user.id)) {
-      rawAnnounce(`${user.displayName} is fighting ${bossName}! 🔥`);
+      // Announce to specific channel
+      rawAnnounce(`${user.displayName} is fighting ${bossName}! 🔥`, channelName);
     }
     
     // Update player state (example: reduce HP, add XP, etc.)
@@ -215,8 +228,8 @@ app.post('/api/action', async (req, res) => {
     progress.xp += 50;
     progress.hp = Math.max(0, progress.hp - 20);
     
-    // Save updated progress
-    await db.savePlayerProgress(user.id, progress);
+    // Save updated progress for this channel
+    await db.savePlayerProgress(user.id, channelName, progress);
     
     return res.json({ 
       status: 'ok', 

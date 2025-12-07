@@ -37,7 +37,8 @@ function initSQLite() {
     );
 
     CREATE TABLE IF NOT EXISTS player_progress (
-      player_id TEXT PRIMARY KEY,
+      player_id TEXT NOT NULL,
+      channel_name TEXT NOT NULL,
       name TEXT NOT NULL,
       location TEXT NOT NULL,
       level INTEGER DEFAULT 1,
@@ -56,6 +57,7 @@ function initSQLite() {
       in_combat INTEGER DEFAULT 0,
       equipped TEXT DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"flavor1":null,"flavor2":null,"flavor3":null}',
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
     );
   `);
@@ -90,7 +92,8 @@ async function initPostgres() {
     );
 
     CREATE TABLE IF NOT EXISTS player_progress (
-      player_id TEXT PRIMARY KEY,
+      player_id TEXT NOT NULL,
+      channel_name TEXT NOT NULL,
       name TEXT NOT NULL,
       location TEXT NOT NULL,
       level INTEGER DEFAULT 1,
@@ -109,10 +112,12 @@ async function initPostgres() {
       in_combat BOOLEAN DEFAULT false,
       equipped JSONB DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"flavor1":null,"flavor2":null,"flavor3":null}',
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
     );
 
     CREATE INDEX IF NOT EXISTS idx_player_progress_player_id ON player_progress(player_id);
+    CREATE INDEX IF NOT EXISTS idx_player_progress_channel ON player_progress(channel_name);
   `);
 
   db = pool;
@@ -153,9 +158,10 @@ async function all(sql, params = []) {
 /**
  * Save or update player progress
  * @param {string} playerId - The player's unique ID
+ * @param {string} channelName - The streamer's channel name (lowercase)
  * @param {object} playerData - Player data object with all fields
  */
-async function savePlayerProgress(playerId, playerData) {
+async function savePlayerProgress(playerId, channelName, playerData) {
   const {
     name,
     location,
@@ -184,14 +190,14 @@ async function savePlayerProgress(playerId, playerData) {
   if (dbType === 'sqlite') {
     await query(`
       INSERT INTO player_progress (
-        player_id, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+        player_id, channel_name, name, location, level, xp, xp_to_next, max_hp, hp, gold,
         type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
-      ON CONFLICT(player_id) DO UPDATE SET
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+      ON CONFLICT(player_id, channel_name) DO UPDATE SET
         name=?, location=?, level=?, xp=?, xp_to_next=?, max_hp=?, hp=?, gold=?,
         type=?, inventory=?, pending=?, combat=?, skill_cd=?, step=?, is_player=?, in_combat=?, equipped=?, updated_at=datetime('now')
     `, [
-      playerId, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+      playerId, channelName, name, location, level, xp, xp_to_next, max_hp, hp, gold,
       type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
       skill_cd, step, is_player ? 1 : 0, in_combat ? 1 : 0, JSON.stringify(equipped),
       // Update values
@@ -202,14 +208,14 @@ async function savePlayerProgress(playerId, playerData) {
   } else {
     await query(`
       INSERT INTO player_progress (
-        player_id, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+        player_id, channel_name, name, location, level, xp, xp_to_next, max_hp, hp, gold,
         type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped, updated_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, NOW())
-      ON CONFLICT(player_id) DO UPDATE SET
-        name=$2, location=$3, level=$4, xp=$5, xp_to_next=$6, max_hp=$7, hp=$8, gold=$9,
-        type=$10, inventory=$11, pending=$12, combat=$13, skill_cd=$14, step=$15, is_player=$16, in_combat=$17, equipped=$18, updated_at=NOW()
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, NOW())
+      ON CONFLICT(player_id, channel_name) DO UPDATE SET
+        name=$3, location=$4, level=$5, xp=$6, xp_to_next=$7, max_hp=$8, hp=$9, gold=$10,
+        type=$11, inventory=$12, pending=$13, combat=$14, skill_cd=$15, step=$16, is_player=$17, in_combat=$18, equipped=$19, updated_at=NOW()
     `, [
-      playerId, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+      playerId, channelName, name, location, level, xp, xp_to_next, max_hp, hp, gold,
       type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
       skill_cd, step, is_player, in_combat, JSON.stringify(equipped)
     ]);
@@ -219,12 +225,13 @@ async function savePlayerProgress(playerId, playerData) {
 /**
  * Load player progress from database
  * @param {string} playerId - The player's unique ID
+ * @param {string} channelName - The streamer's channel name (lowercase)
  * @returns {object|null} Player data or null if not found
  */
-async function loadPlayerProgress(playerId) {
+async function loadPlayerProgress(playerId, channelName) {
   const result = dbType === 'sqlite'
-    ? await query('SELECT * FROM player_progress WHERE player_id = ?', [playerId])
-    : await query('SELECT * FROM player_progress WHERE player_id = $1', [playerId]);
+    ? await query('SELECT * FROM player_progress WHERE player_id = ? AND channel_name = ?', [playerId, channelName])
+    : await query('SELECT * FROM player_progress WHERE player_id = $1 AND channel_name = $2', [playerId, channelName]);
 
   if (!result.rows || result.rows.length === 0) {
     return null;
@@ -258,11 +265,12 @@ async function loadPlayerProgress(playerId) {
 /**
  * Initialize new player with default values
  * @param {string} playerId - The player's unique ID
+ * @param {string} channelName - The streamer's channel name (lowercase)
  * @param {string} playerName - The player's display name
  * @param {string} startLocation - Starting location
  * @param {number} baseMaxHp - Base max HP value
  */
-async function initializeNewPlayer(playerId, playerName, startLocation = "Town Square", baseMaxHp = 100) {
+async function initializeNewPlayer(playerId, channelName, playerName, startLocation = "Town Square", baseMaxHp = 100) {
   const defaultPlayer = {
     name: playerName,
     location: startLocation,
@@ -288,7 +296,7 @@ async function initializeNewPlayer(playerId, playerName, startLocation = "Town S
     }
   };
 
-  await savePlayerProgress(playerId, defaultPlayer);
+  await savePlayerProgress(playerId, channelName, defaultPlayer);
   return defaultPlayer;
 }
 
