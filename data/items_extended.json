@@ -1,0 +1,1136 @@
+{
+  "consumables": {
+    "common": [
+      {
+        "id": "potion",
+        "name": "Potion",
+        "description": "A basic healing potion",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 6,
+          "instant": true
+        },
+        "value": 3,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "bandage",
+        "name": "Bandage",
+        "description": "Stops bleeding and heals minor wounds",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 3,
+          "instant": true
+        },
+        "value": 2,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "bread",
+        "name": "Bread",
+        "description": "Stale bread that provides minor healing",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 2,
+          "instant": true
+        },
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "apple",
+        "name": "Apple",
+        "description": "A crisp red apple",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 2,
+          "instant": true
+        },
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "water_flask",
+        "name": "Water Flask",
+        "description": "Clean water that refreshes you",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 1,
+          "instant": true
+        },
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "mushroom",
+        "name": "Mushroom",
+        "description": "An edible forest mushroom",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 1,
+          "instant": true
+        },
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "berry",
+        "name": "Berry",
+        "description": "Sweet wild berries",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 1,
+          "instant": true
+        },
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "fish",
+        "name": "Fish",
+        "description": "Fresh caught fish",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 3,
+          "instant": true
+        },
+        "value": 2,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "acorn",
+        "name": "Acorn",
+        "description": "A nutritious tree nut",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 1,
+          "instant": true
+        },
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "nut",
+        "name": "Nut",
+        "description": "A hard-shelled tree nut",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 1,
+          "instant": true
+        },
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "dried_meat",
+        "name": "Dried Meat",
+        "description": "Preserved meat rations",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 4,
+          "instant": true
+        },
+        "value": 3,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "cheese",
+        "name": "Cheese",
+        "description": "Aged cheese wheel",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 3,
+          "instant": true
+        },
+        "value": 2,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "honey",
+        "name": "Honey",
+        "description": "Sweet golden honey",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 4,
+          "instant": true
+        },
+        "value": 4,
+        "stackable": true,
+        "max_stack": 50
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "minor_mana_potion",
+        "name": "Minor Mana Potion",
+        "description": "Restores a little magical energy",
+        "rarity": "uncommon",
+        "usage": {
+          "type": "cooldown_reduction",
+          "amount": 1
+        },
+        "value": 10,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "tonic_of_vigor",
+        "name": "Tonic of Vigor",
+        "description": "Brief surge of strength",
+        "rarity": "uncommon",
+        "usage": {
+          "type": "buff",
+          "stat": "attack",
+          "amount": 2,
+          "duration": 4
+        },
+        "value": 14,
+        "stackable": true,
+        "max_stack": 20
+      },
+      {
+        "id": "smoke_vial",
+        "name": "Smoke Vial",
+        "description": "Conceals movement for a moment",
+        "rarity": "uncommon",
+        "usage": {
+          "type": "stealth",
+          "duration": 2
+        },
+        "value": 12,
+        "stackable": true,
+        "max_stack": 20
+      }
+    ],
+    "rare": [
+      {
+        "id": "greater_potion",
+        "name": "Greater Potion",
+        "description": "A powerful healing potion",
+        "rarity": "rare",
+        "usage": {
+          "type": "heal",
+          "amount": 10,
+          "instant": true
+        },
+        "value": 15,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "elixir_of_strength",
+        "name": "Elixir of Strength",
+        "description": "Increases damage for several rounds",
+        "rarity": "rare",
+        "usage": {
+          "type": "buff",
+          "stat": "attack",
+          "amount": 3,
+          "duration": 5
+        },
+        "value": 20,
+        "stackable": true,
+        "max_stack": 20
+      },
+      {
+        "id": "mana_potion",
+        "name": "Mana Potion",
+        "description": "Restores magical energy",
+        "rarity": "rare",
+        "usage": {
+          "type": "cooldown_reduction",
+          "amount": 2
+        },
+        "value": 18,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "magic_scroll",
+        "name": "Magic Scroll",
+        "description": "Contains a powerful spell",
+        "rarity": "rare",
+        "usage": {
+          "type": "damage",
+          "amount": 12,
+          "instant": true
+        },
+        "value": 25,
+        "stackable": true,
+        "max_stack": 20
+      },
+      {
+        "id": "antidote",
+        "name": "Antidote",
+        "description": "Cures poison and heals significantly",
+        "rarity": "rare",
+        "usage": {
+          "type": "cure_and_heal",
+          "removes": ["poison"],
+          "heal_amount": 8
+        },
+        "value": 22,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "blessed_water",
+        "name": "Blessed Water",
+        "description": "Holy water that removes curses",
+        "rarity": "rare",
+        "usage": {
+          "type": "cure_and_heal",
+          "removes": ["curse"],
+          "heal_amount": 6
+        },
+        "value": 30,
+        "stackable": true,
+        "max_stack": 25
+      },
+      {
+        "id": "frost_potion",
+        "name": "Frost Potion",
+        "description": "Deals ice damage to enemies",
+        "rarity": "rare",
+        "usage": {
+          "type": "damage",
+          "damage_type": "ice",
+          "amount": 15,
+          "instant": true
+        },
+        "value": 28,
+        "stackable": true,
+        "max_stack": 20
+      },
+      {
+        "id": "invisibility_potion",
+        "name": "Invisibility Potion",
+        "description": "Grants temporary invisibility",
+        "rarity": "rare",
+        "usage": {
+          "type": "stealth",
+          "duration": 3
+        },
+        "value": 45,
+        "stackable": true,
+        "max_stack": 10
+      },
+      {
+        "id": "berserker_potion",
+        "name": "Berserker Potion",
+        "description": "Increases attack but reduces defense",
+        "rarity": "rare",
+        "usage": {
+          "type": "buff_debuff",
+          "buff_stat": "attack",
+          "buff_amount": 8,
+          "debuff_stat": "defense",
+          "debuff_amount": 2,
+          "duration": 6
+        },
+        "value": 35,
+        "stackable": true,
+        "max_stack": 15
+      },
+      {
+        "id": "scroll_of_fireball",
+        "name": "Scroll of Fireball",
+        "description": "Unleashes a devastating fireball",
+        "rarity": "rare",
+        "usage": {
+          "type": "damage",
+          "damage_type": "fire",
+          "amount": 20,
+          "instant": true
+        },
+        "value": 40,
+        "stackable": true,
+        "max_stack": 10
+      },
+      {
+        "id": "elixir_of_speed",
+        "name": "Elixir of Speed",
+        "description": "Increases attack speed temporarily",
+        "rarity": "rare",
+        "usage": {
+          "type": "buff",
+          "stat": "agility",
+          "amount": 2,
+          "duration": 8
+        },
+        "value": 38,
+        "stackable": true,
+        "max_stack": 15
+      },
+      {
+        "id": "summoning_stone",
+        "name": "Summoning Stone",
+        "description": "Summons a spirit ally for combat",
+        "rarity": "rare",
+        "usage": {
+          "type": "summon",
+          "ally_type": "spirit",
+          "duration": 5
+        },
+        "value": 80,
+        "stackable": true,
+        "max_stack": 5
+      },
+      {
+        "id": "scroll_of_healing",
+        "name": "Scroll of Healing",
+        "description": "Powerful healing magic",
+        "rarity": "rare",
+        "usage": {
+          "type": "cure_and_heal",
+          "removes": ["all"],
+          "heal_amount": 15
+        },
+        "value": 50,
+        "stackable": true,
+        "max_stack": 10
+      },
+      {
+        "id": "war_paint",
+        "name": "War Paint",
+        "description": "Intimidating face paint",
+        "rarity": "rare",
+        "usage": {
+          "type": "buff",
+          "stat": "attack",
+          "amount": 2,
+          "duration": 10
+        },
+        "value": 25,
+        "stackable": true,
+        "max_stack": 20
+      },
+      {
+        "id": "silver_arrow",
+        "name": "Silver Arrow",
+        "description": "Blessed arrow effective against undead",
+        "rarity": "rare",
+        "usage": {
+          "type": "damage",
+          "damage_type": "holy",
+          "amount": 15,
+          "bonus_vs": "undead",
+          "bonus_amount": 25
+        },
+        "value": 35,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "smoke_bomb",
+        "name": "Smoke Bomb",
+        "description": "Creates concealing smoke",
+        "rarity": "rare",
+        "usage": {
+          "type": "escape",
+          "chance": 0.5
+        },
+        "value": 30,
+        "stackable": true,
+        "max_stack": 10
+      }
+    ],
+    "epic": [
+      {
+        "id": "supreme_healing_potion",
+        "name": "Supreme Healing Potion",
+        "description": "Fully restores health instantly",
+        "rarity": "epic",
+        "usage": {
+          "type": "heal",
+          "amount": 50,
+          "instant": true
+        },
+        "value": 100,
+        "stackable": true,
+        "max_stack": 25
+      },
+      {
+        "id": "phoenix_feather",
+        "name": "Phoenix Feather",
+        "description": "Resurrects with full health if you die",
+        "rarity": "epic",
+        "usage": {
+          "type": "auto_revive",
+          "hp_percent": 1.0,
+          "passive": true
+        },
+        "value": 800,
+        "stackable": true,
+        "max_stack": 5
+      },
+      {
+        "id": "time_crystal",
+        "name": "Time Crystal",
+        "description": "Grants an extra turn in combat",
+        "rarity": "epic",
+        "usage": {
+          "type": "extra_turn",
+          "instant": true
+        },
+        "value": 500,
+        "stackable": true,
+        "max_stack": 3
+      },
+      {
+        "id": "elixir_of_power",
+        "name": "Elixir of Power",
+        "description": "Permanently increases maximum health",
+        "rarity": "epic",
+        "usage": {
+          "type": "permanent_stat",
+          "stat": "max_hp",
+          "amount": 10
+        },
+        "value": 750,
+        "stackable": true,
+        "max_stack": 10
+      },
+      {
+        "id": "demon_blood",
+        "name": "Demon Blood",
+        "description": "Grants dark power at a cost",
+        "rarity": "epic",
+        "usage": {
+          "type": "buff_debuff",
+          "buff_stat": "attack",
+          "buff_amount": 15,
+          "debuff_type": "hp_drain",
+          "debuff_amount": 1,
+          "duration": 10
+        },
+        "value": 300,
+        "stackable": true,
+        "max_stack": 5
+      },
+      {
+        "id": "angel_wing",
+        "name": "Angel Wing",
+        "description": "Provides divine protection",
+        "rarity": "epic",
+        "usage": {
+          "type": "heal_and_shield",
+          "heal_amount": 30,
+          "shield_duration": 5
+        },
+        "value": 400,
+        "stackable": true,
+        "max_stack": 5
+      },
+      {
+        "id": "elixir_of_transcendence",
+        "name": "Elixir of Transcendence",
+        "description": "Temporarily grants godlike powers",
+        "rarity": "epic",
+        "usage": {
+          "type": "buff_and_regen",
+          "buff_stat": "all",
+          "buff_amount": 25,
+          "regen_amount": 10,
+          "duration": 5
+        },
+        "value": 900,
+        "stackable": true,
+        "max_stack": 3
+      },
+      {
+        "id": "crystal_heart",
+        "name": "Crystal Heart",
+        "description": "Replaces your heart with pure energy",
+        "rarity": "epic",
+        "usage": {
+          "type": "permanent_stat",
+          "stat": "max_hp",
+          "amount": 25
+        },
+        "value": 1200,
+        "stackable": true,
+        "max_stack": 3
+      }
+    ],
+    "legendary": [
+      {
+        "id": "world_tree_essence",
+        "name": "World Tree Essence",
+        "description": "Essence from the tree that supports all worlds",
+        "rarity": "legendary",
+        "usage": {
+          "type": "full_restore_and_buff",
+          "heal_full": true,
+          "max_hp_bonus": 100,
+          "level_bonus": 5
+        },
+        "value": 15000,
+        "stackable": true,
+        "max_stack": 3
+      },
+      {
+        "id": "ambrosia",
+        "name": "Ambrosia",
+        "description": "Food of the gods, grants temporary immortality",
+        "rarity": "legendary",
+        "usage": {
+          "type": "full_buff",
+          "heal_full": true,
+          "invulnerability_duration": 10
+        },
+        "value": 30000,
+        "stackable": true,
+        "max_stack": 2
+      },
+      {
+        "id": "genesis_crystal",
+        "name": "Genesis Crystal",
+        "description": "Contains the power of creation itself",
+        "rarity": "legendary",
+        "usage": {
+          "type": "special",
+          "effect": "create_world"
+        },
+        "value": 50000,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ],
+    "mythic": [
+      {
+        "id": "nectar_of_ascension",
+        "name": "Nectar of Ascension",
+        "description": "Transforms the drinker into a deity",
+        "rarity": "mythic",
+        "usage": {
+          "type": "ascend",
+          "max_hp_bonus": 1000,
+          "all_stats_bonus": 100
+        },
+        "value": 2000000,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "elixir_of_eternity",
+        "name": "Elixir of Eternity",
+        "description": "Grants true immortality beyond death itself",
+        "rarity": "mythic",
+        "usage": {
+          "type": "true_immortality",
+          "passive": true
+        },
+        "value": 10000000,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "soul_of_the_multiverse",
+        "name": "Soul of the Multiverse",
+        "description": "Contains the collective consciousness of all realities",
+        "rarity": "mythic",
+        "usage": {
+          "type": "special",
+          "effect": "multiverse_control"
+        },
+        "value": 25000000,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ]
+  },
+  "materials": {
+    "common": [
+      {
+        "id": "herb",
+        "name": "Herb",
+        "description": "A common herb found in the wild",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "coin",
+        "name": "Coin",
+        "description": "A simple copper coin",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "feather",
+        "name": "Feather",
+        "description": "A light feather from a forest bird",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "stone",
+        "name": "Stone",
+        "description": "A smooth river stone",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "rope",
+        "name": "Rope",
+        "description": "Useful rope for various purposes",
+        "rarity": "common",
+        "value": 3,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "copper_ore",
+        "name": "Copper Ore",
+        "description": "Raw copper that can be smelted",
+        "rarity": "common",
+        "value": 3,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "iron_ore",
+        "name": "Iron Ore",
+        "description": "Valuable iron ore",
+        "rarity": "common",
+        "value": 5,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "clay",
+        "name": "Clay",
+        "description": "Soft clay for crafting",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "bone",
+        "name": "Bone",
+        "description": "A weathered animal bone",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "cloth",
+        "name": "Cloth",
+        "description": "Simple woven cloth",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "thread",
+        "name": "Thread",
+        "description": "Strong thread for sewing",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "salt",
+        "name": "Salt",
+        "description": "Precious salt for preserving food",
+        "rarity": "common",
+        "value": 4,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "flint",
+        "name": "Flint",
+        "description": "Creates sparks to start fires",
+        "rarity": "common",
+        "value": 3,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "leather_scraps",
+        "name": "Leather Scraps",
+        "description": "Pieces of worn leather",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "wood_chips",
+        "name": "Wood Chips",
+        "description": "Small pieces of carved wood",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "bark",
+        "name": "Bark",
+        "description": "Tree bark with medicinal properties",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "moss",
+        "name": "Moss",
+        "description": "Soft green moss",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "spider_web",
+        "name": "Spider Web",
+        "description": "Sticky spider silk",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "sand",
+        "name": "Sand",
+        "description": "Fine grains of weathered rock",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "seashell",
+        "name": "Seashell",
+        "description": "A beautiful spiral shell",
+        "rarity": "common",
+        "value": 3,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "iron_nail",
+        "name": "Iron Nail",
+        "description": "A sturdy iron nail",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "glass_shard",
+        "name": "Glass Shard",
+        "description": "A sharp piece of broken glass",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "ink",
+        "name": "Ink",
+        "description": "Black writing ink",
+        "rarity": "common",
+        "value": 3,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "oil",
+        "name": "Oil",
+        "description": "Lamp oil for burning",
+        "rarity": "common",
+        "value": 3,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "wax",
+        "name": "Wax",
+        "description": "Natural beeswax",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "coal",
+        "name": "Coal",
+        "description": "Black coal for fuel",
+        "rarity": "common",
+        "value": 3,
+        "stackable": true,
+        "max_stack": 999
+      },
+      {
+        "id": "charcoal",
+        "name": "Charcoal",
+        "description": "Burned wood charcoal",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 999
+      }
+    ],
+    "uncommon": [],
+    "rare": [
+      {
+        "id": "meteor_fragment",
+        "name": "Meteor Fragment",
+        "description": "A piece of a fallen star",
+        "rarity": "rare",
+        "value": 350,
+        "stackable": true,
+        "max_stack": 10
+      }
+    ],
+    "epic": [
+      {
+        "id": "void_crystal",
+        "name": "Void Crystal",
+        "description": "A crystal from the space between worlds",
+        "rarity": "epic",
+        "value": 400,
+        "stackable": true,
+        "max_stack": 10
+      },
+      {
+        "id": "soul_gem",
+        "name": "Soul Gem",
+        "description": "Contains the essence of a powerful spirit",
+        "rarity": "epic",
+        "value": 600,
+        "stackable": true,
+        "max_stack": 5
+      },
+      {
+        "id": "demon_horn",
+        "name": "Demon Horn",
+        "description": "Horn from a greater demon",
+        "rarity": "epic",
+        "value": 700,
+        "stackable": true,
+        "max_stack": 5
+      }
+    ],
+    "legendary": [
+      {
+        "id": "dragon_heart",
+        "name": "Dragon Heart",
+        "description": "The still-beating heart of an ancient dragon",
+        "rarity": "legendary",
+        "value": 12000,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "philosopher_stone",
+        "name": "Philosopher's Stone",
+        "description": "The ultimate alchemical creation",
+        "rarity": "legendary",
+        "value": 10000,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ],
+    "mythic": [
+      {
+        "id": "primordial_essence",
+        "name": "Primordial Essence",
+        "description": "The fundamental building block of all creation",
+        "rarity": "mythic",
+        "value": 5000000,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ]
+  },
+  "trinkets": {
+    "common": [
+      {
+        "id": "torch",
+        "name": "Torch",
+        "description": "Provides light in dark places",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "empty_bottle",
+        "name": "Empty Bottle",
+        "description": "Could be useful for storing liquids",
+        "rarity": "common",
+        "value": 1,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "candle",
+        "name": "Candle",
+        "description": "A wax candle for light",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "torn_map",
+        "name": "Torn Map",
+        "description": "A partially readable old map",
+        "rarity": "common",
+        "value": 4,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "soap",
+        "name": "Soap",
+        "description": "Basic cleaning soap",
+        "rarity": "common",
+        "value": 2,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "blanket",
+        "name": "Blanket",
+        "description": "A warm woolen blanket",
+        "rarity": "common",
+        "value": 8,
+        "stackable": false,
+        "max_stack": 5
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "lucky_charm",
+        "name": "Lucky Charm",
+        "description": "A coin with a hole—often rubbed",
+        "rarity": "uncommon",
+        "passive": {
+          "crit_chance": 0.03
+        },
+        "value": 18,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "night_scout_lens",
+        "name": "Night-Scout Lens",
+        "description": "Polished glass that gathers starlight",
+        "rarity": "uncommon",
+        "passive": {
+          "night_vision": true,
+          "stealth_bonus": 0.05
+        },
+        "value": 22,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ],
+    "rare": [
+      {
+        "id": "mystic_gem",
+        "name": "Mystic Gem",
+        "description": "A gem that pulses with magical energy",
+        "rarity": "rare",
+        "value": 60,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "lockpick_set",
+        "name": "Lockpick Set",
+        "description": "Tools for opening locked containers",
+        "rarity": "rare",
+        "value": 30,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "golden_chalice",
+        "name": "Golden Chalice",
+        "description": "A valuable ceremonial cup",
+        "rarity": "rare",
+        "value": 90,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "magic_mirror",
+        "name": "Magic Mirror",
+        "description": "Shows glimpses of the future",
+        "rarity": "rare",
+        "value": 120,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ],
+    "epic": [],
+    "legendary": [
+      {
+        "id": "reality_anchor",
+        "name": "Reality Anchor",
+        "description": "Prevents reality from being altered",
+        "rarity": "legendary",
+        "passive": {
+          "reality_protection": true
+        },
+        "value": 18000,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ],
+    "mythic": [
+      {
+        "id": "reality_engine",
+        "name": "Reality Engine",
+        "description": "A device that can rewrite the laws of physics",
+        "rarity": "mythic",
+        "value": 8000000,
+        "stackable": false,
+        "max_stack": 1
+      }
+    ]
+  }
+}

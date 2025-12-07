@@ -1,0 +1,416 @@
+{
+  "dialogues": {
+    "character_creation": {
+      "npc_id": "mysterious_guide",
+      "name": "Mysterious Guide",
+      "greeting": "Welcome, traveler. Before you step into the realm of Ashbee, you must choose your path...",
+      "personality": "mystical",
+      "conversations": {
+        "class_selection": {
+          "id": "class_selection",
+          "trigger": "new_player",
+          "nodes": [
+            {
+              "id": "start",
+              "text": "The threads of fate converge... I see a warrior's spirit within you, waiting to be awakened. But which path calls to your soul?\n\nThe Warrior: Battle-hardened fighter who excels in close combat. High health and devastating melee damage.\n\nThe Mage: Wielder of arcane forces who commands the elements. Fragile but possesses devastating magical abilities.\n\nThe Rogue: Cunning assassin who strikes from shadows. Relies on speed, critical hits, and dodging attacks.\n\nThe Ranger: Master of ranged combat and wilderness survival. Excels at dealing consistent damage from a distance.\n\nThe Cleric: Holy warrior blessed by divine powers. Can heal and smite evil with holy magic.\n\nWhich path do you choose?",
+              "choices": [
+                {
+                  "text": "I am a Warrior - I will face my enemies head-on with blade and shield",
+                  "next": "warrior_chosen",
+                  "set_class": "warrior"
+                },
+                {
+                  "text": "I am a Mage - The arcane arts shall be my weapon",
+                  "next": "mage_chosen",
+                  "set_class": "mage"
+                },
+                {
+                  "text": "I am a Rogue - I strike from the shadows, swift and deadly",
+                  "next": "rogue_chosen",
+                  "set_class": "rogue"
+                },
+                {
+                  "text": "I am a Ranger - Master of bow and wilderness, my aim is true",
+                  "next": "ranger_chosen",
+                  "set_class": "ranger"
+                },
+                {
+                  "text": "I am a Cleric - I will heal my allies and smite evil with divine power",
+                  "next": "cleric_chosen",
+                  "set_class": "cleric"
+                },
+                {
+                  "text": "Tell me more about each path",
+                  "next": "class_details"
+                }
+              ]
+            },
+            {
+              "id": "class_details",
+              "text": "Of course, let me tell you more about each path:\n\n**Warrior**: High health and defense. Special Ability: Berserker Rage - Deal 150% damage for 3 turns but take 25% more damage. Best for those who prefer direct melee combat.\n\n**Mage**: High magic power but fragile. Special Ability: Arcane Blast - Unleash pure arcane energy dealing 200% magic damage. Best for those who prefer powerful magical attacks.\n\n**Rogue**: High agility and critical chance. Special Ability: Shadow Strike - Guaranteed critical hit with 50% dodge chance next turn. Best for those who prefer speed and precision strikes.\n\n**Ranger**: Balanced stats, master of ranged combat. Special Ability: Multishot - Fire three arrows dealing 80% damage each. Best for those who prefer consistent ranged damage.\n\n**Cleric**: Balanced health with magic and defense. Special Ability: Divine Intervention - Restore 40% HP and gain temporary invulnerability for 1 turn. Best for those who prefer support and survivability.\n\nWhich path speaks to you?",
+              "choices": [
+                {
+                  "text": "I choose the path of the Warrior",
+                  "next": "warrior_chosen",
+                  "set_class": "warrior"
+                },
+                {
+                  "text": "I choose the path of the Mage",
+                  "next": "mage_chosen",
+                  "set_class": "mage"
+                },
+                {
+                  "text": "I choose the path of the Rogue",
+                  "next": "rogue_chosen",
+                  "set_class": "rogue"
+                },
+                {
+                  "text": "I choose the path of the Ranger",
+                  "next": "ranger_chosen",
+                  "set_class": "ranger"
+                },
+                {
+                  "text": "I choose the path of the Cleric",
+                  "next": "cleric_chosen",
+                  "set_class": "cleric"
+                }
+              ]
+            },
+            {
+              "id": "warrior_chosen",
+              "text": "Ah, the path of the Warrior! A noble choice. You will stand as an unbreakable bulwark against the darkness, your blade a beacon of hope. May your courage never waver, and your strength never fail.\n\nYour starting equipment awaits: a battle-worn sword and protective leather armor. Use them well.\n\nNow go forth, Warrior. Elder Thorne awaits you in the village. He will guide you on your first steps into Ashbee Realms.",
+              "reward": {
+                "starting_weapon": "rusty_sword",
+                "starting_armor": "leather_armor",
+                "gold": 50,
+                "health_potion": 3
+              },
+              "unlocks": ["class_warrior", "meet_elder_thorne"],
+              "next": "end"
+            },
+            {
+              "id": "mage_chosen",
+              "text": "The path of the Mage! Wise choice. The arcane flows through you like a raging river. You will rain destruction upon your enemies from afar, bending reality to your will.\n\nYour starting equipment awaits: a wooden staff crackling with magical energy and simple robes to channel your power. Use them wisely.\n\nNow go forth, Mage. Elder Thorne awaits you in the village. He will guide you on your first steps into Ashbee Realms.",
+              "reward": {
+                "starting_weapon": "wooden_staff",
+                "starting_armor": "cloth_robe",
+                "gold": 50,
+                "health_potion": 3,
+                "mana_potion": 3
+              },
+              "unlocks": ["class_mage", "meet_elder_thorne"],
+              "next": "end"
+            },
+            {
+              "id": "rogue_chosen",
+              "text": "The path of the Rogue! Cunning and swift. You will be the shadow that strikes before the enemy knows fear, the blade they never see coming. Let stealth and speed be your greatest weapons.\n\nYour starting equipment awaits: twin daggers sharp as whispers and lightweight leather armor for silent movement. Strike true.\n\nNow go forth, Rogue. Elder Thorne awaits you in the village. He will guide you on your first steps into Ashbee Realms.",
+              "reward": {
+                "starting_weapon": "rusty_dagger",
+                "starting_armor": "leather_armor",
+                "gold": 50,
+                "health_potion": 3,
+                "smoke_bomb": 2
+              },
+              "unlocks": ["class_rogue", "meet_elder_thorne"],
+              "next": "end"
+            },
+            {
+              "id": "ranger_chosen",
+              "text": "The path of the Ranger! Excellent choice. You walk between civilization and wilderness, master of bow and blade. Nature itself will be your ally, and your arrows shall never miss their mark.\n\nYour starting equipment awaits: a well-crafted short bow and leather armor for swift movement through the wilds.\n\nNow go forth, Ranger. Elder Thorne awaits you in the village. He will guide you on your first steps into Ashbee Realms.",
+              "reward": {
+                "starting_weapon": "short_bow",
+                "starting_armor": "leather_armor",
+                "gold": 50,
+                "health_potion": 3
+              },
+              "unlocks": ["class_ranger", "meet_elder_thorne"],
+              "next": "end"
+            },
+            {
+              "id": "cleric_chosen",
+              "text": "The path of the Cleric! A blessed choice. You are chosen by the divine, a beacon of hope and healing in these dark times. Your prayers will mend wounds and your faith will smite the wicked.\n\nYour starting equipment awaits: a wooden mace blessed by the gods and protective chainmail armor. May the light guide you.\n\nNow go forth, Cleric. Elder Thorne awaits you in the village. He will guide you on your first steps into Ashbee Realms.",
+              "reward": {
+                "starting_weapon": "wooden_mace",
+                "starting_armor": "chainmail",
+                "gold": 50,
+                "health_potion": 3,
+                "mana_potion": 2
+              },
+              "unlocks": ["class_cleric", "meet_elder_thorne"],
+              "next": "end"
+            }
+          ]
+        },
+        "confirm_class": {
+          "id": "confirm_class",
+          "trigger": "class_change_request",
+          "nodes": [
+            {
+              "id": "start",
+              "text": "You wish to walk a different path? This is possible, but only through great sacrifice. You would lose all progress and begin anew. Are you certain?",
+              "choices": [
+                {
+                  "text": "Yes, I wish to change my class",
+                  "next": "reset_confirmed",
+                  "requires": "respec_token"
+                },
+                {
+                  "text": "No, I'll continue my current path",
+                  "next": "end"
+                }
+              ]
+            },
+            {
+              "id": "reset_confirmed",
+              "text": "Very well. The threads of fate are rewoven. Choose your new path wisely.",
+              "effect": "reset_to_class_selection",
+              "next": "end"
+            }
+          ]
+        }
+      }
+    },
+    "elder_thorne": {
+      "npc_id": "elder_thorne",
+      "name": "Elder Thorne",
+      "greeting": "Ah, another soul drawn to our troubled realm. Welcome, traveler.",
+      "personality": "wise",
+      "conversations": {
+        "first_meeting": {
+          "id": "first_meeting",
+          "trigger": "first_encounter",
+          "nodes": [
+            {
+              "id": "start",
+              "text": "You've arrived at a dangerous time, stranger. The shadows grow long and creatures stir that should remain sleeping. Tell me, what brings you to Ashbee Realms?",
+              "choices": [
+                {
+                  "text": "I seek adventure and glory",
+                  "next": "glory_seeker",
+                  "reputation": 0
+                },
+                {
+                  "text": "I'm here to help protect the realm",
+                  "next": "protector",
+                  "reputation": 10
+                },
+                {
+                  "text": "I'm just passing through",
+                  "next": "wanderer",
+                  "reputation": -5
+                },
+                {
+                  "text": "That's my business",
+                  "next": "hostile",
+                  "reputation": -10
+                }
+              ]
+            },
+            {
+              "id": "glory_seeker",
+              "text": "Glory, is it? Well, there's certainly plenty of danger to go around. But remember, true glory comes from protecting others, not just seeking fame. Perhaps you'll learn that in time.",
+              "reward": {"xp": 50},
+              "next": "quest_offer"
+            },
+            {
+              "id": "protector",
+              "text": "A noble heart! We need more like you. The Whispering Woods have become treacherous. Will you help us clear the wolf threat?",
+              "reward": {"xp": 100, "reputation": 20},
+              "unlocks": ["quest:awakening"],
+              "next": "end"
+            },
+            {
+              "id": "wanderer",
+              "text": "I see. Well, should you change your mind, we could use capable hands. The woods grow more dangerous by the day.",
+              "next": "end"
+            },
+            {
+              "id": "hostile",
+              "text": "*narrows eyes* Very well. Keep your secrets. But know that I'm watching you, stranger.",
+              "next": "end"
+            }
+          ]
+        },
+        "quest_followup": {
+          "id": "quest_followup",
+          "trigger": "quest_awakening_complete",
+          "nodes": [
+            {
+              "id": "start",
+              "text": "You've proven yourself capable. The wolves were just a symptom, I fear. Something darker stirs in the depths. Are you prepared to face it?",
+              "choices": [
+                {
+                  "text": "I'm ready for whatever comes",
+                  "next": "brave",
+                  "unlocks": ["quest:wolves_den"]
+                },
+                {
+                  "text": "Tell me more about this darkness",
+                  "next": "lore_dump"
+                },
+                {
+                  "text": "I need time to prepare",
+                  "next": "cautious"
+                }
+              ]
+            },
+            {
+              "id": "lore_dump",
+              "text": "Long ago, this realm was peaceful. But an ancient evil was sealed beneath the earth. Recently, the seals have weakened. Corruption spreads. The creatures grow bold. We must act before it's too late.",
+              "unlocks": ["lore:ancient_evil"],
+              "choices": [
+                {
+                  "text": "I'll investigate",
+                  "next": "brave"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "garen_wandering_merchant": {
+      "npc_id": "wandering_merchant",
+      "name": "Garen the Wanderer",
+      "greeting": "Ho there, friend! Care to see my wares?",
+      "personality": "cheerful",
+      "conversations": {
+        "standard": {
+          "id": "standard",
+          "nodes": [
+            {
+              "id": "start",
+              "text": "I've traveled far and wide, gathering the finest goods! What catches your eye today?",
+              "choices": [
+                {
+                  "text": "Let me see what you have",
+                  "action": "open_shop"
+                },
+                {
+                  "text": "Tell me about your travels",
+                  "next": "travel_stories"
+                },
+                {
+                  "text": "Any rumors or news?",
+                  "next": "rumors"
+                },
+                {
+                  "text": "Farewell",
+                  "next": "end"
+                }
+              ]
+            },
+            {
+              "id": "travel_stories",
+              "text": "Oh, I've seen things! Once saw a dragon sleeping atop a mountain of gold. Didn't dare get close, mind you! And the ruins to the east... they whisper at night, they do.",
+              "choices": [
+                {
+                  "text": "Tell me about the eastern ruins",
+                  "next": "ruins_hint",
+                  "unlocks": ["map_marker:forsaken_ruins"]
+                },
+                {
+                  "text": "Back to business",
+                  "next": "start"
+                }
+              ]
+            },
+            {
+              "id": "rumors",
+              "text": "Heard tell of goblin raids increasing. Something's riling them up. Also, a traveler mentioned seeing strange lights in the Cursed Swamp at night. Wouldn't go there if I were you!",
+              "quest_hint": true,
+              "next": "start"
+            }
+          ]
+        }
+      }
+    },
+    "witch_morgana": {
+      "npc_id": "witch_morgana",
+      "name": "Witch Morgana",
+      "greeting": "*cackles* What brings you to my domain, dearie?",
+      "personality": "mysterious",
+      "conversations": {
+        "curse_quest": {
+          "id": "curse_quest",
+          "trigger": "quest:curse_investigation",
+          "nodes": [
+            {
+              "id": "start",
+              "text": "So, you seek to understand the curse that plagues these lands? Knowledge has a price... What will you offer?",
+              "choices": [
+                {
+                  "text": "I'll pay gold (500 gold)",
+                  "cost": {"gold": 500},
+                  "next": "knowledge_gold"
+                },
+                {
+                  "text": "I'll bring you rare ingredients",
+                  "next": "quest_ingredients",
+                  "adds_quest_objective": true
+                },
+                {
+                  "text": "I'll accept a curse in exchange",
+                  "next": "curse_bargain",
+                  "gives_curse": true
+                },
+                {
+                  "text": "I'll find another way",
+                  "next": "refuse"
+                }
+              ]
+            },
+            {
+              "id": "knowledge_gold",
+              "text": "Wise choice. The curse stems from an artifact, shattered long ago. Its fragments still pulse with dark power. Destroy them, and the curse will weaken. But beware... the Plague Bearer guards them.",
+              "reward": {"xp": 200},
+              "quest_progress": true,
+              "next": "end"
+            },
+            {
+              "id": "curse_bargain",
+              "text": "*grins wickedly* Brave... or foolish. Very well. I curse you with the Sight. You'll see truths others cannot... but some truths drive mortals mad. *waves hand* It is done.",
+              "gives_curse": "witches_sight",
+              "unlocks": ["see_hidden_things"],
+              "reward": {"xp": 500},
+              "next": "end"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "dialogue_conditions": {
+    "reputation_gates": {
+      "friendly": ">=1000",
+      "honored": ">=3000",
+      "exalted": ">=6000"
+    },
+    "quest_requirements": {
+      "completed": "quest must be complete",
+      "active": "quest must be active",
+      "available": "quest must be available"
+    }
+  },
+  "random_barks": {
+    "guards": [
+      "Keep moving, citizen.",
+      "These are dangerous times. Stay alert.",
+      "I used to be an adventurer like you...",
+      "Nothing to see here.",
+      "By order of the militia, stay out of trouble."
+    ],
+    "merchants": [
+      "Best prices in the realm!",
+      "Come back anytime!",
+      "Tell your friends about my shop!",
+      "I've got the best deals around."
+    ],
+    "villagers": [
+      "Did you hear about the monster attacks?",
+      "I hope the militia can protect us.",
+      "Strange times these are...",
+      "Be careful out there, traveler."
+    ]
+  }
+}

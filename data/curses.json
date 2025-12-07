@@ -1,0 +1,370 @@
+{
+  "curses": {
+    "curse_of_weakness": {
+      "name": "Curse of Weakness",
+      "description": "Your strength fades, making combat difficult",
+      "rarity": "common",
+      "effects": {
+        "damage_reduction": 0.3,
+        "attack_speed": 0.8
+      },
+      "duration": "permanent_until_cleansed",
+      "source": ["cursed_items", "witch_npcs", "dark_magic_enemies"],
+      "cleanse_methods": [
+        {
+          "method": "holy_water",
+          "cost": 100
+        },
+        {
+          "method": "priest_blessing",
+          "cost": 250,
+          "reputation_required": "neutral"
+        }
+      ]
+    },
+    "curse_of_greed": {
+      "name": "Curse of Greed",
+      "description": "You cannot help but hoard gold, unable to spend or drop it",
+      "rarity": "uncommon",
+      "effects": {
+        "cannot_spend_gold": true,
+        "gold_weight": "Inventory encumbered by gold",
+        "merchant_prices_increase": 2.0
+      },
+      "duration": "permanent_until_cleansed",
+      "source": ["cursed_treasure", "dragon_curses"],
+      "cleanse_methods": [
+        {
+          "method": "donate_all_gold",
+          "cost": "all_gold",
+          "location": "temple"
+        },
+        {
+          "method": "break_with_generosity",
+          "requirement": "Give 10,000 gold to beggars"
+        }
+      ]
+    },
+    "curse_of_undeath": {
+      "name": "Curse of Undeath",
+      "description": "You walk the line between life and death",
+      "rarity": "rare",
+      "effects": {
+        "healing_reduced": 0.5,
+        "undead_friendly": "Undead won't attack first",
+        "holy_damage_taken": 1.5,
+        "appearance": "Pale, gaunt",
+        "night_vision": true
+      },
+      "duration": "permanent_until_cleansed",
+      "source": ["necromancer_curse", "undead_legion_ritual"],
+      "benefits": ["Can speak with dead", "Undead disguise"],
+      "cleanse_methods": [
+        {
+          "method": "divine_intervention",
+          "cost": 5000,
+          "reputation_required": "honored_with_church"
+        },
+        {
+          "method": "life_fountain",
+          "location": "celestial_sanctuary"
+        }
+      ]
+    },
+    "vampirism": {
+      "name": "Vampirism",
+      "description": "You have been turned into a vampire",
+      "rarity": "epic",
+      "effects": {
+        "sun_damage": "Take damage during daytime",
+        "must_feed": "Must drink blood every 24 hours or weaken",
+        "immortal": "Cannot die of age",
+        "stats": {
+          "strength": 1.5,
+          "speed": 1.3,
+          "regeneration": 2.0
+        },
+        "abilities": ["Blood Drain", "Mist Form", "Bat Transformation", "Charm"],
+        "weaknesses": ["Sunlight", "Holy Water", "Silver", "Garlic"]
+      },
+      "duration": "permanent_lifestyle_change",
+      "source": ["vampire_bite", "vampire_lord_ritual"],
+      "feeding_system": {
+        "must_feed_every": "24_hours",
+        "targets": ["humans", "animals"],
+        "stealth_required": "Or lose reputation",
+        "alternative": "Blood potions from vampire coven"
+      },
+      "vampire_society": {
+        "access": "Vampire coven hideouts",
+        "quests": "Vampire-specific questlines",
+        "conflicts": "War with werewolves"
+      },
+      "cure_methods": [
+        {
+          "method": "kill_sire",
+          "description": "Kill the vampire who turned you"
+        },
+        {
+          "method": "ancient_ritual",
+          "requirements": ["vampire_cure_scroll", "phoenix_blood", "solar_essence"],
+          "difficulty": "legendary_quest"
+        }
+      ]
+    },
+    "lycanthropy": {
+      "name": "Lycanthropy (Werewolf Curse)",
+      "description": "You transform into a beast under the full moon",
+      "rarity": "epic",
+      "effects": {
+        "full_moon_transformation": "Forced transformation during full moon",
+        "lose_control": "Attack anything nearby when transformed",
+        "stats_when_transformed": {
+          "strength": 2.0,
+          "speed": 1.5,
+          "defense": 1.3,
+          "critical_damage": 2.0
+        },
+        "abilities": ["Savage Bite", "Howl", "Pack Call", "Primal Rage"],
+        "silver_weakness": "Take double damage from silver"
+      },
+      "duration": "permanent_lifestyle_change",
+      "source": ["werewolf_bite", "werewolf_alpha_ritual"],
+      "transformation_control": {
+        "initial": "Cannot control",
+        "with_practice": "Learn to control transformation",
+        "master_level": "Transform at will, keep consciousness"
+      },
+      "werewolf_society": {
+        "access": "Werewolf pack",
+        "quests": "Pack-specific questlines",
+        "conflicts": "War with vampires",
+        "full_moon_hunts": "Group activities"
+      },
+      "cure_methods": [
+        {
+          "method": "kill_alpha",
+          "description": "Kill the alpha werewolf"
+        },
+        {
+          "method": "wolfsbane_ritual",
+          "requirements": ["pure_wolfsbane", "silver_dagger", "lunar_eclipse"],
+          "difficulty": "legendary_quest"
+        }
+      ]
+    },
+    "curse_of_stone": {
+      "name": "Curse of Stone",
+      "description": "Your body slowly turns to stone",
+      "rarity": "rare",
+      "effects": {
+        "movement_speed": 0.6,
+        "defense": 1.5,
+        "stone_spreading": "Gradually covers more of body",
+        "stages": [
+          {
+            "stage": 1,
+            "duration_days": 7,
+            "effects": "Arm turns to stone"
+          },
+          {
+            "stage": 2,
+            "duration_days": 7,
+            "effects": "Torso turns to stone"
+          },
+          {
+            "stage": 3,
+            "duration_days": 7,
+            "effects": "Fully petrified - game over"
+          }
+        ]
+      },
+      "source": ["gorgon_gaze", "cursed_statue"],
+      "urgency": "high",
+      "cleanse_methods": [
+        {
+          "method": "gorgon_blood",
+          "requirements": ["Kill gorgon", "Extract blood"],
+          "time_limit": "Before stage 3"
+        },
+        {
+          "method": "statue_breaker_spell",
+          "location": "Ancient library",
+          "cost": 2000
+        }
+      ]
+    },
+    "curse_of_truth": {
+      "name": "Curse of Truth",
+      "description": "You cannot lie or keep secrets",
+      "rarity": "uncommon",
+      "effects": {
+        "cannot_lie": true,
+        "reveal_intentions": "NPCs always know your true motives",
+        "dialogue_options_limited": "No deception choices",
+        "reputation_effects": "Some NPCs respect honesty, others exploit it"
+      },
+      "source": ["fey_curse", "oath_breaking"],
+      "interesting_interactions": {
+        "merchants": "Can't haggle effectively",
+        "quests": "Some impossible to complete",
+        "relationships": "Some NPCs appreciate brutal honesty"
+      },
+      "cleanse_methods": [
+        {
+          "method": "make_amends",
+          "description": "Fix whatever caused the curse"
+        },
+        {
+          "method": "fey_bargain",
+          "description": "Make a new deal with the fey"
+        }
+      ]
+    },
+    "curse_of_hunger": {
+      "name": "Curse of Eternal Hunger",
+      "description": "You are always starving, no matter how much you eat",
+      "rarity": "rare",
+      "effects": {
+        "constant_hunger": true,
+        "must_eat_frequently": "Every 10 minutes or take damage",
+        "food_cost": "Consume 10x normal food",
+        "stat_drain": "Gradual stat reduction if not fed"
+      },
+      "source": ["gluttony_demon", "cursed_feast"],
+      "cleanse_methods": [
+        {
+          "method": "fast_for_7_days",
+          "description": "Do not eat for 7 in-game days (extremely difficult)"
+        },
+        {
+          "method": "defeat_gluttony_demon",
+          "location": "Seven Sins dungeon"
+        }
+      ]
+    },
+    "curse_of_silence": {
+      "name": "Curse of Silence",
+      "description": "You cannot speak or cast spells with verbal components",
+      "rarity": "uncommon",
+      "effects": {
+        "no_dialogue": "Cannot communicate with NPCs normally",
+        "spell_restrictions": "Cannot cast spells requiring speech",
+        "communication": "Limited to gestures and writing"
+      },
+      "source": ["banshee_scream", "silence_curse_trap"],
+      "workarounds": {
+        "sign_language": "Some NPCs understand",
+        "written_notes": "Can write messages",
+        "telepathy_items": "Rare items allow mental communication"
+      },
+      "cleanse_methods": [
+        {
+          "method": "voice_restoration_potion",
+          "cost": 500
+        },
+        {
+          "method": "banshee_forgiveness",
+          "description": "Make peace with the banshee"
+        }
+      ]
+    },
+    "curse_of_gold_touch": {
+      "name": "Midas Curse",
+      "description": "Everything you touch turns to gold",
+      "rarity": "legendary",
+      "effects": {
+        "items_turn_to_gold": "Equipped items become gold statues (useless)",
+        "food_becomes_gold": "Cannot eat or drink",
+        "cannot_interact": "Cannot pick up items safely",
+        "gold_generation": "Generate gold but cannot use it"
+      },
+      "source": ["ancient_treasure_room", "greed_god_curse"],
+      "time_limit": "Must cure within 7 days or starve",
+      "cleanse_methods": [
+        {
+          "method": "river_of_pactolus",
+          "description": "Wash in the sacred river",
+          "location": "Hidden in mountains"
+        },
+        {
+          "method": "give_away_all_gold",
+          "description": "Renounce all wealth completely"
+        }
+      ]
+    }
+  },
+  "cursed_items": {
+    "ring_of_binding": {
+      "name": "Ring of Binding",
+      "type": "accessory",
+      "rarity": "rare",
+      "description": "Once worn, cannot be removed",
+      "stats": {
+        "strength": 10,
+        "health": 50
+      },
+      "curse": {
+        "cannot_unequip": true,
+        "reputation_loss": 1,
+        "daily_penalty": "Slowly drains max HP"
+      },
+      "remove_curse": ["Remove Curse spell", "Cut off finger (extreme)"]
+    },
+    "sword_of_bloodlust": {
+      "name": "Sword of Bloodlust",
+      "type": "weapon",
+      "rarity": "epic",
+      "description": "A powerful blade that demands blood",
+      "stats": {
+        "damage": "100-150",
+        "critical_chance": 0.3
+      },
+      "curse": {
+        "must_kill_daily": "Must kill something every day or take damage",
+        "bloodlust": "Harder to spare enemies",
+        "corruption": "Slowly corrupts alignment"
+      },
+      "benefits": "Incredibly powerful weapon",
+      "remove_curse": ["Bathe in holy water", "Feed it a demon's soul"]
+    },
+    "armor_of_thorns": {
+      "name": "Armor of Living Thorns",
+      "type": "armor",
+      "rarity": "epic",
+      "description": "Armor made of living thorns that burrow into flesh",
+      "stats": {
+        "defense": 100,
+        "thorns_damage": 50
+      },
+      "curse": {
+        "constant_pain": "Take 5 damage per minute",
+        "cannot_remove": "Thorns hold it in place",
+        "growing": "Thorns slowly spread across body"
+      },
+      "remove_curse": ["Powerful healing magic", "Burn it off (risky)"]
+    }
+  },
+  "curse_mechanics": {
+    "identification": {
+      "cursed_items_hidden": "Curses not revealed until equipped",
+      "identify_curse": "Use Identify scroll to detect curses before equipping"
+    },
+    "cleansing": {
+      "methods": ["Holy magic", "Remove Curse scroll", "Priest NPC", "Quest completion"],
+      "costs": "Vary by curse rarity",
+      "failure_chance": "Some curses resist cleansing"
+    },
+    "curse_resistance": {
+      "items": ["Holy amulet", "Blessed armor"],
+      "passives": ["Divine Protection", "Curse Breaker"],
+      "temporary": ["Holy water", "Protection spells"]
+    },
+    "living_with_curses": {
+      "some_curses_have_benefits": true,
+      "vampire_werewolf_paths": "Alternative playstyles",
+      "curse_communities": "NPCs and players with same curses",
+      "unique_content": "Curse-specific quests and areas"
+    }
+  }
+}

@@ -1,0 +1,1678 @@
+{
+  "npcs": {
+    "merchants": [
+      {
+        "id": "wandering_merchant",
+        "name": "Garen the Wanderer",
+        "description": "A cheerful trader with a cart full of oddities",
+        "greeting": "Ah, a customer! Come, come! I have wares from all corners of the realm!",
+        "merchant_type": "general",
+        "spawn_locations": ["whispering_woods", "highland_reaches", "twilight_wetlands"],
+        "spawn_chance": 0.15,
+        "inventory_theme": "general",
+        "stock": {
+          "always_available": [
+            { "item": "potion", "price": 10, "stock": 10 },
+            { "item": "bread", "price": 5, "stock": 20 },
+            { "item": "antidote", "price": 15, "stock": 5 }
+          ],
+          "random_pool": [
+            { "item": "health_potion", "price": 35, "chance": 0.6 },
+            { "item": "mana_potion", "price": 40, "chance": 0.4 },
+            { "item": "strength_elixir", "price": 50, "chance": 0.3 },
+            { "item": "scroll_of_teleportation", "price": 150, "chance": 0.1 }
+          ]
+        },
+        "dialogue": [
+          "These roads are dangerous, friend. Stock up while you can!",
+          "I once met a dragon... from a very safe distance.",
+          "The prices are fair, I assure you. Well, mostly fair."
+        ]
+      },
+      {
+        "id": "potion_master",
+        "name": "Elara the Alchemist",
+        "description": "A mysterious woman in a stained apron, surrounded by bubbling vials",
+        "greeting": "Potions, elixirs, tonics! Whatever ails you, I have the cure!",
+        "merchant_type": "potions",
+        "spawn_locations": ["cursed_swamp", "twilight_wetlands", "forsaken_ruins"],
+        "spawn_chance": 0.12,
+        "inventory_theme": "potions",
+        "stock": {
+          "always_available": [
+            { "item": "potion", "price": 8, "stock": 15 },
+            { "item": "health_potion", "price": 30, "stock": 10 },
+            { "item": "mana_potion", "price": 35, "stock": 8 },
+            { "item": "antidote", "price": 12, "stock": 10 }
+          ],
+          "random_pool": [
+            { "item": "greater_health_potion", "price": 90, "chance": 0.5 },
+            { "item": "strength_elixir", "price": 45, "chance": 0.6 },
+            { "item": "phoenix_down", "price": 225, "chance": 0.15 },
+            { "item": "elixir_of_immortality", "price": 450, "chance": 0.05 }
+          ]
+        },
+        "dialogue": [
+          "This particular brew took three years to perfect!",
+          "Never drink the purple one. Trust me on this.",
+          "Alchemy is an art, not a science. Well... mostly art."
+        ]
+      },
+      {
+        "id": "weapon_dealer",
+        "name": "Thorgrim Ironhand",
+        "description": "A scarred dwarf with arms like tree trunks",
+        "greeting": "Need something that bites? I've got blades that'll cut through anything!",
+        "merchant_type": "weapons",
+        "spawn_locations": ["goblin_tunnels", "forsaken_ruins", "volcanic_peaks"],
+        "spawn_chance": 0.1,
+        "inventory_theme": "weapons",
+        "stock": {
+          "always_available": [
+            { "item": "steel_sword", "price": 100, "stock": 3 },
+            { "item": "orcish_axe", "price": 150, "stock": 2 }
+          ],
+          "random_pool": [
+            { "item": "flamebrand", "price": 500, "chance": 0.3 },
+            { "item": "staff_of_storms", "price": 600, "chance": 0.25 },
+            { "item": "dragonslayer", "price": 2000, "chance": 0.05 }
+          ]
+        },
+        "dialogue": [
+          "Every blade I sell has tasted blood. Usually mine, during testing.",
+          "A warrior without a good weapon is just... well, dead.",
+          "I don't ask questions, and you don't tell lies. Deal?"
+        ]
+      },
+      {
+        "id": "armor_merchant",
+        "name": "Seraphina Steelweave",
+        "description": "An elegant elf displaying gleaming armor sets",
+        "greeting": "Protection is not a luxury—it's a necessity. Let me outfit you properly.",
+        "merchant_type": "armor",
+        "spawn_locations": ["town_square", "forsaken_ruins", "highland_reaches"],
+        "spawn_chance": 0.1,
+        "inventory_theme": "armor",
+        "stock": {
+          "always_available": [
+            { "item": "leather_armor", "price": 15, "stock": 5 },
+            { "item": "chainmail", "price": 120, "stock": 3 }
+          ],
+          "random_pool": [
+            { "item": "mage_robes", "price": 150, "chance": 0.4 },
+            { "item": "dragon_scale_mail", "price": 800, "chance": 0.2 },
+            { "item": "titan_plate_armor", "price": 3000, "chance": 0.03 }
+          ]
+        },
+        "dialogue": [
+          "Style and protection need not be mutually exclusive.",
+          "I crafted armor for the King's Guard, you know.",
+          "The best defense is not being hit. The second best is good armor."
+        ]
+      },
+      {
+        "id": "mysterious_trader",
+        "name": "The Hooded Figure",
+        "description": "A figure shrouded in shadows, face hidden beneath a deep hood",
+        "greeting": "...*whispers* I have... special items. For the right price.",
+        "merchant_type": "rare",
+        "spawn_locations": ["cursed_swamp", "void_realm", "ancient_crypts", "forsaken_ruins"],
+        "spawn_chance": 0.05,
+        "inventory_theme": "rare_illegal",
+        "stock": {
+          "random_pool": [
+            { "item": "phoenix_down", "price": 200, "chance": 0.6 },
+            { "item": "greater_health_potion", "price": 80, "chance": 0.7 },
+            { "item": "scroll_of_teleportation", "price": 120, "chance": 0.5 },
+            { "item": "dragon_blood_vial", "price": 900, "chance": 0.2 },
+            { "item": "elixir_of_immortality", "price": 400, "chance": 0.15 },
+            { "item": "ambrosia", "price": 2000, "chance": 0.05 }
+          ]
+        },
+        "dialogue": [
+          "Ask no questions, and I'll tell no lies.",
+          "Where I got these? Let's just say... they fell off a cart.",
+          "Some call me a smuggler. I prefer 'logistics specialist'."
+        ]
+      }
+    ],
+    "quest_givers": [
+      {
+        "id": "elder_thorne",
+        "name": "Elder Thorne",
+        "description": "The wise village elder with a long gray beard and kind eyes",
+        "greeting": "Ah, you've arrived. Welcome to Ashbee Realms, traveler. Dark times are upon us...",
+        "spawn_locations": ["town_square", "village_center"],
+        "spawn_chance": 1.0,
+        "quest": {
+          "type": "story",
+          "objective": "Investigate the disturbance in Whispering Woods",
+          "reward": {
+            "gold": 100,
+            "xp": 100,
+            "item": "elder_blessing",
+            "reputation": 25
+          }
+        },
+        "dialogue": [
+          "The woods have grown dark and dangerous lately...",
+          "Strange creatures emerge at night, terrorizing our people.",
+          "We need a hero. Perhaps you are the one foretold..."
+        ],
+        "completion_text": "You've done well, brave one. But this is only the beginning of your journey."
+      },
+      {
+        "id": "witch_morgana",
+        "name": "Witch Morgana",
+        "description": "A mysterious witch shrouded in dark robes, her eyes glowing with arcane power",
+        "greeting": "You seek answers about the curse, do you? Everything has a price...",
+        "spawn_locations": ["cursed_swamp", "witch_hut", "dark_grove"],
+        "spawn_chance": 0.15,
+        "quest": {
+          "type": "fetch",
+          "objective": "Bring rare ingredients for curse removal",
+          "required_item": "mandrake_root",
+          "reward": {
+            "gold": 200,
+            "xp": 150,
+            "item": "curse_breaker_amulet",
+            "reputation": -10
+          }
+        },
+        "dialogue": [
+          "The curse was not my doing, but I can undo it... for a price.",
+          "Bring me mandrake root from the swamp's deepest reaches.",
+          "Be warned - the path to power is never without sacrifice."
+        ],
+        "completion_text": "*cackles* Well done. The curse is lifted... for now."
+      },
+      {
+        "id": "farmer_harold",
+        "name": "Farmer Harold",
+        "description": "A weathered farmer with calloused hands and a worried expression",
+        "greeting": "Oh thank the gods! Someone who can help! My family's heirloom has been stolen!",
+        "spawn_locations": ["farmlands", "countryside", "village_outskirts"],
+        "spawn_chance": 0.12,
+        "quest": {
+          "type": "fetch",
+          "objective": "Recover the stolen family heirloom",
+          "required_item": "harold_heirloom",
+          "reward": {
+            "gold": 150,
+            "xp": 75,
+            "item": "farmer_gratitude_token",
+            "reputation": 20
+          }
+        },
+        "dialogue": [
+          "Those blasted goblins raided my farm last night!",
+          "They took everything - food, tools, and worst of all, my grandfather's pocket watch!",
+          "It's been in our family for generations. Please, help me get it back!"
+        ],
+        "completion_text": "You found it! *tears up* Thank you, stranger. My family is forever in your debt."
+      },
+      {
+        "id": "lady_ashford_ghost",
+        "name": "Lady Ashford's Ghost",
+        "description": "A translucent figure of a noble woman, her face etched with eternal sadness",
+        "greeting": "*whispers* Please... help me find peace... I cannot rest...",
+        "spawn_locations": ["haunted_manor", "ashford_estate", "ancient_cemetery"],
+        "spawn_chance": 0.08,
+        "quest": {
+          "type": "investigation",
+          "objective": "Discover the truth behind Lady Ashford's death",
+          "reward": {
+            "gold": 300,
+            "xp": 200,
+            "item": "ashford_signet_ring",
+            "reputation": 30
+          }
+        },
+        "dialogue": [
+          "*sobbing* I was murdered... but I cannot remember by whom...",
+          "My memory is fragments... scattered like mist...",
+          "Find the truth... let me finally rest in peace..."
+        ],
+        "completion_text": "*faint smile* The truth is revealed at last. Thank you... I can finally... rest... *fades away*"
+      },
+      {
+        "id": "wounded_soldier",
+        "name": "Marcus the Wounded",
+        "description": "A soldier slumped against a tree, clutching a bleeding wound",
+        "greeting": "*coughs* Please... I need help...",
+        "spawn_locations": ["whispering_woods", "forsaken_ruins", "highland_reaches"],
+        "spawn_chance": 0.1,
+        "quest": {
+          "type": "fetch",
+          "objective": "Bring healing potion",
+          "required_item": "health_potion",
+          "reward": {
+            "gold": 50,
+            "xp": 25,
+            "item": "steel_sword",
+            "reputation": 10
+          }
+        },
+        "dialogue": [
+          "Ambushed... by goblins... didn't see them coming...",
+          "My unit... scattered... I'm all that's left...",
+          "*weakly* Thank you, stranger. I owe you my life."
+        ],
+        "completion_text": "You... saved me. Take this sword—I won't be needing it anymore. I'm done with fighting."
+      },
+      {
+        "id": "lost_child",
+        "name": "Timmy",
+        "description": "A young boy with tears streaming down his face",
+        "greeting": "Have you seen my mama? I can't find her!",
+        "spawn_locations": ["whispering_woods", "twilight_wetlands", "highland_reaches"],
+        "spawn_chance": 0.08,
+        "quest": {
+          "type": "escort",
+          "objective": "Lead child to Town Square",
+          "destination": "town_square",
+          "reward": {
+            "gold": 30,
+            "xp": 40,
+            "reputation": 15
+          }
+        },
+        "dialogue": [
+          "We were picking flowers and I... I got lost...",
+          "It's scary out here. There are monsters!",
+          "Will you help me find my mama?"
+        ],
+        "completion_text": "Mama! *runs to embrace mother* Thank you so much for bringing him home safely!"
+      },
+      {
+        "id": "cursed_knight",
+        "name": "Sir Aldric the Cursed",
+        "description": "A knight in tarnished armor, his face gaunt and eyes haunted",
+        "greeting": "Stay back! I... I cannot control it much longer...",
+        "spawn_locations": ["cursed_swamp", "forsaken_ruins", "ancient_crypts"],
+        "spawn_chance": 0.06,
+        "quest": {
+          "type": "fetch",
+          "objective": "Find a holy relic to break the curse",
+          "required_item": "holy_relic",
+          "reward": {
+            "gold": 200,
+            "xp": 150,
+            "item": "blessed_sword",
+            "reputation": 25
+          }
+        },
+        "dialogue": [
+          "A witch cursed me... transformation comes at night...",
+          "I've hunted for the cure for three years...",
+          "The temple might have something... but I cannot enter sacred ground..."
+        ],
+        "completion_text": "*The curse lifts* Finally... freedom! Thank you, brave soul. I am forever in your debt."
+      },
+      {
+        "id": "scholar",
+        "name": "Professor Aldwin",
+        "description": "An elderly man with spectacles, frantically searching through scrolls",
+        "greeting": "Oh! Perhaps you can help! I'm searching for something quite important!",
+        "spawn_locations": ["ancient_library", "buried_temple", "forsaken_ruins"],
+        "spawn_chance": 0.12,
+        "quest": {
+          "type": "fetch",
+          "objective": "Recover ancient tome",
+          "required_item": "ancient_tome",
+          "reward": {
+            "gold": 100,
+            "xp": 80,
+            "item": "knowledge_scroll",
+            "reputation": 20
+          }
+        },
+        "dialogue": [
+          "The Codex Arcanum—it's been lost for centuries!",
+          "Imagine the knowledge we could unlock!",
+          "I'll pay handsomely for any ancient texts you find."
+        ],
+        "completion_text": "Remarkable! This will revolutionize our understanding! Here, take this—you've earned it."
+      },
+      {
+        "id": "village_elder",
+        "name": "Elder Theron",
+        "description": "A weathered old man leaning on a gnarled staff",
+        "greeting": "Young adventurer... our village is in grave danger.",
+        "spawn_locations": ["town_square", "forsaken_hamlet"],
+        "spawn_chance": 0.1,
+        "quest": {
+          "type": "kill",
+          "objective": "Slay the monster terrorizing the village",
+          "target": "troll_berserker",
+          "count": 1,
+          "reward": {
+            "gold": 300,
+            "xp": 200,
+            "item": "village_champion_medal",
+            "reputation": 30
+          }
+        },
+        "dialogue": [
+          "A beast... attacks our livestock every night...",
+          "We've lost three brave men already...",
+          "You're our only hope, stranger."
+        ],
+        "completion_text": "The village is saved! You are our hero! Please accept this as a token of our gratitude."
+      }
+    ],
+    "riddlers": [
+      {
+        "id": "sphinx",
+        "name": "The Sphinx",
+        "description": "A majestic creature with the body of a lion and face of a woman",
+        "greeting": "Halt, traveler. Answer my riddle, or turn back.",
+        "spawn_locations": ["ancient_library", "buried_temple", "stone_circle"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
+            "answer": "echo",
+            "hint": "Listen to the caves...",
+            "reward": { "gold": 100, "xp": 75, "item": "wisdom_amulet" }
+          },
+          {
+            "question": "The more you take, the more you leave behind. What am I?",
+            "answer": "footsteps",
+            "hint": "Think about your journey...",
+            "reward": { "gold": 100, "xp": 75, "item": "travelers_boots" }
+          },
+          {
+            "question": "I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
+            "answer": "map",
+            "hint": "Adventurers always carry one...",
+            "reward": { "gold": 100, "xp": 75, "item": "ancient_map" }
+          },
+          {
+            "question": "What can run but never walks, has a mouth but never talks, has a head but never weeps, has a bed but never sleeps?",
+            "answer": "river",
+            "hint": "It flows through the lands...",
+            "reward": { "gold": 100, "xp": 75, "item": "water_stone" }
+          },
+          {
+            "question": "I am not alive, but I grow; I don't have lungs, but I need air; I don't have a mouth, but water kills me. What am I?",
+            "answer": "fire",
+            "hint": "Beware in the dry woods...",
+            "reward": { "gold": 100, "xp": 75, "item": "flame_crystal" }
+          }
+        ],
+        "failure_consequence": "You have failed. Return when your mind is sharper.",
+        "success_text": "Impressive. You have earned passage and your reward."
+      },
+      {
+        "id": "mad_jester",
+        "name": "Jolly the Mad",
+        "description": "A cackling jester in motley, spinning in circles",
+        "greeting": "Hehehehe! Want to play a game? I have a riddle for you!",
+        "spawn_locations": ["forsaken_ruins", "abandoned_market", "lost_amphitheater"],
+        "spawn_chance": 0.1,
+        "riddles": [
+          {
+            "question": "What has hands but cannot clap?",
+            "answer": "clock",
+            "hint": "Tick tock, tick tock!",
+            "reward": { "gold": 50, "xp": 40, "item": "jester_token" }
+          },
+          {
+            "question": "What has a head and a tail but no body?",
+            "answer": "coin",
+            "hint": "Flip it and make a wish!",
+            "reward": { "gold": 50, "xp": 40, "item": "lucky_coin" }
+          },
+          {
+            "question": "What gets wetter the more it dries?",
+            "answer": "towel",
+            "hint": "Bath time, bath time!",
+            "reward": { "gold": 50, "xp": 40, "item": "magic_cloth" }
+          }
+        ],
+        "failure_consequence": "Wrong! Hahahaha! Come back and try again!",
+        "success_text": "Correct! You're smarter than you look! Here's your prize!"
+      },
+      {
+        "id": "ancient_guardian",
+        "name": "Stone Guardian",
+        "description": "An ancient statue that speaks with a voice like grinding stones",
+        "greeting": "To pass this threshold, prove your wisdom.",
+        "spawn_locations": ["buried_temple", "sealed_gate", "ancient_library"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "I am always hungry and must be fed. The finger I touch will soon turn red. What am I?",
+            "answer": "fire",
+            "hint": "It consumes all...",
+            "reward": { "gold": 150, "xp": 100, "access": "sealed_gate_open" }
+          },
+          {
+            "question": "What is seen in the middle of March and April that can't be seen at the beginning or end of either month?",
+            "answer": "r",
+            "hint": "Look closely at the words...",
+            "reward": { "gold": 150, "xp": 100, "access": "sealed_gate_open" }
+          }
+        ],
+        "failure_consequence": "You are not worthy. The path remains sealed.",
+        "success_text": "Your wisdom is proven. The way is open."
+      },
+      {
+        "id": "wise_owl",
+        "name": "Wise Owl",
+        "description": "An ancient owl perched on a gnarled branch, its eyes gleaming with intelligence",
+        "greeting": "Hoot... I have lived many lifetimes. Test your wit against mine, young one.",
+        "spawn_locations": ["whispering_woods", "ancient_grove", "lonely_oak"],
+        "spawn_chance": 0.12,
+        "riddles": [
+          {
+            "question": "My wings blot the sun, my breath is flame, Kingdoms fall trembling at my name.",
+            "answer": "dragon",
+            "hint": "The greatest of beasts...",
+            "reward": { "gold": 80, "xp": 60, "item": "owl_feather" }
+          },
+          {
+            "question": "I raise up my voice, I run with the pack, Together we hunt, together attack.",
+            "answer": "wolf",
+            "hint": "Listen to their howls...",
+            "reward": { "gold": 80, "xp": 60, "item": "forest_blessing" }
+          },
+          {
+            "question": "I dance without feet, I roar without breath, I bring both warm life and merciless death.",
+            "answer": "fire",
+            "hint": "It warms and destroys...",
+            "reward": { "gold": 80, "xp": 60, "item": "ember_charm" }
+          }
+        ],
+        "failure_consequence": "Not wise enough yet, young one. The forest teaches patience.",
+        "success_text": "Hoot! You possess the wisdom of the woods. Take this gift."
+      },
+      {
+        "id": "talking_deer",
+        "name": "Talking Deer",
+        "description": "A majestic stag with silver antlers that shimmer in the moonlight",
+        "greeting": "Few can hear my voice. You are special. Answer me this...",
+        "spawn_locations": ["whispering_woods", "wildflower_meadow", "shaded_glade"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "I walk with the wolf, I hunt with the hawk, The wild is my home, the forest my walk.",
+            "answer": "ranger",
+            "hint": "A hunter of the wilds...",
+            "reward": { "gold": 70, "xp": 55, "item": "antler_crown" }
+          },
+          {
+            "question": "I slip through all fingers, yet wear down all stone, Forever in motion, yet never my own.",
+            "answer": "water",
+            "hint": "It flows eternal...",
+            "reward": { "gold": 70, "xp": 55, "item": "stream_blessing" }
+          }
+        ],
+        "failure_consequence": "The forest's secrets remain hidden to you.",
+        "success_text": "You understand the way of the wild. May the forest bless your path."
+      },
+      {
+        "id": "mushroom_elder",
+        "name": "Mushroom Elder",
+        "description": "A massive sentient mushroom with glowing spores drifting from its cap",
+        "greeting": "*spore clouds form words* Young... one... answer... truthfully...",
+        "spawn_locations": ["fungal_hollow", "whispering_woods", "twilight_wetlands"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "By herb and by crystal, by essence and flame, I fashion strange brews no two are the same.",
+            "answer": "alchemist",
+            "hint": "A mixer of potions...",
+            "reward": { "gold": 90, "xp": 65, "item": "spore_pouch" }
+          },
+          {
+            "question": "I can heal, I can harm, I can grant you the night, I am magic made liquid, in plain mortal sight.",
+            "answer": "potion",
+            "hint": "Bottled magic...",
+            "reward": { "gold": 90, "xp": 65, "item": "mushroom_extract" }
+          }
+        ],
+        "failure_consequence": "*spores drift away sadly*",
+        "success_text": "*glowing spores dance joyfully* Wisdom... grows... like... spores..."
+      },
+      {
+        "id": "brook_turtle",
+        "name": "Brook Turtle",
+        "description": "An ancient turtle basking on a rock by a babbling brook",
+        "greeting": "Slow and steady... wins the race... and gains wisdom. Tell me...",
+        "spawn_locations": ["serpents_brook", "forest_clearing", "sunken_trail"],
+        "spawn_chance": 0.1,
+        "riddles": [
+          {
+            "question": "I slip through all fingers, yet wear down all stone, Forever in motion, yet never my own.",
+            "answer": "water",
+            "hint": "Like this brook...",
+            "reward": { "gold": 60, "xp": 50, "item": "turtle_shell_charm" }
+          },
+          {
+            "question": "I sing through the mountain, I shriek through the plain, I come without warning, and then I vanish again.",
+            "answer": "wind",
+            "hint": "Invisible yet powerful...",
+            "reward": { "gold": 60, "xp": 50, "item": "brook_stone" }
+          }
+        ],
+        "failure_consequence": "Patience, young one. The answer will come... in time.",
+        "success_text": "Ah... you understand. Time teaches all."
+      },
+      {
+        "id": "riddle_hare",
+        "name": "Riddle Hare",
+        "description": "A quick-witted hare that speaks in riddles and rhymes",
+        "greeting": "Quick! Quick! No time to waste! Riddle me this before I race!",
+        "spawn_locations": ["rolling_hills", "wildflower_meadow", "highland_reaches"],
+        "spawn_chance": 0.11,
+        "riddles": [
+          {
+            "question": "I can be cracked, I can be made, I can be told, I can be played.",
+            "answer": "joke",
+            "hint": "It makes you laugh!",
+            "reward": { "gold": 55, "xp": 45, "item": "lucky_foot" }
+          },
+          {
+            "question": "The more you take, the more you leave behind. What am I?",
+            "answer": "footsteps",
+            "hint": "Follow my trail!",
+            "reward": { "gold": 55, "xp": 45, "item": "speed_charm" }
+          }
+        ],
+        "failure_consequence": "Too slow! Catch me next time! *bounds away*",
+        "success_text": "Quick wit! I like you! Here, have this!"
+      },
+      {
+        "id": "whispering_ferns",
+        "name": "Whispering Ferns",
+        "description": "A patch of glowing ferns that rustle and whisper in an unknown tongue",
+        "greeting": "*whisper whisper* Sssssolve... our... riddle... *rustle*",
+        "spawn_locations": ["shaded_glade", "whispering_grove", "fungal_hollow"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "My treasures are hidden, my riches concealed, To those who would dig, my secrets revealed.",
+            "answer": "earth",
+            "hint": "We grow from it...",
+            "reward": { "gold": 75, "xp": 55, "item": "fern_essence" }
+          },
+          {
+            "question": "No wall can contain me, no chain can confine, Yet banished I am by the sun's steady shine.",
+            "answer": "darkness",
+            "hint": "We thrive in it...",
+            "reward": { "gold": 75, "xp": 55, "item": "shadow_leaf" }
+          }
+        ],
+        "failure_consequence": "*disappointed rustling*",
+        "success_text": "*joyful rustling* Yessss... wise one... take our gift..."
+      },
+      {
+        "id": "berry_nymph",
+        "name": "Berry Nymph",
+        "description": "A tiny sprite made entirely of berries and vines",
+        "greeting": "Tee hee! Want some berries? Answer my riddle first!",
+        "spawn_locations": ["wildflower_meadow", "briar_patch", "whispering_woods"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "I grow as I'm spoken, I shrink when I'm true, A shadow of stories that twists as it flew.",
+            "answer": "rumor",
+            "hint": "Gossip and tales...",
+            "reward": { "gold": 50, "xp": 40, "item": "berry_pouch" }
+          },
+          {
+            "question": "Born of the mind, yet shaping the real, I bind and I break, I curse and I heal.",
+            "answer": "spell",
+            "hint": "Magic words...",
+            "reward": { "gold": 50, "xp": 40, "item": "sweet_nectar" }
+          }
+        ],
+        "failure_consequence": "Aww, wrong! No berries for you!",
+        "success_text": "Yay! Here, have some magic berries!"
+      },
+      {
+        "id": "echoing_skull",
+        "name": "Echoing Skull",
+        "description": "A floating skull whose voice reverberates through the chamber",
+        "greeting": "Who disturbs my rest? Answer, or join me in eternal slumber...",
+        "spawn_locations": ["ancient_crypts", "forgotten_ossuary", "abandoned_catacombs"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "Neither breath nor heartbeat moves me again, Yet onward I walk in the land of men.",
+            "answer": "zombie",
+            "hint": "The walking dead...",
+            "reward": { "gold": 100, "xp": 75, "item": "skull_fragment" }
+          },
+          {
+            "question": "My march is of bones, my song is of death, No life in my chest, no warmth in my breath.",
+            "answer": "skeleton",
+            "hint": "Bones without flesh...",
+            "reward": { "gold": 100, "xp": 75, "item": "bone_key" }
+          },
+          {
+            "question": "Neither bone nor blood, yet I walk the night, A shadow of sorrow, unseen in the light.",
+            "answer": "ghost",
+            "hint": "A spirit...",
+            "reward": { "gold": 100, "xp": 75, "item": "ectoplasm" }
+          }
+        ],
+        "failure_consequence": "Your ignorance is... disappointing. Begone.",
+        "success_text": "Knowledge persists beyond death. Take your reward."
+      },
+      {
+        "id": "grave_whisperer",
+        "name": "Grave Whisperer",
+        "description": "A hooded figure kneeling beside a grave, murmuring to the dead",
+        "greeting": "The dead have much to teach... if you're willing to listen and learn...",
+        "spawn_locations": ["graveyard", "sunken_crypt", "cursed_battlefield"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "No shadow I cast, no sun can I bear, By night I hunt with a cold, dark stare.",
+            "answer": "vampire",
+            "hint": "A creature of the night...",
+            "reward": { "gold": 110, "xp": 80, "item": "grave_dirt" }
+          },
+          {
+            "question": "I am tracked but unseen, a red river's flow, When empty, the grave is the place you will go.",
+            "answer": "health",
+            "hint": "Life force...",
+            "reward": { "gold": 110, "xp": 80, "item": "life_essence" }
+          }
+        ],
+        "failure_consequence": "The dead have rejected you. Leave this place.",
+        "success_text": "The dead whisper their approval. You may pass."
+      },
+      {
+        "id": "forgotten_librarian",
+        "name": "Forgotten Librarian",
+        "description": "A ghostly figure still tending to books that crumble at her touch",
+        "greeting": "Shh... this is a library. But I'll allow one question... if you can answer mine.",
+        "spawn_locations": ["ancient_library", "shattered_monastery", "half_sunk_tower"],
+        "spawn_chance": 0.1,
+        "riddles": [
+          {
+            "question": "I carry a tome, my voice is my blade, By secrets and symbols my power is made.",
+            "answer": "mage",
+            "hint": "A scholar of magic...",
+            "reward": { "gold": 95, "xp": 70, "item": "ancient_bookmark" }
+          },
+          {
+            "question": "I live in the word, the rune, and the sign, With power eternal, both cruel and divine.",
+            "answer": "magic",
+            "hint": "The arcane arts...",
+            "reward": { "gold": 95, "xp": 70, "item": "spell_page" }
+          },
+          {
+            "question": "I have cities but no houses, forests but no trees, water but no fish. What am I?",
+            "answer": "map",
+            "hint": "Found in every library...",
+            "reward": { "gold": 95, "xp": 70, "item": "dusty_tome" }
+          }
+        ],
+        "failure_consequence": "Silence! You disturb the books with your ignorance!",
+        "success_text": "Finally, someone with an educated mind. Take this."
+      },
+      {
+        "id": "ancestor_spirit",
+        "name": "Ancestor Spirit",
+        "description": "A translucent figure dressed in ancient robes, radiating wisdom",
+        "greeting": "Young one, the ancestors test you. Prove yourself worthy.",
+        "spawn_locations": ["buried_temple", "stone_circle", "ancient_library"],
+        "spawn_chance": 0.06,
+        "riddles": [
+          {
+            "question": "I am born of the deed, yet greater I grow, A tale of the past that all mortals know.",
+            "answer": "legend",
+            "hint": "Stories that echo through time...",
+            "reward": { "gold": 120, "xp": 90, "item": "ancestral_blessing" }
+          },
+          {
+            "question": "I begin with a call, I end with a name, I carry no coin, yet bring fortune and fame.",
+            "answer": "quest",
+            "hint": "The hero's journey...",
+            "reward": { "gold": 120, "xp": 90, "item": "ancestral_token" }
+          }
+        ],
+        "failure_consequence": "The ancestors turn away. You are not ready.",
+        "success_text": "The ancestors smile upon you. Their blessing is yours."
+      },
+      {
+        "id": "candle_ghost",
+        "name": "Candle Ghost",
+        "description": "A spectral child holding an eternally lit candle",
+        "greeting": "My light never goes out... can you solve my riddle before it does?",
+        "spawn_locations": ["haunted_manor", "ruined_chapel", "forgotten_ossuary"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "I burn without hatred, I fade without fight, I banish the shadows and carry the light.",
+            "answer": "candle",
+            "hint": "Like the one I hold...",
+            "reward": { "gold": 65, "xp": 50, "item": "eternal_candle" }
+          },
+          {
+            "question": "I write every color, I paint every hue, Through prism or raindrop I scatter anew.",
+            "answer": "light",
+            "hint": "What I create...",
+            "reward": { "gold": 65, "xp": 50, "item": "light_shard" }
+          }
+        ],
+        "failure_consequence": "*the candle flickers sadly*",
+        "success_text": "*the candle burns brighter* Thank you! Take this!"
+      },
+      {
+        "id": "dreaming_child_spirit",
+        "name": "Dreaming Child Spirit",
+        "description": "A child's spirit asleep but speaking in dreams",
+        "greeting": "*murmurs* I'm dreaming... are you part of my dream? Answer me...",
+        "spawn_locations": ["haunted_manor", "forsaken_hamlet", "sunken_village"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "I am empty in form, yet feared in the ground, For those who step wrongly will soon tumble down.",
+            "answer": "hole",
+            "hint": "A trap underfoot...",
+            "reward": { "gold": 60, "xp": 45, "item": "dream_essence" }
+          },
+          {
+            "question": "What can run but never walks, has a mouth but never talks, has a head but never weeps, has a bed but never sleeps?",
+            "answer": "river",
+            "hint": "Like in my dreams...",
+            "reward": { "gold": 60, "xp": 45, "item": "dream_catcher" }
+          }
+        ],
+        "failure_consequence": "*turns restlessly in sleep*",
+        "success_text": "*smiles peacefully* A good dream... thank you..."
+      },
+      {
+        "id": "stone_caretaker",
+        "name": "Stone Caretaker",
+        "description": "An ancient golem still tending to a ruined garden",
+        "greeting": "*grinding stone voice* This garden... was once beautiful... prove you understand...",
+        "spawn_locations": ["overgrown_courtyard", "buried_temple", "shattered_monastery"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "My treasures are hidden, my riches concealed, To those who would dig, my secrets revealed.",
+            "answer": "earth",
+            "hint": "Where plants grow...",
+            "reward": { "gold": 85, "xp": 65, "item": "stone_seed" }
+          },
+          {
+            "question": "I slip through all fingers, yet wear down all stone, Forever in motion, yet never my own.",
+            "answer": "water",
+            "hint": "What gardens need...",
+            "reward": { "gold": 85, "xp": 65, "item": "golem_core_fragment" }
+          }
+        ],
+        "failure_consequence": "*returns to gardening silently*",
+        "success_text": "*nods slowly* You... understand... take this..."
+      },
+      {
+        "id": "stone_scribe",
+        "name": "Stone Scribe",
+        "description": "A statue holding a stone tablet, its face weathered but wise",
+        "greeting": "Words carved in stone last forever. Can your answer match their permanence?",
+        "spawn_locations": ["ancient_library", "buried_temple", "stone_circle"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "I am carved in stone, in wood, or in bone, A symbol of power that stands on its own.",
+            "answer": "rune",
+            "hint": "Ancient symbols...",
+            "reward": { "gold": 100, "xp": 75, "item": "rune_tablet" }
+          },
+          {
+            "question": "Carved into runes, in sigil or chant, I give common things a power they grant.",
+            "answer": "enchantment",
+            "hint": "Magic imbued...",
+            "reward": { "gold": 100, "xp": 75, "item": "enchanted_chisel" }
+          }
+        ],
+        "failure_consequence": "Your answer is as fleeting as sand. Begone.",
+        "success_text": "Your wisdom is carved in the annals of time. Take this."
+      },
+      {
+        "id": "talking_statue",
+        "name": "Talking Statue",
+        "description": "A marble statue that impossibly speaks with a hollow voice",
+        "greeting": "I have stood here for centuries. Test yourself against my knowledge.",
+        "spawn_locations": ["lost_amphitheater", "crumbling_fortress", "sealed_gate"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "I am crown of the hill, I am pride of the land, With towers like lances, with walls that withstand.",
+            "answer": "castle",
+            "hint": "A fortress...",
+            "reward": { "gold": 90, "xp": 70, "item": "marble_chip" }
+          },
+          {
+            "question": "Neither peasant nor king, yet honored I stand, The sword of the realm, the guard of the land.",
+            "answer": "knight",
+            "hint": "A noble warrior...",
+            "reward": { "gold": 90, "xp": 70, "item": "honor_medal" }
+          }
+        ],
+        "failure_consequence": "Stone has more wit than you. Return wiser.",
+        "success_text": "You have proven yourself. Accept this reward."
+      },
+      {
+        "id": "runestone_idol",
+        "name": "Runestone Idol",
+        "description": "A carved idol covered in glowing runes",
+        "greeting": "*runes pulse with light* Speak... the answer... and power... shall be yours...",
+        "spawn_locations": ["stone_circle", "buried_temple", "ancient_forge"],
+        "spawn_chance": 0.06,
+        "riddles": [
+          {
+            "question": "I am carved in stone, in wood, or in bone, A symbol of power that stands on its own.",
+            "answer": "rune",
+            "hint": "What covers me...",
+            "reward": { "gold": 130, "xp": 95, "item": "power_rune" }
+          },
+          {
+            "question": "Neither spell nor word, yet magic I bear, A treasure of legends beyond all compare.",
+            "answer": "artifact",
+            "hint": "An object of power...",
+            "reward": { "gold": 130, "xp": 95, "item": "runic_shard" }
+          }
+        ],
+        "failure_consequence": "*runes dim and go dark*",
+        "success_text": "*runes blaze with power* Worthy... take... this..."
+      },
+      {
+        "id": "oracle_mirror",
+        "name": "Oracle Mirror",
+        "description": "A mystical mirror that shows not your reflection but your fate",
+        "greeting": "Gaze into me and see the truth... but first, answer my question.",
+        "spawn_locations": ["half_sunk_tower", "witch_hut", "haunted_manor"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "One mirror may save you, one shield may defend, But meet my eyes bare, and your tale finds its end.",
+            "answer": "medusa",
+            "hint": "She who turns to stone...",
+            "reward": { "gold": 105, "xp": 80, "item": "mirror_shard" }
+          },
+          {
+            "question": "I grow as I'm spoken, I shrink when I'm true, A shadow of stories that twists as it flew.",
+            "answer": "rumor",
+            "hint": "Reflected truth distorted...",
+            "reward": { "gold": 105, "xp": 80, "item": "truth_reflection" }
+          }
+        ],
+        "failure_consequence": "*your reflection fades to black*",
+        "success_text": "*reveals a vision of treasure* Wisdom sees truth."
+      },
+      {
+        "id": "clockwork_owl",
+        "name": "Clockwork Owl",
+        "description": "A mechanical owl with gears clicking and whirring",
+        "greeting": "*click click* Time... *whirr* ...is precious... *tick* Answer quickly!",
+        "spawn_locations": ["half_sunk_tower", "abandoned_market", "ancient_forge"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "What has hands but cannot clap?",
+            "answer": "clock",
+            "hint": "Tick tock...",
+            "reward": { "gold": 70, "xp": 55, "item": "gear_piece" }
+          },
+          {
+            "question": "I mark your ascent, a measure of might, Each step that you climb brings new strength to fight.",
+            "answer": "level",
+            "hint": "Your progression...",
+            "reward": { "gold": 70, "xp": 55, "item": "clockwork_key" }
+          }
+        ],
+        "failure_consequence": "*gears grind to a halt* Time... wasted...",
+        "success_text": "*gears spin happily* Efficient! *drops reward*"
+      },
+      {
+        "id": "whistling_jar",
+        "name": "Whistling Jar",
+        "description": "An enchanted jar that produces haunting melodies",
+        "greeting": "*whistles a tune* Solve my riddle and I'll sing you a song!",
+        "spawn_locations": ["witch_hut", "ancient_library", "abandoned_market"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "I wander with lute, with tale and with rhyme, A keeper of stories through battle and time.",
+            "answer": "bard",
+            "hint": "A musical storyteller...",
+            "reward": { "gold": 75, "xp": 60, "item": "song_scroll" }
+          },
+          {
+            "question": "I sing through the mountain, I shriek through the plain, I come without warning, and then I vanish again.",
+            "answer": "wind",
+            "hint": "What makes me whistle...",
+            "reward": { "gold": 75, "xp": 60, "item": "wind_charm" }
+          }
+        ],
+        "failure_consequence": "*whistles a sad tune*",
+        "success_text": "*whistles triumphantly and rattles with joy*"
+      },
+      {
+        "id": "wandering_book",
+        "name": "Wandering Book",
+        "description": "A leather-bound book that floats and flips its own pages",
+        "greeting": "*pages flutter* Knowledge walks on pages... answer me this...",
+        "spawn_locations": ["ancient_library", "buried_temple", "shattered_monastery"],
+        "spawn_chance": 0.1,
+        "riddles": [
+          {
+            "question": "I carry a tome, my voice is my blade, By secrets and symbols my power is made.",
+            "answer": "mage",
+            "hint": "One who reads me...",
+            "reward": { "gold": 85, "xp": 65, "item": "bookmark_of_power" }
+          },
+          {
+            "question": "Born of the mind, yet shaping the real, I bind and I break, I curse and I heal.",
+            "answer": "spell",
+            "hint": "Written on my pages...",
+            "reward": { "gold": 85, "xp": 65, "item": "spell_fragment" }
+          },
+          {
+            "question": "I am born of the deed, yet greater I grow, A tale of the past that all mortals know.",
+            "answer": "legend",
+            "hint": "What I contain...",
+            "reward": { "gold": 85, "xp": 65, "item": "legendary_page" }
+          }
+        ],
+        "failure_consequence": "*slams shut angrily*",
+        "success_text": "*opens to reveal a hidden page with treasure*"
+      },
+      {
+        "id": "starlight_wisp",
+        "name": "Starlight Wisp",
+        "description": "A floating orb of starlight that pulses gently",
+        "greeting": "*shimmers* From the heavens I fell... answer, and I'll grant you a wish...",
+        "spawn_locations": ["starlit_ridge", "stone_circle", "stormbluff_cliffs"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "I write every color, I paint every hue, Through prism or raindrop I scatter anew.",
+            "answer": "light",
+            "hint": "What I am made of...",
+            "reward": { "gold": 95, "xp": 70, "item": "star_fragment" }
+          },
+          {
+            "question": "No wall can contain me, no chain can confine, Yet banished I am by the sun's steady shine.",
+            "answer": "darkness",
+            "hint": "My opposite...",
+            "reward": { "gold": 95, "xp": 70, "item": "night_essence" }
+          }
+        ],
+        "failure_consequence": "*dims and fades away*",
+        "success_text": "*shines brilliantly* Your wish is granted! *leaves treasure*"
+      },
+      {
+        "id": "moonbeam_hare",
+        "name": "Moonbeam Hare",
+        "description": "A spectral hare made of pale moonlight",
+        "greeting": "Catch me if you can! But first, catch the answer!",
+        "spawn_locations": ["starlit_ridge", "wildflower_meadow", "twilight_marsh"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "The more you take, the more you leave behind. What am I?",
+            "answer": "footsteps",
+            "hint": "My trail...",
+            "reward": { "gold": 70, "xp": 55, "item": "moonstone" }
+          },
+          {
+            "question": "No wall can contain me, no chain can confine, Yet banished I am by the sun's steady shine.",
+            "answer": "darkness",
+            "hint": "When I appear...",
+            "reward": { "gold": 70, "xp": 55, "item": "moon_charm" }
+          }
+        ],
+        "failure_consequence": "*bounds away into moonlight*",
+        "success_text": "*leaves a glowing trail* You're quick! Here!"
+      },
+      {
+        "id": "starling_spirit",
+        "name": "Starling Spirit",
+        "description": "A ghostly bird that leaves trails of stardust",
+        "greeting": "*chirps in celestial tones* The stars speak through me...",
+        "spawn_locations": ["starlit_ridge", "howling_plateau", "stone_circle"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "With no feathers of my own, through the air I glide, I carry no breath, yet I take men's lives.",
+            "answer": "arrow",
+            "hint": "Swift as a bird...",
+            "reward": { "gold": 80, "xp": 60, "item": "starling_feather" }
+          },
+          {
+            "question": "I am drawn without art, I am loosed without word, My silence is deadly, my music unheard.",
+            "answer": "bow",
+            "hint": "My launcher...",
+            "reward": { "gold": 80, "xp": 60, "item": "celestial_down" }
+          }
+        ],
+        "failure_consequence": "*flies away trailing disappointed stardust*",
+        "success_text": "*circles joyfully and drops a gift*"
+      },
+      {
+        "id": "crystal_orb",
+        "name": "Crystal Orb",
+        "description": "A floating crystal sphere showing swirling cosmos within",
+        "greeting": "*cosmic voice echoes* Peer into infinity... but first answer...",
+        "spawn_locations": ["crystal_cavern", "buried_temple", "half_sunk_tower"],
+        "spawn_chance": 0.06,
+        "riddles": [
+          {
+            "question": "Neither spell nor word, yet magic I bear, A treasure of legends beyond all compare.",
+            "answer": "artifact",
+            "hint": "A powerful object...",
+            "reward": { "gold": 120, "xp": 90, "item": "crystal_core" }
+          },
+          {
+            "question": "I wear no crown, yet command the sky, With staff in my hand, the stars I defy.",
+            "answer": "wizard",
+            "hint": "My creator...",
+            "reward": { "gold": 120, "xp": 90, "item": "scrying_shard" }
+          }
+        ],
+        "failure_consequence": "*dims and shows nothing*",
+        "success_text": "*reveals visions of treasure and knowledge*"
+      },
+      {
+        "id": "constellation_sprite",
+        "name": "Constellation Sprite",
+        "description": "A tiny being made of connected stars forming a pattern",
+        "greeting": "*twinkles* Connect the dots... connect the answer!",
+        "spawn_locations": ["starlit_ridge", "stone_circle", "ancient_library"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "I have cities but no houses, forests but no trees, water but no fish. What am I?",
+            "answer": "map",
+            "hint": "Like a map of the sky...",
+            "reward": { "gold": 75, "xp": 60, "item": "star_chart" }
+          },
+          {
+            "question": "What is seen in the middle of March and April that can't be seen at the beginning or end of either month?",
+            "answer": "r",
+            "hint": "Look at the letters...",
+            "reward": { "gold": 75, "xp": 60, "item": "constellation_map" }
+          }
+        ],
+        "failure_consequence": "*stars disconnect and fade*",
+        "success_text": "*forms into a treasure chest shape* Here!"
+      },
+      {
+        "id": "astral_cat",
+        "name": "Astral Cat",
+        "description": "A translucent cat made of starlight that phases in and out of reality",
+        "greeting": "*purrs* Meow... answer my riddle and I'll let you pet me...",
+        "spawn_locations": ["void_realm", "starlit_ridge", "witch_hut"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "Neither bone nor blood, yet I walk the night, A shadow of sorrow, unseen in the light.",
+            "answer": "ghost",
+            "hint": "Like me... sort of...",
+            "reward": { "gold": 85, "xp": 65, "item": "astral_whisker" }
+          },
+          {
+            "question": "I can be cracked, I can be made, I can be told, I can be played.",
+            "answer": "joke",
+            "hint": "Cats understand humor...",
+            "reward": { "gold": 85, "xp": 65, "item": "cosmic_yarn" }
+          }
+        ],
+        "failure_consequence": "*phases away with a disappointed meow*",
+        "success_text": "*purrs loudly and rubs against you, leaving a gift*"
+      },
+      {
+        "id": "timekeeper_sprite",
+        "name": "Timekeeper Sprite",
+        "description": "A tiny winged creature surrounded by floating clock gears",
+        "greeting": "*tick* Time is precious! *tock* Answer quickly!",
+        "spawn_locations": ["half_sunk_tower", "ancient_library", "sealed_gate"],
+        "spawn_chance": 0.07,
+        "riddles": [
+          {
+            "question": "What has hands but cannot clap?",
+            "answer": "clock",
+            "hint": "What surrounds me...",
+            "reward": { "gold": 90, "xp": 70, "item": "time_shard" }
+          },
+          {
+            "question": "I am the proof of battles won, The record kept of deeds well done.",
+            "answer": "experience",
+            "hint": "What you gain over time...",
+            "reward": { "gold": 90, "xp": 70, "item": "hourglass_dust" }
+          }
+        ],
+        "failure_consequence": "*all gears stop* Time... wasted...",
+        "success_text": "*gears spin wildly with joy* Perfect timing!"
+      },
+      {
+        "id": "comet_spirit",
+        "name": "Comet Spirit",
+        "description": "A blazing spirit trailing fire and ice as it streaks by",
+        "greeting": "*whooshes past* Quick! I don't have much time before I pass!",
+        "spawn_locations": ["starlit_ridge", "volcanic_peaks", "frozen_wastes"],
+        "spawn_chance": 0.05,
+        "riddles": [
+          {
+            "question": "I dance without feet, I roar without breath, I bring both warm life and merciless death.",
+            "answer": "fire",
+            "hint": "My tail...",
+            "reward": { "gold": 150, "xp": 110, "item": "comet_core" }
+          },
+          {
+            "question": "I bite without teeth, I cut without blade, I silence the river, I still what once played.",
+            "answer": "ice",
+            "hint": "My head...",
+            "reward": { "gold": 150, "xp": 110, "item": "comet_fragment" }
+          }
+        ],
+        "failure_consequence": "*streaks away into the distance*",
+        "success_text": "*explodes in a shower of treasure* A gift from the cosmos!"
+      },
+      {
+        "id": "village_storyteller",
+        "name": "Village Storyteller",
+        "description": "An old woman with twinkling eyes, always ready with a tale or riddle",
+        "greeting": "Ah, a new face! Let's see if you're as clever as you look!",
+        "spawn_locations": ["town_square", "inn", "forsaken_hamlet"],
+        "spawn_chance": 0.12,
+        "riddles": [
+          {
+            "question": "I am born of the deed, yet greater I grow, A tale of the past that all mortals know.",
+            "answer": "legend",
+            "hint": "What I tell...",
+            "reward": { "gold": 70, "xp": 55, "item": "story_scroll" }
+          },
+          {
+            "question": "I wander with lute, with tale and with rhyme, A keeper of stories through battle and time.",
+            "answer": "bard",
+            "hint": "My profession...",
+            "reward": { "gold": 70, "xp": 55, "item": "tale_token" }
+          },
+          {
+            "question": "I grow as I'm spoken, I shrink when I'm true, A shadow of stories that twists as it flew.",
+            "answer": "rumor",
+            "hint": "Village gossip...",
+            "reward": { "gold": 70, "xp": 55, "item": "gossip_note" }
+          }
+        ],
+        "failure_consequence": "*chuckles* Not quite, dear. Come back when you've learned more!",
+        "success_text": "Wonderful! You've earned a place in my next story!"
+      },
+      {
+        "id": "wandering_bard",
+        "name": "Wandering Bard",
+        "description": "A charismatic musician with a lute slung over his shoulder",
+        "greeting": "Ho there! Care for a riddle? Get it right and I'll sing your praises!",
+        "spawn_locations": ["town_square", "inn", "abandoned_market", "highland_reaches"],
+        "spawn_chance": 0.11,
+        "riddles": [
+          {
+            "question": "I wander with lute, with tale and with rhyme, A keeper of stories through battle and time.",
+            "answer": "bard",
+            "hint": "That's me!",
+            "reward": { "gold": 75, "xp": 60, "item": "bard_coin" }
+          },
+          {
+            "question": "I can be cracked, I can be made, I can be told, I can be played.",
+            "answer": "joke",
+            "hint": "Part of my repertoire...",
+            "reward": { "gold": 75, "xp": 60, "item": "jester_hat" }
+          }
+        ],
+        "failure_consequence": "Ah well, can't win them all! Come find me again!",
+        "success_text": "*strums lute triumphantly* Brilliant! Here's your reward!"
+      },
+      {
+        "id": "masked_fool",
+        "name": "Masked Fool",
+        "description": "A jester in a porcelain mask, juggling impossible objects",
+        "greeting": "Haha! The joke's on you... unless you can answer my riddle!",
+        "spawn_locations": ["lost_amphitheater", "abandoned_market", "town_square"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "I can be cracked, I can be made, I can be told, I can be played.",
+            "answer": "joke",
+            "hint": "My specialty!",
+            "reward": { "gold": 65, "xp": 50, "item": "fool_mask" }
+          },
+          {
+            "question": "What gets wetter the more it dries?",
+            "answer": "towel",
+            "hint": "Absurd, isn't it?",
+            "reward": { "gold": 65, "xp": 50, "item": "jester_bauble" }
+          }
+        ],
+        "failure_consequence": "*laughs maniacally* The joke IS you! Hahahaha!",
+        "success_text": "*tips mask* Well played! The joke's on me this time!"
+      },
+      {
+        "id": "pilgrim_sage",
+        "name": "Pilgrim Sage",
+        "description": "A weathered traveler with prayer beads and a walking stick",
+        "greeting": "The path of wisdom is long. Let us see if you've walked it.",
+        "spawn_locations": ["stone_circle", "temple", "buried_temple", "highland_reaches"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "My words are of light, my touch can restore, The fallen may rise when I pray once more.",
+            "answer": "cleric",
+            "hint": "My calling...",
+            "reward": { "gold": 95, "xp": 70, "item": "prayer_beads" }
+          },
+          {
+            "question": "I begin with a call, I end with a name, I carry no coin, yet bring fortune and fame.",
+            "answer": "quest",
+            "hint": "My journey...",
+            "reward": { "gold": 95, "xp": 70, "item": "pilgrim_staff" }
+          }
+        ],
+        "failure_consequence": "The path remains closed to you. Seek more wisdom, child.",
+        "success_text": "You have walked the path well. May this aid your journey."
+      },
+      {
+        "id": "old_farmer",
+        "name": "Old Farmer",
+        "description": "A sun-weathered farmer leaning on a pitchfork",
+        "greeting": "City folk think they're clever. Let's see if you know simple truths.",
+        "spawn_locations": ["rolling_hills", "wildflower_meadow", "forsaken_hamlet"],
+        "spawn_chance": 0.1,
+        "riddles": [
+          {
+            "question": "My treasures are hidden, my riches concealed, To those who would dig, my secrets revealed.",
+            "answer": "earth",
+            "hint": "What I work with...",
+            "reward": { "gold": 60, "xp": 45, "item": "fertile_soil" }
+          },
+          {
+            "question": "I slip through all fingers, yet wear down all stone, Forever in motion, yet never my own.",
+            "answer": "water",
+            "hint": "Crops need it...",
+            "reward": { "gold": 60, "xp": 45, "item": "well_bucket" }
+          }
+        ],
+        "failure_consequence": "*shakes head* City folk... all book learning, no common sense.",
+        "success_text": "Heh! Maybe you're smarter than you look! Take this."
+      },
+      {
+        "id": "lantern_bearer_child",
+        "name": "Lantern-Bearer Child",
+        "description": "A young child carrying an oversized lantern that never dims",
+        "greeting": "Mama says I should test people before helping them! Here's a riddle!",
+        "spawn_locations": ["town_square", "inn", "whispering_woods"],
+        "spawn_chance": 0.1,
+        "riddles": [
+          {
+            "question": "I write every color, I paint every hue, Through prism or raindrop I scatter anew.",
+            "answer": "light",
+            "hint": "What my lantern makes!",
+            "reward": { "gold": 55, "xp": 40, "item": "lantern_oil" }
+          },
+          {
+            "question": "I burn without hatred, I fade without fight, I banish the shadows and carry the light.",
+            "answer": "candle",
+            "hint": "Inside my lantern!",
+            "reward": { "gold": 55, "xp": 40, "item": "bright_candle" }
+          }
+        ],
+        "failure_consequence": "*pouts* You don't know? Come back when you're smarter!",
+        "success_text": "*giggles* You're smart! Here, take this!"
+      },
+      {
+        "id": "blind_poet",
+        "name": "Blind Poet",
+        "description": "An elderly blind man who sees more than those with sight",
+        "greeting": "Darkness teaches one to see with the mind. Answer my riddle.",
+        "spawn_locations": ["town_square", "inn", "lost_amphitheater"],
+        "spawn_chance": 0.08,
+        "riddles": [
+          {
+            "question": "No wall can contain me, no chain can confine, Yet banished I am by the sun's steady shine.",
+            "answer": "darkness",
+            "hint": "My world...",
+            "reward": { "gold": 85, "xp": 65, "item": "shadow_verse" }
+          },
+          {
+            "question": "I am born of the deed, yet greater I grow, A tale of the past that all mortals know.",
+            "answer": "legend",
+            "hint": "What I recite...",
+            "reward": { "gold": 85, "xp": 65, "item": "epic_scroll" }
+          }
+        ],
+        "failure_consequence": "You see with eyes but not with mind. Return when you understand.",
+        "success_text": "Ah, you see the truth. Take this with my blessing."
+      },
+      {
+        "id": "wandering_cobbler",
+        "name": "Wandering Cobbler",
+        "description": "A cheerful cobbler with patches on his clothes and worn boots",
+        "greeting": "A good pair of boots will take you far! But first, a riddle!",
+        "spawn_locations": ["town_square", "abandoned_market", "rolling_hills"],
+        "spawn_chance": 0.09,
+        "riddles": [
+          {
+            "question": "The more you take, the more you leave behind. What am I?",
+            "answer": "footsteps",
+            "hint": "What boots make!",
+            "reward": { "gold": 65, "xp": 50, "item": "sturdy_boots" }
+          },
+          {
+            "question": "I begin with a call, I end with a name, I carry no coin, yet bring fortune and fame.",
+            "answer": "quest",
+            "hint": "Why people need good boots!",
+            "reward": { "gold": 65, "xp": 50, "item": "traveling_shoes" }
+          }
+        ],
+        "failure_consequence": "Ah well, can't all be clever! Come back anytime!",
+        "success_text": "Excellent! You've earned these fine boots!"
+      }
+    ],
+    "special_encounters": [
+      {
+        "id": "captain_sylvara_windwhisper",
+        "name": "Captain Sylvara Windwhisper",
+        "description": "A skilled ranger captain with a longbow and keen eyes that miss nothing",
+        "greeting": "Well met, traveler. The woods speak to those who listen. Do you hear them?",
+        "spawn_locations": ["whispering_woods", "ranger_outpost", "ancient_grove"],
+        "spawn_chance": 0.12,
+        "encounter_type": "faction_leader",
+        "faction": "whispering_woods_rangers",
+        "options": [
+          {
+            "choice": "Join the Rangers",
+            "outcome": "faction_join",
+            "result": { "reputation": 100, "text": "Welcome to the Rangers. Together we protect these woods." }
+          },
+          {
+            "choice": "Ask about quests",
+            "outcome": "quest_info",
+            "result": { "text": "We need help tracking a dangerous beast terrorizing travelers." }
+          },
+          {
+            "choice": "Leave peacefully",
+            "outcome": "nothing",
+            "result": { "text": "May the wind guide your path, friend." }
+          }
+        ]
+      },
+      {
+        "id": "commander_aldric_ironheart",
+        "name": "Commander Aldric Ironheart",
+        "description": "A battle-scarred commander in heavy plate armor, leading the Highland Militia",
+        "greeting": "Stand tall, soldier! The Highlands need strong backs and brave hearts!",
+        "spawn_locations": ["highland_fortress", "highland_reaches", "militia_camp"],
+        "spawn_chance": 0.1,
+        "encounter_type": "faction_leader",
+        "faction": "highland_militia",
+        "options": [
+          {
+            "choice": "Enlist in the Militia",
+            "outcome": "faction_join",
+            "result": { "reputation": 100, "text": "Good! We march at dawn. Steel yourself for battle." }
+          },
+          {
+            "choice": "Request training",
+            "outcome": "training",
+            "result": { "stat_boost": "strength", "text": "Ten laps around the fort! Let's build that strength!" }
+          },
+          {
+            "choice": "Decline",
+            "outcome": "nothing",
+            "result": { "text": "Suit yourself. We'll be here when you grow a spine." }
+          }
+        ]
+      },
+      {
+        "id": "the_faceless_one",
+        "name": "The Faceless One",
+        "description": "A mysterious figure in black whose face is perpetually obscured by shadow",
+        "greeting": "Ssss... you have potential. The Syndicate could use someone like you...",
+        "spawn_locations": ["shadow_district", "thieves_alley", "underground_market"],
+        "spawn_chance": 0.05,
+        "encounter_type": "faction_leader",
+        "faction": "shadow_syndicate",
+        "options": [
+          {
+            "choice": "Join the Syndicate",
+            "outcome": "faction_join",
+            "result": { "reputation": 100, "text": "Welcome to the shadows. Your first contract awaits..." }
+          },
+          {
+            "choice": "Refuse",
+            "outcome": "threat",
+            "result": { "text": "A shame. Do remember - we have eyes everywhere..." }
+          },
+          {
+            "choice": "Report to authorities",
+            "outcome": "hostile",
+            "result": { "debuff": "marked_for_death", "text": "You fool... you've made a grave mistake." }
+          }
+        ]
+      },
+      {
+        "id": "archmage_thalindra_wise",
+        "name": "Archmage Thalindra the Wise",
+        "description": "An elderly mage with silver hair and robes crackling with arcane energy",
+        "greeting": "Ah, a seeker of knowledge. The arcane arts call to you, don't they?",
+        "spawn_locations": ["mage_tower", "arcane_library", "crystal_sanctum"],
+        "spawn_chance": 0.08,
+        "encounter_type": "faction_leader",
+        "faction": "mages_conclave",
+        "options": [
+          {
+            "choice": "Study under the Conclave",
+            "outcome": "faction_join",
+            "result": { "reputation": 100, "text": "Excellent. The path of magic is arduous but rewarding." }
+          },
+          {
+            "choice": "Request spell training",
+            "outcome": "training",
+            "result": { "stat_boost": "magic", "text": "Focus your mind. Channel the mana through intent..." }
+          },
+          {
+            "choice": "Politely decline",
+            "outcome": "nothing",
+            "result": { "text": "As you wish. The offer stands should you change your mind." }
+          }
+        ]
+      },
+      {
+        "id": "lich_lord_malachar",
+        "name": "Lich Lord Malachar",
+        "description": "A skeletal figure in tattered robes, emanating an aura of death and decay",
+        "greeting": "Mortal... you stand before eternity itself. Kneel, or perish.",
+        "spawn_locations": ["undead_citadel", "cursed_necropolis", "death_realm"],
+        "spawn_chance": 0.03,
+        "encounter_type": "faction_leader",
+        "faction": "undead_legion",
+        "options": [
+          {
+            "choice": "Pledge yourself to undeath",
+            "outcome": "faction_join",
+            "result": { "reputation": 100, "text": "Rise as one of the Legion. Death is but the beginning..." }
+          },
+          {
+            "choice": "Challenge the Lich",
+            "outcome": "combat",
+            "result": { "text": "Foolish mortal! Face oblivion!" }
+          },
+          {
+            "choice": "Flee in terror",
+            "outcome": "escape",
+            "result": { "debuff": "terror", "text": "Run, worm! But death comes for all..." }
+          }
+        ]
+      },
+      {
+        "id": "archdruid_thornweave",
+        "name": "Archdruid Thornweave",
+        "description": "An ancient druid whose body seems to be part tree, with bark-like skin and moss growing on their shoulders",
+        "greeting": "The forest welcomes you, child of the world. Nature's balance must be maintained...",
+        "spawn_locations": ["druid_grove", "sacred_oak", "nature_sanctuary"],
+        "spawn_chance": 0.09,
+        "encounter_type": "faction_leader",
+        "faction": "druid_circle",
+        "options": [
+          {
+            "choice": "Join the Druid Circle",
+            "outcome": "faction_join",
+            "result": { "reputation": 100, "text": "You are now bound to nature's covenant. Protect the balance." }
+          },
+          {
+            "choice": "Learn nature magic",
+            "outcome": "training",
+            "result": { "spell_learn": "nature_magic", "text": "Feel the life force flowing through all living things..." }
+          },
+          {
+            "choice": "Leave respectfully",
+            "outcome": "nothing",
+            "result": { "text": "Go in peace. May the forest watch over you." }
+          }
+        ]
+      },
+      {
+        "id": "mysterious_stranger",
+        "name": "???",
+        "description": "A cloaked figure materializes from the shadows",
+        "greeting": "...",
+        "spawn_locations": ["void_realm", "cursed_swamp", "ancient_crypts"],
+        "spawn_chance": 0.03,
+        "encounter_type": "mysterious",
+        "options": [
+          {
+            "choice": "Approach cautiously",
+            "outcome": "item_gift",
+            "result": { "item": "mysterious_gift", "text": "The figure hands you something and vanishes." }
+          },
+          {
+            "choice": "Attack",
+            "outcome": "curse",
+            "result": { "debuff": "curse_of_shadows", "text": "The figure laughs and you feel weakened." }
+          },
+          {
+            "choice": "Ignore and walk away",
+            "outcome": "nothing",
+            "result": { "text": "The figure fades away as if it never existed." }
+          }
+        ]
+      },
+      {
+        "id": "fairy_circle",
+        "name": "Fairy Ring",
+        "description": "A circle of glowing mushrooms with tiny lights dancing above",
+        "greeting": "Step into the circle, mortal, and make your wish...",
+        "spawn_locations": ["whispering_woods", "wildflower_meadow", "shaded_glade"],
+        "spawn_chance": 0.08,
+        "encounter_type": "magical",
+        "options": [
+          {
+            "choice": "Step inside",
+            "outcome": "random",
+            "possible_results": [
+              { "effect": "blessing", "text": "Fairy magic envelops you! +10 to all stats for 10 turns!" },
+              { "effect": "curse", "text": "The fairies cackle! You've been turned into a frog! (temporarily)" },
+              { "effect": "teleport", "text": "The world spins! You're somewhere else now!" }
+            ]
+          },
+          {
+            "choice": "Leave an offering",
+            "outcome": "gift",
+            "cost": { "gold": 50 },
+            "result": { "item": "fairy_blessing", "text": "The fairies accept your gift and bless you." }
+          },
+          {
+            "choice": "Walk away",
+            "outcome": "nothing",
+            "result": { "text": "Best not to meddle with fairy folk." }
+          }
+        ]
+      },
+      {
+        "id": "old_hermit",
+        "name": "Grimwald the Hermit",
+        "description": "An ancient man sitting by a campfire",
+        "greeting": "Ah, a visitor. It's been so long... sit, rest a while.",
+        "spawn_locations": ["whispering_woods", "highland_reaches", "ashen_barrens"],
+        "spawn_chance": 0.12,
+        "encounter_type": "rest",
+        "benefits": {
+          "full_heal": true,
+          "buff": "hermit_wisdom",
+          "duration": 5
+        },
+        "dialogue": [
+          "I've been out here forty years. Seen things you wouldn't believe.",
+          "The world moves too fast. Out here, time is different.",
+          "Rest, young one. The road ahead is dangerous."
+        ]
+      },
+      {
+        "id": "traveling_bard",
+        "name": "Lyra the Songstress",
+        "description": "A beautiful woman with a lute, singing a haunting melody",
+        "greeting": "Well met, traveler! Care to hear a song? Or perhaps you have a tale to share?",
+        "spawn_locations": ["town_square", "inn", "abandoned_market", "highland_reaches"],
+        "spawn_chance": 0.15,
+        "encounter_type": "entertainment",
+        "services": [
+          {
+            "service": "Inspiring Song",
+            "cost": 20,
+            "effect": { "buff": "inspired", "duration": 10, "bonus": { "attack": 5, "defense": 5 } }
+          },
+          {
+            "service": "Share Your Story",
+            "cost": 0,
+            "effect": { "gold": 30, "text": "She rewards you with coin for your tale!" }
+          },
+          {
+            "service": "Learn a Song",
+            "cost": 50,
+            "effect": { "item": "bard_song_scroll", "text": "She teaches you an ancient ballad." }
+          }
+        ],
+        "dialogue": [
+          "Music soothes even the most savage beast.",
+          "Every adventurer has a story. What's yours?",
+          "The best tales are earned, not told."
+        ]
+      },
+      {
+        "id": "ghost",
+        "name": "Restless Spirit",
+        "description": "A translucent figure hovering above the ground",
+        "greeting": "Please... help me find peace...",
+        "spawn_locations": ["forsaken_ruins", "ancient_crypts", "haunted_manor", "cursed_swamp"],
+        "spawn_chance": 0.1,
+        "encounter_type": "haunting",
+        "options": [
+          {
+            "choice": "Listen to their story",
+            "outcome": "quest",
+            "result": { "quest": "lay_spirit_to_rest", "text": "The spirit tells you of unfinished business..." }
+          },
+          {
+            "choice": "Perform exorcism",
+            "outcome": "combat",
+            "result": { "fight": "angry_spirit", "text": "The spirit becomes hostile!" }
+          },
+          {
+            "choice": "Leave quickly",
+            "outcome": "nothing",
+            "result": { "text": "The spirit's wails fade as you hurry away." }
+          }
+        ]
+      }
+    ]
+  }
+}

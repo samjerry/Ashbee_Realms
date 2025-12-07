@@ -1,0 +1,392 @@
+{
+  "titles": {
+    "combat_titles": [
+      {
+        "id": "novice_fighter",
+        "name": "Novice Fighter",
+        "description": "Just starting your combat journey",
+        "icon": "⚔️",
+        "rarity": "common",
+        "unlock": {"type": "monster_kills", "count": 1},
+        "stats": {}
+      },
+      {
+        "id": "monster_slayer",
+        "name": "Monster Slayer",
+        "description": "Slayer of countless monsters",
+        "icon": "⚔️",
+        "rarity": "uncommon",
+        "unlock": {"type": "monster_kills", "count": 100},
+        "stats": {"attack": 5}
+      },
+      {
+        "id": "legendary_hunter",
+        "name": "the Legendary Hunter",
+        "description": "A hunter of legendary status",
+        "icon": "🏹",
+        "rarity": "legendary",
+        "unlock": {"type": "monster_kills", "count": 1000},
+        "stats": {"attack": 20, "crit_chance": 0.05},
+        "special": "Feared by beasts"
+      },
+      {
+        "id": "boss_vanquisher",
+        "name": "Boss Vanquisher",
+        "description": "Defeats bosses with ease",
+        "icon": "👑",
+        "rarity": "rare",
+        "unlock": {"type": "boss_kills", "count": 10},
+        "stats": {"attack": 10, "boss_damage": 0.10}
+      },
+      {
+        "id": "untouchable",
+        "name": "the Untouchable",
+        "description": "Never takes damage",
+        "icon": "✨",
+        "rarity": "rare",
+        "unlock": {"type": "achievement", "achievement_id": "flawless_victory"},
+        "stats": {"evasion": 0.05, "defense": 10}
+      },
+      {
+        "id": "devastating",
+        "name": "the Devastating",
+        "description": "Deals catastrophic damage",
+        "icon": "💀",
+        "rarity": "epic",
+        "unlock": {"type": "achievement", "achievement_id": "overkill"},
+        "stats": {"attack": 30, "crit_damage": 0.15}
+      },
+      {
+        "id": "survivor",
+        "name": "Survivor",
+        "description": "Defies death itself",
+        "icon": "🛡️",
+        "rarity": "rare",
+        "unlock": {"type": "achievement", "achievement_id": "survivor"},
+        "stats": {"max_hp": 50, "defense": 5}
+      },
+      {
+        "id": "beast_slayer",
+        "name": "the Beast Slayer",
+        "description": "Master hunter of dangerous beasts",
+        "icon": "🐻",
+        "rarity": "rare",
+        "unlock": {"type": "quest", "quest_id": "beast_hunter"},
+        "stats": {"beast_damage": 0.25}
+      }
+    ],
+    "exploration_titles": [
+      {
+        "id": "pathfinder",
+        "name": "Pathfinder",
+        "description": "Discovers many locations",
+        "icon": "🗺️",
+        "rarity": "uncommon",
+        "unlock": {"type": "locations_visited", "count": 20},
+        "stats": {"movement_speed": 0.10}
+      },
+      {
+        "id": "master_explorer",
+        "name": "Master Explorer",
+        "description": "Explored every corner of the realm",
+        "icon": "🌍",
+        "rarity": "epic",
+        "unlock": {"type": "achievement", "achievement_id": "master_explorer"},
+        "stats": {"movement_speed": 0.15, "discovery_chance": 0.10}
+      },
+      {
+        "id": "dungeon_delver",
+        "name": "Dungeon Delver",
+        "description": "Conquers many dungeons",
+        "icon": "🏰",
+        "rarity": "rare",
+        "unlock": {"type": "dungeons_completed", "count": 5},
+        "stats": {"dungeon_stats": 0.10}
+      },
+      {
+        "id": "secret_finder",
+        "name": "the Secret Finder",
+        "description": "Uncovers hidden mysteries",
+        "icon": "🔍",
+        "rarity": "rare",
+        "unlock": {"type": "secrets_found", "count": 10},
+        "stats": {"discovery_chance": 0.15}
+      }
+    ],
+    "wealth_titles": [
+      {
+        "id": "merchant_prince",
+        "name": "Merchant Prince",
+        "description": "Amassed great wealth",
+        "icon": "💰",
+        "rarity": "epic",
+        "unlock": {"type": "gold_accumulated", "amount": 50000},
+        "stats": {"gold_find": 0.15, "merchant_discount": 0.10}
+      },
+      {
+        "id": "legendary_collector",
+        "name": "the Legendary Collector",
+        "description": "Owns many legendary items",
+        "icon": "✨",
+        "rarity": "legendary",
+        "unlock": {"type": "legendary_items_owned", "count": 5},
+        "stats": {"legendary_drop_chance": 0.05}
+      }
+    ],
+    "progression_titles": [
+      {
+        "id": "apprentice",
+        "name": "Apprentice",
+        "description": "Beginning to master your skills",
+        "icon": "⬆️",
+        "rarity": "common",
+        "unlock": {"type": "level_reached", "level": 10},
+        "stats": {"xp_bonus": 0.05}
+      },
+      {
+        "id": "veteran",
+        "name": "Veteran",
+        "description": "Battle-hardened warrior",
+        "icon": "⬆️",
+        "rarity": "rare",
+        "unlock": {"type": "level_reached", "level": 25},
+        "stats": {"all_stats": 5, "xp_bonus": 0.10}
+      },
+      {
+        "id": "ascended",
+        "name": "the Ascended",
+        "description": "Reached the pinnacle of power",
+        "icon": "⬆️",
+        "rarity": "legendary",
+        "unlock": {"type": "level_reached", "level": 50},
+        "stats": {"all_stats": 15, "all_multipliers": 0.10}
+      },
+      {
+        "id": "quick_learner",
+        "name": "Quick Learner",
+        "description": "Learns exceptionally fast",
+        "icon": "⚡",
+        "rarity": "rare",
+        "unlock": {"type": "achievement", "achievement_id": "quick_learner"},
+        "stats": {"xp_bonus": 0.20}
+      }
+    ],
+    "faction_titles": [
+      {
+        "id": "friend_of_forest",
+        "name": "Friend of the Forest",
+        "description": "Ally of the Rangers",
+        "icon": "🌲",
+        "rarity": "uncommon",
+        "unlock": {"type": "faction_reputation", "faction": "whispering_woods_rangers", "tier": "friendly"},
+        "stats": {"nature_damage": 0.10}
+      },
+      {
+        "id": "champion_of_woods",
+        "name": "Champion of the Woods",
+        "description": "Greatest ally of the Rangers",
+        "icon": "🌲",
+        "rarity": "epic",
+        "unlock": {"type": "faction_reputation", "faction": "whispering_woods_rangers", "tier": "exalted"},
+        "stats": {"nature_damage": 0.25, "beast_ally": true}
+      },
+      {
+        "id": "hero_of_highlands",
+        "name": "Hero of the Highlands",
+        "description": "Protector of humanity",
+        "icon": "🏔️",
+        "rarity": "epic",
+        "unlock": {"type": "faction_reputation", "faction": "highland_militia", "tier": "exalted"},
+        "stats": {"reputation_gain": 0.15}
+      },
+      {
+        "id": "shadow_lord",
+        "name": "Shadow Lord",
+        "description": "Master of the shadows",
+        "icon": "🌑",
+        "rarity": "legendary",
+        "unlock": {"type": "faction_reputation", "faction": "shadow_syndicate", "tier": "exalted"},
+        "stats": {"stealth": 0.30, "night_bonus": 0.20}
+      }
+    ],
+    "special_titles": [
+      {
+        "id": "death_defier",
+        "name": "Death Defier",
+        "description": "Has cheated death many times",
+        "icon": "💀",
+        "rarity": "uncommon",
+        "unlock": {"type": "deaths", "count": 10},
+        "stats": {"resurrection_chance": 0.05}
+      },
+      {
+        "id": "iron_man",
+        "name": "the Iron Man",
+        "description": "Unyielding and unbreakable",
+        "icon": "🛡️",
+        "rarity": "legendary",
+        "unlock": {"type": "achievement", "achievement_id": "iron_man"},
+        "stats": {"max_hp": 100, "defense": 20, "death_save_chance": 0.10}
+      },
+      {
+        "id": "speed_runner",
+        "name": "Speed Runner",
+        "description": "Completes challenges with incredible speed",
+        "icon": "⏱️",
+        "rarity": "epic",
+        "unlock": {"type": "achievement", "achievement_id": "speed_runner"},
+        "stats": {"movement_speed": 0.20, "cooldown_reduction": 0.15}
+      },
+      {
+        "id": "cursed_one",
+        "name": "the Cursed One",
+        "description": "Embraces dark power",
+        "icon": "🌑",
+        "rarity": "rare",
+        "unlock": {"type": "achievement", "achievement_id": "cursed_one"},
+        "stats": {"curse_power": 0.50, "curse_resistance": 0.30}
+      },
+      {
+        "id": "mystery_solver",
+        "name": "the Mystery Solver",
+        "description": "Unraveled all secrets",
+        "icon": "🔮",
+        "rarity": "legendary",
+        "unlock": {"type": "achievement", "achievement_id": "mystery_solver"},
+        "stats": {"all_stats": 10, "secret_sense": true}
+      },
+      {
+        "id": "time_traveler",
+        "name": "Time Traveler",
+        "description": "Walked through the ages",
+        "icon": "⏳",
+        "rarity": "epic",
+        "unlock": {"type": "achievement", "achievement_id": "time_traveler"},
+        "stats": {"temporal_power": 0.15}
+      },
+      {
+        "id": "savior_of_ashbee",
+        "name": "Savior of Ashbee",
+        "description": "Saved the realm from darkness",
+        "icon": "🌟",
+        "rarity": "legendary",
+        "unlock": {"type": "quest", "quest_id": "ancient_evil"},
+        "stats": {"all_stats": 25, "all_multipliers": 0.15, "legendary_aura": true}
+      },
+      {
+        "id": "goblin_slayer",
+        "name": "Goblin Slayer",
+        "description": "Scourge of goblinkind",
+        "icon": "⚔️",
+        "rarity": "uncommon",
+        "unlock": {"type": "dungeon_clear", "dungeon_id": "goblin_warrens"},
+        "stats": {"goblin_damage": 0.30}
+      },
+      {
+        "id": "crypt_delver",
+        "name": "Crypt Delver",
+        "description": "Braved the tombs of the dead",
+        "icon": "💀",
+        "rarity": "rare",
+        "unlock": {"type": "dungeon_clear", "dungeon_id": "crypts_of_the_forgotten"},
+        "stats": {"undead_damage": 0.25}
+      },
+      {
+        "id": "shadowbane",
+        "name": "Shadowbane",
+        "description": "Conquered the Lord of Shadows",
+        "icon": "🌟",
+        "rarity": "legendary",
+        "unlock": {"type": "dungeon_clear", "dungeon_id": "shadow_keep"},
+        "stats": {"shadow_resistance": 0.50, "light_damage": 0.30, "all_stats": 20}
+      },
+      {
+        "id": "ascended_one",
+        "name": "the Ascended One",
+        "description": "Climbed the Tower of Trials",
+        "icon": "🗼",
+        "rarity": "legendary",
+        "unlock": {"type": "trial_floor", "floor": 100},
+        "stats": {"all_stats": 30, "trial_power": 0.20}
+      },
+      {
+        "id": "streamer",
+        "name": "Streamer",
+        "description": "Plays for an audience",
+        "icon": "📺",
+        "rarity": "common",
+        "unlock": {"type": "twitch_stream", "count": 1},
+        "stats": {"viewer_bonus": 0.05}
+      },
+      {
+        "id": "chat_favorite",
+        "name": "Chat Favorite",
+        "description": "Beloved by Twitch chat",
+        "icon": "💬",
+        "rarity": "uncommon",
+        "unlock": {"type": "chat_interactions", "count": 100},
+        "stats": {"twitch_bonus": 0.10}
+      },
+      {
+        "id": "raid_leader",
+        "name": "Raid Leader",
+        "description": "Leads viewers to victory",
+        "icon": "👥",
+        "rarity": "rare",
+        "unlock": {"type": "achievement", "achievement_id": "raid_leader"},
+        "stats": {"group_bonus": 0.15}
+      },
+      {
+        "id": "season_1_champion",
+        "name": "Season 1 Champion",
+        "description": "Dominated Season 1",
+        "icon": "🏆",
+        "rarity": "legendary",
+        "unlock": {"type": "season", "season_id": 1},
+        "stats": {"legacy_power": 0.20},
+        "time_limited": true
+      }
+    ]
+  },
+  "title_display": {
+    "prefix_titles": [
+      "the Legendary Hunter",
+      "the Untouchable",
+      "the Devastating",
+      "the Beast Slayer",
+      "the Secret Finder",
+      "the Legendary Collector",
+      "the Ascended",
+      "the Cursed One",
+      "the Mystery Solver",
+      "Shadow Lord",
+      "the Iron Man",
+      "Shadowbane",
+      "the Ascended One"
+    ],
+    "suffix_titles": [
+      "Novice Fighter",
+      "Monster Slayer",
+      "Boss Vanquisher",
+      "Pathfinder",
+      "Master Explorer",
+      "Dungeon Delver",
+      "Merchant Prince",
+      "Apprentice",
+      "Veteran",
+      "Death Defier",
+      "Speed Runner",
+      "Goblin Slayer",
+      "Streamer",
+      "Chat Favorite",
+      "Raid Leader"
+    ]
+  },
+  "title_colors": {
+    "common": "#808080",
+    "uncommon": "#00FF00",
+    "rare": "#0070DD",
+    "epic": "#A335EE",
+    "legendary": "#FF8000"
+  }
+}

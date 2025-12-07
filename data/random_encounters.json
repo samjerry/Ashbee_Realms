@@ -1,0 +1,437 @@
+{
+  "encounters": {
+    "mysterious_stranger": {
+      "name": "Mysterious Stranger",
+      "type": "npc",
+      "rarity": "uncommon",
+      "description": "A hooded figure approaches you with an offer",
+      "locations": ["any"],
+      "choices": [
+        {
+          "text": "Listen to the stranger",
+          "outcomes": [
+            {
+              "chance": 0.6,
+              "result": "The stranger offers a quest",
+              "effect": "grant_quest",
+              "quest": "mysterious_stranger_quest"
+            },
+            {
+              "chance": 0.3,
+              "result": "The stranger sells you a rare item",
+              "effect": "shop_rare_items"
+            },
+            {
+              "chance": 0.1,
+              "result": "The stranger reveals lore",
+              "effect": "unlock_lore",
+              "lore_id": "ancient_prophecy"
+            }
+          ]
+        },
+        {
+          "text": "Ignore the stranger",
+          "result": "The stranger vanishes without a word",
+          "effect": "nothing"
+        },
+        {
+          "text": "Attack the stranger",
+          "result": "The stranger was a powerful mage! Combat begins",
+          "effect": "combat",
+          "enemy": "mysterious_mage"
+        }
+      ]
+    },
+    "dying_soldier": {
+      "name": "Dying Soldier",
+      "type": "moral_choice",
+      "rarity": "uncommon",
+      "description": "You find a dying soldier clutching a bag of gold",
+      "locations": ["battlegrounds", "grasslands", "highlands"],
+      "choices": [
+        {
+          "text": "Try to save the soldier",
+          "outcomes": [
+            {
+              "chance": 0.7,
+              "result": "You save the soldier! He thanks you and gives you his gold",
+              "effect": "gold",
+              "amount": 200,
+              "reputation": 10
+            },
+            {
+              "chance": 0.3,
+              "result": "Despite your efforts, the soldier dies in your arms",
+              "effect": "nothing",
+              "status": "Apply sadness debuff"
+            }
+          ]
+        },
+        {
+          "text": "Take the gold and leave",
+          "result": "You take the gold and leave the soldier to die",
+          "effect": "gold",
+          "amount": 300,
+          "reputation": -25,
+          "alignment": -10
+        },
+        {
+          "text": "Comfort the soldier in his final moments",
+          "result": "The soldier dies peacefully. You find a family heirloom on him",
+          "effect": "item",
+          "item": "soldiers_locket",
+          "quest_trigger": "return_locket_to_family"
+        }
+      ]
+    },
+    "wandering_merchant": {
+      "name": "Wandering Merchant",
+      "type": "shop",
+      "rarity": "common",
+      "description": "A traveling merchant with exotic wares",
+      "locations": ["any"],
+      "special_inventory": {
+        "always_has": ["health_potion", "scroll_of_town_portal"],
+        "rare_chance": ["legendary_item", "rare_mount", "unique_cosmetic"],
+        "prices": "20% higher than normal"
+      },
+      "choices": [
+        {
+          "text": "Browse the merchant's wares",
+          "effect": "open_shop"
+        },
+        {
+          "text": "Ask about rumors",
+          "result": "The merchant shares information about the area",
+          "effect": "reveal_map_area"
+        },
+        {
+          "text": "Rob the merchant",
+          "outcomes": [
+            {
+              "chance": 0.3,
+              "result": "You successfully rob the merchant!",
+              "effect": "gold",
+              "amount": 500,
+              "reputation": -50
+            },
+            {
+              "chance": 0.7,
+              "result": "The merchant's guards attack!",
+              "effect": "combat",
+              "enemy": "merchant_guard"
+            }
+          ]
+        }
+      ]
+    },
+    "cursed_chest": {
+      "name": "Cursed Chest",
+      "type": "trap",
+      "rarity": "rare",
+      "description": "An ornate chest radiates dark energy",
+      "locations": ["dungeons", "cursed_swamp", "shadow_realm"],
+      "choices": [
+        {
+          "text": "Open the chest carefully",
+          "outcomes": [
+            {
+              "chance": 0.4,
+              "result": "You find treasure inside!",
+              "effect": "loot",
+              "loot_table": "rare"
+            },
+            {
+              "chance": 0.4,
+              "result": "The chest is trapped! You take damage and get cursed",
+              "effect": "damage",
+              "amount": 50,
+              "status_effect": "cursed"
+            },
+            {
+              "chance": 0.2,
+              "result": "A demon bursts out of the chest!",
+              "effect": "combat",
+              "enemy": "chest_demon"
+            }
+          ]
+        },
+        {
+          "text": "Use a scroll of identify",
+          "requirements": ["scroll_of_identify"],
+          "result": "The scroll reveals: This chest contains legendary loot but is heavily cursed",
+          "effect": "reveal_contents"
+        },
+        {
+          "text": "Leave the chest alone",
+          "result": "You wisely decide not to tempt fate",
+          "effect": "nothing"
+        }
+      ]
+    },
+    "fortune_teller": {
+      "name": "Fortune Teller",
+      "type": "mystical",
+      "rarity": "rare",
+      "description": "An old woman offers to read your fortune",
+      "locations": ["towns", "forest_camps"],
+      "cost": 50,
+      "choices": [
+        {
+          "text": "Pay for a fortune reading (50 gold)",
+          "outcomes": [
+            {
+              "chance": 0.3,
+              "result": "Good fortune! You gain a temporary luck buff",
+              "effect": "buff",
+              "status_effect": "fortunate",
+              "duration": 3600
+            },
+            {
+              "chance": 0.3,
+              "result": "The fortune teller reveals the location of treasure",
+              "effect": "reveal_treasure"
+            },
+            {
+              "chance": 0.2,
+              "result": "Dark omens... You gain +10% XP but take +10% damage for 1 hour",
+              "effect": "double_edged_buff"
+            },
+            {
+              "chance": 0.2,
+              "result": "The fortune teller is a fraud and runs off with your money",
+              "effect": "nothing"
+            }
+          ]
+        },
+        {
+          "text": "Refuse and walk away",
+          "effect": "nothing"
+        }
+      ]
+    },
+    "arena_challenger": {
+      "name": "Arena Challenger",
+      "type": "combat",
+      "rarity": "uncommon",
+      "description": "A warrior challenges you to a duel",
+      "locations": ["towns", "battlegrounds"],
+      "choices": [
+        {
+          "text": "Accept the challenge",
+          "result": "You enter the arena!",
+          "effect": "arena_combat",
+          "enemy_level": "player_level",
+          "rewards": {
+            "victory": ["gold", "arena_tokens", "reputation"],
+            "defeat": ["nothing"]
+          }
+        },
+        {
+          "text": "Decline the challenge",
+          "result": "The warrior mocks your cowardice",
+          "effect": "nothing"
+        },
+        {
+          "text": "Challenge them to a bet instead",
+          "result": "Engage in a gambling minigame",
+          "effect": "gambling",
+          "stakes": "100_gold"
+        }
+      ]
+    },
+    "spirit_shrine": {
+      "name": "Spirit Shrine",
+      "type": "mystical",
+      "rarity": "rare",
+      "description": "An ancient shrine glows with spiritual energy",
+      "locations": ["whispering_woods", "mountains", "sacred_grove"],
+      "choices": [
+        {
+          "text": "Pray at the shrine",
+          "outcomes": [
+            {
+              "chance": 0.5,
+              "result": "The spirits bless you with increased stats",
+              "effect": "shrine_blessing",
+              "duration": 7200
+            },
+            {
+              "chance": 0.3,
+              "result": "A spirit appears and offers a quest",
+              "effect": "grant_quest",
+              "quest": "spirit_quest"
+            },
+            {
+              "chance": 0.2,
+              "result": "Nothing happens",
+              "effect": "nothing"
+            }
+          ]
+        },
+        {
+          "text": "Leave an offering",
+          "cost": 100,
+          "result": "The spirits are pleased! They grant you a rare item",
+          "effect": "item",
+          "rarity": "rare"
+        },
+        {
+          "text": "Desecrate the shrine",
+          "result": "The spirits curse you!",
+          "effect": "curse",
+          "status_effect": "spirit_curse",
+          "reputation": -50
+        }
+      ]
+    },
+    "crossroads_demon": {
+      "name": "Crossroads Demon",
+      "type": "devil_deal",
+      "rarity": "legendary",
+      "description": "A demon appears at the crossroads, offering power at a price",
+      "locations": ["crossroads_at_midnight"],
+      "choices": [
+        {
+          "text": "Make a deal with the demon",
+          "offers": [
+            {
+              "deal": "Power",
+              "gives": "+50% damage permanently",
+              "cost": "Your soul (permanent curse)"
+            },
+            {
+              "deal": "Wealth",
+              "gives": "10,000 gold immediately",
+              "cost": "All future gold reduced by 50%"
+            },
+            {
+              "deal": "Knowledge",
+              "gives": "Unlock all lore entries",
+              "cost": "Lose ability to gain experience"
+            }
+          ],
+          "effect": "devil_deal",
+          "irreversible": true
+        },
+        {
+          "text": "Refuse and banish the demon",
+          "requirements": ["holy_symbol"],
+          "result": "You banish the demon! Holy achievement unlocked",
+          "effect": "achievement",
+          "achievement_id": "demon_slayer"
+        },
+        {
+          "text": "Attack the demon",
+          "result": "The demon laughs and teleports away",
+          "effect": "nothing"
+        }
+      ]
+    },
+    "time_rift": {
+      "name": "Time Rift",
+      "type": "dimensional",
+      "rarity": "legendary",
+      "description": "Reality tears open, showing glimpses of past and future",
+      "locations": ["any"],
+      "spawn_condition": "rare_random",
+      "choices": [
+        {
+          "text": "Step into the past",
+          "result": "You witness historical events and gain ancient knowledge",
+          "effect": "unlock_lore",
+          "xp": 5000
+        },
+        {
+          "text": "Step into the future",
+          "result": "You see a vision of what's to come",
+          "effect": "prophecy",
+          "hints": "future_quests"
+        },
+        {
+          "text": "Close the rift",
+          "result": "You stabilize reality and gain temporal essence",
+          "effect": "item",
+          "item": "temporal_essence"
+        },
+        {
+          "text": "Reach in and grab something",
+          "outcomes": [
+            {
+              "chance": 0.4,
+              "result": "You pull out an ancient artifact!",
+              "effect": "legendary_item"
+            },
+            {
+              "chance": 0.4,
+              "result": "You pull out nothing but pain",
+              "effect": "damage",
+              "amount": 100
+            },
+            {
+              "chance": 0.2,
+              "result": "You're pulled into the rift!",
+              "effect": "teleport",
+              "location": "random_timeline"
+            }
+          ]
+        }
+      ]
+    },
+    "fairy_circle": {
+      "name": "Fairy Circle",
+      "type": "fey",
+      "rarity": "rare",
+      "description": "Mushrooms form a perfect circle, glowing in the moonlight",
+      "locations": ["whispering_woods"],
+      "spawn_time": "night_only",
+      "choices": [
+        {
+          "text": "Dance in the circle",
+          "result": "The fey are pleased! They grant you swiftness",
+          "effect": "buff",
+          "status_effect": "fey_blessing",
+          "duration": 3600
+        },
+        {
+          "text": "Pick the mushrooms",
+          "result": "You collect magical mushrooms but anger the fey",
+          "effect": "items",
+          "items": ["magic_mushroom"],
+          "status_effect": "fey_curse"
+        },
+        {
+          "text": "Leave an offering",
+          "cost": "Any item",
+          "result": "The fey accept your gift and grant a boon",
+          "effect": "random_reward"
+        },
+        {
+          "text": "Walk away",
+          "effect": "nothing"
+        }
+      ]
+    }
+  },
+  "gambling": {
+    "dice_game": {
+      "name": "Crown & Anchor",
+      "description": "Roll dice and bet on the outcome",
+      "min_bet": 10,
+      "max_bet": 1000,
+      "house_edge": 0.1
+    },
+    "card_game": {
+      "name": "Dragon's Hand",
+      "description": "A card game of luck and strategy",
+      "min_bet": 50,
+      "max_bet": 5000,
+      "skill_factor": 0.3
+    },
+    "arena_betting": {
+      "name": "Arena Wagers",
+      "description": "Bet on arena fights",
+      "odds_based_on": "fighter_stats"
+    }
+  }
+}

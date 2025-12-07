@@ -1,0 +1,174 @@
+{
+  "world_states": {
+    "current_age": "age_of_shadow",
+    "active_events": [],
+    "global_modifiers": {
+      "monster_aggression": 1.0,
+      "spawn_rates": 1.0,
+      "corruption_level": 0.3
+    },
+    "dynamic_changes": [
+      {
+        "id": "goblin_war",
+        "name": "Goblin War",
+        "description": "Goblins are raiding settlements across the highlands",
+        "active": true,
+        "start_trigger": "community_goblin_kills:1000",
+        "end_trigger": "community_goblin_kills:5000",
+        "effects": {
+          "goblin_spawn_rate": 1.5,
+          "highland_danger": 1.3,
+          "militia_presence": 1.5
+        },
+        "announcement": "🚨 The Goblin War has begun! Settlements are under attack!"
+      },
+      {
+        "id": "blood_moon_event",
+        "name": "Blood Moon Rising",
+        "description": "The blood moon amplifies dark creatures",
+        "active": false,
+        "start_trigger": "time:full_moon_and_random",
+        "duration": 7200,
+        "effects": {
+          "undead_power": 1.5,
+          "undead_spawn_rate": 2.0,
+          "night_danger": 2.0,
+          "rare_drops": 1.5
+        },
+        "announcement": "🌕 A BLOOD MOON rises! The undead grow stronger!"
+      },
+      {
+        "id": "demon_invasion",
+        "name": "Demon Invasion",
+        "description": "Demons pour through rifts across the realm",
+        "active": false,
+        "start_trigger": "corruption_level:0.7",
+        "duration": 14400,
+        "effects": {
+          "demon_spawn": true,
+          "portal_spawn_rate": 0.1,
+          "all_monster_power": 1.3,
+          "epic_loot_chance": 2.0
+        },
+        "announcement": "😈 DEMON INVASION! Portals are opening across the realm!"
+      },
+      {
+        "id": "dragon_awakening",
+        "name": "The Dragon Awakens",
+        "description": "An ancient dragon has awakened from its slumber",
+        "active": false,
+        "start_trigger": "community_dragon_kills:0_and_level_30_players:10",
+        "effects": {
+          "dragon_boss_spawn": true,
+          "dragon_minions": true,
+          "all_fire_damage": 1.2
+        },
+        "announcement": "🐉 An ANCIENT DRAGON has awakened! The skies grow dark!"
+      },
+      {
+        "id": "eternal_winter",
+        "name": "Eternal Winter",
+        "description": "A supernatural winter freezes the land",
+        "active": false,
+        "start_trigger": "world_event:ice_artifact_activated",
+        "duration": 21600,
+        "effects": {
+          "all_biomes_frozen": true,
+          "ice_monster_bonus": 1.5,
+          "cold_damage_all": 10,
+          "fire_resistance_needed": true
+        },
+        "announcement": "❄️ ETERNAL WINTER descends upon the realm!"
+      }
+    ],
+    "biome_states": {
+      "whispering_woods": {
+        "corruption_level": 0.2,
+        "controlled_by": "whispering_woods_rangers",
+        "danger_level": 1,
+        "special_conditions": []
+      },
+      "cursed_swamp": {
+        "corruption_level": 0.8,
+        "controlled_by": "witch_coven",
+        "danger_level": 3,
+        "special_conditions": ["permanent_fog", "disease_outbreak"]
+      },
+      "highland_reaches": {
+        "corruption_level": 0.1,
+        "controlled_by": "highland_militia",
+        "danger_level": 1,
+        "special_conditions": []
+      }
+    },
+    "rare_spawns": {
+      "legendary_creatures": [
+        {
+          "id": "ancient_treant",
+          "name": "Ancient Treant",
+          "spawn_chance": 0.001,
+          "spawn_locations": ["whispering_woods"],
+          "spawn_time": "any",
+          "last_seen": null,
+          "respawn_time": 86400,
+          "announcement": true
+        },
+        {
+          "id": "phantom_king",
+          "name": "The Phantom King",
+          "spawn_chance": 0.0005,
+          "spawn_locations": ["ancient_crypts"],
+          "spawn_time": "night",
+          "last_seen": null,
+          "respawn_time": 172800,
+          "announcement": true
+        }
+      ]
+    },
+    "world_bosses": {
+      "active": [],
+      "schedule": [
+        {
+          "id": "world_boss_1",
+          "name": "Ragnarok the Destroyer",
+          "spawn_time": "saturday_20:00",
+          "location": "ashen_barrens",
+          "requires_players": 1,
+          "max_participants": 100,
+          "duration": 3600,
+          "rewards": "world_boss_legendary"
+        }
+      ]
+    },
+    "seasonal_changes": {
+      "current_season": "autumn",
+      "season_effects": {
+        "autumn": {
+          "harvest_bonus": 1.2,
+          "undead_spawn_increase": 1.1,
+          "fall_colors": true
+        }
+      }
+    },
+    "player_driven_changes": {
+      "forests_planted": 0,
+      "monsters_slain": 0,
+      "gold_donated": 0,
+      "quests_completed": 0,
+      "thresholds": [
+        {
+          "metric": "monsters_slain",
+          "threshold": 10000,
+          "result": "unlock_new_area",
+          "area_id": "champions_arena"
+        },
+        {
+          "metric": "gold_donated",
+          "threshold": 100000,
+          "result": "build_monument",
+          "monument_id": "hero_statue"
+        }
+      ]
+    }
+  }
+}

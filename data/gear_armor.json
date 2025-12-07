@@ -1,0 +1,626 @@
+{
+  "armor": {
+    "common": [
+      {
+        "id": "padded_vest",
+        "name": "Padded Vest",
+        "description": "Cloth armor with padding",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 7
+      },
+      {
+        "id": "hide_vest",
+        "name": "Hide Vest",
+        "description": "Rough animal hide protection",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 2
+        },
+        "value": 10
+      },
+      {
+        "id": "canvas_jerkin",
+        "name": "Canvas Jerkin",
+        "description": "Thick canvas work shirt",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 1
+        },
+        "value": 8
+      },
+      {
+        "id": "quilted_armor",
+        "name": "Quilted Armor",
+        "description": "Padded cloth protection",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 2
+        },
+        "value": 12
+      },
+      {
+        "id": "rough_tunic",
+        "name": "Rough Tunic",
+        "description": "Basic cloth shirt",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "value": 5
+      },
+      {
+        "id": "studded_leather",
+        "name": "Studded Leather",
+        "description": "Leather reinforced with metal studs",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 5,
+        "stats": {
+          "defense": 3
+        },
+        "value": 18
+      },
+      {
+        "id": "boiled_leather",
+        "name": "Boiled Leather",
+        "description": "Hardened leather chest piece",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 5,
+        "stats": {
+          "defense": 3
+        },
+        "value": 16
+      },
+      {
+        "id": "wool_robes",
+        "name": "Wool Robes",
+        "description": "Warm woolen garments",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 2
+        },
+        "passive": {
+          "cold_resist": 0.10
+        },
+        "value": 14
+      },
+      {
+        "id": "linen_shirt",
+        "name": "Linen Shirt",
+        "description": "Fine linen clothing",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 1,
+          "agility": 2
+        },
+        "value": 9
+      },
+      {
+        "id": "ring_mail",
+        "name": "Ring Mail",
+        "description": "Interlocked metal rings",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 7,
+        "stats": {
+          "defense": 4
+        },
+        "value": 25
+      },
+      {
+        "id": "fur_coat",
+        "name": "Fur Coat",
+        "description": "Thick animal fur garment",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 4,
+        "stats": {
+          "defense": 3
+        },
+        "passive": {
+          "cold_resist": 0.20
+        },
+        "value": 20
+      },
+      {
+        "id": "cloth_robe",
+        "name": "Cloth Robe",
+        "description": "Simple cloth garments",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 2,
+          "magic": 2
+        },
+        "value": 8
+      },
+      {
+        "id": "leather_armor",
+        "name": "Leather Armor",
+        "description": "Basic leather protection",
+        "slot": "armor",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 5,
+          "agility": 1
+        },
+        "value": 15
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "reinforced_leather_armor",
+        "name": "Reinforced Leather Armor",
+        "description": "Leather armor reinforced with studs and plates",
+        "slot": "armor",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 2
+        },
+        "value": 25
+      },
+      {
+        "id": "brigandine",
+        "name": "Brigandine",
+        "description": "Layered plates riveted to cloth",
+        "slot": "armor",
+        "rarity": "uncommon",
+        "required_level": 9,
+        "stats": {
+          "defense": 3
+        },
+        "value": 28
+      },
+      {
+        "id": "hunter_vest",
+        "name": "Hunter Vest",
+        "description": "Light armor for agile hunters",
+        "slot": "armor",
+        "rarity": "uncommon",
+        "required_level": 8,
+        "stats": {
+          "defense": 2,
+          "agility": 4
+        },
+        "value": 26
+      },
+      {
+        "id": "chainmail",
+        "name": "Chainmail Armor",
+        "description": "Interlocking metal rings provide solid protection",
+        "slot": "armor",
+        "rarity": "uncommon",
+        "required_level": 5,
+        "stats": {
+          "defense": 12,
+          "hp": 20
+        },
+        "value": 120
+      },
+      {
+        "id": "mage_robes",
+        "name": "Enchanted Mage Robes",
+        "description": "Robes woven with magical threads",
+        "slot": "armor",
+        "rarity": "uncommon",
+        "required_level": 6,
+        "stats": {
+          "defense": 6,
+          "magic": 12,
+          "hp": 15
+        },
+        "passive": {
+          "spell_power": 0.1
+        },
+        "value": 150
+      }
+    ],
+    "rare": [
+      {
+        "id": "dragon_scale_mail",
+        "name": "Dragon Scale Mail",
+        "description": "Armor crafted from genuine dragon scales",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 35,
+          "hp": 60,
+          "strength": 5
+        },
+        "passive": {
+          "fire_resistance": 0.5,
+          "damage_reduction": 0.1
+        },
+        "value": 800
+      },
+      {
+        "id": "chain_mail",
+        "name": "Chain Mail",
+        "description": "Interlocked metal rings provide protection",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 6
+        },
+        "value": 80
+      },
+      {
+        "id": "blessed_chainmail",
+        "name": "Blessed Chainmail",
+        "description": "Holy blessed metal rings",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 16,
+        "stats": {
+          "defense": 8
+        },
+        "passive": {
+          "holy_protection": true
+        },
+        "value": 200
+      },
+      {
+        "id": "shadow_leather",
+        "name": "Shadow Leather",
+        "description": "Dark leather that absorbs light",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 6
+        },
+        "passive": {
+          "stealth_bonus": 0.15
+        },
+        "value": 180
+      },
+      {
+        "id": "crystal_plate",
+        "name": "Crystal Plate",
+        "description": "Crystalline chest protection",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 18,
+        "stats": {
+          "defense": 10
+        },
+        "passive": {
+          "magic_reflect": 0.10
+        },
+        "value": 250
+      },
+      {
+        "id": "elemental_robes",
+        "name": "Elemental Robes",
+        "description": "Robes infused with elemental power",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 17,
+        "stats": {
+          "defense": 5,
+          "magic": 20
+        },
+        "passive": {
+          "elemental_resist": 0.15
+        },
+        "value": 220
+      },
+      {
+        "id": "berserker_hide",
+        "name": "Berserker's Hide",
+        "description": "Fur armor that enhances battle rage",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 16,
+        "stats": {
+          "defense": 5,
+          "attack": 3
+        },
+        "value": 170
+      },
+      {
+        "id": "phoenix_feather_vest",
+        "name": "Phoenix Feather Vest",
+        "description": "Vest woven from phoenix plumage",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 19,
+        "stats": {
+          "defense": 7
+        },
+        "passive": {
+          "fire_resist": 0.30,
+          "regeneration": 2
+        },
+        "value": 280
+      },
+      {
+        "id": "storm_cloak_armor",
+        "name": "Storm Cloak Armor",
+        "description": "Armor crackling with lightning",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 17,
+        "stats": {
+          "defense": 8
+        },
+        "passive": {
+          "lightning_damage": 5
+        },
+        "value": 210
+      },
+      {
+        "id": "void_plate",
+        "name": "Void Plate",
+        "description": "Dark metal from the space between worlds",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 20,
+        "stats": {
+          "defense": 12
+        },
+        "passive": {
+          "void_protection": 0.20
+        },
+        "value": 300
+      },
+      {
+        "id": "angels_embrace",
+        "name": "Angel's Embrace",
+        "description": "Radiant white robes of divine protection",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 18,
+        "stats": {
+          "defense": 6,
+          "magic": 15
+        },
+        "passive": {
+          "healing_bonus": 0.20
+        },
+        "value": 260
+      },
+      {
+        "id": "natures_guard",
+        "name": "Nature's Guard",
+        "description": "Living bark that grows with the wearer",
+        "slot": "armor",
+        "rarity": "rare",
+        "required_level": 16,
+        "stats": {
+          "defense": 6
+        },
+        "passive": {
+          "regeneration": 3
+        },
+        "value": 190
+      }
+    ],
+    "epic": [
+      {
+        "id": "titan_plate_armor",
+        "name": "Titan Plate Armor",
+        "description": "Impossibly heavy armor from an ancient titan",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 60,
+          "hp": 120,
+          "strength": 15
+        },
+        "passive": {
+          "damage_reduction": 0.25,
+          "thorns": 20
+        },
+        "value": 3000
+      },
+      {
+        "id": "dragonscale_armor",
+        "name": "Dragonscale Armor",
+        "description": "Armor crafted from ancient dragon scales",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 12
+        },
+        "passive": {
+          "fire_resist": 0.50
+        },
+        "value": 300
+      },
+      {
+        "id": "armor_of_the_ancients",
+        "name": "Armor of the Ancients",
+        "description": "Plate mail from a lost civilization",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "defense": 15
+        },
+        "passive": {
+          "ancient_wisdom": true
+        },
+        "value": 450
+      },
+      {
+        "id": "wings_of_freedom",
+        "name": "Wings of Freedom",
+        "description": "Grants the power of flight",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 30,
+        "stats": {
+          "defense": 10,
+          "agility": 40
+        },
+        "passive": {
+          "flight": true
+        },
+        "value": 800
+      },
+      {
+        "id": "dragonlord_plate",
+        "name": "Dragonlord Plate",
+        "description": "Armor forged from the scales of the Dragon King",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 32,
+        "stats": {
+          "defense": 20
+        },
+        "passive": {
+          "fire_damage": 25,
+          "all_resist": 0.30
+        },
+        "value": 2800
+      },
+      {
+        "id": "void_knight_armor",
+        "name": "Void Knight Armor",
+        "description": "Dark plate that exists between dimensions",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 33,
+        "stats": {
+          "defense": 18
+        },
+        "passive": {
+          "phase_shift": 0.30,
+          "void_damage": 20
+        },
+        "value": 3200
+      },
+      {
+        "id": "celestial_robes",
+        "name": "Celestial Robes",
+        "description": "Garments woven from starlight itself",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 34,
+        "stats": {
+          "defense": 12,
+          "magic": 40
+        },
+        "passive": {
+          "cosmic_power": 0.25,
+          "flight": true
+        },
+        "value": 3500
+      },
+      {
+        "id": "titans_embrace",
+        "name": "Titan's Embrace",
+        "description": "Massive armor that grants giant strength",
+        "slot": "armor",
+        "rarity": "epic",
+        "required_level": 35,
+        "stats": {
+          "defense": 25,
+          "attack": 50
+        },
+        "passive": {
+          "size_increase": 2
+        },
+        "value": 4000
+      }
+    ],
+    "legendary": [
+      {
+        "id": "armor_of_universe_forge",
+        "name": "Armor of the Universe Forge",
+        "description": "Worn by the smith who forged the cosmos",
+        "slot": "armor",
+        "rarity": "legendary",
+        "required_level": 45,
+        "stats": {
+          "defense": 40,
+          "magic": 60
+        },
+        "passive": {
+          "create_world": true,
+          "reality_control": 0.80,
+          "cosmic_power": true
+        },
+        "value": 80000
+      },
+      {
+        "id": "robes_of_infinite_wisdom",
+        "name": "Robes of Infinite Wisdom",
+        "description": "Contains all wisdom across all realities",
+        "slot": "armor",
+        "rarity": "legendary",
+        "required_level": 42,
+        "stats": {
+          "defense": 30,
+          "magic": 100
+        },
+        "passive": {
+          "infinite_knowledge": true,
+          "detect_lies": true
+        },
+        "value": 65000
+      }
+    ],
+    "mythic": [
+      {
+        "id": "armor_of_conceptual_protection",
+        "name": "Armor of Conceptual Protection",
+        "description": "Protects against abstract concepts and ideas",
+        "slot": "armor",
+        "rarity": "mythic",
+        "required_level": 50,
+        "stats": {
+          "defense": 100
+        },
+        "passive": {
+          "immunity": true,
+          "concept_protection": 5.0
+        },
+        "value": 800000
+      },
+      {
+        "id": "vestments_of_pure_logic",
+        "name": "Vestments of Pure Logic",
+        "description": "Embodies mathematical perfection and reason",
+        "slot": "armor",
+        "rarity": "mythic",
+        "required_level": 50,
+        "stats": {
+          "defense": 80,
+          "magic": 400
+        },
+        "passive": {
+          "infinite_knowledge": true,
+          "logic_mastery": true
+        },
+        "value": 900000
+      }
+    ]
+  }
+}

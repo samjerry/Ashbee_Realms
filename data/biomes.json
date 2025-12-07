@@ -1,0 +1,704 @@
+{
+  "biomes": {
+    "whispering_woods": {
+      "id": "whispering_woods",
+      "name": "Whispering Woods",
+      "description": "An ancient forest where the trees seem to whisper secrets. Sunlight barely pierces the thick canopy.",
+      "danger_level": 1,
+      "recommended_level": [1, 10],
+      "environmental_effects": {
+        "visibility": "low",
+        "ambush_chance": 0.15
+      },
+      "sub_locations": [
+        {
+          "id": "forest_clearing",
+          "name": "Forest Clearing",
+          "description": "A peaceful clearing with a small stream running through it",
+          "monster_spawn_types": ["common"],
+          "events": ["peaceful_rest", "herb_gathering", "merchant_encounter"]
+        },
+        {
+          "id": "dark_thicket",
+          "name": "Dark Thicket",
+          "description": "Dense undergrowth where shadows move unnaturally",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["ambush", "lost_path", "hidden_cache"]
+        },
+        {
+          "id": "whispering_grove",
+          "name": "Whispering Grove",
+          "description": "Ancient trees that speak in hushed tones to those who listen",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["tree_spirit", "ancient_wisdom", "nature_blessing"]
+        },
+        {
+          "id": "shaded_glade",
+          "name": "Shaded Glade",
+          "description": "A cool, dark area where ferns grow thick",
+          "monster_spawn_types": ["common"],
+          "events": ["rest_spot", "foraging", "deer_encounter"]
+        },
+        {
+          "id": "briar_patch",
+          "name": "Briar Patch",
+          "description": "Thorny vines that tear at clothing and flesh",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["thorns_damage", "hidden_treasure", "trapped_animal"]
+        },
+        {
+          "id": "lonely_oak",
+          "name": "Lonely Oak",
+          "description": "A massive ancient oak standing alone in a clearing",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["tree_guardian", "sacred_shrine", "druid_circle"]
+        },
+        {
+          "id": "withered_grove",
+          "name": "Withered Grove",
+          "description": "Dead trees with bark like bone, drained of all life",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["curse_investigation", "undead_stirring", "blight_source"]
+        },
+        {
+          "id": "serpents_brook",
+          "name": "Serpent's Brook",
+          "description": "A winding stream where serpents are known to nest",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["snake_attack", "fishing", "water_crossing"]
+        },
+        {
+          "id": "wolf_den",
+          "name": "Wolf Den",
+          "description": "A cave entrance surrounded by bones and wolf tracks",
+          "monster_spawn_types": ["common"],
+          "guaranteed_encounter": true,
+          "pack_size": [3, 5],
+          "events": ["pack_attack"]
+        },
+        {
+          "id": "hunting_grounds",
+          "name": "Hunting Grounds",
+          "description": "An area where predators stalk their prey",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["predator_hunt", "track_game", "animal_trap"]
+        }
+      ]
+    },
+    "twilight_wetlands": {
+      "id": "twilight_wetlands",
+      "name": "Twilight Wetlands",
+      "description": "Misty marshlands that exist in perpetual twilight, where solid ground is scarce.",
+      "danger_level": 2,
+      "recommended_level": [5, 12],
+      "environmental_effects": {
+        "visibility": "very_low",
+        "movement_penalty": 0.25,
+        "disease_chance": 0.15
+      },
+      "sub_locations": [
+        {
+          "id": "twilight_marsh",
+          "name": "Twilight Marsh",
+          "description": "Perpetually shrouded in mist, neither day nor night",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["will_o_wisp", "quicksand", "marsh_gas"]
+        },
+        {
+          "id": "boggy_mire",
+          "name": "Boggy Mire",
+          "description": "Deep mud that threatens to swallow the unwary",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["sinking", "leech_swarm", "mudslide"]
+        },
+        {
+          "id": "sunken_trail",
+          "name": "Sunken Trail",
+          "description": "An ancient path slowly being reclaimed by the swamp",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["old_bones", "lost_caravan", "treasure_recovery"]
+        },
+        {
+          "id": "frozen_pond",
+          "name": "Frozen Pond",
+          "description": "A permanently frozen pond in the midst of the wetlands",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["ice_skating", "frozen_corpse", "winter_spirit"]
+        }
+      ]
+    },
+    "highland_reaches": {
+      "id": "highland_reaches",
+      "name": "Highland Reaches",
+      "description": "Wind-swept hills and plateaus where the sky seems closer and storms gather.",
+      "danger_level": 2,
+      "recommended_level": [6, 14],
+      "environmental_effects": {
+        "wind_exposure": true,
+        "visibility": "high"
+      },
+      "sub_locations": [
+        {
+          "id": "rolling_hills",
+          "name": "Rolling Hills",
+          "description": "Gentle slopes covered in wild grass and flowers",
+          "monster_spawn_types": ["common"],
+          "events": ["scenic_view", "herb_gathering", "shepherd_encounter"]
+        },
+        {
+          "id": "wildflower_meadow",
+          "name": "Wildflower Meadow",
+          "description": "A vibrant field bursting with colorful blooms",
+          "monster_spawn_types": ["common"],
+          "events": ["peaceful_rest", "bee_swarm", "harvest_flowers"]
+        },
+        {
+          "id": "stormbluff_cliffs",
+          "name": "Stormbluff Cliffs",
+          "description": "Towering cliffs where lightning frequently strikes",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["lightning_strike", "cliff_climb", "eagle_nest"]
+        },
+        {
+          "id": "howling_plateau",
+          "name": "Howling Plateau",
+          "description": "A high plateau where the wind never stops screaming",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["wind_storm", "air_elemental", "ancient_cairn"]
+        },
+        {
+          "id": "starlit_ridge",
+          "name": "Starlit Ridge",
+          "description": "A high ridge perfect for stargazing on clear nights",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["constellation_puzzle", "meteor_shower", "astronomer_ghost"]
+        },
+        {
+          "id": "stone_circle",
+          "name": "Stone Circle",
+          "description": "Ancient standing stones arranged in a perfect circle",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["ritual_site", "stone_guardian", "ley_line_nexus"]
+        }
+      ]
+    },
+    "ashen_barrens": {
+      "id": "ashen_barrens",
+      "name": "Ashen Barrens",
+      "description": "A desolate wasteland covered in ash and charred remnants of what once was.",
+      "danger_level": 3,
+      "recommended_level": [12, 20],
+      "environmental_effects": {
+        "ash_storms": true,
+        "visibility": "low",
+        "fire_resistance_needed": 0.2
+      },
+      "sub_locations": [
+        {
+          "id": "ashen_clearing",
+          "name": "Ashen Clearing",
+          "description": "An open area where nothing grows, only gray ash remains",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["ash_storm", "ember_elemental", "scorched_earth"]
+        },
+        {
+          "id": "fallen_log_crossing",
+          "name": "Fallen Log Crossing",
+          "description": "A massive burned log spanning a smoldering ravine",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["balance_test", "log_collapse", "fire_sprite"]
+        }
+      ]
+    },
+    "goblin_tunnels": {
+      "id": "goblin_tunnels",
+      "name": "Goblin Tunnels",
+      "description": "A maze of crude tunnels carved by goblin clans. The smell is overwhelming.",
+      "danger_level": 2,
+      "recommended_level": [5, 15],
+      "environmental_effects": {
+        "visibility": "very_low",
+        "trap_chance": 0.25
+      },
+      "sub_locations": [
+        {
+          "id": "main_tunnel",
+          "name": "Main Tunnel",
+          "description": "A wide tunnel with crude torches lighting the way",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["ambush", "collapse", "secret_passage"]
+        },
+        {
+          "id": "winding_burrows",
+          "name": "Winding Burrows",
+          "description": "Narrow passages that twist and turn unpredictably",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["get_lost", "ceiling_collapse", "rat_nest"]
+        },
+        {
+          "id": "treasury",
+          "name": "Goblin Treasury",
+          "description": "A chamber filled with stolen goods and treasure",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "guaranteed_treasure": true,
+          "events": ["treasure_hoard", "cursed_gold"]
+        },
+        {
+          "id": "throne_room",
+          "name": "Chieftain's Throne Room",
+          "description": "The largest chamber, decorated with trophies and weapons",
+          "monster_spawn_types": ["rare"],
+          "boss_location": true,
+          "events": ["boss_fight"]
+        }
+      ]
+    },
+    "deep_caverns": {
+      "id": "deep_caverns",
+      "name": "Deep Caverns",
+      "description": "Ancient underground chambers that delve deep beneath the earth.",
+      "danger_level": 3,
+      "recommended_level": [10, 20],
+      "environmental_effects": {
+        "visibility": "none",
+        "claustrophobic": true,
+        "cave_ins": 0.1
+      },
+      "sub_locations": [
+        {
+          "id": "crystal_cavern",
+          "name": "Crystal Cavern",
+          "description": "Walls glittering with precious crystals that cast rainbow light",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["crystal_harvest", "elemental_guardian", "geode_discovery"]
+        },
+        {
+          "id": "fungal_hollow",
+          "name": "Fungal Hollow",
+          "description": "Massive mushrooms grow from floor to ceiling",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["spore_cloud", "mushroom_harvest", "myconid_village"]
+        },
+        {
+          "id": "echoing_grotto",
+          "name": "Echoing Grotto",
+          "description": "Every sound reverberates endlessly through the chamber",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["sonic_puzzle", "bat_colony", "sound_guardian"]
+        },
+        {
+          "id": "dripping_tunnels",
+          "name": "Dripping Tunnels",
+          "description": "Water constantly drips from the ceiling, creating eerie music",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["slippery_floor", "underground_stream", "water_creature"]
+        },
+        {
+          "id": "stalactite_chamber",
+          "name": "Stalactite Chamber",
+          "description": "Massive stone formations hang like teeth from above",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["falling_rocks", "climb_challenge", "hidden_alcove"]
+        },
+        {
+          "id": "chasm_edge",
+          "name": "Chasm Edge",
+          "description": "A narrow ledge beside a bottomless pit",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["narrow_path", "rope_bridge", "flying_creature"]
+        },
+        {
+          "id": "lava_fissure",
+          "name": "Lava Fissure",
+          "description": "Molten rock bubbles up through cracks in the floor",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["heat_damage", "fire_elemental", "magma_crossing"]
+        },
+        {
+          "id": "serpents_den",
+          "name": "Serpent's Den",
+          "description": "A dark cave filled with the hissing of countless serpents",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "guaranteed_encounter": true,
+          "events": ["snake_pit", "giant_serpent", "venom_trap"]
+        },
+        {
+          "id": "blackwater_caves",
+          "name": "Blackwater Caves",
+          "description": "Dark pools of still water that reflect no light",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["water_crossing", "tentacle_attack", "drowning_risk"]
+        },
+        {
+          "id": "collapsed_shaft",
+          "name": "Collapsed Shaft",
+          "description": "An old mining shaft that has partially caved in",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["dig_through", "trapped_miner", "ore_vein"]
+        }
+      ]
+    },
+    "ancient_crypts": {
+      "id": "ancient_crypts",
+      "name": "Ancient Crypts",
+      "description": "Burial grounds and catacombs where the dead refuse to rest.",
+      "danger_level": 3,
+      "recommended_level": [12, 22],
+      "environmental_effects": {
+        "undead_presence": true,
+        "curse_chance": 0.2,
+        "holy_damage_bonus": 0.3
+      },
+      "sub_locations": [
+        {
+          "id": "abandoned_catacombs",
+          "name": "Abandoned Catacombs",
+          "description": "Endless rows of burial niches carved into stone walls",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["skeleton_attack", "tomb_robbery", "ancient_scroll"]
+        },
+        {
+          "id": "sunken_crypt",
+          "name": "Sunken Crypt",
+          "description": "A tomb half-flooded with black water",
+          "monster_spawn_types": ["rare"],
+          "events": ["water_ghost", "submerged_treasure", "drowning_spirits"]
+        },
+        {
+          "id": "forgotten_ossuary",
+          "name": "Forgotten Ossuary",
+          "description": "Bones of thousands arranged in macabre patterns",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["bone_guardian", "necromancy", "mass_grave"]
+        },
+        {
+          "id": "silent_tomb",
+          "name": "Silent Tomb",
+          "description": "An unnaturally quiet chamber where no sound can be made",
+          "monster_spawn_types": ["rare"],
+          "events": ["silence_curse", "mute_combat", "sound_barrier"]
+        },
+        {
+          "id": "buried_temple",
+          "name": "Buried Temple",
+          "description": "A sacred place entombed beneath the earth",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["temple_guardian", "holy_relic", "divine_trial"]
+        }
+      ]
+    },
+    "cursed_swamp": {
+      "id": "cursed_swamp",
+      "name": "Cursed Swamp",
+      "description": "A fetid marshland shrouded in perpetual mist. The dead do not rest easy here.",
+      "danger_level": 3,
+      "recommended_level": [10, 20],
+      "environmental_effects": {
+        "disease_chance": 0.2,
+        "movement_penalty": 0.3
+      },
+      "sub_locations": [
+        {
+          "id": "murky_waters",
+          "name": "Murky Waters",
+          "description": "Stagnant pools of brackish water teeming with disease",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["disease_pool", "quicksand"]
+        },
+        {
+          "id": "witch_hut",
+          "name": "Witch's Hut",
+          "description": "A crooked hut on stilts, smoke rising from its chimney",
+          "monster_spawn_types": ["rare"],
+          "events": ["witch_encounter", "potion_shop", "curse"]
+        },
+        {
+          "id": "graveyard",
+          "name": "Forgotten Graveyard",
+          "description": "Crumbling tombstones emerge from the mist",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["undead_rising", "grave_robbing", "ghostly_apparition"]
+        }
+      ]
+    },
+    "forsaken_ruins": {
+      "id": "forsaken_ruins",
+      "name": "Forsaken Ruins",
+      "description": "The crumbling remains of a once-great civilization, now haunted and overgrown.",
+      "danger_level": 3,
+      "recommended_level": [14, 24],
+      "environmental_effects": {
+        "structural_instability": 0.15,
+        "curse_chance": 0.1
+      },
+      "sub_locations": [
+        {
+          "id": "ruined_chapel",
+          "name": "Ruined Chapel",
+          "description": "A desecrated place of worship with a collapsed roof",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["unholy_presence", "broken_altar", "fallen_priest"]
+        },
+        {
+          "id": "crumbling_fortress",
+          "name": "Crumbling Fortress",
+          "description": "Once-mighty walls now barely standing",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "boss_location": true,
+          "events": ["wall_breach", "siege_remnants", "fortress_lord"]
+        },
+        {
+          "id": "forsaken_hamlet",
+          "name": "Forsaken Hamlet",
+          "description": "A village abandoned in haste, doors still open",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["ghost_town", "plague_investigation", "missing_villagers"]
+        },
+        {
+          "id": "watch_post",
+          "name": "Watch Post",
+          "description": "An old guard tower overlooking the ruins",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["scout_vantage", "alarm_bell", "archer_post"]
+        },
+        {
+          "id": "shattered_monastery",
+          "name": "Shattered Monastery",
+          "description": "Sacred halls now home to darkness",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["corrupted_monks", "sacred_texts", "ritual_chamber"]
+        },
+        {
+          "id": "sealed_gate",
+          "name": "Sealed Gate",
+          "description": "A massive gate sealed by ancient magic",
+          "monster_spawn_types": ["rare"],
+          "events": ["unlock_puzzle", "guardian_challenge", "barrier_dispel"]
+        },
+        {
+          "id": "ancient_library",
+          "name": "Ancient Library",
+          "description": "Shelves of moldering books and lost knowledge",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["book_research", "knowledge_guardian", "forbidden_tome"]
+        },
+        {
+          "id": "deserted_camp",
+          "name": "Deserted Camp",
+          "description": "A military camp abandoned mid-meal",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["supply_scavenge", "soldier_ghosts", "battle_aftermath"]
+        },
+        {
+          "id": "cursed_battlefield",
+          "name": "Cursed Battlefield",
+          "description": "Where thousands fell, their spirits still wage war",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["phantom_battle", "war_spirits", "haunted_weapons"]
+        },
+        {
+          "id": "half_sunk_tower",
+          "name": "Half-Sunk Tower",
+          "description": "A wizard's tower slowly sinking into the earth",
+          "monster_spawn_types": ["rare"],
+          "events": ["tilted_climb", "magical_instability", "wizard_laboratory"]
+        },
+        {
+          "id": "overgrown_courtyard",
+          "name": "Overgrown Courtyard",
+          "description": "Nature reclaiming what was once pristine",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["vine_entanglement", "garden_guardian", "hidden_fountain"]
+        },
+        {
+          "id": "abandoned_market",
+          "name": "Abandoned Market",
+          "description": "Empty stalls with goods rotting where they were left",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["scavenge_goods", "merchant_ghost", "market_day_memory"]
+        },
+        {
+          "id": "haunted_manor",
+          "name": "Haunted Manor",
+          "description": "A noble estate where the family never left",
+          "monster_spawn_types": ["rare", "epic"],
+          "boss_location": true,
+          "events": ["ghost_family", "inheritance_curse", "manor_lord"]
+        },
+        {
+          "id": "fallen_barracks",
+          "name": "Fallen Barracks",
+          "description": "Military quarters collapsed and abandoned",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["weapon_cache", "undead_soldiers", "training_yard"]
+        },
+        {
+          "id": "broken_aqueduct",
+          "name": "Broken Aqueduct",
+          "description": "Water channels now dry and crumbling",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["precarious_walkway", "aqueduct_guardian", "water_puzzle"]
+        },
+        {
+          "id": "silent_docks",
+          "name": "Silent Docks",
+          "description": "Rotting piers where ships no longer call",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["sunken_ship", "dock_haunt", "smuggler_cache"]
+        },
+        {
+          "id": "derelict_mill",
+          "name": "Derelict Mill",
+          "description": "A water mill with a wheel that still creaks in the wind",
+          "monster_spawn_types": ["uncommon"],
+          "events": ["grain_dust_explosion", "miller_ghost", "grinding_mechanism"]
+        },
+        {
+          "id": "lost_amphitheater",
+          "name": "Lost Amphitheater",
+          "description": "Where crowds once cheered, now only echoes remain",
+          "monster_spawn_types": ["rare"],
+          "events": ["phantom_performance", "acoustic_puzzle", "gladiator_spirits"]
+        },
+        {
+          "id": "sunken_village",
+          "name": "Sunken Village",
+          "description": "Houses half-submerged in murky water",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["flood_survivors", "underwater_exploration", "drowned_village"]
+        },
+        {
+          "id": "wrecked_caravan",
+          "name": "Wrecked Caravan",
+          "description": "Overturned wagons and scattered belongings",
+          "monster_spawn_types": ["common", "uncommon"],
+          "events": ["bandit_ambush", "merchant_goods", "survivor_search"]
+        }
+      ]
+    },
+    "volcanic_peaks": {
+      "id": "volcanic_peaks",
+      "name": "Volcanic Peaks",
+      "description": "Jagged mountains with rivers of molten lava. The heat is almost unbearable.",
+      "danger_level": 4,
+      "recommended_level": [18, 30],
+      "environmental_effects": {
+        "fire_damage": 5,
+        "heat_exhaustion": true
+      },
+      "sub_locations": [
+        {
+          "id": "lava_flows",
+          "name": "Lava Flows",
+          "description": "Streams of molten rock carving through the mountainside",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["lava_crossing", "eruption"]
+        },
+        {
+          "id": "dragon_lair",
+          "name": "Dragon's Lair",
+          "description": "A massive cave filled with treasure and bones",
+          "monster_spawn_types": ["epic"],
+          "boss_location": true,
+          "guaranteed_treasure": true,
+          "events": ["dragon_hoard"]
+        },
+        {
+          "id": "forge_of_ancients",
+          "name": "Ancient Forge",
+          "description": "A legendary forge powered by volcanic heat",
+          "events": ["legendary_crafting", "blacksmith_ghost"]
+        }
+      ]
+    },
+    "frozen_wastes": {
+      "id": "frozen_wastes",
+      "name": "Frozen Wastes",
+      "description": "An endless expanse of ice and snow. The cold here can kill in minutes.",
+      "danger_level": 4,
+      "recommended_level": [20, 35],
+      "environmental_effects": {
+        "cold_damage": 5,
+        "visibility": "low"
+      },
+      "sub_locations": [
+        {
+          "id": "ice_caves",
+          "name": "Glacial Caves",
+          "description": "Crystalline caves of pure ice",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["ice_formation", "frozen_treasure"]
+        },
+        {
+          "id": "lich_tower",
+          "name": "Tower of the Lich",
+          "description": "A tower of black ice rising from the frozen plain",
+          "monster_spawn_types": ["epic"],
+          "boss_location": true,
+          "events": ["phylactery_hunt"]
+        }
+      ]
+    },
+    "void_realm": {
+      "id": "void_realm",
+      "name": "The Void Realm",
+      "description": "A place beyond reality where the laws of nature break down. Only the most powerful dare enter.",
+      "danger_level": 5,
+      "recommended_level": [35, 50],
+      "environmental_effects": {
+        "reality_distortion": true,
+        "sanity_drain": 0.1
+      },
+      "sub_locations": [
+        {
+          "id": "void_gateway",
+          "name": "Void Gateway",
+          "description": "The entrance to the realm of chaos",
+          "monster_spawn_types": ["legendary", "mythic"],
+          "events": ["dimensional_rift"]
+        },
+        {
+          "id": "chaos_throne",
+          "name": "Throne of Chaos",
+          "description": "The seat of The Nameless One, where reality itself unravels",
+          "monster_spawn_types": ["mythic"],
+          "boss_location": true,
+          "events": ["final_boss"]
+        }
+      ]
+    },
+    "town_square": {
+      "id": "town_square",
+      "name": "Town Square",
+      "description": "The safe haven where adventurers gather, trade, and rest between journeys.",
+      "danger_level": 0,
+      "safe_zone": true,
+      "sub_locations": [
+        {
+          "id": "inn",
+          "name": "The Broken Sword Inn",
+          "description": "A cozy inn with warm beds and hot meals",
+          "events": ["rest", "rumors", "quest_board"]
+        },
+        {
+          "id": "shop",
+          "name": "General Store",
+          "description": "Buy and sell equipment and items",
+          "events": ["shop", "sell_items"]
+        },
+        {
+          "id": "blacksmith",
+          "name": "Blacksmith",
+          "description": "Craft and upgrade equipment",
+          "events": ["crafting", "repair", "upgrade"]
+        },
+        {
+          "id": "temple",
+          "name": "Temple of Light",
+          "description": "A sacred place of healing and blessing",
+          "events": ["heal", "blessing", "resurrection"]
+        }
+      ]
+    }
+  }
+}

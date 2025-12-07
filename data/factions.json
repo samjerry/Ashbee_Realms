@@ -1,0 +1,568 @@
+{
+  "factions": {
+    "whispering_woods_rangers": {
+      "id": "whispering_woods_rangers",
+      "name": "Whispering Woods Rangers",
+      "description": "Protectors of the ancient forest who dedicate their lives to preserving nature's balance",
+      "alignment": "good",
+      "territory": ["whispering_woods", "enchanted_grove"],
+      "headquarters": "ranger_outpost",
+      "leader": "captain_sylvara_windwhisper",
+      "enemy_factions": ["goblin_clans", "undead_legion"],
+      "allied_factions": ["highland_militia", "druid_circle"],
+      "reputation_tiers": {
+        "hostile": {
+          "min": -3000,
+          "max": -1000,
+          "title": "Enemy of the Woods",
+          "effects": {
+            "attacked_on_sight": true,
+            "quest_access": false,
+            "merchant_access": false
+          }
+        },
+        "unfriendly": {
+          "min": -999,
+          "max": -1,
+          "title": "Distrusted",
+          "effects": {
+            "quest_access": false,
+            "merchant_prices": 1.5
+          }
+        },
+        "neutral": {
+          "min": 0,
+          "max": 999,
+          "title": "Stranger",
+          "effects": {
+            "basic_quest_access": true,
+            "merchant_prices": 1.0
+          }
+        },
+        "friendly": {
+          "min": 1000,
+          "max": 2999,
+          "title": "Friend of the Forest",
+          "effects": {
+            "quest_access": true,
+            "merchant_prices": 0.9,
+            "faction_ability": "forest_stride"
+          }
+        },
+        "honored": {
+          "min": 3000,
+          "max": 5999,
+          "title": "Forest Guardian",
+          "effects": {
+            "advanced_quest_access": true,
+            "merchant_prices": 0.8,
+            "faction_ability": "forest_stride",
+            "mount_access": "forest_stag"
+          }
+        },
+        "exalted": {
+          "min": 6000,
+          "max": 999999,
+          "title": "Champion of the Woods",
+          "effects": {
+            "all_quest_access": true,
+            "merchant_prices": 0.7,
+            "faction_ability": "forest_stride",
+            "mount_access": "forest_stag",
+            "unique_gear": "ranger_cloak_legendary",
+            "passive_unlock": "natures_blessing"
+          }
+        }
+      },
+      "reputation_gains": {
+        "kill_goblin": 5,
+        "kill_undead_in_territory": 10,
+        "complete_quest": 50,
+        "kill_corrupted_creature": 15,
+        "plant_tree": 20
+      },
+      "reputation_losses": {
+        "kill_beast_in_territory": -10,
+        "cut_ancient_tree": -100,
+        "kill_ranger": -500,
+        "side_with_goblins": -200
+      }
+    },
+    "highland_militia": {
+      "id": "highland_militia",
+      "name": "Highland Militia",
+      "description": "Brave defenders of human settlements, standing against the darkness",
+      "alignment": "good",
+      "territory": ["highland_reaches", "town_square", "fortified_village"],
+      "headquarters": "militia_hall",
+      "leader": "commander_aldric_ironheart",
+      "enemy_factions": ["goblin_clans", "bandit_brotherhood", "undead_legion"],
+      "allied_factions": ["whispering_woods_rangers", "merchants_guild"],
+      "reputation_tiers": {
+        "hostile": {
+          "min": -3000,
+          "max": -1000,
+          "title": "Outlaw",
+          "effects": {
+            "guards_attack": true,
+            "bounty": 500,
+            "town_access": false
+          }
+        },
+        "unfriendly": {
+          "min": -999,
+          "max": -1,
+          "title": "Troublemaker",
+          "effects": {
+            "guards_suspicious": true,
+            "merchant_prices": 1.4
+          }
+        },
+        "neutral": {
+          "min": 0,
+          "max": 999,
+          "title": "Citizen",
+          "effects": {
+            "town_access": true,
+            "basic_quests": true
+          }
+        },
+        "friendly": {
+          "min": 1000,
+          "max": 2999,
+          "title": "Militia Member",
+          "effects": {
+            "guard_assistance": true,
+            "faction_ability": "militia_backup",
+            "merchant_prices": 0.9
+          }
+        },
+        "honored": {
+          "min": 3000,
+          "max": 5999,
+          "title": "Sergeant",
+          "effects": {
+            "command_guards": true,
+            "faction_ability": "rally_cry",
+            "merchant_prices": 0.85,
+            "unique_gear": "militia_plate_armor"
+          }
+        },
+        "exalted": {
+          "min": 6000,
+          "max": 999999,
+          "title": "Hero of the Highlands",
+          "effects": {
+            "statue_erected": true,
+            "free_inn_rest": true,
+            "merchant_prices": 0.75,
+            "faction_ability": "highland_honor",
+            "passive_unlock": "peoples_champion"
+          }
+        }
+      },
+      "reputation_gains": {
+        "kill_bandit": 8,
+        "kill_goblin": 5,
+        "complete_quest": 50,
+        "protect_npc": 25,
+        "donate_gold": 1
+      },
+      "reputation_losses": {
+        "steal": -50,
+        "kill_guard": -500,
+        "kill_citizen": -300,
+        "side_with_bandits": -200
+      }
+    },
+    "shadow_syndicate": {
+      "id": "shadow_syndicate",
+      "name": "Shadow Syndicate",
+      "description": "A secretive organization of thieves, assassins, and information brokers",
+      "alignment": "neutral_evil",
+      "territory": ["undercity", "shadow_district", "thieves_quarter"],
+      "headquarters": "hidden_den",
+      "leader": "the_faceless_one",
+      "enemy_factions": ["highland_militia", "temple_of_light"],
+      "allied_factions": ["bandit_brotherhood", "dark_merchants"],
+      "reputation_tiers": {
+        "hostile": {
+          "min": -3000,
+          "max": -1000,
+          "title": "Marked for Death",
+          "effects": {
+            "assassins_hunt": true,
+            "safe_houses_closed": true
+          }
+        },
+        "unfriendly": {
+          "min": -999,
+          "max": -1,
+          "title": "Unwelcome",
+          "effects": {
+            "no_services": true
+          }
+        },
+        "neutral": {
+          "min": 0,
+          "max": 999,
+          "title": "Outsider",
+          "effects": {
+            "limited_services": true
+          }
+        },
+        "friendly": {
+          "min": 1000,
+          "max": 2999,
+          "title": "Shadow Associate",
+          "effects": {
+            "fence_access": true,
+            "faction_ability": "shadow_step",
+            "assassination_contracts": true
+          }
+        },
+        "honored": {
+          "min": 3000,
+          "max": 5999,
+          "title": "Master Thief",
+          "effects": {
+            "advanced_contracts": true,
+            "faction_ability": "vanish",
+            "unique_gear": "shadowweave_armor",
+            "black_market_access": true
+          }
+        },
+        "exalted": {
+          "min": 6000,
+          "max": 999999,
+          "title": "Shadow Lord",
+          "effects": {
+            "command_thieves": true,
+            "faction_ability": "death_mark",
+            "legendary_contracts": true,
+            "passive_unlock": "shadow_mastery",
+            "safe_house_network": true
+          }
+        }
+      },
+      "reputation_gains": {
+        "successful_theft": 15,
+        "assassination_complete": 50,
+        "information_sold": 10,
+        "betray_militia": 100
+      },
+      "reputation_losses": {
+        "failed_theft": -25,
+        "betray_syndicate": -500,
+        "cooperate_with_guards": -100
+      }
+    },
+    "mages_conclave": {
+      "id": "mages_conclave",
+      "name": "Mages' Conclave",
+      "description": "An ancient order dedicated to the pursuit and preservation of magical knowledge",
+      "alignment": "neutral",
+      "territory": ["arcane_sanctum", "crystal_tower", "library_of_echoes"],
+      "headquarters": "grand_arcanum",
+      "leader": "archmage_thalindra_wise",
+      "enemy_factions": ["witch_coven", "anti_magic_crusade"],
+      "allied_factions": ["alchemist_guild"],
+      "reputation_tiers": {
+        "hostile": {
+          "min": -3000,
+          "max": -1000,
+          "title": "Magical Heretic",
+          "effects": {
+            "tower_barred": true,
+            "spell_vendors_refuse": true
+          }
+        },
+        "unfriendly": {
+          "min": -999,
+          "max": -1,
+          "title": "Dabbler",
+          "effects": {
+            "limited_spell_access": true,
+            "training_unavailable": true
+          }
+        },
+        "neutral": {
+          "min": 0,
+          "max": 999,
+          "title": "Apprentice",
+          "effects": {
+            "basic_spell_access": true,
+            "library_access": true
+          }
+        },
+        "friendly": {
+          "min": 1000,
+          "max": 2999,
+          "title": "Adept",
+          "effects": {
+            "advanced_spell_access": true,
+            "faction_ability": "arcane_knowledge",
+            "spell_discount": 0.85
+          }
+        },
+        "honored": {
+          "min": 3000,
+          "max": 5999,
+          "title": "Magister",
+          "effects": {
+            "rare_spell_access": true,
+            "faction_ability": "mana_well",
+            "unique_gear": "magisters_robes",
+            "enchanting_recipes": true
+          }
+        },
+        "exalted": {
+          "min": 6000,
+          "max": 999999,
+          "title": "Archmage",
+          "effects": {
+            "all_spell_access": true,
+            "faction_ability": "arcane_mastery",
+            "tower_ownership": true,
+            "passive_unlock": "magical_prodigy",
+            "legendary_spell_access": true
+          }
+        }
+      },
+      "reputation_gains": {
+        "complete_magical_research": 100,
+        "donate_spell_scroll": 50,
+        "kill_anti_magic_crusader": 20,
+        "discover_magical_artifact": 75
+      },
+      "reputation_losses": {
+        "destroy_magical_artifact": -100,
+        "kill_mage": -200,
+        "use_forbidden_magic": -150
+      }
+    },
+    "undead_legion": {
+      "id": "undead_legion",
+      "name": "Undead Legion",
+      "description": "The risen dead who serve the dark necromancers",
+      "alignment": "evil",
+      "territory": ["ancient_crypts", "necropolis", "tomb_of_kings"],
+      "headquarters": "bone_citadel",
+      "leader": "lich_lord_malachar",
+      "enemy_factions": ["highland_militia", "whispering_woods_rangers", "temple_of_light"],
+      "allied_factions": ["witch_coven", "demon_cult"],
+      "reputation_tiers": {
+        "hostile": {
+          "min": -3000,
+          "max": -1000,
+          "title": "Life Lover",
+          "effects": {
+            "undead_aggression": 2.0,
+            "death_curses": true
+          }
+        },
+        "unfriendly": {
+          "min": -999,
+          "max": -1,
+          "title": "Warm Blood",
+          "effects": {
+            "undead_aggression": 1.5
+          }
+        },
+        "neutral": {
+          "min": 0,
+          "max": 999,
+          "title": "Corpse Toucher",
+          "effects": {
+            "undead_tolerance": true,
+            "necromancer_contact": true
+          }
+        },
+        "friendly": {
+          "min": 1000,
+          "max": 2999,
+          "title": "Death's Apprentice",
+          "effects": {
+            "necromancy_spells": true,
+            "faction_ability": "raise_dead",
+            "undead_allies": true
+          }
+        },
+        "honored": {
+          "min": 3000,
+          "max": 5999,
+          "title": "Death Knight",
+          "effects": {
+            "advanced_necromancy": true,
+            "faction_ability": "death_aura",
+            "unique_gear": "cursed_plate",
+            "lich_transformation_quest": true
+          }
+        },
+        "exalted": {
+          "min": 6000,
+          "max": 999999,
+          "title": "Eternal One",
+          "effects": {
+            "lichdom_available": true,
+            "command_undead_army": true,
+            "faction_ability": "phylactery",
+            "passive_unlock": "undeath_mastery",
+            "immunity_to_death": true
+          }
+        }
+      },
+      "reputation_gains": {
+        "raise_undead": 10,
+        "kill_living_in_territory": 15,
+        "desecrate_grave": 20,
+        "kill_cleric": 100
+      },
+      "reputation_losses": {
+        "kill_undead": -5,
+        "consecrate_ground": -50,
+        "destroy_phylactery": -200
+      }
+    },
+    "druid_circle": {
+      "id": "druid_circle",
+      "name": "Circle of the Eternal Grove",
+      "description": "Ancient guardians who channel primal nature magic",
+      "alignment": "neutral_good",
+      "territory": ["enchanted_grove", "whispering_woods", "sacred_glade"],
+      "headquarters": "world_tree",
+      "leader": "archdruid_thornweave",
+      "enemy_factions": ["undead_legion", "goblin_clans", "demon_cult"],
+      "allied_factions": ["whispering_woods_rangers", "beast_masters"],
+      "reputation_tiers": {
+        "hostile": {
+          "min": -3000,
+          "max": -1000,
+          "title": "Nature's Enemy",
+          "effects": {
+            "beast_attacks": true,
+            "plant_poison": true,
+            "grove_barred": true
+          }
+        },
+        "unfriendly": {
+          "min": -999,
+          "max": -1,
+          "title": "Outsider",
+          "effects": {
+            "no_druid_aid": true
+          }
+        },
+        "neutral": {
+          "min": 0,
+          "max": 999,
+          "title": "Nature's Student",
+          "effects": {
+            "basic_nature_spells": true,
+            "herb_gathering": true
+          }
+        },
+        "friendly": {
+          "min": 1000,
+          "max": 2999,
+          "title": "Grove Keeper",
+          "effects": {
+            "animal_companion": true,
+            "faction_ability": "wild_shape",
+            "plant_allies": true
+          }
+        },
+        "honored": {
+          "min": 3000,
+          "max": 5999,
+          "title": "Druid",
+          "effects": {
+            "advanced_wild_shape": true,
+            "faction_ability": "natures_wrath",
+            "unique_gear": "living_bark_armor",
+            "elemental_summoning": true
+          }
+        },
+        "exalted": {
+          "min": 6000,
+          "max": 999999,
+          "title": "Archdruid",
+          "effects": {
+            "become_treant": true,
+            "control_weather": true,
+            "faction_ability": "worldtree_blessing",
+            "passive_unlock": "primal_connection",
+            "immortality_option": true
+          }
+        }
+      },
+      "reputation_gains": {
+        "plant_tree": 25,
+        "heal_nature": 30,
+        "kill_undead": 10,
+        "cleanse_corruption": 50
+      },
+      "reputation_losses": {
+        "burn_forest": -200,
+        "kill_beast": -15,
+        "pollute_water": -100,
+        "kill_druid": -500
+      }
+    }
+  },
+  "faction_conflicts": {
+    "active_wars": [
+      {
+        "factions": ["highland_militia", "goblin_clans"],
+        "status": "active",
+        "victory_conditions": {
+          "militia": "clear_all_goblin_tunnels",
+          "goblins": "raid_three_villages"
+        }
+      }
+    ],
+    "tension_points": {
+      "shadow_syndicate_vs_militia": 80,
+      "mages_vs_anti_magic": 70,
+      "undead_vs_living": 95
+    }
+  },
+  "faction_abilities": {
+    "forest_stride": {
+      "name": "Forest Stride",
+      "description": "Move swiftly through forested terrain",
+      "cooldown": 0,
+      "effect": "movement_bonus_forests"
+    },
+    "militia_backup": {
+      "name": "Militia Backup",
+      "description": "Call guards to aid you in combat",
+      "cooldown": 300,
+      "effect": "summon_guards"
+    },
+    "shadow_step": {
+      "name": "Shadow Step",
+      "description": "Teleport short distances through shadows",
+      "cooldown": 60,
+      "effect": "teleport_short"
+    },
+    "arcane_knowledge": {
+      "name": "Arcane Knowledge",
+      "description": "Identify magical items and gain mana regeneration",
+      "cooldown": 0,
+      "effect": "identify_items_mana_regen"
+    },
+    "raise_dead": {
+      "name": "Raise Dead",
+      "description": "Raise defeated enemies to fight for you",
+      "cooldown": 180,
+      "effect": "summon_undead_minion"
+    },
+    "wild_shape": {
+      "name": "Wild Shape",
+      "description": "Transform into a beast",
+      "cooldown": 300,
+      "effect": "beast_transformation"
+    }
+  }
+}

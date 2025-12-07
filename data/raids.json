@@ -1,0 +1,273 @@
+{
+  "raids": {
+    "goblin_siege": {
+      "name": "Goblin Siege",
+      "description": "Defend the village from waves of goblin attackers",
+      "difficulty": "normal",
+      "min_players": 3,
+      "max_players": 10,
+      "duration_minutes": 30,
+      "waves": [
+        {
+          "wave": 1,
+          "enemies": ["goblin_scout", "goblin_warrior"],
+          "count": 15,
+          "description": "Scouts test the defenses"
+        },
+        {
+          "wave": 2,
+          "enemies": ["goblin_warrior", "goblin_shaman"],
+          "count": 20,
+          "description": "Warriors and shamans attack"
+        },
+        {
+          "wave": 3,
+          "enemies": ["goblin_warrior", "goblin_shaman", "goblin_chief"],
+          "count": 25,
+          "boss": "goblin_warlord",
+          "description": "The Warlord leads the final assault"
+        }
+      ],
+      "mechanics": [
+        {
+          "name": "Barricades",
+          "description": "Players must repair barricades between waves"
+        },
+        {
+          "name": "Catapults",
+          "description": "Special players can operate catapults for AOE damage"
+        }
+      ],
+      "rewards": {
+        "gold": 500,
+        "experience": 1000,
+        "items": ["siege_defender_badge", "goblin_warlord_trophy"],
+        "unique_loot": ["fortress_plate", "siege_breaker_bow"]
+      },
+      "twitch_integration": {
+        "viewer_participation": true,
+        "spawn_control": "Viewers vote on which enemy types spawn",
+        "chaos_events": ["double_enemies", "boss_reinforcements", "heal_players"]
+      }
+    },
+    "dragon_assault": {
+      "name": "Dragon's Assault",
+      "description": "Face the awakened dragon Infernus and his minions",
+      "difficulty": "hard",
+      "min_players": 5,
+      "max_players": 15,
+      "duration_minutes": 45,
+      "phases": [
+        {
+          "phase": 1,
+          "boss": "infernus_dragon",
+          "hp_threshold": "100-70%",
+          "mechanics": ["flame_breath", "tail_sweep", "wing_buffet"],
+          "description": "Ground phase - dragon fights on the ground"
+        },
+        {
+          "phase": 2,
+          "boss": "infernus_dragon",
+          "hp_threshold": "70-40%",
+          "mechanics": ["aerial_bombardment", "summon_whelps", "fire_rain"],
+          "adds": ["dragon_whelp"],
+          "description": "Flight phase - dragon takes to the air, summons adds"
+        },
+        {
+          "phase": 3,
+          "boss": "infernus_dragon",
+          "hp_threshold": "40-0%",
+          "mechanics": ["inferno_nova", "volcanic_eruption", "desperate_rage"],
+          "description": "Enrage phase - dragon uses devastating attacks"
+        }
+      ],
+      "roles": {
+        "tank": {
+          "required": 2,
+          "job": "Hold aggro and face dragon away from raid"
+        },
+        "healer": {
+          "required": 3,
+          "job": "Keep raid alive through heavy damage"
+        },
+        "dps": {
+          "required": 10,
+          "job": "Burn down dragon and kill adds"
+        }
+      },
+      "rewards": {
+        "gold": 2000,
+        "experience": 5000,
+        "items": ["dragon_scale", "infernus_fang"],
+        "unique_loot": ["dragonscale_armor", "infernus_blade", "wings_of_fire"]
+      },
+      "achievements": [
+        {
+          "id": "dragonslayer",
+          "name": "Dragonslayer",
+          "requirement": "Defeat Infernus"
+        },
+        {
+          "id": "no_casualties",
+          "name": "Perfect Defense",
+          "requirement": "Complete without any player deaths"
+        },
+        {
+          "id": "speed_kill",
+          "name": "Speed Kill",
+          "requirement": "Complete in under 20 minutes"
+        }
+      ],
+      "twitch_integration": {
+        "viewer_participation": true,
+        "buff_voting": "Viewers vote to buff dragon or players each phase",
+        "bits_summons": "100 bits spawns elite dragon whelp"
+      }
+    },
+    "void_incursion": {
+      "name": "Void Incursion",
+      "description": "Close the dimensional rifts before void creatures consume the realm",
+      "difficulty": "nightmare",
+      "min_players": 8,
+      "max_players": 20,
+      "duration_minutes": 60,
+      "objectives": [
+        {
+          "objective": "Close Void Rifts",
+          "description": "Players must close 5 rifts while defending against void creatures",
+          "mechanics": ["channel_time", "interrupt_prevention"]
+        },
+        {
+          "objective": "Defeat Rift Guardians",
+          "description": "Each rift is guarded by a powerful void entity",
+          "bosses": ["void_stalker", "dimension_ripper", "chaos_spawn", "void_herald", "entropy_lord"]
+        },
+        {
+          "objective": "Final Boss",
+          "description": "Face the Void Sovereign who commands the invasion",
+          "boss": "void_sovereign"
+        }
+      ],
+      "mechanics": [
+        {
+          "name": "Void Corruption",
+          "description": "Standing in void zones applies stacking corruption debuff"
+        },
+        {
+          "name": "Reality Tear",
+          "description": "Random players are pulled into void dimension, team must rescue"
+        },
+        {
+          "name": "Entropy Wave",
+          "description": "Periodic wave that damages everyone, reduced by closed rifts"
+        }
+      ],
+      "rewards": {
+        "gold": 5000,
+        "experience": 10000,
+        "raid_tokens": 50,
+        "items": ["void_essence", "reality_fragment"],
+        "unique_loot": ["voidwalker_cloak", "entropy_staff", "sovereign_crown"],
+        "titles": ["Voidbane", "Reality Defender"]
+      },
+      "leaderboard": {
+        "tracked": true,
+        "categories": ["fastest_clear", "fewest_deaths", "highest_damage"]
+      },
+      "twitch_integration": {
+        "viewer_participation": true,
+        "channel_points": {
+          "heal_raid": 5000,
+          "spawn_elite": 10000,
+          "buff_boss": 15000
+        },
+        "subscriber_bonus": "Subscribers vote with 2x weight"
+      }
+    },
+    "trial_of_legends": {
+      "name": "Trial of Legends",
+      "description": "Face legendary versions of all raid bosses in succession",
+      "difficulty": "mythic",
+      "min_players": 10,
+      "max_players": 20,
+      "duration_minutes": 90,
+      "weekly_rotation": true,
+      "boss_rush": [
+        "goblin_warlord_legendary",
+        "infernus_dragon_legendary",
+        "void_sovereign_legendary",
+        "ancient_treant_legendary",
+        "phantom_king_legendary"
+      ],
+      "modifiers": {
+        "active": ["enraged", "fortified", "chaotic"],
+        "rotation": "Changes weekly"
+      },
+      "rewards": {
+        "gold": 10000,
+        "experience": 20000,
+        "raid_tokens": 100,
+        "guaranteed_legendary": true,
+        "mythic_loot_table": ["world_tree_branch", "phoenix_feather", "titan_heart"],
+        "titles": ["Legend", "Raid Master"]
+      }
+    }
+  },
+  "raid_mechanics": {
+    "viewer_integration": {
+      "voting_system": {
+        "enabled": true,
+        "vote_duration": 30,
+        "options": ["buff_boss", "buff_players", "spawn_adds", "heal_all", "chaos_mode"]
+      },
+      "channel_points": {
+        "enabled": true,
+        "redemptions": [
+          {
+            "name": "Heal the Raid",
+            "cost": 5000,
+            "effect": "Restore 25% HP to all players"
+          },
+          {
+            "name": "Spawn Elite",
+            "cost": 10000,
+            "effect": "Spawn challenging elite enemy"
+          },
+          {
+            "name": "Empower Boss",
+            "cost": 15000,
+            "effect": "Boss gains 20% damage for 1 minute"
+          }
+        ]
+      },
+      "bits_effects": [
+        {
+          "amount": 100,
+          "effect": "Summon healing orb"
+        },
+        {
+          "amount": 500,
+          "effect": "Grant raid-wide shield"
+        },
+        {
+          "amount": 1000,
+          "effect": "Activate special boss mechanic"
+        }
+      ]
+    },
+    "loot_system": {
+      "distribution": "personal_loot",
+      "bonus_rolls": 2,
+      "guaranteed_items_per_boss": true,
+      "raid_tokens": {
+        "earned_per_boss": 10,
+        "vendor_items": ["raid_gear", "mounts", "pets", "cosmetics"]
+      }
+    },
+    "progression": {
+      "lockout": "weekly",
+      "difficulty_tiers": ["normal", "hard", "nightmare", "mythic"],
+      "scaling": "Player count and difficulty affect HP/damage"
+    }
+  }
+}

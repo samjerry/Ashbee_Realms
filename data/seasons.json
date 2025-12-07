@@ -1,0 +1,279 @@
+{
+  "seasons": {
+    "season_1": {
+      "name": "Season of Shadows",
+      "description": "The first season where heroes rise against the spreading darkness",
+      "start_date": "2024-01-01",
+      "end_date": "2024-04-01",
+      "duration_days": 90,
+      "theme": "darkness_corruption",
+      "active": false,
+      "rewards": {
+        "participation": ["season_1_frame", "shadow_pet"],
+        "milestones": [
+          {
+            "level": 10,
+            "rewards": ["season_1_title", "shadow_cloak"]
+          },
+          {
+            "level": 25,
+            "rewards": ["season_1_weapon_skin", "dark_mount"]
+          },
+          {
+            "level": 50,
+            "rewards": ["season_1_legendary", "shadowbane_title"]
+          }
+        ],
+        "leaderboard": {
+          "top_1": ["season_1_champion_title", "unique_legendary", "champion_crown"],
+          "top_10": ["season_1_master_title", "epic_reward_box"],
+          "top_100": ["season_1_hero_title", "rare_reward_box"]
+        }
+      },
+      "special_mechanics": {
+        "corruption_meter": {
+          "description": "Global corruption increases over the season",
+          "effects": ["Monsters grow stronger", "New dark events spawn", "Shadow zones expand"],
+          "max_corruption": 100
+        },
+        "shadow_invasions": {
+          "frequency": "weekly",
+          "description": "Shadow creatures invade major towns"
+        }
+      }
+    },
+    "season_2": {
+      "name": "Season of Ascension",
+      "description": "Heroes push back the darkness and reclaim lost territories",
+      "start_date": "2024-04-01",
+      "end_date": "2024-07-01",
+      "duration_days": 90,
+      "theme": "light_restoration",
+      "active": true,
+      "new_content": {
+        "dungeons": ["tower_of_trials_extended"],
+        "raids": ["temple_of_light"],
+        "biomes": ["reclaimed_highlands"],
+        "mechanics": ["ascension_points"]
+      },
+      "season_currency": {
+        "name": "Ascension Tokens",
+        "earned_from": ["quests", "events", "dungeons"],
+        "vendor_items": ["season_gear", "cosmetics", "mounts"]
+      },
+      "challenges": {
+        "weekly": [
+          {
+            "name": "Dungeon Master",
+            "requirement": "Complete 5 dungeons",
+            "reward": "50 Ascension Tokens"
+          },
+          {
+            "name": "Monster Hunter",
+            "requirement": "Defeat 100 monsters",
+            "reward": "30 Ascension Tokens"
+          }
+        ],
+        "seasonal": [
+          {
+            "name": "Legendary Hunter",
+            "requirement": "Defeat all legendary monsters",
+            "reward": "Legendary weapon skin"
+          },
+          {
+            "name": "Master Explorer",
+            "requirement": "Discover all locations",
+            "reward": "Unique mount"
+          }
+        ]
+      },
+      "battle_pass": {
+        "free_track": [
+          {
+            "level": 1,
+            "reward": "Experience boost"
+          },
+          {
+            "level": 5,
+            "reward": "Rare item"
+          },
+          {
+            "level": 10,
+            "reward": "Season title"
+          }
+        ],
+        "premium_track": [
+          {
+            "level": 1,
+            "reward": "Premium currency + XP boost"
+          },
+          {
+            "level": 5,
+            "reward": "Epic weapon skin"
+          },
+          {
+            "level": 10,
+            "reward": "Legendary mount"
+          },
+          {
+            "level": 25,
+            "reward": "Unique pet"
+          },
+          {
+            "level": 50,
+            "reward": "Legendary armor set"
+          }
+        ],
+        "cost": 1000,
+        "max_level": 50
+      }
+    },
+    "season_3": {
+      "name": "Season of Dragons",
+      "description": "Ancient dragons awaken and the world burns",
+      "start_date": "2024-07-01",
+      "end_date": "2024-10-01",
+      "duration_days": 90,
+      "theme": "dragons_fire",
+      "active": false,
+      "planned": true,
+      "preview": {
+        "new_raid": "Dragon's Lair",
+        "new_class": "Dragon Knight",
+        "new_mechanic": "Dragon Bonding",
+        "legendary_boss": "Ragnarok the World Ender"
+      }
+    }
+  },
+  "seasonal_events": {
+    "spring_festival": {
+      "name": "Festival of Blooms",
+      "season": "spring",
+      "duration_days": 14,
+      "frequency": "annual",
+      "activities": {
+        "flower_collection": {
+          "description": "Collect rare flowers throughout the world",
+          "rewards": ["spring_crown", "flower_pet", "bloom_staff"]
+        },
+        "spring_boss": {
+          "boss": "elder_treant_bloom",
+          "location": "Whispering Woods",
+          "unique_drops": ["nature's_blessing", "spring_legendary"]
+        }
+      },
+      "special_vendor": {
+        "npc": "Spring Maiden",
+        "currency": "flower_tokens",
+        "items": ["spring_cosmetics", "seasonal_mounts", "limited_edition_gear"]
+      }
+    },
+    "summer_games": {
+      "name": "Summer Championship",
+      "season": "summer",
+      "duration_days": 30,
+      "frequency": "annual",
+      "activities": {
+        "arena_tournament": {
+          "type": "pvp",
+          "brackets": ["solo", "duo", "team"],
+          "rewards": "Based on ranking"
+        },
+        "beach_event": {
+          "location": "Sunset Shore",
+          "activities": ["fishing_contest", "treasure_hunt", "sand_castle_contest"]
+        }
+      }
+    },
+    "halloween_horrors": {
+      "name": "Night of Terrors",
+      "season": "autumn",
+      "duration_days": 14,
+      "frequency": "annual",
+      "world_changes": {
+        "pumpkin_spawns": true,
+        "undead_increased": 200,
+        "special_biome": "haunted_graveyard"
+      },
+      "activities": {
+        "trick_or_treat": {
+          "description": "Visit NPCs for treats or tricks",
+          "possible_rewards": ["candy", "cursed_item", "legendary_costume"]
+        },
+        "headless_horseman": {
+          "boss": "headless_horseman",
+          "spawn_time": "midnight",
+          "mount_drop": "headless_horse"
+        }
+      }
+    },
+    "winter_festival": {
+      "name": "Frostfall Celebration",
+      "season": "winter",
+      "duration_days": 21,
+      "frequency": "annual",
+      "world_changes": {
+        "snow_everywhere": true,
+        "ice_monsters": true,
+        "frozen_lakes": true
+      },
+      "activities": {
+        "gift_giving": {
+          "description": "Exchange gifts with NPCs and players",
+          "rewards": ["winter_cosmetics", "toy_pets", "snowflake_currency"]
+        },
+        "frost_king": {
+          "boss": "frost_king",
+          "location": "Frozen Peaks",
+          "unique_drops": ["ice_crown", "frost_blade", "winter_mount"]
+        },
+        "snowball_fights": {
+          "type": "pvp_casual",
+          "rewards": ["snowball_title", "winter_fun_achievement"]
+        }
+      }
+    }
+  },
+  "season_mechanics": {
+    "progression": {
+      "seasonal_level": {
+        "max": 50,
+        "experience_sources": ["quests", "events", "kills", "exploration"],
+        "rewards_every_level": true
+      },
+      "seasonal_currency": {
+        "earned": ["challenges", "events", "daily_login"],
+        "spent_on": ["cosmetics", "boosts", "unique_items"]
+      }
+    },
+    "competitive": {
+      "leaderboards": [
+        {
+          "type": "level",
+          "description": "Highest seasonal level"
+        },
+        {
+          "type": "dungeon_clears",
+          "description": "Most dungeon completions"
+        },
+        {
+          "type": "boss_kills",
+          "description": "Most boss kills"
+        },
+        {
+          "type": "achievement_points",
+          "description": "Most achievement points earned this season"
+        }
+      ],
+      "rewards": {
+        "weekly": "Small rewards for top performers",
+        "season_end": "Major rewards based on final ranking"
+      }
+    },
+    "season_reset": {
+      "what_resets": ["seasonal_level", "seasonal_currency", "leaderboards", "season_challenges"],
+      "what_persists": ["account_passives", "achievements", "cosmetics_earned", "titles_earned"],
+      "legacy_rewards": "Special legacy items for completed seasons"
+    }
+  }
+}

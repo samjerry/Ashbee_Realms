@@ -1,0 +1,386 @@
+{
+  "twitch_integration": {
+    "channel_points": {
+      "enabled": true,
+      "redemptions": [
+        {
+          "id": "heal_player",
+          "name": "Heal the Adventurer",
+          "cost": 5000,
+          "cooldown": 300,
+          "effect": "Restore 50% HP to the player",
+          "global_cooldown": true,
+          "description": "Help the streamer survive by healing them!"
+        },
+        {
+          "id": "buff_player",
+          "name": "Power Surge",
+          "cost": 7500,
+          "cooldown": 600,
+          "effect": "Grant +50% damage for 5 minutes",
+          "status_effect": "power_surge",
+          "duration": 300
+        },
+        {
+          "id": "spawn_elite",
+          "name": "Spawn Elite Monster",
+          "cost": 10000,
+          "cooldown": 900,
+          "effect": "Spawn a challenging elite enemy",
+          "chaos": true,
+          "description": "Make things interesting..."
+        },
+        {
+          "id": "spawn_boss",
+          "name": "Summon Boss",
+          "cost": 25000,
+          "cooldown": 1800,
+          "effect": "Spawn a random boss monster",
+          "chaos": true,
+          "danger": "high"
+        },
+        {
+          "id": "treasure_goblin",
+          "name": "Treasure Goblin",
+          "cost": 15000,
+          "cooldown": 1200,
+          "effect": "Spawn a treasure goblin (high loot, runs away)",
+          "reward": "high_gold_and_items"
+        },
+        {
+          "id": "random_event",
+          "name": "Chaos Roulette",
+          "cost": 5000,
+          "cooldown": 300,
+          "effect": "Trigger a random event (good or bad)",
+          "unpredictable": true
+        },
+        {
+          "id": "reveal_map",
+          "name": "Scout the Area",
+          "cost": 3000,
+          "cooldown": 600,
+          "effect": "Reveal hidden areas and secrets nearby"
+        },
+        {
+          "id": "teleport_random",
+          "name": "Chaos Teleport",
+          "cost": 8000,
+          "cooldown": 1800,
+          "effect": "Teleport player to random location",
+          "chaos": true
+        },
+        {
+          "id": "buff_monsters",
+          "name": "Monster Power Hour",
+          "cost": 20000,
+          "cooldown": 3600,
+          "effect": "All monsters +50% stats for 10 minutes",
+          "chaos": true,
+          "duration": 600
+        },
+        {
+          "id": "mystery_box",
+          "name": "Mystery Box",
+          "cost": 10000,
+          "cooldown": 600,
+          "effect": "Receive random item (common to legendary)",
+          "loot_table": "mystery"
+        }
+      ]
+    },
+    "bits": {
+      "enabled": true,
+      "effects": [
+        {
+          "amount": 1,
+          "effect": "Spawn healing orb",
+          "description": "Small heal for every bit"
+        },
+        {
+          "amount": 100,
+          "effect": "Buff player (+10% stats for 60s)",
+          "message": "Thanks for the bits! Powered up!"
+        },
+        {
+          "amount": 500,
+          "effect": "Spawn rare chest",
+          "message": "A treasure chest appears!"
+        },
+        {
+          "amount": 1000,
+          "effect": "Grant legendary loot",
+          "message": "Amazing support! Legendary reward!"
+        },
+        {
+          "amount": 5000,
+          "effect": "Unlock special mount/pet",
+          "message": "INCREDIBLE! Special cosmetic unlocked!"
+        }
+      ],
+      "milestones": {
+        "enabled": true,
+        "goals": [
+          {
+            "bits": 10000,
+            "reward": "Community raid boss spawns",
+            "announced": true
+          },
+          {
+            "bits": 50000,
+            "reward": "Special event triggered",
+            "announced": true
+          },
+          {
+            "bits": 100000,
+            "reward": "New area unlocked for everyone",
+            "announced": true
+          }
+        ]
+      }
+    },
+    "subscriptions": {
+      "enabled": true,
+      "perks": {
+        "all_tiers": [
+          "Vote weight x2 in polls",
+          "Exclusive sub badge in-game",
+          "10% bonus gold and XP",
+          "Priority queue for multiplayer",
+          "Access to subscriber lounge (NPC area)"
+        ],
+        "tier_1": [
+          "Sub title: 'Supporter'",
+          "Monthly reward box (rare)",
+          "1 free channel point redemption per stream"
+        ],
+        "tier_2": [
+          "Sub title: 'Patron'",
+          "Monthly reward box (epic)",
+          "2 free channel point redemptions per stream",
+          "Exclusive mount"
+        ],
+        "tier_3": [
+          "Sub title: 'Champion'",
+          "Monthly reward box (legendary)",
+          "5 free channel point redemptions per stream",
+          "Exclusive mount & pet",
+          "Custom title option"
+        ]
+      },
+      "sub_events": {
+        "new_sub": {
+          "announcement": true,
+          "reward_to_streamer": "50 gold, XP boost (30s)"
+        },
+        "resub": {
+          "announcement": true,
+          "reward_to_streamer": "100 gold x months, extended XP boost"
+        },
+        "gift_sub": {
+          "announcement": true,
+          "reward_to_streamer": "200 gold, rare item"
+        },
+        "sub_bomb": {
+          "threshold": 5,
+          "effect": "Trigger special event or boss",
+          "announcement": "MEGA THANKS! Special event triggered!"
+        }
+      }
+    },
+    "polls": {
+      "enabled": true,
+      "types": [
+        {
+          "type": "next_location",
+          "description": "Where should we go next?",
+          "frequency": "between_adventures",
+          "options": ["forest", "mountains", "swamp", "dungeon"]
+        },
+        {
+          "type": "buff_choice",
+          "description": "Choose a buff for the next fight",
+          "options": ["damage", "defense", "speed", "luck"]
+        },
+        {
+          "type": "enemy_type",
+          "description": "What should we fight?",
+          "options": ["goblins", "undead", "beasts", "demons"]
+        },
+        {
+          "type": "mercy_or_kill",
+          "description": "Spare the boss or finish them?",
+          "options": ["mercy", "execute"],
+          "affects": "Story and rewards"
+        },
+        {
+          "type": "loot_choice",
+          "description": "Choose the reward",
+          "options": ["weapon", "armor", "gold", "mystery"]
+        }
+      ],
+      "sub_multiplier": 2,
+      "duration": 60
+    },
+    "predictions": {
+      "enabled": true,
+      "events": [
+        {
+          "type": "boss_fight",
+          "question": "Will the boss be defeated?",
+          "options": ["Victory", "Defeat"]
+        },
+        {
+          "type": "survival",
+          "question": "Will they survive the dungeon?",
+          "options": ["Survive", "Die"]
+        },
+        {
+          "type": "loot_rarity",
+          "question": "What rarity will drop?",
+          "options": ["Common", "Rare", "Epic", "Legendary"]
+        }
+      ]
+    },
+    "raids": {
+      "incoming_raid": {
+        "effect": "Spawn treasure for every raider",
+        "announcement": "Raiders bring treasure! Thanks @{raider}!",
+        "treasure_per_viewer": 1
+      },
+      "outgoing_raid": {
+        "effect": "Grant bonus XP and gold to raided streamer's viewers"
+      }
+    },
+    "hype_train": {
+      "enabled": true,
+      "levels": [
+        {
+          "level": 1,
+          "effect": "10% XP boost for duration"
+        },
+        {
+          "level": 2,
+          "effect": "25% XP boost + 10% gold boost"
+        },
+        {
+          "level": 3,
+          "effect": "50% XP boost + 25% gold boost"
+        },
+        {
+          "level": 4,
+          "effect": "75% XP boost + 50% gold boost + rare chest"
+        },
+        {
+          "level": 5,
+          "effect": "100% XP boost + 100% gold boost + legendary chest + special title"
+        }
+      ]
+    },
+    "chat_commands": {
+      "viewer_commands": [
+        {
+          "command": "!stats",
+          "description": "View player's current stats",
+          "cooldown": 30
+        },
+        {
+          "command": "!location",
+          "description": "See where the player currently is"
+        },
+        {
+          "command": "!quest",
+          "description": "View active quests"
+        },
+        {
+          "command": "!inventory",
+          "description": "See player's inventory highlights"
+        },
+        {
+          "command": "!leaderboard",
+          "description": "View top players",
+          "cooldown": 60
+        },
+        {
+          "command": "!claim",
+          "description": "Claim daily viewer reward",
+          "cooldown": 86400,
+          "reward": "Viewer participation points"
+        }
+      ],
+      "mod_commands": [
+        {
+          "command": "!heal",
+          "description": "Heal the player (mods only)"
+        },
+        {
+          "command": "!spawn [monster]",
+          "description": "Spawn a specific monster"
+        },
+        {
+          "command": "!give [item]",
+          "description": "Give player an item"
+        },
+        {
+          "command": "!teleport [location]",
+          "description": "Teleport player to location"
+        }
+      ]
+    },
+    "viewer_participation": {
+      "viewer_accounts": {
+        "enabled": true,
+        "track": ["watch_time", "participation_points", "redemptions_made"],
+        "rewards": [
+          {
+            "watch_hours": 10,
+            "reward": "Viewer title",
+            "title": "Regular"
+          },
+          {
+            "watch_hours": 50,
+            "reward": "Special cosmetic",
+            "title": "Dedicated"
+          },
+          {
+            "watch_hours": 100,
+            "reward": "Legendary cosmetic",
+            "title": "True Fan"
+          }
+        ]
+      },
+      "daily_login": {
+        "enabled": true,
+        "reward": "Participation points",
+        "streak_bonus": true
+      }
+    },
+    "overlay_integration": {
+      "widgets": [
+        {
+          "type": "hp_bar",
+          "position": "top",
+          "animated": true
+        },
+        {
+          "type": "location",
+          "position": "top-left"
+        },
+        {
+          "type": "quest_tracker",
+          "position": "right"
+        },
+        {
+          "type": "recent_events",
+          "position": "bottom",
+          "displays": ["drops", "level_ups", "achievements", "chat_effects"]
+        },
+        {
+          "type": "leaderboard",
+          "position": "left",
+          "auto_hide": true
+        }
+      ]
+    }
+  }
+}

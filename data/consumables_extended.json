@@ -1,0 +1,337 @@
+{
+  "potions": {
+    "lesser_health_potion": {
+      "name": "Lesser Health Potion",
+      "type": "health",
+      "rarity": "common",
+      "effect": "Restore 50 HP instantly",
+      "cooldown": 30,
+      "price": 25,
+      "craftable": true,
+      "recipe": {
+        "ingredients": ["healing_herb", "water"],
+        "skill_required": 1
+      }
+    },
+    "health_potion": {
+      "name": "Health Potion",
+      "type": "health",
+      "rarity": "uncommon",
+      "effect": "Restore 150 HP instantly",
+      "cooldown": 30,
+      "price": 75,
+      "craftable": true,
+      "recipe": {
+        "ingredients": ["healing_herb", "crystal_water", "honey"],
+        "skill_required": 10
+      }
+    },
+    "greater_health_potion": {
+      "name": "Greater Health Potion",
+      "type": "health",
+      "rarity": "rare",
+      "effect": "Restore 350 HP instantly",
+      "cooldown": 30,
+      "price": 200,
+      "craftable": true,
+      "recipe": {
+        "ingredients": ["golden_herb", "blessed_water", "phoenix_tear"],
+        "skill_required": 25
+      }
+    },
+    "strength_elixir": {
+      "name": "Elixir of Strength",
+      "type": "buff",
+      "rarity": "uncommon",
+      "effect": "Increase damage by 25% for 10 minutes",
+      "status_effect": "strength",
+      "duration": 600,
+      "cooldown": 60,
+      "price": 100,
+      "craftable": true
+    },
+    "iron_skin_potion": {
+      "name": "Potion of Iron Skin",
+      "type": "buff",
+      "rarity": "uncommon",
+      "effect": "Increase defense by 30% for 10 minutes",
+      "status_effect": "iron_skin",
+      "duration": 600,
+      "cooldown": 60,
+      "price": 100
+    },
+    "swiftness_draught": {
+      "name": "Draught of Swiftness",
+      "type": "buff",
+      "rarity": "rare",
+      "effect": "Increase attack speed by 50% for 5 minutes",
+      "status_effect": "haste",
+      "duration": 300,
+      "cooldown": 60,
+      "price": 150
+    },
+    "invisibility_potion": {
+      "name": "Potion of Invisibility",
+      "type": "utility",
+      "rarity": "rare",
+      "effect": "Become invisible for 60 seconds (broken on attack)",
+      "status_effect": "invisibility",
+      "duration": 60,
+      "cooldown": 300,
+      "price": 250
+    },
+    "luck_potion": {
+      "name": "Potion of Fortune",
+      "type": "buff",
+      "rarity": "rare",
+      "effect": "Increase drop rate and crit chance by 20% for 30 minutes",
+      "status_effect": "fortunate",
+      "duration": 1800,
+      "cooldown": 60,
+      "price": 300
+    },
+    "elixir_of_immortality": {
+      "name": "Elixir of Immortality",
+      "type": "survival",
+      "rarity": "legendary",
+      "effect": "Upon death, revive with 50% HP once (lasts 1 hour)",
+      "status_effect": "immortality_blessing",
+      "duration": 3600,
+      "cooldown": 3600,
+      "price": 5000,
+      "craftable": false
+    }
+  },
+  "food": {
+    "bread": {
+      "name": "Bread",
+      "type": "food",
+      "rarity": "common",
+      "effect": "Restore 30 HP over 15 seconds",
+      "combat_usable": false,
+      "price": 5
+    },
+    "cooked_meat": {
+      "name": "Cooked Meat",
+      "type": "food",
+      "rarity": "common",
+      "effect": "Restore 50 HP over 20 seconds",
+      "combat_usable": false,
+      "price": 15
+    },
+    "hearty_stew": {
+      "name": "Hearty Stew",
+      "type": "food",
+      "rarity": "uncommon",
+      "effect": "Restore 100 HP over 30 seconds, +10% max HP for 1 hour",
+      "combat_usable": false,
+      "buff_duration": 3600,
+      "price": 50
+    },
+    "travelers_rations": {
+      "name": "Traveler's Rations",
+      "type": "food",
+      "rarity": "common",
+      "effect": "Restore 20 HP over 10 seconds, no cooldown",
+      "combat_usable": false,
+      "price": 10,
+      "stackable": 99
+    }
+  },
+  "scrolls": {
+    "scroll_of_town_portal": {
+      "name": "Scroll of Town Portal",
+      "type": "teleport",
+      "rarity": "common",
+      "effect": "Teleport to nearest town (5 second cast)",
+      "cast_time": 5,
+      "interruptible": true,
+      "price": 50,
+      "stackable": 20
+    },
+    "scroll_of_identify": {
+      "name": "Scroll of Identify",
+      "type": "utility",
+      "rarity": "uncommon",
+      "effect": "Reveal properties of an unidentified item",
+      "price": 100,
+      "stackable": 50
+    },
+    "scroll_of_fireball": {
+      "name": "Scroll of Fireball",
+      "type": "combat",
+      "rarity": "rare",
+      "effect": "Cast Fireball spell (150 damage, AOE)",
+      "damage": 150,
+      "area": "3x3",
+      "price": 200,
+      "stackable": 10
+    },
+    "scroll_of_lightning": {
+      "name": "Scroll of Lightning",
+      "type": "combat",
+      "rarity": "rare",
+      "effect": "Cast Chain Lightning (200 damage, chains to 3 enemies)",
+      "damage": 200,
+      "chains": 3,
+      "price": 250,
+      "stackable": 10
+    },
+    "scroll_of_resurrection": {
+      "name": "Scroll of Resurrection",
+      "type": "revival",
+      "rarity": "legendary",
+      "effect": "Revive dead player with full HP (raid only)",
+      "raid_only": true,
+      "price": 1000,
+      "stackable": 5
+    }
+  },
+  "bombs": {
+    "smoke_bomb": {
+      "name": "Smoke Bomb",
+      "type": "utility",
+      "rarity": "uncommon",
+      "effect": "Create smoke cloud, enemies have 50% miss chance for 10 seconds",
+      "area": "5x5",
+      "duration": 10,
+      "price": 75,
+      "stackable": 20
+    },
+    "fire_bomb": {
+      "name": "Fire Bomb",
+      "type": "combat",
+      "rarity": "rare",
+      "effect": "Throw explosive that deals 100 damage and applies burning",
+      "damage": 100,
+      "status_effect": "burning",
+      "area": "3x3",
+      "price": 150,
+      "stackable": 10
+    },
+    "frost_bomb": {
+      "name": "Frost Bomb",
+      "type": "combat",
+      "rarity": "rare",
+      "effect": "Throw explosive that deals 80 damage and slows enemies",
+      "damage": 80,
+      "status_effect": "slowed",
+      "area": "4x4",
+      "duration": 5,
+      "price": 150,
+      "stackable": 10
+    },
+    "holy_bomb": {
+      "name": "Holy Bomb",
+      "type": "combat",
+      "rarity": "epic",
+      "effect": "Throw bomb that deals massive damage to undead (300)",
+      "damage": 300,
+      "bonus_vs": "undead",
+      "area": "3x3",
+      "price": 500,
+      "stackable": 5
+    }
+  },
+  "utility": {
+    "lockpick": {
+      "name": "Lockpick",
+      "type": "utility",
+      "rarity": "common",
+      "effect": "Attempt to open locked chest or door",
+      "success_rate": 0.7,
+      "price": 20,
+      "stackable": 50
+    },
+    "repair_kit": {
+      "name": "Repair Kit",
+      "type": "utility",
+      "rarity": "uncommon",
+      "effect": "Repair damaged equipment (restore 50% durability)",
+      "price": 100,
+      "stackable": 10
+    },
+    "tent": {
+      "name": "Camping Tent",
+      "type": "utility",
+      "rarity": "uncommon",
+      "effect": "Set up camp to rest and save (wilderness only)",
+      "restore_hp": "100%",
+      "save_point": true,
+      "price": 200,
+      "uses": 5
+    },
+    "treasure_map": {
+      "name": "Treasure Map",
+      "type": "utility",
+      "rarity": "rare",
+      "effect": "Reveals location of hidden treasure",
+      "leads_to": "random_treasure",
+      "price": 500,
+      "stackable": 1
+    },
+    "dungeon_key": {
+      "name": "Dungeon Key",
+      "type": "utility",
+      "rarity": "uncommon",
+      "effect": "Opens one dungeon entrance",
+      "price": 100,
+      "stackable": 10
+    }
+  },
+  "special": {
+    "experience_boost": {
+      "name": "Experience Elixir",
+      "type": "boost",
+      "rarity": "epic",
+      "effect": "Gain 50% bonus experience for 2 hours",
+      "duration": 7200,
+      "price": 1000,
+      "twitch_reward": true
+    },
+    "gold_boost": {
+      "name": "Fortune's Favor",
+      "type": "boost",
+      "rarity": "epic",
+      "effect": "Gain 50% bonus gold for 2 hours",
+      "duration": 7200,
+      "price": 1000,
+      "twitch_reward": true
+    },
+    "raid_flask": {
+      "name": "Raid Flask",
+      "type": "buff",
+      "rarity": "epic",
+      "effect": "Gain +15% to all stats for 1 hour (raid only)",
+      "stat_boost": 0.15,
+      "duration": 3600,
+      "raid_only": true,
+      "price": 500
+    },
+    "soul_gem": {
+      "name": "Soul Gem",
+      "type": "revival",
+      "rarity": "legendary",
+      "effect": "Automatically revive with 100% HP on death (one time use)",
+      "auto_revive": true,
+      "restore_hp": "100%",
+      "price": 10000
+    }
+  },
+  "consumable_mechanics": {
+    "potion_cooldown": {
+      "description": "Health potions share a 30 second cooldown",
+      "cooldown_group": "health_potions",
+      "duration": 30
+    },
+    "buff_stacking": {
+      "description": "Multiple buffs can be active, but same type don't stack",
+      "max_active": 10,
+      "same_type_stacks": false
+    },
+    "combat_restrictions": {
+      "description": "Some items cannot be used in combat",
+      "restricted_items": ["food", "tent", "scroll_of_town_portal"]
+    }
+  }
+}

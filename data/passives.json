@@ -1,0 +1,621 @@
+{
+  "passives": {
+    "comment": "These are permanent account-wide passives that persist through death and character resets",
+    "combat_passives": [
+      {
+        "id": "efficient_killer",
+        "name": "Efficient Killer",
+        "description": "Deal 2% more damage for every 100 monsters slain (max 20%)",
+        "icon": "⚔️",
+        "unlock_requirement": {
+          "type": "monster_kills",
+          "count": 1000
+        },
+        "effect": {
+          "type": "damage_bonus",
+          "value_per_stack": 0.02,
+          "max_stacks": 10,
+          "stack_requirement": 100
+        },
+        "account_wide": true
+      },
+      {
+        "id": "improved_crits",
+        "name": "Improved Critical Strikes",
+        "description": "+3% critical strike chance and +20% critical damage",
+        "icon": "💥",
+        "unlock_requirement": {
+          "type": "critical_hits",
+          "count": 100
+        },
+        "effect": {
+          "type": "combat_stats",
+          "crit_chance": 0.03,
+          "crit_damage": 0.20
+        },
+        "account_wide": true
+      },
+      {
+        "id": "veteran_experience",
+        "name": "Veteran's Experience",
+        "description": "Take 5% less damage from all sources",
+        "icon": "🛡️",
+        "unlock_requirement": {
+          "type": "level_reached",
+          "level": 25
+        },
+        "effect": {
+          "type": "damage_reduction",
+          "value": 0.05
+        },
+        "account_wide": true
+      },
+      {
+        "id": "death_experience",
+        "name": "Death's Experience",
+        "description": "+2% all stats for each time you've died (max 20%)",
+        "icon": "💀",
+        "unlock_requirement": {
+          "type": "deaths",
+          "count": 10
+        },
+        "effect": {
+          "type": "stat_multiplier",
+          "value_per_stack": 0.02,
+          "max_stacks": 10,
+          "stack_requirement": 1
+        },
+        "account_wide": true
+      },
+      {
+        "id": "iron_resolve",
+        "name": "Iron Resolve",
+        "description": "Once per life, survive a lethal blow with 1 HP",
+        "icon": "🛡️",
+        "unlock_requirement": {
+          "type": "achievement",
+          "achievement_id": "iron_man"
+        },
+        "effect": {
+          "type": "death_save",
+          "cooldown_per_life": 1
+        },
+        "account_wide": true
+      },
+      {
+        "id": "legendary_luck",
+        "name": "Legendary Luck",
+        "description": "+5% chance to find rare and legendary items",
+        "icon": "✨",
+        "unlock_requirement": {
+          "type": "legendary_items_owned",
+          "count": 5
+        },
+        "effect": {
+          "type": "loot_bonus",
+          "rare_chance": 0.05,
+          "legendary_chance": 0.05
+        },
+        "account_wide": true
+      },
+      {
+        "id": "ascended_power",
+        "name": "Ascended Power",
+        "description": "+10% to all stats permanently",
+        "icon": "⬆️",
+        "unlock_requirement": {
+          "type": "level_reached",
+          "level": 50
+        },
+        "effect": {
+          "type": "stat_multiplier",
+          "value": 0.10
+        },
+        "account_wide": true
+      },
+      {
+        "id": "fast_learner",
+        "name": "Fast Learner",
+        "description": "Gain 15% bonus experience from all sources",
+        "icon": "⚡",
+        "unlock_requirement": {
+          "type": "achievement",
+          "achievement_id": "quick_learner"
+        },
+        "effect": {
+          "type": "xp_multiplier",
+          "value": 0.15
+        },
+        "account_wide": true
+      },
+      {
+        "id": "haste",
+        "name": "Haste",
+        "description": "+10% movement speed and +5% attack speed",
+        "icon": "⏱️",
+        "unlock_requirement": {
+          "type": "achievement",
+          "achievement_id": "speed_runner"
+        },
+        "effect": {
+          "type": "speed_bonus",
+          "movement": 0.10,
+          "attack_speed": 0.05
+        },
+        "account_wide": true
+      }
+    ],
+    "survival_passives": [
+      {
+        "id": "regeneration",
+        "name": "Regeneration",
+        "description": "Regenerate 1% HP every 5 seconds out of combat",
+        "icon": "💚",
+        "unlock_requirement": {
+          "type": "hp_healed_total",
+          "amount": 10000
+        },
+        "effect": {
+          "type": "hp_regen",
+          "value": 0.01,
+          "interval": 5,
+          "out_of_combat_only": true
+        },
+        "account_wide": true
+      },
+      {
+        "id": "thick_skin",
+        "name": "Thick Skin",
+        "description": "+50 maximum HP",
+        "icon": "❤️",
+        "unlock_requirement": {
+          "type": "damage_taken_total",
+          "amount": 5000
+        },
+        "effect": {
+          "type": "max_hp_bonus",
+          "value": 50
+        },
+        "account_wide": true
+      },
+      {
+        "id": "second_wind",
+        "name": "Second Wind",
+        "description": "Heal 30% HP when dropping below 25% HP (once per fight)",
+        "icon": "💨",
+        "unlock_requirement": {
+          "type": "survive_low_hp",
+          "count": 20
+        },
+        "effect": {
+          "type": "emergency_heal",
+          "trigger_threshold": 0.25,
+          "heal_amount": 0.30,
+          "cooldown_per_fight": 1
+        },
+        "account_wide": true
+      }
+    ],
+    "exploration_passives": [
+      {
+        "id": "world_traveler",
+        "name": "World Traveler",
+        "description": "+20% movement speed and reduced encounter rate",
+        "icon": "🌍",
+        "unlock_requirement": {
+          "type": "all_biomes_visited",
+          "count": 1
+        },
+        "effect": {
+          "type": "exploration_bonus",
+          "movement_speed": 0.20,
+          "encounter_rate": -0.15
+        },
+        "account_wide": true
+      },
+      {
+        "id": "keen_eye",
+        "name": "Keen Eye",
+        "description": "+25% chance to find secrets and hidden treasures",
+        "icon": "🔍",
+        "unlock_requirement": {
+          "type": "secrets_found",
+          "count": 10
+        },
+        "effect": {
+          "type": "discovery_bonus",
+          "secret_chance": 0.25,
+          "treasure_quality": 0.15
+        },
+        "account_wide": true
+      },
+      {
+        "id": "dungeon_master",
+        "name": "Dungeon Master",
+        "description": "+10% stats while in dungeons",
+        "icon": "🏰",
+        "unlock_requirement": {
+          "type": "dungeons_completed",
+          "count": 25
+        },
+        "effect": {
+          "type": "location_bonus",
+          "location_type": "dungeon",
+          "stat_bonus": 0.10
+        },
+        "account_wide": true
+      },
+      {
+        "id": "cartographer",
+        "name": "Cartographer",
+        "description": "Reveal nearby points of interest on the map",
+        "icon": "🗺️",
+        "unlock_requirement": {
+          "type": "locations_visited",
+          "count": 50
+        },
+        "effect": {
+          "type": "map_reveal",
+          "radius": 2
+        },
+        "account_wide": true
+      }
+    ],
+    "wealth_passives": [
+      {
+        "id": "bargain_hunter",
+        "name": "Bargain Hunter",
+        "description": "10% discount at all merchants",
+        "icon": "💰",
+        "unlock_requirement": {
+          "type": "gold_accumulated",
+          "amount": 50000
+        },
+        "effect": {
+          "type": "merchant_discount",
+          "value": 0.10
+        },
+        "account_wide": true
+      },
+      {
+        "id": "treasure_hunter",
+        "name": "Treasure Hunter",
+        "description": "Find 20% more gold from all sources",
+        "icon": "💎",
+        "unlock_requirement": {
+          "type": "gold_looted_total",
+          "amount": 100000
+        },
+        "effect": {
+          "type": "gold_bonus",
+          "value": 0.20
+        },
+        "account_wide": true
+      },
+      {
+        "id": "starting_wealth",
+        "name": "Starting Wealth",
+        "description": "New characters start with 500 gold",
+        "icon": "💵",
+        "unlock_requirement": {
+          "type": "gold_spent",
+          "amount": 25000
+        },
+        "effect": {
+          "type": "starting_bonus",
+          "gold": 500
+        },
+        "account_wide": true
+      }
+    ],
+    "special_passives": [
+      {
+        "id": "monster_knowledge",
+        "name": "Monster Knowledge",
+        "description": "Deal 10% more damage to monsters you've defeated before",
+        "icon": "📚",
+        "unlock_requirement": {
+          "type": "bestiary_complete",
+          "percentage": 100
+        },
+        "effect": {
+          "type": "knowledge_bonus",
+          "damage_vs_known": 0.10,
+          "show_monster_stats": true
+        },
+        "account_wide": true
+      },
+      {
+        "id": "curse_affinity",
+        "name": "Curse Affinity",
+        "description": "Cursed items grant +50% stats but curse effects reduced by 50%",
+        "icon": "🌑",
+        "unlock_requirement": {
+          "type": "achievement",
+          "achievement_id": "cursed_one"
+        },
+        "effect": {
+          "type": "curse_mastery",
+          "cursed_item_bonus": 0.50,
+          "curse_penalty_reduction": 0.50
+        },
+        "account_wide": true
+      },
+      {
+        "id": "intuition",
+        "name": "Intuition",
+        "description": "Sense danger, treasures, and quest objectives",
+        "icon": "🔮",
+        "unlock_requirement": {
+          "type": "mysteries_solved",
+          "count": "all"
+        },
+        "effect": {
+          "type": "sixth_sense",
+          "danger_warning": true,
+          "treasure_sense": true,
+          "quest_hints": true
+        },
+        "account_wide": true
+      },
+      {
+        "id": "temporal_awareness",
+        "name": "Temporal Awareness",
+        "description": "See time-related events and opportunities",
+        "icon": "⏳",
+        "unlock_requirement": {
+          "type": "achievement",
+          "achievement_id": "time_traveler"
+        },
+        "effect": {
+          "type": "time_sense",
+          "see_time_rifts": true,
+          "event_prediction": true
+        },
+        "account_wide": true
+      },
+      {
+        "id": "peoples_champion",
+        "name": "People's Champion",
+        "description": "+10% stats for each allied faction at Friendly or higher",
+        "icon": "👑",
+        "unlock_requirement": {
+          "type": "factions_friendly",
+          "count": 3
+        },
+        "effect": {
+          "type": "reputation_bonus",
+          "stat_per_faction": 0.10,
+          "min_reputation": "friendly"
+        },
+        "account_wide": true
+      },
+      {
+        "id": "universal_respect",
+        "name": "Universal Respect",
+        "description": "Never lose reputation below Neutral with any faction",
+        "icon": "🤝",
+        "unlock_requirement": {
+          "type": "achievement",
+          "achievement_id": "faction_diplomat"
+        },
+        "effect": {
+          "type": "reputation_floor",
+          "minimum_tier": "neutral"
+        },
+        "account_wide": true
+      },
+      {
+        "id": "shadow_mastery",
+        "name": "Shadow Mastery",
+        "description": "+20% damage in darkness, +15% evasion at night",
+        "icon": "🌙",
+        "unlock_requirement": {
+          "type": "faction_exalted",
+          "faction": "shadow_syndicate"
+        },
+        "effect": {
+          "type": "darkness_bonus",
+          "damage_in_dark": 0.20,
+          "evasion_at_night": 0.15
+        },
+        "account_wide": true
+      },
+      {
+        "id": "natures_blessing",
+        "name": "Nature's Blessing",
+        "description": "Heal 2% HP per second in natural environments",
+        "icon": "🌿",
+        "unlock_requirement": {
+          "type": "faction_exalted",
+          "faction": "whispering_woods_rangers"
+        },
+        "effect": {
+          "type": "environmental_heal",
+          "biome_types": ["forest", "grove", "meadow"],
+          "heal_percent": 0.02,
+          "interval": 1
+        },
+        "account_wide": true
+      },
+      {
+        "id": "magical_prodigy",
+        "name": "Magical Prodigy",
+        "description": "Spells cost 15% less mana and cooldowns reduced by 10%",
+        "icon": "✨",
+        "unlock_requirement": {
+          "type": "faction_exalted",
+          "faction": "mages_conclave"
+        },
+        "effect": {
+          "type": "magic_mastery",
+          "mana_cost_reduction": 0.15,
+          "cooldown_reduction": 0.10
+        },
+        "account_wide": true
+      },
+      {
+        "id": "undeath_mastery",
+        "name": "Undeath Mastery",
+        "description": "Cannot die permanently; respawn as undead with 50% stats",
+        "icon": "💀",
+        "unlock_requirement": {
+          "type": "faction_exalted",
+          "faction": "undead_legion"
+        },
+        "effect": {
+          "type": "undeath",
+          "respawn_as_undead": true,
+          "undead_stat_multiplier": 0.50,
+          "permanent_death_immunity": true
+        },
+        "account_wide": true
+      },
+      {
+        "id": "primal_connection",
+        "name": "Primal Connection",
+        "description": "Communicate with beasts and summon animal companions",
+        "icon": "🐾",
+        "unlock_requirement": {
+          "type": "faction_exalted",
+          "faction": "druid_circle"
+        },
+        "effect": {
+          "type": "beast_mastery",
+          "beast_communication": true,
+          "permanent_companion": true,
+          "beast_pacification": 0.50
+        },
+        "account_wide": true
+      },
+      {
+        "id": "reincarnation_bonus",
+        "name": "Reincarnation Mastery",
+        "description": "Gain bonus stats based on how many times you've reincarnated",
+        "icon": "♻️",
+        "unlock_requirement": {
+          "type": "reincarnations",
+          "count": 5
+        },
+        "effect": {
+          "type": "reincarnation_power",
+          "stat_bonus_per_reincarnation": 0.05,
+          "xp_bonus_per_reincarnation": 0.10
+        },
+        "account_wide": true
+      },
+      {
+        "id": "ghostseer",
+        "name": "Ghostseer",
+        "description": "See and interact with spirits, +20% damage to undead",
+        "icon": "👻",
+        "unlock_requirement": {
+          "type": "quest_complete",
+          "quest_id": "ghost_investigation"
+        },
+        "effect": {
+          "type": "spirit_sight",
+          "see_ghosts": true,
+          "undead_damage": 0.20,
+          "spirit_dialogue": true
+        },
+        "account_wide": true
+      }
+    ],
+    "starter_unlocks": [
+      {
+        "id": "starter_health",
+        "name": "Hardy Constitution",
+        "description": "New characters start with +20 max HP",
+        "icon": "❤️",
+        "unlock_requirement": {
+          "type": "deaths",
+          "count": 5
+        },
+        "effect": {
+          "type": "starting_bonus",
+          "max_hp": 20
+        },
+        "account_wide": true
+      },
+      {
+        "id": "starter_damage",
+        "name": "Combat Training",
+        "description": "New characters start with +2 attack",
+        "icon": "⚔️",
+        "unlock_requirement": {
+          "type": "monster_kills",
+          "count": 500
+        },
+        "effect": {
+          "type": "starting_bonus",
+          "attack": 2
+        },
+        "account_wide": true
+      },
+      {
+        "id": "starter_defense",
+        "name": "Defensive Stance",
+        "description": "New characters start with +2 defense",
+        "icon": "🛡️",
+        "unlock_requirement": {
+          "type": "damage_blocked_total",
+          "amount": 3000
+        },
+        "effect": {
+          "type": "starting_bonus",
+          "defense": 2
+        },
+        "account_wide": true
+      },
+      {
+        "id": "starter_equipment",
+        "name": "Heirloom Equipment",
+        "description": "New characters start with a random uncommon item",
+        "icon": "🎁",
+        "unlock_requirement": {
+          "type": "level_reached",
+          "level": 20
+        },
+        "effect": {
+          "type": "starting_bonus",
+          "item_rarity": "uncommon",
+          "item_count": 1
+        },
+        "account_wide": true
+      }
+    ]
+  },
+  "passive_categories": {
+    "combat": {
+      "name": "Combat Mastery",
+      "description": "Enhance your fighting capabilities",
+      "color": "#FF0000"
+    },
+    "survival": {
+      "name": "Survival Instincts",
+      "description": "Increase your survivability",
+      "color": "#00FF00"
+    },
+    "exploration": {
+      "name": "Explorer's Wisdom",
+      "description": "Improve your exploration abilities",
+      "color": "#00FFFF"
+    },
+    "wealth": {
+      "name": "Merchant's Eye",
+      "description": "Increase your wealth accumulation",
+      "color": "#FFD700"
+    },
+    "special": {
+      "name": "Unique Powers",
+      "description": "Rare and powerful abilities",
+      "color": "#FF00FF"
+    },
+    "starter": {
+      "name": "Legacy Benefits",
+      "description": "Help your new characters start stronger",
+      "color": "#FFA500"
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "lore": {
+    "ages": {
+      "age_of_creation": {
+        "name": "Age of Creation",
+        "era": "Ancient Past",
+        "description": "When the gods shaped the world and brought life to Ashbee Realms",
+        "key_events": [
+          "The Primordial Gods create the world",
+          "First life emerges from the World Tree",
+          "Magic flows freely through all things",
+          "Dragons are born from elemental chaos"
+        ],
+        "duration": "Unknown"
+      },
+      "age_of_harmony": {
+        "name": "Age of Harmony",
+        "era": "Golden Age",
+        "description": "When all races lived in peace under the guidance of the Celestials",
+        "key_events": [
+          "Humans, elves, and dwarves unite",
+          "Great cities are built",
+          "The Mages' Conclave is founded",
+          "The Crystal Depths are discovered"
+        ],
+        "duration": "2000 years"
+      },
+      "age_of_shadow": {
+        "name": "Age of Shadow",
+        "era": "Current Age",
+        "description": "The present age, where darkness creeps back into the world",
+        "key_events": [
+          "The Ancient Evil stirs beneath",
+          "Corruption spreads through the land",
+          "Monsters grow bold and numerous",
+          "Heroes rise to face the darkness"
+        ],
+        "duration": "Ongoing"
+      }
+    },
+    "ancient_evil": {
+      "name": "The Nameless One",
+      "title": "The Ancient Evil",
+      "description": "An entity of pure darkness sealed away in ancient times",
+      "origin": "Born from the nightmares of dying gods",
+      "sealed_by": "The Five Celestial Heroes",
+      "seal_location": "Beneath the Obsidian Citadel",
+      "powers": [
+        "Corruption of living things",
+        "Control over shadows",
+        "Ability to breach dimensions",
+        "Immortality through darkness"
+      ],
+      "prophecy": "When the seals weaken and corruption spreads, a hero must rise to face the Ancient Evil, or all shall be consumed by shadow.",
+      "fragments": [
+        "The Shadow Heart - sealed in the Cursed Swamp",
+        "The Void Crystal - hidden in the Deep Caverns",
+        "The Dusk Crown - lost in the Ancient Crypts",
+        "The Nightmare Blade - guarded in the Obsidian Citadel"
+      ]
+    },
+    "artifacts": {
+      "world_tree_seed": {
+        "name": "Seed of the World Tree",
+        "rarity": "mythic",
+        "description": "A seed from the original World Tree, source of all life",
+        "power": "Can restore life to dead lands or grant immortality",
+        "location": "Hidden within the Eternal Grove",
+        "lore": "The World Tree was the first living thing, planted by the gods themselves. Its seeds hold the power of creation."
+      },
+      "crown_of_ascension": {
+        "name": "Crown of Ascension",
+        "rarity": "legendary",
+        "description": "Worn by the first king of humanity",
+        "power": "Grants leadership and inspires loyalty",
+        "location": "Tower of Trials, Floor 100",
+        "lore": "Forged by dwarven smiths and blessed by celestials, this crown has never known a tyrant's head."
+      },
+      "shadowbane": {
+        "name": "Shadowbane, the Light's Edge",
+        "rarity": "legendary",
+        "description": "A sword forged to destroy the Ancient Evil",
+        "power": "Burns shadow creatures and nullifies dark magic",
+        "location": "Wielded by the Lord of Shadows (ironic prison)",
+        "lore": "Created by the Celestial Heroes to seal away darkness, but corrupted over millennia."
+      }
+    },
+    "factions_history": {
+      "whispering_woods_rangers": {
+        "founded": "Age of Harmony",
+        "founder": "Sylvara the First",
+        "purpose": "Protect the ancient forests and maintain balance",
+        "major_events": [
+          "Defended the World Tree from corruption",
+          "Allied with druids during the Great Blight",
+          "Currently fighting spreading darkness"
+        ]
+      },
+      "shadow_syndicate": {
+        "founded": "Age of Conflict",
+        "founder": "The Faceless One (identity unknown)",
+        "purpose": "Control through information and fear",
+        "major_events": [
+          "Assassinated three kings",
+          "Stole the Crown of Shadows",
+          "Operates from the Undercity"
+        ]
+      }
+    },
+    "locations_history": {
+      "obsidian_citadel": {
+        "built": "Age of Creation",
+        "builders": "The Celestial Heroes",
+        "purpose": "Prison for the Ancient Evil",
+        "current_state": "Partially ruined, seals weakening",
+        "lore": "Built from solidified darkness itself, the citadel stands as both prison and monument to an ancient battle."
+      },
+      "whispering_woods": {
+        "age": "Since the beginning",
+        "significance": "Home of the World Tree",
+        "lore": "The trees remember everything and whisper secrets to those who listen. The forest itself is sentient."
+      }
+    },
+    "legendary_figures": {
+      "the_five_celestials": {
+        "names": ["Lumina the Radiant", "Thornweave the Eternal", "Ironheart the Unbreakable", "Whisperwind the Silent", "Flameheart the Purifying"],
+        "era": "Age of Harmony",
+        "deed": "Sealed the Ancient Evil",
+        "fate": "Sacrificed their immortality to create the seal",
+        "legacy": "Their spirits watch over the realm, appearing in times of dire need"
+      },
+      "lady_ashford": {
+        "title": "Lady of Hollow Manor",
+        "era": "Age of Conflict",
+        "story": "A noble lady who died tragically, her spirit haunts the manor searching for her lost locket",
+        "quest_related": true
+      }
+    },
+    "mysteries": {
+      "singing_stones": {
+        "description": "Ancient stones that hum with power during celestial events",
+        "purpose": "Unknown - possibly a map or communication device",
+        "locations": ["Highland Reaches", "Crystal Depths", "Forgotten Isle"]
+      },
+      "missing_sixth_celestial": {
+        "description": "Legends speak of five Celestial Heroes, but ancient texts hint at a sixth",
+        "theories": [
+          "Betrayed the others and joined the darkness",
+          "Erased from history for using forbidden magic",
+          "Never existed - a myth within a myth"
+        ]
+      }
+    }
+  }
+}

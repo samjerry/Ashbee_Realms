@@ -1,0 +1,549 @@
+{
+  "events": {
+    "combat_events": [
+      {
+        "id": "ambush",
+        "name": "Ambush!",
+        "description": "Enemies leap from the shadows!",
+        "type": "combat",
+        "trigger_chance": 0.15,
+        "biome_specific": ["whispering_woods", "cursed_swamp", "goblin_tunnels"],
+        "effects": {
+          "spawn_monsters": true,
+          "monster_count": [2, 4],
+          "monster_level_bonus": 1,
+          "player_first_turn": false
+        },
+        "announcement": "⚠️ {player} was ambushed by {monster_count} enemies!"
+      },
+      {
+        "id": "surprise_attack",
+        "name": "Surprise Attack",
+        "description": "You catch the enemy off guard!",
+        "type": "combat",
+        "trigger_chance": 0.1,
+        "effects": {
+          "player_first_turn": true,
+          "first_attack_bonus": 1.5,
+          "enemy_defense_reduced": 0.3
+        },
+        "announcement": "✨ {player} surprised their enemy with a devastating opening strike!"
+      },
+      {
+        "id": "reinforcements_arrive",
+        "name": "Enemy Reinforcements",
+        "description": "More enemies join the battle!",
+        "type": "combat_mid",
+        "trigger_chance": 0.08,
+        "trigger_turn": 3,
+        "effects": {
+          "spawn_additional_monsters": true,
+          "monster_count": [1, 2]
+        },
+        "announcement": "🚨 Reinforcements have arrived to aid {player}'s enemies!"
+      },
+      {
+        "id": "berserker_rage",
+        "name": "Berserker Rage",
+        "description": "The enemy enters a frenzied state!",
+        "type": "combat_mid",
+        "trigger_chance": 0.12,
+        "trigger_conditions": {"enemy_hp_below": 0.3},
+        "effects": {
+          "enemy_damage_multiplier": 1.5,
+          "enemy_defense_multiplier": 0.7,
+          "duration": 3
+        },
+        "announcement": "😡 The enemy enters a berserker rage!"
+      }
+    ],
+    "exploration_events": [
+      {
+        "id": "hidden_cache",
+        "name": "Hidden Cache",
+        "description": "You discover a hidden stash of supplies!",
+        "type": "treasure",
+        "trigger_chance": 0.12,
+        "effects": {
+          "loot": {
+            "gold": [20, 100],
+            "items": ["health_potion", "mana_potion"],
+            "item_chance": 0.6
+          }
+        },
+        "announcement": "💰 {player} discovered a hidden cache!"
+      },
+      {
+        "id": "trapped_chest",
+        "name": "Trapped Chest",
+        "description": "A chest lies before you, but something seems off...",
+        "type": "choice",
+        "trigger_chance": 0.08,
+        "choices": [
+          {
+            "id": "open_carefully",
+            "text": "Open it carefully",
+            "success_chance": 0.7,
+            "success_effect": {
+              "loot": {"gold": [50, 200], "items": ["rare_gear"]},
+              "xp": 100
+            },
+            "failure_effect": {
+              "damage": 30,
+              "status_effect": "bleeding"
+            }
+          },
+          {
+            "id": "ignore",
+            "text": "Leave it alone",
+            "effect": {
+              "message": "You wisely avoid the trap."
+            }
+          },
+          {
+            "id": "force_open",
+            "text": "Force it open",
+            "success_chance": 0.3,
+            "success_effect": {
+              "loot": {"gold": [100, 300], "items": ["epic_gear"]}
+            },
+            "failure_effect": {
+              "damage": 60,
+              "status_effect": "poison",
+              "spawn_monster": "mimic"
+            }
+          }
+        ],
+        "announcement": "⚠️ {player} encountered a suspicious chest!"
+      },
+      {
+        "id": "mysterious_shrine",
+        "name": "Mysterious Shrine",
+        "description": "An ancient shrine radiates power. Make an offering?",
+        "type": "choice",
+        "trigger_chance": 0.06,
+        "choices": [
+          {
+            "id": "offer_gold",
+            "text": "Offer 50 gold",
+            "cost": {"gold": 50},
+            "effect": {
+              "buff": "shrine_blessing",
+              "duration": 10,
+              "xp": 150
+            }
+          },
+          {
+            "id": "offer_item",
+            "text": "Offer a rare item",
+            "cost": {"item_rarity": "rare"},
+            "effect": {
+              "buff": "greater_blessing",
+              "duration": 20,
+              "xp": 300
+            }
+          },
+          {
+            "id": "desecrate",
+            "text": "Desecrate the shrine",
+            "effect": {
+              "curse": "divine_wrath",
+              "spawn_monster": "shrine_guardian",
+              "gold": 100
+            }
+          },
+          {
+            "id": "ignore",
+            "text": "Leave respectfully",
+            "effect": {
+              "message": "The shrine acknowledges your respect."
+            }
+          }
+        ]
+      },
+      {
+        "id": "merchant_encounter",
+        "name": "Traveling Merchant",
+        "description": "A friendly merchant offers to trade",
+        "type": "merchant",
+        "trigger_chance": 0.15,
+        "effects": {
+          "spawn_merchant": "wandering_merchant",
+          "discount": 0.1
+        },
+        "announcement": "🛍️ {player} met a traveling merchant!"
+      },
+      {
+        "id": "rest_spot",
+        "name": "Peaceful Clearing",
+        "description": "A safe place to rest and recover",
+        "type": "healing",
+        "trigger_chance": 0.1,
+        "effects": {
+          "heal_hp_percent": 0.5,
+          "restore_mana_percent": 0.5,
+          "remove_negative_effects": true
+        },
+        "announcement": "🌿 {player} found a peaceful place to rest"
+      },
+      {
+        "id": "ominous_warning",
+        "name": "Ominous Warning",
+        "description": "Strange markings warn of danger ahead...",
+        "type": "warning",
+        "trigger_chance": 0.05,
+        "effects": {
+          "next_encounter_difficulty": 1.5,
+          "next_encounter_loot": 2.0,
+          "player_awareness": true
+        }
+      },
+      {
+        "id": "lost_traveler",
+        "name": "Lost Traveler",
+        "description": "A lost traveler asks for help finding their way",
+        "type": "choice",
+        "trigger_chance": 0.09,
+        "choices": [
+          {
+            "id": "help",
+            "text": "Help them find their way",
+            "effect": {
+              "reputation_gain": 50,
+              "gold": 30,
+              "xp": 100,
+              "karma": 10
+            }
+          },
+          {
+            "id": "rob",
+            "text": "Rob the traveler",
+            "effect": {
+              "gold": 80,
+              "reputation_loss": 100,
+              "karma": -20,
+              "spawn_guards_chance": 0.3
+            }
+          },
+          {
+            "id": "ignore",
+            "text": "Ignore them",
+            "effect": {
+              "message": "You continue on your way."
+            }
+          }
+        ]
+      }
+    ],
+    "weather_events": [
+      {
+        "id": "heavy_rain",
+        "name": "Heavy Rain",
+        "description": "A torrential downpour drenches everything",
+        "type": "weather",
+        "duration": 5,
+        "trigger_chance": 0.1,
+        "biome_specific": ["twilight_wetlands", "whispering_woods"],
+        "effects": {
+          "visibility_reduced": 0.3,
+          "fire_damage_reduced": 0.5,
+          "lightning_damage_increased": 1.3,
+          "movement_penalty": 0.15
+        }
+      },
+      {
+        "id": "fog",
+        "name": "Thick Fog",
+        "description": "Dense fog obscures your vision",
+        "type": "weather",
+        "duration": 3,
+        "trigger_chance": 0.12,
+        "effects": {
+          "ambush_chance_increased": 0.2,
+          "visibility_reduced": 0.5,
+          "evasion_bonus": 0.15
+        }
+      },
+      {
+        "id": "thunderstorm",
+        "name": "Thunderstorm",
+        "description": "Lightning crashes all around!",
+        "type": "weather",
+        "duration": 4,
+        "trigger_chance": 0.07,
+        "biome_specific": ["highland_reaches", "stormbluff_cliffs"],
+        "effects": {
+          "random_lightning_damage": [10, 30],
+          "lightning_resistance_needed": true,
+          "spawn_air_elementals": 0.15
+        },
+        "announcement": "⚡ A fierce thunderstorm strikes the area!"
+      },
+      {
+        "id": "blizzard",
+        "name": "Blizzard",
+        "description": "Freezing winds and snow reduce visibility to zero",
+        "type": "weather",
+        "duration": 6,
+        "trigger_chance": 0.05,
+        "biome_specific": ["frozen_peaks", "highland_reaches"],
+        "effects": {
+          "cold_damage_per_turn": 5,
+          "movement_penalty": 0.4,
+          "visibility_reduced": 0.8,
+          "ice_resistance_needed": true
+        }
+      },
+      {
+        "id": "heat_wave",
+        "name": "Scorching Heat",
+        "description": "Oppressive heat drains your stamina",
+        "type": "weather",
+        "duration": 5,
+        "trigger_chance": 0.08,
+        "biome_specific": ["ashen_barrens", "volcanic_wastes"],
+        "effects": {
+          "hp_drain_per_turn": 3,
+          "fire_damage_increased": 1.4,
+          "ice_damage_reduced": 0.6
+        }
+      }
+    ],
+    "time_based_events": [
+      {
+        "id": "blood_moon",
+        "name": "Blood Moon Rising",
+        "description": "The moon turns crimson, empowering dark creatures",
+        "type": "world_event",
+        "duration": 30,
+        "trigger_time": "night",
+        "trigger_chance": 0.03,
+        "effects": {
+          "undead_spawn_rate": 2.0,
+          "undead_power": 1.5,
+          "vampire_spawn": true,
+          "werewolf_transformation": true,
+          "loot_bonus": 1.5
+        },
+        "announcement": "🌕 A BLOOD MOON rises! Dark creatures grow stronger!"
+      },
+      {
+        "id": "meteor_shower",
+        "name": "Meteor Shower",
+        "description": "Celestial rocks rain from the sky!",
+        "type": "world_event",
+        "duration": 15,
+        "trigger_time": "night",
+        "trigger_chance": 0.04,
+        "effects": {
+          "random_damage_chance": 0.1,
+          "meteor_ore_drops": true,
+          "celestial_creatures_spawn": true
+        },
+        "announcement": "☄️ A meteor shower illuminates the night sky!"
+      },
+      {
+        "id": "eclipse",
+        "name": "Solar Eclipse",
+        "description": "Day turns to night as the sun is blocked",
+        "type": "world_event",
+        "duration": 10,
+        "trigger_time": "day",
+        "trigger_chance": 0.02,
+        "effects": {
+          "darkness_during_day": true,
+          "shadow_creatures_spawn": true,
+          "magic_power_increased": 1.3,
+          "rare_encounter_chance": 0.2
+        },
+        "announcement": "🌑 A solar eclipse darkens the land!"
+      },
+      {
+        "id": "fairy_ring",
+        "name": "Fairy Ring Appears",
+        "description": "Magical mushrooms form a perfect circle",
+        "type": "time_event",
+        "duration": 5,
+        "trigger_time": "night",
+        "trigger_chance": 0.06,
+        "biome_specific": ["whispering_woods", "enchanted_grove"],
+        "effects": {
+          "teleport_option": true,
+          "fairy_encounter": true,
+          "magic_buff": 1.5,
+          "duration": 5
+        }
+      }
+    ],
+    "biome_specific_events": [
+      {
+        "id": "quicksand",
+        "name": "Quicksand!",
+        "description": "You're sinking into quicksand!",
+        "type": "hazard",
+        "trigger_chance": 0.1,
+        "biome_specific": ["cursed_swamp", "twilight_wetlands"],
+        "effects": {
+          "damage": 20,
+          "immobilize": 2,
+          "lose_item_chance": 0.1
+        }
+      },
+      {
+        "id": "volcanic_eruption",
+        "name": "Volcanic Eruption",
+        "description": "The ground shakes as lava spews forth!",
+        "type": "hazard",
+        "trigger_chance": 0.05,
+        "biome_specific": ["volcanic_wastes", "ashen_barrens"],
+        "effects": {
+          "fire_damage": [30, 60],
+          "spawn_fire_elementals": true,
+          "lava_pools_created": true
+        },
+        "announcement": "🌋 {player} barely escapes a volcanic eruption!"
+      },
+      {
+        "id": "avalanche",
+        "name": "Avalanche!",
+        "description": "Snow and ice cascade down the mountain!",
+        "type": "hazard",
+        "trigger_chance": 0.08,
+        "biome_specific": ["frozen_peaks", "highland_reaches"],
+        "effects": {
+          "cold_damage": [40, 80],
+          "stun": 1,
+          "buried_treasure_revealed": 0.3
+        }
+      },
+      {
+        "id": "ancient_magic",
+        "name": "Ancient Magic Surge",
+        "description": "Ancient magical energy pulses through the area",
+        "type": "magical",
+        "trigger_chance": 0.06,
+        "biome_specific": ["forsaken_ruins", "arcane_sanctum"],
+        "effects": {
+          "random_spell_cast": true,
+          "magic_damage_amplified": 1.5,
+          "mana_restored": 50
+        }
+      }
+    ],
+    "rare_events": [
+      {
+        "id": "legendary_spawn",
+        "name": "Legendary Creature Sighted",
+        "description": "A legendary creature appears before you!",
+        "type": "boss_spawn",
+        "trigger_chance": 0.01,
+        "effects": {
+          "spawn_legendary_boss": true,
+          "legendary_loot_guaranteed": true,
+          "bonus_xp": 5000
+        },
+        "announcement": "🔥 {player} has encountered a LEGENDARY creature!"
+      },
+      {
+        "id": "time_rift",
+        "name": "Time Rift",
+        "description": "A tear in time opens before you",
+        "type": "portal",
+        "trigger_chance": 0.02,
+        "effects": {
+          "time_travel_option": true,
+          "access_past_era": true,
+          "unique_loot": true
+        },
+        "announcement": "⏳ A time rift has appeared!"
+      },
+      {
+        "id": "divine_intervention",
+        "name": "Divine Intervention",
+        "description": "The gods smile upon you",
+        "type": "blessing",
+        "trigger_chance": 0.015,
+        "effects": {
+          "full_heal": true,
+          "remove_all_curses": true,
+          "buff": "divine_blessing",
+          "duration": 20,
+          "bonus_loot": 2.0
+        },
+        "announcement": "✨ The gods have blessed {player}!"
+      },
+      {
+        "id": "demon_portal",
+        "name": "Demon Portal Opens",
+        "description": "A portal to the underworld tears open!",
+        "type": "invasion",
+        "trigger_chance": 0.01,
+        "effects": {
+          "demon_invasion": true,
+          "spawn_demon_waves": 5,
+          "area_corruption": true,
+          "epic_loot_chance": 0.5
+        },
+        "announcement": "😈 A DEMON PORTAL has opened! {player} faces the invasion!"
+      }
+    ],
+    "npc_events": [
+      {
+        "id": "distressed_npc",
+        "name": "NPC in Danger",
+        "description": "An NPC is being attacked by monsters!",
+        "type": "rescue",
+        "trigger_chance": 0.07,
+        "choices": [
+          {
+            "id": "rescue",
+            "text": "Rush to their aid",
+            "effect": {
+              "start_combat": true,
+              "monster_count": [2, 3],
+              "reputation_gain": 100,
+              "npc_reward": true
+            }
+          },
+          {
+            "id": "ignore",
+            "text": "Keep walking",
+            "effect": {
+              "reputation_loss": 50,
+              "karma": -10
+            }
+          }
+        ]
+      },
+      {
+        "id": "quest_giver_appears",
+        "name": "Quest Opportunity",
+        "description": "An NPC has a task for you",
+        "type": "quest",
+        "trigger_chance": 0.1,
+        "effects": {
+          "unlock_random_quest": true,
+          "quest_bonus": 1.2
+        }
+      }
+    ]
+  },
+  "event_pools": {
+    "common_pool": {
+      "weight": 60,
+      "events": ["hidden_cache", "merchant_encounter", "rest_spot", "lost_traveler"]
+    },
+    "uncommon_pool": {
+      "weight": 25,
+      "events": ["trapped_chest", "mysterious_shrine", "distressed_npc", "quest_giver_appears"]
+    },
+    "rare_pool": {
+      "weight": 10,
+      "events": ["blood_moon", "meteor_shower", "fairy_ring", "ancient_magic"]
+    },
+    "legendary_pool": {
+      "weight": 5,
+      "events": ["legendary_spawn", "time_rift", "divine_intervention", "demon_portal"]
+    }
+  }
+}

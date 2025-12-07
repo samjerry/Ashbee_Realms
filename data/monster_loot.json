@@ -1,0 +1,90 @@
+{
+  "loot_tables": {
+    "beast_common": {
+      "gold": [2, 8],
+      "items": [
+        { "item": "raw_meat", "chance": 0.3 },
+        { "item": "animal_hide", "chance": 0.2 }
+      ]
+    },
+    "beast_common_plus": {
+      "gold": [5, 15],
+      "items": [
+        { "item": "wolf_pelt", "chance": 0.5 },
+        { "item": "raw_meat", "chance": 0.3 }
+      ]
+    },
+    "beast_shell": {
+      "gold": [3, 10],
+      "items": [
+        { "item": "crab_shell", "chance": 0.5 },
+        { "item": "crab_meat", "chance": 0.3 }
+      ]
+    },
+    "beast_meat": {
+      "gold": [6, 14],
+      "items": [
+        { "item": "boar_tusk", "chance": 0.4 },
+        { "item": "raw_meat", "chance": 0.5 }
+      ]
+    },
+    "humanoid_common": {
+      "gold": [8, 20],
+      "items": [
+        { "item": "rusty_dagger", "chance": 0.2 },
+        { "item": "goblin_ear", "chance": 0.4 }
+      ]
+    },
+    "undead_common": {
+      "gold": [5, 12],
+      "items": [
+        { "item": "bone_fragment", "chance": 0.6 },
+        { "item": "rusty_sword", "chance": 0.2 }
+      ]
+    },
+    "slime_common": {
+      "gold": [4, 10],
+      "items": [
+        { "item": "slime_gel", "chance": 0.7 }
+      ]
+    },
+    "elemental_uncommon": {
+      "gold": [20, 50],
+      "items": [
+        { "item": "elemental_essence", "chance": 0.5 },
+        { "item": "mana_crystal", "chance": 0.3 }
+      ]
+    },
+    "dragon_rare": {
+      "gold": [80, 175],
+      "items": [
+        { "item": "dragon_scale", "chance": 0.6 },
+        { "item": "dragon_claw", "chance": 0.4 }
+      ]
+    },
+    "boss_epic": {
+      "gold": [200, 450],
+      "items": [
+        { "item": "epic_token", "chance": 0.8 },
+        { "item": "rare_gem", "chance": 0.5 },
+        { "item": "enchanted_equipment", "chance": 0.3 }
+      ]
+    },
+    "boss_legendary": {
+      "gold": [1000, 3000],
+      "items": [
+        { "item": "legendary_material", "chance": 0.9 },
+        { "item": "artifact_fragment", "chance": 0.5 },
+        { "item": "legendary_equipment", "chance": 0.3 }
+      ]
+    },
+    "boss_mythic": {
+      "gold": [5000, 20000],
+      "items": [
+        { "item": "mythic_essence", "chance": 1.0 },
+        { "item": "reality_shard", "chance": 0.7 },
+        { "item": "mythic_artifact", "chance": 0.5 }
+      ]
+    }
+  }
+}

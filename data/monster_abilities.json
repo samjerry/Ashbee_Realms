@@ -1,0 +1,1108 @@
+{
+  "abilities": {
+    "bite": {
+      "name": "Bite",
+      "type": "physical",
+      "damage_multiplier": 1.2,
+      "description": "A savage bite attack"
+    },
+    "evasive": {
+      "name": "Evasive",
+      "type": "passive",
+      "effect": "dodge_chance_bonus",
+      "value": 0.15,
+      "description": "Hard to hit, +15% dodge chance"
+    },
+    "disease": {
+      "name": "Disease",
+      "type": "debuff",
+      "effect": "poison_damage_over_time",
+      "duration": 3,
+      "description": "Inflicts disease on hit"
+    },
+    "regen": {
+      "name": "Regeneration",
+      "type": "passive",
+      "effect": "heal_per_turn",
+      "value": 0.05,
+      "description": "Heals 5% HP per turn"
+    },
+    "shell": {
+      "name": "Shell",
+      "type": "passive",
+      "effect": "defense_bonus",
+      "value": 2,
+      "description": "Hard shell provides extra defense"
+    },
+    "charge": {
+      "name": "Charge",
+      "type": "physical",
+      "damage_multiplier": 1.5,
+      "cooldown": 2,
+      "description": "Powerful charging attack"
+    },
+    "shock": {
+      "name": "Shock",
+      "type": "magic",
+      "element": "lightning",
+      "damage_multiplier": 1.3,
+      "effect": "stun_chance",
+      "value": 0.25,
+      "description": "Lightning damage with 25% stun chance"
+    },
+    "phase": {
+      "name": "Phase",
+      "type": "passive",
+      "effect": "physical_resist",
+      "value": 0.3,
+      "description": "Can phase through physical attacks, 30% resist"
+    },
+    "freeze": {
+      "name": "Freeze",
+      "type": "magic",
+      "element": "ice",
+      "effect": "slow",
+      "duration": 2,
+      "description": "Slows enemy for 2 turns"
+    },
+    "ice_shield": {
+      "name": "Ice Shield",
+      "type": "passive",
+      "effect": "magic_defense_bonus",
+      "value": 3,
+      "description": "Ice armor provides magic defense"
+    },
+    "poison": {
+      "name": "Poison",
+      "type": "debuff",
+      "effect": "poison_damage",
+      "damage_per_turn": 5,
+      "duration": 3,
+      "description": "Inflicts poison damage over time"
+    },
+    "web": {
+      "name": "Web",
+      "type": "debuff",
+      "effect": "immobilize",
+      "duration": 1,
+      "description": "Traps enemy in web"
+    },
+    "magic_arrow": {
+      "name": "Magic Arrow",
+      "type": "magic",
+      "element": "arcane",
+      "damage_multiplier": 1.4,
+      "description": "Enchanted arrow attack"
+    },
+    "stealth": {
+      "name": "Stealth",
+      "type": "passive",
+      "effect": "first_strike_bonus",
+      "value": 2.0,
+      "description": "First attack deals double damage"
+    },
+    "life_drain": {
+      "name": "Life Drain",
+      "type": "magic",
+      "element": "darkness",
+      "effect": "heal_on_hit",
+      "value": 0.3,
+      "description": "Heals 30% of damage dealt"
+    },
+    "burn": {
+      "name": "Burn",
+      "type": "magic",
+      "element": "fire",
+      "effect": "burn_damage",
+      "damage_per_turn": 8,
+      "duration": 3,
+      "description": "Sets target on fire"
+    },
+    "flame_aura": {
+      "name": "Flame Aura",
+      "type": "passive",
+      "effect": "counter_damage",
+      "value": 5,
+      "description": "Deals 5 fire damage to attackers"
+    },
+    "fire_aura": {
+      "name": "Fire Aura",
+      "type": "passive",
+      "effect": "counter_damage",
+      "value": 7,
+      "description": "Deals 7 fire damage to attackers"
+    },
+    "phase_shift": {
+      "name": "Phase Shift",
+      "type": "active",
+      "effect": "dodge_next_attack",
+      "cooldown": 3,
+      "description": "Phases out, dodging next attack"
+    },
+    "fear": {
+      "name": "Fear",
+      "type": "debuff",
+      "effect": "reduce_attack",
+      "value": 0.3,
+      "duration": 2,
+      "description": "Reduces enemy attack by 30%"
+    },
+    "nature_blessed": {
+      "name": "Nature Blessed",
+      "type": "passive",
+      "effect": "hp_bonus",
+      "value": 1.2,
+      "description": "+20% max HP"
+    },
+    "berserker": {
+      "name": "Berserker",
+      "type": "passive",
+      "effect": "damage_when_low_hp",
+      "threshold": 0.3,
+      "value": 1.5,
+      "description": "+50% damage when below 30% HP"
+    },
+    "rage": {
+      "name": "Rage",
+      "type": "active",
+      "effect": "attack_bonus",
+      "value": 1.3,
+      "duration": 3,
+      "cooldown": 5,
+      "description": "+30% attack for 3 turns"
+    },
+    "intimidate": {
+      "name": "Intimidate",
+      "type": "passive",
+      "effect": "reduce_enemy_defense",
+      "value": 0.1,
+      "description": "Reduces enemy defense by 10%"
+    },
+    "fury": {
+      "name": "Fury",
+      "type": "active",
+      "effect": "multi_attack",
+      "attacks": 2,
+      "cooldown": 4,
+      "description": "Attacks twice in one turn"
+    },
+    "predator": {
+      "name": "Predator",
+      "type": "passive",
+      "effect": "crit_chance_bonus",
+      "value": 0.2,
+      "description": "+20% critical hit chance"
+    },
+    "magic_resist": {
+      "name": "Magic Resist",
+      "type": "passive",
+      "effect": "magic_damage_reduction",
+      "value": 0.4,
+      "description": "40% magic damage reduction"
+    },
+    "reflect": {
+      "name": "Reflect",
+      "type": "passive",
+      "effect": "reflect_magic",
+      "value": 0.25,
+      "description": "Reflects 25% of magic damage"
+    },
+    "frost_aura": {
+      "name": "Frost Aura",
+      "type": "passive",
+      "effect": "slow_attackers",
+      "value": 0.2,
+      "description": "Slows attackers by 20%"
+    },
+    "evasive": {
+      "name": "Evasive",
+      "type": "passive",
+      "effect": "dodge_chance",
+      "value": 0.25,
+      "description": "+25% dodge chance"
+    },
+    "ambush": {
+      "name": "Ambush",
+      "type": "passive",
+      "effect": "surprise_damage",
+      "value": 1.5,
+      "description": "First attack deals +50% damage"
+    },
+    "coward": {
+      "name": "Coward",
+      "type": "passive",
+      "effect": "flee_when_low",
+      "threshold": 0.25,
+      "description": "May flee when below 25% HP"
+    },
+    "pack_hunter": {
+      "name": "Pack Hunter",
+      "type": "passive",
+      "effect": "damage_bonus_with_allies",
+      "value": 1.2,
+      "description": "+20% damage when allies present"
+    },
+    "necromancy": {
+      "name": "Necromancy",
+      "type": "magic",
+      "element": "darkness",
+      "effect": "summon_minion",
+      "cooldown": 5,
+      "description": "Summons skeleton minion"
+    },
+    "pack_leader": {
+      "name": "Pack Leader",
+      "type": "passive",
+      "effect": "buff_allies",
+      "value": 1.15,
+      "description": "+15% damage to all allies"
+    },
+    "command": {
+      "name": "Command",
+      "type": "active",
+      "effect": "buff_allies_attack",
+      "value": 1.25,
+      "duration": 2,
+      "cooldown": 4,
+      "description": "+25% attack to allies for 2 turns"
+    },
+    "regeneration": {
+      "name": "Regeneration",
+      "type": "passive",
+      "effect": "heal_per_turn",
+      "value": 0.08,
+      "description": "Heals 8% HP per turn"
+    },
+    "slam": {
+      "name": "Slam",
+      "type": "physical",
+      "damage_multiplier": 1.8,
+      "effect": "stun",
+      "cooldown": 3,
+      "description": "Powerful slam with stun"
+    },
+    "poison_breath": {
+      "name": "Poison Breath",
+      "type": "magic",
+      "element": "poison",
+      "damage_multiplier": 1.3,
+      "effect": "poison_all",
+      "description": "AoE poison breath"
+    },
+    "constrict": {
+      "name": "Constrict",
+      "type": "physical",
+      "effect": "damage_over_time",
+      "damage_per_turn": 10,
+      "duration": 3,
+      "description": "Squeezes for ongoing damage"
+    },
+    "stone_skin": {
+      "name": "Stone Skin",
+      "type": "passive",
+      "effect": "physical_damage_reduction",
+      "value": 0.5,
+      "description": "50% physical damage reduction"
+    },
+    "earthquake": {
+      "name": "Earthquake",
+      "type": "magic",
+      "element": "earth",
+      "damage_multiplier": 1.5,
+      "effect": "aoe_damage",
+      "cooldown": 5,
+      "description": "AoE earth damage"
+    },
+    "dragon_breath": {
+      "name": "Dragon Breath",
+      "type": "magic",
+      "element": "fire",
+      "damage_multiplier": 2.0,
+      "effect": "aoe_burn",
+      "cooldown": 4,
+      "description": "Devastating fire breath"
+    },
+    "tail_sweep": {
+      "name": "Tail Sweep",
+      "type": "physical",
+      "damage_multiplier": 1.5,
+      "effect": "knockback",
+      "description": "Sweeps all nearby enemies"
+    },
+    "wing_buffet": {
+      "name": "Wing Buffet",
+      "type": "physical",
+      "damage_multiplier": 1.3,
+      "effect": "push_back",
+      "cooldown": 3,
+      "description": "Powerful wing attack"
+    },
+    "intimidating_roar": {
+      "name": "Intimidating Roar",
+      "type": "debuff",
+      "effect": "fear_all",
+      "duration": 2,
+      "cooldown": 5,
+      "description": "Frightens all enemies"
+    },
+    "death_coil": {
+      "name": "Death Coil",
+      "type": "magic",
+      "element": "darkness",
+      "damage_multiplier": 1.7,
+      "effect": "heal_self",
+      "value": 0.5,
+      "cooldown": 3,
+      "description": "Damage and heal"
+    },
+    "summon_undead": {
+      "name": "Summon Undead",
+      "type": "magic",
+      "element": "darkness",
+      "effect": "summon_multiple",
+      "count": 3,
+      "cooldown": 6,
+      "description": "Summons 3 undead"
+    },
+    "frost_nova": {
+      "name": "Frost Nova",
+      "type": "magic",
+      "element": "ice",
+      "damage_multiplier": 1.4,
+      "effect": "freeze_all",
+      "cooldown": 4,
+      "description": "AoE freeze attack"
+    },
+    "phylactery_regeneration": {
+      "name": "Phylactery Regeneration",
+      "type": "passive",
+      "effect": "revive_once",
+      "hp_restored": 0.5,
+      "description": "Revives once at 50% HP"
+    },
+    "wail": {
+      "name": "Wail",
+      "type": "magic",
+      "element": "darkness",
+      "damage_multiplier": 1.6,
+      "effect": "fear_and_damage",
+      "cooldown": 3,
+      "description": "Terrifying wail"
+    },
+    "void_magic": {
+      "name": "Void Magic",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 1.8,
+      "effect": "ignore_resist",
+      "description": "Ignores magic resistance"
+    },
+    "sacrifice": {
+      "name": "Sacrifice",
+      "type": "magic",
+      "effect": "damage_boost_on_death",
+      "value": 2.0,
+      "description": "Grants massive boost when dying"
+    },
+    "lightning_strike": {
+      "name": "Lightning Strike",
+      "type": "magic",
+      "element": "lightning",
+      "damage_multiplier": 2.2,
+      "effect": "chain_damage",
+      "cooldown": 4,
+      "description": "Chains to multiple targets"
+    },
+    "windstorm": {
+      "name": "Windstorm",
+      "type": "magic",
+      "element": "air",
+      "damage_multiplier": 1.4,
+      "effect": "aoe_push",
+      "cooldown": 5,
+      "description": "Powerful wind attack"
+    },
+    "burn_aura": {
+      "name": "Burn Aura",
+      "type": "passive",
+      "effect": "aoe_burn_damage",
+      "damage_per_turn": 10,
+      "description": "Burns nearby enemies"
+    },
+    "immolate": {
+      "name": "Immolate",
+      "type": "magic",
+      "element": "fire",
+      "damage_multiplier": 2.5,
+      "effect": "self_destruct_damage",
+      "cooldown": 10,
+      "description": "Explosive fire attack"
+    },
+    "dark_magic": {
+      "name": "Dark Magic",
+      "type": "magic",
+      "element": "darkness",
+      "damage_multiplier": 1.5,
+      "effect": "curse",
+      "description": "Dark curse damage"
+    },
+    "armor_pierce": {
+      "name": "Armor Pierce",
+      "type": "passive",
+      "effect": "ignore_armor",
+      "value": 0.5,
+      "description": "Ignores 50% of armor"
+    },
+    "soul_rend": {
+      "name": "Soul Rend",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 2.0,
+      "effect": "max_hp_damage",
+      "value": 0.1,
+      "cooldown": 5,
+      "description": "Damages max HP"
+    },
+    "spell_caster": {
+      "name": "Spell Caster",
+      "type": "passive",
+      "effect": "magic_damage_bonus",
+      "value": 1.3,
+      "description": "+30% magic damage"
+    },
+    "howl": {
+      "name": "Howl",
+      "type": "active",
+      "effect": "summon_wolves",
+      "count": 2,
+      "cooldown": 6,
+      "description": "Summons wolf pack"
+    },
+    "ice_armor": {
+      "name": "Ice Armor",
+      "type": "passive",
+      "effect": "defense_and_freeze",
+      "defense_value": 5,
+      "freeze_chance": 0.2,
+      "description": "Extra defense and freezes attackers"
+    },
+    "void_step": {
+      "name": "Void Step",
+      "type": "active",
+      "effect": "teleport_and_strike",
+      "damage_multiplier": 1.8,
+      "cooldown": 4,
+      "description": "Teleports and attacks"
+    },
+    "reality_tear": {
+      "name": "Reality Tear",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 2.5,
+      "effect": "true_damage",
+      "cooldown": 6,
+      "description": "Unblockable void damage"
+    },
+    "ice_magic": {
+      "name": "Ice Magic",
+      "type": "magic",
+      "element": "ice",
+      "damage_multiplier": 1.6,
+      "effect": "freeze_and_slow",
+      "description": "Freezing magic"
+    },
+    "freeze_aura": {
+      "name": "Freeze Aura",
+      "type": "passive",
+      "effect": "slow_all_enemies",
+      "value": 0.3,
+      "description": "Slows all nearby enemies"
+    },
+    "lightning_mastery": {
+      "name": "Lightning Mastery",
+      "type": "passive",
+      "effect": "lightning_damage_bonus",
+      "value": 1.5,
+      "description": "+50% lightning damage"
+    },
+    "hurricane": {
+      "name": "Hurricane",
+      "type": "magic",
+      "element": "air",
+      "damage_multiplier": 2.0,
+      "effect": "aoe_damage_and_scatter",
+      "cooldown": 7,
+      "description": "Devastating wind storm"
+    },
+    "flight": {
+      "name": "Flight",
+      "type": "passive",
+      "effect": "dodge_ground_attacks",
+      "value": 0.5,
+      "description": "50% dodge vs ground attacks"
+    },
+    "hell_fire": {
+      "name": "Hell Fire",
+      "type": "magic",
+      "element": "fire",
+      "damage_multiplier": 2.3,
+      "effect": "burn_and_fear",
+      "cooldown": 5,
+      "description": "Infernal flames"
+    },
+    "shadow_army": {
+      "name": "Shadow Army",
+      "type": "magic",
+      "element": "darkness",
+      "effect": "summon_shadows",
+      "count": 4,
+      "cooldown": 8,
+      "description": "Summons shadow minions"
+    },
+    "death_magic": {
+      "name": "Death Magic",
+      "type": "magic",
+      "element": "darkness",
+      "damage_multiplier": 2.0,
+      "effect": "instant_kill_chance",
+      "value": 0.05,
+      "description": "5% instant kill chance"
+    },
+    "undead_army": {
+      "name": "Undead Army",
+      "type": "magic",
+      "element": "darkness",
+      "effect": "summon_undead_horde",
+      "count": 5,
+      "cooldown": 10,
+      "description": "Summons undead horde"
+    },
+    "hellfire": {
+      "name": "Hellfire",
+      "type": "magic",
+      "element": "fire",
+      "damage_multiplier": 3.0,
+      "effect": "aoe_burn_massive",
+      "cooldown": 6,
+      "description": "Massive hellfire"
+    },
+    "demon_strike": {
+      "name": "Demon Strike",
+      "type": "physical",
+      "damage_multiplier": 2.5,
+      "effect": "curse_on_hit",
+      "description": "Powerful demonic attack"
+    },
+    "summon_imps": {
+      "name": "Summon Imps",
+      "type": "magic",
+      "effect": "summon_demons",
+      "count": 3,
+      "cooldown": 7,
+      "description": "Summons imp minions"
+    },
+    "infernal_shield": {
+      "name": "Infernal Shield",
+      "type": "active",
+      "effect": "damage_shield",
+      "value": 100,
+      "duration": 3,
+      "cooldown": 6,
+      "description": "Fire damage shield"
+    },
+    "chaos_bolt": {
+      "name": "Chaos Bolt",
+      "type": "magic",
+      "element": "chaos",
+      "damage_multiplier": 2.8,
+      "effect": "random_effect",
+      "cooldown": 5,
+      "description": "Chaotic damage"
+    },
+    "stone_fist": {
+      "name": "Stone Fist",
+      "type": "physical",
+      "damage_multiplier": 2.2,
+      "effect": "stun_heavy",
+      "cooldown": 4,
+      "description": "Crushing stone attack"
+    },
+    "fortress_stance": {
+      "name": "Fortress Stance",
+      "type": "active",
+      "effect": "defense_massive",
+      "value": 2.0,
+      "duration": 3,
+      "cooldown": 8,
+      "description": "Doubles defense"
+    },
+    "regenerate_armor": {
+      "name": "Regenerate Armor",
+      "type": "passive",
+      "effect": "repair_armor",
+      "value": 5,
+      "description": "Repairs 5 armor per turn"
+    },
+    "reality_warp": {
+      "name": "Reality Warp",
+      "type": "magic",
+      "element": "chaos",
+      "damage_multiplier": 3.5,
+      "effect": "warp_reality",
+      "cooldown": 8,
+      "description": "Warps reality itself"
+    },
+    "void_blast": {
+      "name": "Void Blast",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 3.0,
+      "effect": "void_damage_aoe",
+      "cooldown": 6,
+      "description": "Massive void explosion"
+    },
+    "chaos_form": {
+      "name": "Chaos Form",
+      "type": "transformation",
+      "effect": "all_stats_boost",
+      "value": 1.5,
+      "duration": 5,
+      "cooldown": 12,
+      "description": "Transforms to chaos form"
+    },
+    "time_stop": {
+      "name": "Time Stop",
+      "type": "magic",
+      "element": "time",
+      "effect": "freeze_time",
+      "duration": 1,
+      "cooldown": 15,
+      "description": "Stops time for one turn"
+    },
+    "omniscient_strike": {
+      "name": "Omniscient Strike",
+      "type": "physical",
+      "damage_multiplier": 4.0,
+      "effect": "always_hit",
+      "cooldown": 10,
+      "description": "Cannot be dodged"
+    },
+    "dimension_shift": {
+      "name": "Dimension Shift",
+      "type": "magic",
+      "element": "void",
+      "effect": "teleport_anywhere",
+      "cooldown": 5,
+      "description": "Teleports across dimensions"
+    },
+    "elemental_mastery": {
+      "name": "Elemental Mastery",
+      "type": "passive",
+      "effect": "all_elemental_damage",
+      "value": 1.8,
+      "description": "+80% all elemental damage"
+    },
+    "storm_call": {
+      "name": "Storm Call",
+      "type": "magic",
+      "element": "lightning",
+      "damage_multiplier": 2.8,
+      "effect": "aoe_lightning",
+      "cooldown": 7,
+      "description": "Calls down lightning storm"
+    },
+    "void_breath": {
+      "name": "Void Breath",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 3.5,
+      "effect": "void_breath_aoe",
+      "cooldown": 6,
+      "description": "Breathes pure void"
+    },
+    "reality_rend": {
+      "name": "Reality Rend",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 4.0,
+      "effect": "tear_reality",
+      "cooldown": 8,
+      "description": "Tears through reality"
+    },
+    "immortality": {
+      "name": "Immortality",
+      "type": "passive",
+      "effect": "revive_always",
+      "hp_restored": 1.0,
+      "description": "Cannot truly die"
+    },
+    "divine_power": {
+      "name": "Divine Power",
+      "type": "passive",
+      "effect": "holy_damage_bonus",
+      "value": 2.0,
+      "description": "Double divine damage"
+    },
+    "immunity": {
+      "name": "Immunity",
+      "type": "passive",
+      "effect": "immune_debuffs",
+      "description": "Immune to all debuffs"
+    },
+    "cosmic_power": {
+      "name": "Cosmic Power",
+      "type": "passive",
+      "effect": "cosmic_damage",
+      "value": 2.5,
+      "description": "+150% cosmic damage"
+    },
+    "magic_damage": {
+      "name": "Magic Damage",
+      "type": "passive",
+      "effect": "magic_bonus",
+      "value": 1.5,
+      "description": "+50% magic damage"
+    },
+    "ancient_magic": {
+      "name": "Ancient Magic",
+      "type": "magic",
+      "element": "arcane",
+      "damage_multiplier": 2.0,
+      "effect": "ancient_power",
+      "description": "Ancient arcane magic"
+    },
+    "treasure_hoard": {
+      "name": "Treasure Hoard",
+      "type": "passive",
+      "effect": "bonus_loot",
+      "value": 2.0,
+      "description": "Doubles loot rewards"
+    },
+    "time_magic": {
+      "name": "Time Magic",
+      "type": "magic",
+      "element": "time",
+      "damage_multiplier": 2.2,
+      "effect": "time_manipulation",
+      "description": "Manipulates time"
+    },
+    "soul_prison": {
+      "name": "Soul Prison",
+      "type": "magic",
+      "element": "darkness",
+      "effect": "trap_soul",
+      "duration": 3,
+      "cooldown": 8,
+      "description": "Imprisons enemy soul"
+    },
+    "undead_mastery": {
+      "name": "Undead Mastery",
+      "type": "passive",
+      "effect": "undead_bonus",
+      "value": 1.5,
+      "description": "+50% damage vs undead"
+    },
+    "rebirth": {
+      "name": "Rebirth",
+      "type": "passive",
+      "effect": "revive_on_death",
+      "hp_restored": 1.0,
+      "uses": 1,
+      "description": "Revives once at full HP"
+    },
+    "fire_mastery": {
+      "name": "Fire Mastery",
+      "type": "passive",
+      "effect": "fire_damage_bonus",
+      "value": 2.0,
+      "description": "Double fire damage"
+    },
+    "light_mastery": {
+      "name": "Light Mastery",
+      "type": "passive",
+      "effect": "light_damage_bonus",
+      "value": 2.0,
+      "description": "Double light damage"
+    },
+    "purify": {
+      "name": "Purify",
+      "type": "magic",
+      "element": "light",
+      "damage_multiplier": 2.5,
+      "effect": "remove_buffs",
+      "cooldown": 5,
+      "description": "Removes enemy buffs"
+    },
+    "tidal_wave": {
+      "name": "Tidal Wave",
+      "type": "magic",
+      "element": "water",
+      "damage_multiplier": 2.8,
+      "effect": "aoe_water_damage",
+      "cooldown": 7,
+      "description": "Massive water wave"
+    },
+    "water_mastery": {
+      "name": "Water Mastery",
+      "type": "passive",
+      "effect": "water_damage_bonus",
+      "value": 2.0,
+      "description": "Double water damage"
+    },
+    "colossal": {
+      "name": "Colossal",
+      "type": "passive",
+      "effect": "size_bonus",
+      "hp_multiplier": 1.5,
+      "damage_multiplier": 1.3,
+      "description": "+50% HP, +30% damage"
+    },
+    "hell_portal": {
+      "name": "Hell Portal",
+      "type": "magic",
+      "element": "fire",
+      "effect": "summon_demons_continuous",
+      "cooldown": 10,
+      "description": "Opens portal to hell"
+    },
+    "demon_army": {
+      "name": "Demon Army",
+      "type": "magic",
+      "effect": "summon_demon_horde",
+      "count": 6,
+      "cooldown": 12,
+      "description": "Summons demon army"
+    },
+    "curse_mastery": {
+      "name": "Curse Mastery",
+      "type": "passive",
+      "effect": "curse_all_enemies",
+      "value": 0.3,
+      "description": "All enemies take 30% more damage"
+    },
+    "reality_control": {
+      "name": "Reality Control",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 4.5,
+      "effect": "control_reality",
+      "cooldown": 10,
+      "description": "Controls reality itself"
+    },
+    "void_mastery": {
+      "name": "Void Mastery",
+      "type": "passive",
+      "effect": "void_damage_bonus",
+      "value": 2.5,
+      "description": "+150% void damage"
+    },
+    "dimension_rift": {
+      "name": "Dimension Rift",
+      "type": "magic",
+      "element": "void",
+      "damage_multiplier": 3.8,
+      "effect": "rift_damage",
+      "cooldown": 9,
+      "description": "Opens dimensional rift"
+    },
+    "ancient_wisdom": {
+      "name": "Ancient Wisdom",
+      "type": "passive",
+      "effect": "all_stats_bonus",
+      "value": 1.3,
+      "description": "+30% all stats"
+    },
+    "madness": {
+      "name": "Madness",
+      "type": "magic",
+      "element": "void",
+      "effect": "drive_insane",
+      "duration": 5,
+      "cooldown": 8,
+      "description": "Drives enemies mad"
+    },
+    "reality_distortion": {
+      "name": "Reality Distortion",
+      "type": "passive",
+      "effect": "distort_attacks",
+      "value": 0.4,
+      "description": "40% chance to distort attacks"
+    },
+    "infinite_eyes": {
+      "name": "Infinite Eyes",
+      "type": "passive",
+      "effect": "see_all",
+      "dodge_reduction": 1.0,
+      "description": "Cannot miss, enemies cannot dodge"
+    },
+    "world_ending": {
+      "name": "World Ending",
+      "type": "magic",
+      "element": "chaos",
+      "damage_multiplier": 5.0,
+      "effect": "apocalypse_damage",
+      "cooldown": 15,
+      "description": "World-ending attack"
+    },
+    "poison_mastery": {
+      "name": "Poison Mastery",
+      "type": "passive",
+      "effect": "poison_damage_bonus",
+      "value": 2.5,
+      "description": "+150% poison damage"
+    },
+    "divine_corruption": {
+      "name": "Divine Corruption",
+      "type": "magic",
+      "element": "darkness",
+      "damage_multiplier": 4.0,
+      "effect": "corrupt_divine",
+      "description": "Corrupts holy power"
+    },
+    "creation_breath": {
+      "name": "Creation Breath",
+      "type": "magic",
+      "element": "creation",
+      "damage_multiplier": 5.5,
+      "effect": "create_and_destroy",
+      "cooldown": 12,
+      "description": "Breath of creation"
+    },
+    "time_mastery": {
+      "name": "Time Mastery",
+      "type": "passive",
+      "effect": "control_time",
+      "extra_turns": 1,
+      "description": "Takes extra turn"
+    },
+    "ancient_power": {
+      "name": "Ancient Power",
+      "type": "passive",
+      "effect": "primordial_strength",
+      "value": 2.0,
+      "description": "Double all damage"
+    },
+    "dark_wings": {
+      "name": "Dark Wings",
+      "type": "passive",
+      "effect": "flight_and_speed",
+      "agility_bonus": 10,
+      "description": "+10 agility from flight"
+    },
+    "curse": {
+      "name": "Curse",
+      "type": "magic",
+      "element": "darkness",
+      "effect": "permanent_debuff",
+      "value": 0.2,
+      "description": "Permanent 20% damage reduction"
+    },
+    "bleed": {
+      "name": "Bleed",
+      "type": "debuff",
+      "effect": "bleed_damage",
+      "damage_per_turn": 5,
+      "duration": 3,
+      "description": "Causes bleeding"
+    },
+    "stab": {
+      "name": "Stab",
+      "type": "physical",
+      "damage_multiplier": 1.3,
+      "description": "Quick stabbing attack"
+    },
+    "dodge": {
+      "name": "Dodge",
+      "type": "passive",
+      "effect": "dodge_chance",
+      "value": 0.2,
+      "description": "+20% dodge chance"
+    },
+    "cleave": {
+      "name": "Cleave",
+      "type": "physical",
+      "damage_multiplier": 1.4,
+      "effect": "hit_multiple",
+      "description": "Hits multiple enemies"
+    },
+    "roar": {
+      "name": "Roar",
+      "type": "debuff",
+      "effect": "reduce_enemy_attack",
+      "value": 0.2,
+      "duration": 2,
+      "description": "Reduces enemy attack"
+    },
+    "shadow_bolt": {
+      "name": "Shadow Bolt",
+      "type": "magic",
+      "element": "darkness",
+      "damage_multiplier": 1.5,
+      "description": "Dark magic bolt"
+    },
+    "teleport": {
+      "name": "Teleport",
+      "type": "active",
+      "effect": "reposition",
+      "cooldown": 3,
+      "description": "Teleports to new position"
+    },
+    "smash": {
+      "name": "Smash",
+      "type": "physical",
+      "damage_multiplier": 2.0,
+      "effect": "knockdown",
+      "cooldown": 3,
+      "description": "Powerful smashing attack"
+    },
+    "enrage": {
+      "name": "Enrage",
+      "type": "active",
+      "effect": "damage_and_speed",
+      "value": 1.5,
+      "duration": 3,
+      "cooldown": 5,
+      "description": "+50% damage and speed"
+    },
+    "charm": {
+      "name": "Charm",
+      "type": "debuff",
+      "effect": "mind_control",
+      "duration": 2,
+      "cooldown": 6,
+      "description": "Charms enemy temporarily"
+    },
+    "bat_swarm": {
+      "name": "Bat Swarm",
+      "type": "magic",
+      "element": "darkness",
+      "damage_multiplier": 1.3,
+      "effect": "aoe_drain",
+      "cooldown": 4,
+      "description": "Summons vampire bats"
+    },
+    "regenerate": {
+      "name": "Regenerate",
+      "type": "passive",
+      "effect": "heal_per_turn",
+      "value": 0.1,
+      "description": "Heals 10% HP per turn"
+    },
+    "fire_breath": {
+      "name": "Fire Breath",
+      "type": "magic",
+      "element": "fire",
+      "damage_multiplier": 1.8,
+      "effect": "cone_burn",
+      "cooldown": 4,
+      "description": "Cone of fire"
+    },
+    "poison_tail": {
+      "name": "Poison Tail",
+      "type": "physical",
+      "damage_multiplier": 1.2,
+      "effect": "poison_strong",
+      "description": "Poisonous tail attack"
+    }
+  }
+}

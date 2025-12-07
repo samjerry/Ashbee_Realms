@@ -1,0 +1,500 @@
+{
+  "quests": {
+    "main_story": [
+      {
+        "id": "awakening",
+        "name": "The Awakening",
+        "description": "Discover why you've been brought to Ashbee Realms and what threatens the land",
+        "chapter": 1,
+        "required_level": 1,
+        "prerequisites": [],
+        "objectives": [
+          {
+            "type": "talk_to_npc",
+            "target": "elder_thorne",
+            "description": "Speak with Elder Thorne in the village"
+          },
+          {
+            "type": "explore_location",
+            "target": "whispering_woods",
+            "description": "Explore the Whispering Woods"
+          },
+          {
+            "type": "kill_monster",
+            "target": "forest_wolf",
+            "count": 3,
+            "description": "Defeat 3 Forest Wolves"
+          }
+        ],
+        "rewards": {
+          "xp": 100,
+          "gold": 50,
+          "items": ["health_potion"],
+          "unlocks": ["quest:wolves_den"]
+        },
+        "dialogue": {
+          "start": "Ah, another soul drawn to our realm. The woods grow dangerous, stranger. Prove your worth.",
+          "complete": "You've proven yourself capable. But darker threats stir in the shadows..."
+        }
+      },
+      {
+        "id": "wolves_den",
+        "name": "The Wolf's Den",
+        "description": "Clear out the wolf den that threatens travelers",
+        "chapter": 1,
+        "required_level": 3,
+        "prerequisites": ["awakening"],
+        "objectives": [
+          {
+            "type": "explore_location",
+            "target": "wolf_den",
+            "description": "Find the Wolf Den"
+          },
+          {
+            "type": "kill_boss",
+            "target": "alpha_wolf",
+            "description": "Defeat the Alpha Wolf"
+          }
+        ],
+        "rewards": {
+          "xp": 250,
+          "gold": 100,
+          "items": ["wolf_pelt_cloak"],
+          "reputation": {"faction": "whispering_woods_rangers", "amount": 100},
+          "unlocks": ["quest:goblin_threat"]
+        }
+      },
+      {
+        "id": "goblin_threat",
+        "name": "The Goblin Menace",
+        "description": "Investigate the goblin raids on nearby settlements",
+        "chapter": 2,
+        "required_level": 5,
+        "prerequisites": ["wolves_den"],
+        "objectives": [
+          {
+            "type": "kill_monster",
+            "target": "goblin_scout",
+            "count": 10,
+            "description": "Hunt down Goblin Scouts"
+          },
+          {
+            "type": "explore_location",
+            "target": "goblin_tunnels",
+            "description": "Infiltrate the Goblin Tunnels"
+          },
+          {
+            "type": "collect_item",
+            "target": "goblin_war_plans",
+            "count": 1,
+            "description": "Retrieve the Goblin War Plans"
+          }
+        ],
+        "rewards": {
+          "xp": 500,
+          "gold": 200,
+          "items": ["steel_sword", "minor_protection_ring"],
+          "reputation": {"faction": "highland_militia", "amount": 200}
+        }
+      },
+      {
+        "id": "curse_investigation",
+        "name": "The Spreading Curse",
+        "description": "Investigate the source of the corruption spreading through the land",
+        "chapter": 3,
+        "required_level": 10,
+        "prerequisites": ["goblin_threat"],
+        "objectives": [
+          {
+            "type": "explore_location",
+            "target": "cursed_swamp",
+            "description": "Enter the Cursed Swamp"
+          },
+          {
+            "type": "talk_to_npc",
+            "target": "witch_morgana",
+            "description": "Consult with Witch Morgana"
+          },
+          {
+            "type": "collect_item",
+            "target": "cursed_artifact_fragment",
+            "count": 5,
+            "description": "Collect 5 Cursed Artifact Fragments"
+          },
+          {
+            "type": "kill_boss",
+            "target": "plague_bearer",
+            "description": "Defeat the Plague Bearer"
+          }
+        ],
+        "rewards": {
+          "xp": 1000,
+          "gold": 400,
+          "items": ["anti_curse_amulet", "greater_health_potion"],
+          "unlocks": ["quest:ancient_evil"]
+        }
+      },
+      {
+        "id": "ancient_evil",
+        "name": "The Ancient Evil",
+        "description": "Confront the source of darkness threatening to consume Ashbee Realms",
+        "chapter": 4,
+        "required_level": 20,
+        "prerequisites": ["curse_investigation"],
+        "is_finale": true,
+        "objectives": [
+          {
+            "type": "explore_location",
+            "target": "obsidian_citadel",
+            "description": "Reach the Obsidian Citadel"
+          },
+          {
+            "type": "kill_boss",
+            "target": "lord_of_shadows",
+            "description": "Defeat the Lord of Shadows"
+          }
+        ],
+        "rewards": {
+          "xp": 5000,
+          "gold": 2000,
+          "items": ["shadowbane_legendary_weapon", "crown_of_heroes"],
+          "title": "savior_of_ashbee",
+          "unlocks": ["endgame_content"]
+        },
+        "dialogue": {
+          "complete": "The darkness recedes... for now. But your legend is just beginning, hero."
+        }
+      }
+    ],
+    "side_quests": [
+      {
+        "id": "lost_heirloom",
+        "name": "Lost Family Heirloom",
+        "description": "A farmer's precious family ring was stolen by bandits",
+        "required_level": 2,
+        "repeatable": false,
+        "time_limit": null,
+        "objectives": [
+          {
+            "type": "kill_monster",
+            "target": "bandit",
+            "count": 5,
+            "description": "Hunt bandits for the ring"
+          },
+          {
+            "type": "collect_item",
+            "target": "family_ring",
+            "count": 1,
+            "drop_chance": 0.3,
+            "description": "Recover the Family Ring"
+          },
+          {
+            "type": "talk_to_npc",
+            "target": "farmer_harold",
+            "description": "Return the ring to Farmer Harold"
+          }
+        ],
+        "rewards": {
+          "xp": 150,
+          "gold": 75,
+          "reputation": {"faction": "highland_militia", "amount": 50}
+        }
+      },
+      {
+        "id": "potion_ingredients",
+        "name": "Alchemist's Request",
+        "description": "Gather rare ingredients for the village alchemist",
+        "required_level": 4,
+        "repeatable": true,
+        "reset_time": "daily",
+        "objectives": [
+          {
+            "type": "collect_item",
+            "target": "moonpetal_flower",
+            "count": 3,
+            "description": "Gather 3 Moonpetal Flowers"
+          },
+          {
+            "type": "collect_item",
+            "target": "slime_gel",
+            "count": 5,
+            "description": "Collect 5 Slime Gel"
+          }
+        ],
+        "rewards": {
+          "xp": 100,
+          "gold": 50,
+          "items": ["health_potion", "mana_potion"],
+          "reputation": {"faction": "alchemist_guild", "amount": 25}
+        }
+      },
+      {
+        "id": "beast_hunter",
+        "name": "Beast Hunter's Challenge",
+        "description": "Prove your hunting prowess by taking down dangerous beasts",
+        "required_level": 8,
+        "repeatable": false,
+        "objectives": [
+          {
+            "type": "kill_monster",
+            "target": "dire_bear",
+            "count": 1,
+            "description": "Hunt a Dire Bear"
+          },
+          {
+            "type": "kill_monster",
+            "target": "shadow_panther",
+            "count": 1,
+            "description": "Hunt a Shadow Panther"
+          },
+          {
+            "type": "kill_monster",
+            "target": "frost_wyvern",
+            "count": 1,
+            "description": "Hunt a Frost Wyvern"
+          }
+        ],
+        "rewards": {
+          "xp": 800,
+          "gold": 300,
+          "title": "beast_slayer",
+          "items": ["hunters_trophy"]
+        }
+      },
+      {
+        "id": "treasure_map",
+        "name": "The Old Treasure Map",
+        "description": "Follow a mysterious map to hidden treasure",
+        "required_level": 6,
+        "repeatable": false,
+        "objectives": [
+          {
+            "type": "explore_location",
+            "target": "forgotten_cave",
+            "description": "Find the Forgotten Cave"
+          },
+          {
+            "type": "solve_puzzle",
+            "puzzle_id": "stone_inscription",
+            "description": "Solve the stone inscription puzzle"
+          },
+          {
+            "type": "collect_item",
+            "target": "buried_treasure",
+            "count": 1,
+            "description": "Claim the buried treasure"
+          }
+        ],
+        "rewards": {
+          "xp": 400,
+          "gold": 500,
+          "items": ["random_rare_gear"]
+        }
+      },
+      {
+        "id": "ghost_investigation",
+        "name": "Haunting of Hollow Manor",
+        "description": "Investigate the ghostly disturbances at the abandoned manor",
+        "required_level": 12,
+        "repeatable": false,
+        "objectives": [
+          {
+            "type": "explore_location",
+            "target": "hollow_manor",
+            "description": "Enter Hollow Manor at night"
+          },
+          {
+            "type": "kill_monster",
+            "target": "restless_spirit",
+            "count": 8,
+            "description": "Banish 8 Restless Spirits"
+          },
+          {
+            "type": "talk_to_npc",
+            "target": "lady_ashford_ghost",
+            "description": "Speak with Lady Ashford's Ghost"
+          },
+          {
+            "type": "collect_item",
+            "target": "locket_of_memories",
+            "count": 1,
+            "description": "Find Lady Ashford's Locket"
+          }
+        ],
+        "rewards": {
+          "xp": 1200,
+          "gold": 350,
+          "items": ["ghost_lantern", "ectoplasm_vial"],
+          "unlocks": ["ghostseer_passive"]
+        }
+      },
+      {
+        "id": "arena_champion",
+        "name": "Arena of Champions",
+        "description": "Prove yourself in the fighting arena",
+        "required_level": 15,
+        "repeatable": true,
+        "reset_time": "weekly",
+        "objectives": [
+          {
+            "type": "arena_waves",
+            "waves": 10,
+            "description": "Survive 10 waves in the arena"
+          }
+        ],
+        "rewards": {
+          "xp": 2000,
+          "gold": 800,
+          "items": ["arena_token"],
+          "reputation": {"faction": "arena_guild", "amount": 100}
+        }
+      }
+    ],
+    "faction_quests": {
+      "whispering_woods_rangers": [
+        {
+          "id": "ranger_initiation",
+          "name": "Ranger's Trial",
+          "description": "Complete the initiation ritual to join the Rangers",
+          "required_level": 5,
+          "required_reputation": 0,
+          "objectives": [
+            {
+              "type": "kill_monster",
+              "target": "corrupted_treant",
+              "count": 1,
+              "description": "Cleanse a Corrupted Treant"
+            }
+          ],
+          "rewards": {
+            "reputation": {"faction": "whispering_woods_rangers", "amount": 250},
+            "items": ["ranger_badge"]
+          }
+        },
+        {
+          "id": "nature_protection",
+          "name": "Protect the Grove",
+          "description": "Defend the sacred grove from invaders",
+          "required_level": 8,
+          "required_reputation": 500,
+          "repeatable": true,
+          "reset_time": "daily",
+          "objectives": [
+            {
+              "type": "kill_monster_type",
+              "creature_type": "undead",
+              "count": 15,
+              "biome": "whispering_woods",
+              "description": "Clear undead from Whispering Woods"
+            }
+          ],
+          "rewards": {
+            "xp": 300,
+            "gold": 100,
+            "reputation": {"faction": "whispering_woods_rangers", "amount": 50}
+          }
+        }
+      ],
+      "highland_militia": [
+        {
+          "id": "militia_recruit",
+          "name": "Join the Militia",
+          "description": "Enlist in the Highland Militia",
+          "required_level": 3,
+          "required_reputation": 0,
+          "objectives": [
+            {
+              "type": "kill_monster",
+              "target": "goblin_raider",
+              "count": 5,
+              "description": "Defeat 5 Goblin Raiders"
+            }
+          ],
+          "rewards": {
+            "reputation": {"faction": "highland_militia", "amount": 200},
+            "items": ["militia_tabard"]
+          }
+        }
+      ],
+      "shadow_syndicate": [
+        {
+          "id": "thief_initiation",
+          "name": "Shadows Welcome",
+          "description": "Prove your stealth and cunning to the Syndicate",
+          "required_level": 7,
+          "required_reputation": 0,
+          "objectives": [
+            {
+              "type": "steal_item",
+              "target": "merchant_strongbox",
+              "count": 1,
+              "description": "Steal from a merchant without being caught"
+            }
+          ],
+          "rewards": {
+            "reputation": {"faction": "shadow_syndicate", "amount": 300},
+            "items": ["thieves_mark"]
+          }
+        }
+      ]
+    },
+    "daily_quests": [
+      {
+        "id": "daily_monster_slayer",
+        "name": "Daily Bounty",
+        "description": "Complete daily monster hunting bounties",
+        "required_level": 5,
+        "reset_time": "daily",
+        "variants": [
+          {
+            "objectives": [{"type": "kill_monster_any", "count": 20}],
+            "rewards": {"xp": 200, "gold": 50}
+          },
+          {
+            "objectives": [{"type": "kill_monster_rarity", "rarity": "uncommon", "count": 5}],
+            "rewards": {"xp": 300, "gold": 75}
+          }
+        ]
+      },
+      {
+        "id": "daily_exploration",
+        "name": "Daily Explorer",
+        "description": "Explore new locations",
+        "required_level": 3,
+        "reset_time": "daily",
+        "objectives": [
+          {
+            "type": "explore_any_location",
+            "count": 5,
+            "description": "Visit 5 different locations"
+          }
+        ],
+        "rewards": {
+          "xp": 150,
+          "gold": 40
+        }
+      }
+    ],
+    "weekly_quests": [
+      {
+        "id": "weekly_boss_hunt",
+        "name": "Weekly Boss Challenge",
+        "description": "Defeat powerful bosses for great rewards",
+        "required_level": 10,
+        "reset_time": "weekly",
+        "objectives": [
+          {
+            "type": "kill_boss_any",
+            "count": 3,
+            "description": "Defeat 3 Boss Monsters"
+          }
+        ],
+        "rewards": {
+          "xp": 2000,
+          "gold": 500,
+          "items": ["weekly_chest"]
+        }
+      }
+    ]
+  }
+}

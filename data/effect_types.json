@@ -1,0 +1,1084 @@
+{
+  "effect_types": {
+    "healing": {
+      "heal": {
+        "description": "Restores HP immediately when used",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "Restores 30 HP"
+      },
+      "regen": {
+        "description": "Heals HP each turn automatically",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "percentage",
+        "has_duration": true,
+        "example": "Heals 5% HP per turn"
+      },
+      "heal_per_turn": {
+        "description": "Passive healing over time each turn",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Heals 8% HP per turn"
+      },
+      "heal_on_hit": {
+        "description": "Heals when dealing damage",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Heals 10% of damage dealt"
+      },
+      "heal_on_kill": {
+        "description": "Heals you when you defeat an enemy",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "flat_or_percentage",
+        "example": "Heals 50 HP on kill"
+      },
+      "heal_self": {
+        "description": "Active healing ability",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "Heals 100 HP"
+      },
+      "life_steal": {
+        "description": "Heals you for a portion of damage dealt",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "15% lifesteal"
+      },
+      "lifesteal": {
+        "description": "Alternative name for life_steal",
+        "category": "healing",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "20% lifesteal"
+      }
+    },
+    "damage_boost": {
+      "damage": {
+        "description": "Increases base damage dealt in combat",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 damage"
+      },
+      "damage_buff": {
+        "description": "Temporarily increases damage dealt",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "multiplier",
+        "has_duration": true,
+        "example": "+50% damage for 3 turns"
+      },
+      "attack_bonus": {
+        "description": "Increases attack stat",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+5 attack"
+      },
+      "damage_bonus_with_allies": {
+        "description": "Bonus damage when fighting alongside allies",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "+20% damage with allies"
+      },
+      "damage_when_low_hp": {
+        "description": "Increased damage when at low health",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "+50% damage below 25% HP"
+      },
+      "first_strike_bonus": {
+        "description": "Bonus damage on first attack",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "First attack deals +100% damage"
+      },
+      "surprise_damage": {
+        "description": "Extra damage from surprise attacks",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "Surprise attacks deal +50% damage"
+      },
+      "crit_chance": {
+        "description": "Chance to deal critical (double) damage",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "15% critical hit chance"
+      },
+      "crit_chance_bonus": {
+        "description": "Increases critical strike chance",
+        "category": "damage_boost",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+10% crit chance"
+      }
+    },
+    "defense": {
+      "armor": {
+        "description": "Reduces incoming damage from attacks",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 armor"
+      },
+      "defense_bonus": {
+        "description": "Increases defense stat",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+5 defense"
+      },
+      "armor_debuff": {
+        "description": "Temporarily reduces armor protection",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "flat_or_percentage",
+        "has_duration": true,
+        "example": "-10 armor for 2 turns"
+      },
+      "magic_defense_bonus": {
+        "description": "Increases magic defense",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+3 magic defense"
+      },
+      "damage_reduction": {
+        "description": "Reduces all incoming damage by percentage",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Reduces damage by 25%"
+      },
+      "physical_damage_reduction": {
+        "description": "Reduces physical damage taken",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "30% physical damage reduction"
+      },
+      "magic_damage_reduction": {
+        "description": "Reduces magic damage taken",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "40% magic damage reduction"
+      },
+      "defense_massive": {
+        "description": "Massive temporary defense boost",
+        "category": "defense",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "+50 defense for 3 turns"
+      }
+    },
+    "evasion": {
+      "dodge": {
+        "description": "Chance to completely avoid incoming attacks",
+        "category": "evasion",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "15% dodge chance"
+      },
+      "dodge_chance": {
+        "description": "Chance to evade attacks",
+        "category": "evasion",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "25% dodge chance"
+      },
+      "dodge_chance_bonus": {
+        "description": "Increases dodge chance",
+        "category": "evasion",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+15% dodge chance"
+      },
+      "dodge_next_attack": {
+        "description": "Automatically dodges the next attack",
+        "category": "evasion",
+        "has_value": false,
+        "example": "Next attack misses"
+      },
+      "dodge_ground_attacks": {
+        "description": "Immune to ground-based attacks",
+        "category": "evasion",
+        "has_value": false,
+        "example": "Flying, cannot be hit by ground attacks"
+      },
+      "phase_shift": {
+        "description": "Allows phasing through attacks",
+        "category": "evasion",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "30% chance to phase through attacks"
+      },
+      "physical_resist": {
+        "description": "Resistance to physical attacks",
+        "category": "evasion",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "30% physical resistance"
+      }
+    },
+    "blocking": {
+      "block_chance": {
+        "description": "Chance to block and reduce incoming damage",
+        "category": "blocking",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "20% block chance"
+      }
+    },
+    "armor_penetration": {
+      "armor_pierce": {
+        "description": "Ignores a portion of enemy armor",
+        "category": "armor_penetration",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Ignores 30% of armor"
+      },
+      "armor_penetration": {
+        "description": "Penetrates through armor",
+        "category": "armor_penetration",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "15% armor penetration"
+      },
+      "ignore_armor": {
+        "description": "Completely ignores target armor",
+        "category": "armor_penetration",
+        "has_value": false,
+        "example": "Attacks ignore all armor"
+      },
+      "reduce_enemy_defense": {
+        "description": "Lowers enemy defense stat",
+        "category": "armor_penetration",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "Reduces enemy defense by 10"
+      }
+    },
+    "accuracy": {
+      "true_strike": {
+        "description": "Attacks never miss, guaranteed to hit",
+        "category": "accuracy",
+        "has_value": false,
+        "example": "All attacks hit automatically"
+      },
+      "always_hit": {
+        "description": "Cannot miss attacks",
+        "category": "accuracy",
+        "has_value": false,
+        "example": "Attacks always hit"
+      }
+    },
+    "damage_over_time": {
+      "bleed": {
+        "description": "Causes damage over time each turn",
+        "category": "damage_over_time",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "15 bleed damage per turn for 3 turns"
+      },
+      "burn": {
+        "description": "Fire damage over time each turn",
+        "category": "damage_over_time",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "10 fire damage per turn"
+      },
+      "burn_damage": {
+        "description": "Burn effect dealing fire damage over time",
+        "category": "damage_over_time",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "20 burn damage over 3 turns"
+      },
+      "poison": {
+        "description": "Poison damage over time each turn",
+        "category": "damage_over_time",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "8 poison damage per turn for 3 turns"
+      },
+      "poison_damage": {
+        "description": "Inflicts poison damage over time",
+        "category": "damage_over_time",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "5 poison damage per turn"
+      },
+      "poison_damage_over_time": {
+        "description": "Disease or poison effect over time",
+        "category": "damage_over_time",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "Diseased for 3 turns"
+      },
+      "damage_over_time": {
+        "description": "Generic damage over time effect",
+        "category": "damage_over_time",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "10 damage per turn for 3 turns"
+      }
+    },
+    "crowd_control": {
+      "stun": {
+        "description": "Stuns enemy, making them skip a turn",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Stuns for 1 turn"
+      },
+      "stun_chance": {
+        "description": "Chance to stun enemy, making them skip a turn",
+        "category": "crowd_control",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "25% chance to stun"
+      },
+      "stun_heavy": {
+        "description": "Powerful stun with high chance or duration",
+        "category": "crowd_control",
+        "has_value": true,
+        "value_type": "percentage",
+        "has_duration": true,
+        "example": "60% chance to stun for 2 turns"
+      },
+      "intimidate": {
+        "description": "Reduces enemy damage through fear",
+        "category": "crowd_control",
+        "has_value": true,
+        "value_type": "percentage",
+        "has_duration": true,
+        "example": "Reduces enemy damage by 20%"
+      },
+      "reduce_attack": {
+        "description": "Lowers enemy attack power",
+        "category": "crowd_control",
+        "has_value": true,
+        "value_type": "flat_or_percentage",
+        "has_duration": true,
+        "example": "-5 attack for 2 turns"
+      },
+      "slow": {
+        "description": "Slows enemy actions",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Slowed for 2 turns"
+      },
+      "freeze": {
+        "description": "Freezes target in place",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Frozen for 2 turns"
+      },
+      "freeze_and_slow": {
+        "description": "Combines freeze and slow effects",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Freezes and slows for 2 turns"
+      },
+      "immobilize": {
+        "description": "Prevents target from moving",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Trapped for 1 turn"
+      },
+      "fear": {
+        "description": "Causes fear, reducing effectiveness",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Feared for 2 turns"
+      },
+      "fear_all": {
+        "description": "Fears all enemies",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "All enemies feared"
+      },
+      "curse": {
+        "description": "Curses target with various debuffs",
+        "category": "crowd_control",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Cursed for 5 turns"
+      },
+      "curse_on_hit": {
+        "description": "Curses enemies when hitting them",
+        "category": "crowd_control",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "30% chance to curse on hit"
+      }
+    },
+    "elemental_damage": {
+      "fire_damage": {
+        "description": "Additional fire-based damage on attacks",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 fire damage"
+      },
+      "fire_damage_bonus": {
+        "description": "Increases fire damage dealt",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+30% fire damage"
+      },
+      "ice_damage": {
+        "description": "Additional cold-based damage on attacks",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 ice damage"
+      },
+      "lightning_damage": {
+        "description": "Additional electric damage on attacks",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+15 lightning damage"
+      },
+      "lightning_damage_bonus": {
+        "description": "Increases lightning damage",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+25% lightning damage"
+      },
+      "void_damage": {
+        "description": "Additional void/darkness damage on attacks",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+20 void damage"
+      },
+      "divine_damage": {
+        "description": "Additional holy/light damage on attacks",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+25 divine damage"
+      },
+      "holy_damage": {
+        "description": "Extra damage against undead and evil enemies",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+30 holy damage"
+      },
+      "holy_damage_bonus": {
+        "description": "Increases holy damage dealt",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+40% holy damage"
+      },
+      "magic_damage": {
+        "description": "Additional magical damage on attacks",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+12 magic damage"
+      },
+      "magic_damage_bonus": {
+        "description": "Increases magic damage dealt",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+20% magic damage"
+      },
+      "earth_damage": {
+        "description": "Additional earth-based damage",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 earth damage"
+      },
+      "cosmic_damage": {
+        "description": "Cosmic/stellar damage",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+50 cosmic damage"
+      },
+      "true_damage": {
+        "description": "Damage that ignores all resistances",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "50 true damage"
+      },
+      "all_elemental_damage": {
+        "description": "Adds all elemental types to attacks",
+        "category": "elemental_damage",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 of each element"
+      }
+    },
+    "resistance": {
+      "fire_resist": {
+        "description": "Reduces incoming fire damage",
+        "category": "resistance",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "30% fire resistance"
+      },
+      "fire_resistance": {
+        "description": "Reduces fire damage taken",
+        "category": "resistance",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "50% fire resistance"
+      },
+      "fire_immunity": {
+        "description": "Complete immunity to fire damage",
+        "category": "resistance",
+        "has_value": false,
+        "example": "Immune to fire"
+      },
+      "cold_resist": {
+        "description": "Reduces incoming ice/cold damage",
+        "category": "resistance",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "25% cold resistance"
+      },
+      "magic_resist": {
+        "description": "Reduces incoming magical damage",
+        "category": "resistance",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "40% magic resistance"
+      },
+      "all_resist": {
+        "description": "Reduces all types of elemental damage",
+        "category": "resistance",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "15% resistance to all elements"
+      },
+      "void_protection": {
+        "description": "Protection against void/darkness attacks",
+        "category": "resistance",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "50% void protection"
+      },
+      "divine_shield": {
+        "description": "Divine protection that blocks dark magic and evil attacks",
+        "category": "resistance",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Blocks 60% of dark damage"
+      },
+      "immune_debuffs": {
+        "description": "Immune to all negative status effects",
+        "category": "resistance",
+        "has_value": false,
+        "example": "Cannot be debuffed"
+      }
+    },
+    "utility": {
+      "stealth": {
+        "description": "Makes you harder to detect and hit",
+        "category": "utility",
+        "has_value": false,
+        "example": "Harder to detect"
+      },
+      "stealth_bonus": {
+        "description": "Improves stealth abilities and sneak attacks",
+        "category": "utility",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+25% stealth effectiveness"
+      },
+      "invisibility": {
+        "description": "Makes character invisible",
+        "category": "utility",
+        "has_value": false,
+        "example": "Invisible to enemies"
+      },
+      "speed_buff": {
+        "description": "Increases movement and action speed",
+        "category": "utility",
+        "has_value": true,
+        "value_type": "percentage",
+        "has_duration": true,
+        "example": "+30% speed for 5 turns"
+      },
+      "escape_chance": {
+        "description": "Improves chance to flee from combat",
+        "category": "utility",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+20% escape chance"
+      },
+      "flee_when_low": {
+        "description": "Attempts to flee when health is low",
+        "category": "utility",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Flees below 25% HP"
+      },
+      "night_vision": {
+        "description": "See clearly in dark environments",
+        "category": "utility",
+        "has_value": false,
+        "example": "Can see in darkness"
+      },
+      "grip": {
+        "description": "Prevents weapon from being disarmed",
+        "category": "utility",
+        "has_value": false,
+        "example": "Cannot be disarmed"
+      },
+      "teleport": {
+        "description": "Allows teleportation",
+        "category": "utility",
+        "has_value": false,
+        "example": "Can teleport"
+      },
+      "teleport_anywhere": {
+        "description": "Can teleport to any location",
+        "category": "utility",
+        "has_value": false,
+        "example": "Teleports anywhere"
+      },
+      "teleport_and_strike": {
+        "description": "Teleports to target and attacks",
+        "category": "utility",
+        "has_value": false,
+        "example": "Teleport strike"
+      }
+    },
+    "mana": {
+      "mana": {
+        "description": "Restores mana/energy for spell casting",
+        "category": "mana",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "Restores 50 mana"
+      },
+      "mana_regen": {
+        "description": "Restores mana/energy each turn",
+        "category": "mana",
+        "has_value": true,
+        "value_type": "flat_or_percentage",
+        "example": "Restores 10 mana per turn"
+      },
+      "spell_power": {
+        "description": "Increases the power of magical abilities",
+        "category": "mana",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+20% spell power"
+      },
+      "magic_bonus": {
+        "description": "Bonus to magic stat",
+        "category": "mana",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 magic"
+      }
+    },
+    "stats": {
+      "max_hp_bonus": {
+        "description": "Permanently increases maximum health",
+        "category": "stats",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+50 max HP"
+      },
+      "hp_bonus": {
+        "description": "Increases HP stat",
+        "category": "stats",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+30 HP"
+      },
+      "all_stats": {
+        "description": "Increases all primary stats",
+        "category": "stats",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "+10 to all stats"
+      },
+      "all_stats_boost": {
+        "description": "Temporary boost to all stats",
+        "category": "stats",
+        "has_value": true,
+        "value_type": "percentage",
+        "has_duration": true,
+        "example": "+25% all stats for 5 turns"
+      }
+    },
+    "reflection": {
+      "reflect": {
+        "description": "Reflects some damage back to attacker",
+        "category": "reflection",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Reflects 25% of damage"
+      },
+      "reflect_magic": {
+        "description": "Reflects magic damage back to caster",
+        "category": "reflection",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Reflects 25% of magic damage"
+      },
+      "thorns": {
+        "description": "Deals damage to attackers",
+        "category": "reflection",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "20 thorns damage to attackers"
+      },
+      "counter_damage": {
+        "description": "Counters attacks with damage",
+        "category": "reflection",
+        "has_value": true,
+        "value_type": "flat_or_percentage",
+        "example": "Counters for 50% damage"
+      },
+      "damage_shield": {
+        "description": "Shield that damages attackers",
+        "category": "reflection",
+        "has_value": true,
+        "value_type": "flat",
+        "has_duration": true,
+        "example": "Shield deals 30 damage to attackers"
+      }
+    },
+    "special_combat": {
+      "extra_turn": {
+        "description": "Grants additional actions in combat",
+        "category": "special_combat",
+        "has_value": false,
+        "example": "Gain an extra turn"
+      },
+      "multi_attack": {
+        "description": "Attacks multiple times in one turn",
+        "category": "special_combat",
+        "has_value": true,
+        "value_type": "count",
+        "example": "Attacks 2 times"
+      },
+      "chain_damage": {
+        "description": "Damage chains to multiple enemies",
+        "category": "special_combat",
+        "has_value": true,
+        "value_type": "count",
+        "example": "Chains to 3 enemies"
+      },
+      "aoe_damage": {
+        "description": "Damages all enemies",
+        "category": "special_combat",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "AoE for 80% damage"
+      },
+      "knockback": {
+        "description": "Knocks enemies back",
+        "category": "special_combat",
+        "has_value": false,
+        "example": "Knocks enemies back"
+      },
+      "push_back": {
+        "description": "Pushes target away",
+        "category": "special_combat",
+        "has_value": false,
+        "example": "Pushes target back"
+      }
+    },
+    "summoning": {
+      "summon_minion": {
+        "description": "Summons a creature to fight for you",
+        "category": "summoning",
+        "has_value": false,
+        "example": "Summons a skeleton"
+      },
+      "summon_wolves": {
+        "description": "Summons wolf companions",
+        "category": "summoning",
+        "has_value": true,
+        "value_type": "count",
+        "example": "Summons 2 wolves"
+      },
+      "summon_shadows": {
+        "description": "Summons shadow creatures",
+        "category": "summoning",
+        "has_value": true,
+        "value_type": "count",
+        "example": "Summons 3 shadows"
+      },
+      "summon_demons": {
+        "description": "Summons demonic minions",
+        "category": "summoning",
+        "has_value": true,
+        "value_type": "count",
+        "example": "Summons 2 demons"
+      },
+      "summon_undead_horde": {
+        "description": "Summons many undead",
+        "category": "summoning",
+        "has_value": true,
+        "value_type": "count",
+        "example": "Summons 5 undead"
+      },
+      "summon_multiple": {
+        "description": "Summons multiple creatures",
+        "category": "summoning",
+        "has_value": true,
+        "value_type": "count",
+        "example": "Summons 3 creatures"
+      }
+    },
+    "ally_buffs": {
+      "buff_allies": {
+        "description": "Buffs all nearby allies",
+        "category": "ally_buffs",
+        "has_value": true,
+        "value_type": "multiplier",
+        "has_duration": true,
+        "example": "+15% all stats to allies"
+      },
+      "buff_allies_attack": {
+        "description": "Increases ally attack power",
+        "category": "ally_buffs",
+        "has_value": true,
+        "value_type": "multiplier",
+        "has_duration": true,
+        "example": "+25% attack to allies"
+      }
+    },
+    "cleanse": {
+      "cure_poison": {
+        "description": "Removes poison effects immediately",
+        "category": "cleanse",
+        "has_value": false,
+        "example": "Cures poison"
+      },
+      "cure_all": {
+        "description": "Removes all negative status effects",
+        "category": "cleanse",
+        "has_value": false,
+        "example": "Removes all debuffs"
+      },
+      "remove_curse": {
+        "description": "Removes curse effects",
+        "category": "cleanse",
+        "has_value": false,
+        "example": "Removes curses"
+      }
+    },
+    "revival": {
+      "auto_revive_once": {
+        "description": "Automatically revives once upon death",
+        "category": "revival",
+        "has_value": false,
+        "example": "Revive once when killed"
+      },
+      "revive_once": {
+        "description": "Can revive once after death",
+        "category": "revival",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Revives with 50% HP"
+      },
+      "revive_always": {
+        "description": "Always revives after death",
+        "category": "revival",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Always revives with 30% HP"
+      },
+      "revive_on_death": {
+        "description": "Revives when killed",
+        "category": "revival",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Revives with 40% HP"
+      }
+    },
+    "special_effects": {
+      "storm_call": {
+        "description": "Calls down lightning storms in combat",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "Calls lightning for 100 damage"
+      },
+      "aoe_lightning": {
+        "description": "Lightning strikes all enemies",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "Lightning strikes for 80 damage"
+      },
+      "warp_reality": {
+        "description": "Warps reality with chaotic effects",
+        "category": "special_effects",
+        "has_value": false,
+        "example": "Random reality warping"
+      },
+      "time_manipulation": {
+        "description": "Manipulates time flow",
+        "category": "special_effects",
+        "has_value": false,
+        "example": "Controls time"
+      },
+      "freeze_time": {
+        "description": "Stops time for enemies",
+        "category": "special_effects",
+        "has_value": false,
+        "has_duration": true,
+        "example": "Freezes time for 1 turn"
+      },
+      "ancient_power": {
+        "description": "Channels ancient powerful magic",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "Deals massive damage"
+      },
+      "bonus_loot": {
+        "description": "Increases loot drops",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "+50% loot"
+      },
+      "trap_soul": {
+        "description": "Traps enemy soul on death",
+        "category": "special_effects",
+        "has_value": false,
+        "example": "Soul trapped permanently"
+      },
+      "instant_kill_chance": {
+        "description": "Small chance to instantly kill",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "5% instant kill chance"
+      },
+      "max_hp_damage": {
+        "description": "Damage based on target's max HP",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "Deals 15% of max HP"
+      },
+      "corruption": {
+        "description": "Slowly corrupts the bearer",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "percentage",
+        "example": "1% corruption per turn"
+      },
+      "self_destruct_damage": {
+        "description": "Deals damage upon death",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "200 damage on death"
+      },
+      "random_effect": {
+        "description": "Causes random magical effects",
+        "category": "special_effects",
+        "has_value": false,
+        "example": "Random effect each turn"
+      },
+      "repair_armor": {
+        "description": "Repairs damaged armor/defense",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "flat",
+        "example": "Repairs 20 armor"
+      },
+      "ignore_resist": {
+        "description": "Ignores enemy resistances",
+        "category": "special_effects",
+        "has_value": false,
+        "example": "Bypasses all resistances"
+      },
+      "bonus_vs_dragons": {
+        "description": "Extra damage against dragon-type enemies",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "2x damage vs dragons"
+      },
+      "undead_bonus": {
+        "description": "Bonus against undead enemies",
+        "category": "special_effects",
+        "has_value": true,
+        "value_type": "multiplier",
+        "example": "+50% damage vs undead"
+      }
+    }
+  },
+  "categories": {
+    "healing": "Effects that restore or regenerate health points",
+    "damage_boost": "Effects that increase damage output",
+    "defense": "Effects that reduce incoming damage or increase armor",
+    "evasion": "Effects that help avoid attacks entirely",
+    "blocking": "Effects that block and mitigate damage",
+    "armor_penetration": "Effects that bypass or reduce enemy defense",
+    "accuracy": "Effects that improve hit chance",
+    "damage_over_time": "Effects that deal damage gradually over multiple turns",
+    "crowd_control": "Effects that impair or control enemies",
+    "elemental_damage": "Effects that add elemental damage types to attacks",
+    "resistance": "Effects that reduce damage from specific sources",
+    "utility": "Miscellaneous helpful effects",
+    "mana": "Effects related to magical energy and spell power",
+    "stats": "Effects that modify base character statistics",
+    "reflection": "Effects that return damage to attackers",
+    "special_combat": "Unique combat mechanics and abilities",
+    "summoning": "Effects that summon creatures or minions",
+    "ally_buffs": "Effects that benefit allies and party members",
+    "cleanse": "Effects that remove negative status effects",
+    "revival": "Effects that bring characters back from death",
+    "special_effects": "Unique and powerful special abilities"
+  },
+  "value_types": {
+    "flat": "A fixed numerical value (e.g., +10, 50)",
+    "percentage": "A percentage value (e.g., 0.25 = 25%, 1.5 = 150%)",
+    "multiplier": "A damage or stat multiplier (e.g., 1.5 = 150%, 2.0 = 200%)",
+    "count": "A whole number count (e.g., 3 attacks, 5 minions)",
+    "flat_or_percentage": "Can be either a flat value or percentage depending on context"
+  }
+}

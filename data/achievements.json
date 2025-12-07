@@ -1,0 +1,653 @@
+{
+  "achievements": {
+    "combat": [
+      {
+        "id": "first_blood",
+        "name": "First Blood",
+        "description": "Defeat your first monster",
+        "icon": "⚔️",
+        "rarity": "common",
+        "points": 10,
+        "criteria": {
+          "type": "monster_kills",
+          "count": 1
+        },
+        "rewards": {
+          "title": "novice_fighter",
+          "gold": 10
+        },
+        "hidden": false
+      },
+      {
+        "id": "monster_slayer",
+        "name": "Monster Slayer",
+        "description": "Defeat 100 monsters",
+        "icon": "⚔️",
+        "rarity": "uncommon",
+        "points": 25,
+        "criteria": {
+          "type": "monster_kills",
+          "count": 100
+        },
+        "rewards": {
+          "title": "monster_slayer",
+          "xp": 500,
+          "gold": 100
+        }
+      },
+      {
+        "id": "legendary_hunter",
+        "name": "Legendary Hunter",
+        "description": "Defeat 1000 monsters",
+        "icon": "⚔️",
+        "rarity": "legendary",
+        "points": 100,
+        "criteria": {
+          "type": "monster_kills",
+          "count": 1000
+        },
+        "rewards": {
+          "title": "legendary_hunter",
+          "xp": 5000,
+          "gold": 1000,
+          "passive_unlock": "efficient_killer"
+        }
+      },
+      {
+        "id": "boss_vanquisher",
+        "name": "Boss Vanquisher",
+        "description": "Defeat 10 boss monsters",
+        "icon": "👑",
+        "rarity": "rare",
+        "points": 50,
+        "criteria": {
+          "type": "boss_kills",
+          "count": 10
+        },
+        "rewards": {
+          "title": "boss_vanquisher",
+          "xp": 1000,
+          "items": ["boss_trophy"]
+        }
+      },
+      {
+        "id": "flawless_victory",
+        "name": "Flawless Victory",
+        "description": "Win a battle without taking damage",
+        "icon": "✨",
+        "rarity": "rare",
+        "points": 50,
+        "criteria": {
+          "type": "perfect_combat",
+          "count": 1
+        },
+        "rewards": {
+          "xp": 200,
+          "title": "untouchable"
+        }
+      },
+      {
+        "id": "critical_master",
+        "name": "Critical Master",
+        "description": "Land 50 critical hits",
+        "icon": "💥",
+        "rarity": "uncommon",
+        "points": 30,
+        "criteria": {
+          "type": "critical_hits",
+          "count": 50
+        },
+        "rewards": {
+          "passive_unlock": "improved_crits",
+          "gold": 150
+        }
+      },
+      {
+        "id": "overkill",
+        "name": "Overkill",
+        "description": "Deal 500 damage in a single hit",
+        "icon": "💀",
+        "rarity": "epic",
+        "points": 75,
+        "criteria": {
+          "type": "single_hit_damage",
+          "amount": 500
+        },
+        "rewards": {
+          "title": "devastating",
+          "xp": 1500
+        }
+      },
+      {
+        "id": "survivor",
+        "name": "Survivor",
+        "description": "Survive a lethal hit with 1 HP",
+        "icon": "🛡️",
+        "rarity": "rare",
+        "points": 40,
+        "criteria": {
+          "type": "survive_lethal",
+          "count": 1
+        },
+        "rewards": {
+          "title": "survivor",
+          "items": ["lucky_charm"]
+        }
+      },
+      {
+        "id": "killing_spree",
+        "name": "Killing Spree",
+        "description": "Defeat 10 monsters without resting",
+        "icon": "🔥",
+        "rarity": "uncommon",
+        "points": 35,
+        "criteria": {
+          "type": "kill_streak",
+          "count": 10
+        },
+        "rewards": {
+          "xp": 300,
+          "gold": 100
+        }
+      }
+    ],
+    "exploration": [
+      {
+        "id": "first_steps",
+        "name": "First Steps",
+        "description": "Visit your first location",
+        "icon": "🗺️",
+        "rarity": "common",
+        "points": 5,
+        "criteria": {
+          "type": "locations_visited",
+          "count": 1
+        },
+        "rewards": {
+          "xp": 50
+        }
+      },
+      {
+        "id": "pathfinder",
+        "name": "Pathfinder",
+        "description": "Visit 20 different locations",
+        "icon": "🗺️",
+        "rarity": "uncommon",
+        "points": 30,
+        "criteria": {
+          "type": "locations_visited",
+          "count": 20
+        },
+        "rewards": {
+          "title": "pathfinder",
+          "xp": 500,
+          "gold": 200
+        }
+      },
+      {
+        "id": "master_explorer",
+        "name": "Master Explorer",
+        "description": "Visit all biomes",
+        "icon": "🌍",
+        "rarity": "epic",
+        "points": 75,
+        "criteria": {
+          "type": "all_biomes_visited",
+          "count": 1
+        },
+        "rewards": {
+          "title": "master_explorer",
+          "xp": 2000,
+          "passive_unlock": "world_traveler",
+          "items": ["explorers_compass"]
+        }
+      },
+      {
+        "id": "dungeon_delver",
+        "name": "Dungeon Delver",
+        "description": "Complete 5 dungeons",
+        "icon": "🏰",
+        "rarity": "rare",
+        "points": 50,
+        "criteria": {
+          "type": "dungeons_completed",
+          "count": 5
+        },
+        "rewards": {
+          "title": "dungeon_delver",
+          "xp": 1000,
+          "gold": 500
+        }
+      },
+      {
+        "id": "secret_finder",
+        "name": "Secret Finder",
+        "description": "Discover 10 hidden locations",
+        "icon": "🔍",
+        "rarity": "rare",
+        "points": 60,
+        "criteria": {
+          "type": "secrets_found",
+          "count": 10
+        },
+        "rewards": {
+          "title": "secret_finder",
+          "passive_unlock": "keen_eye",
+          "items": ["treasure_map"]
+        }
+      }
+    ],
+    "collection": [
+      {
+        "id": "hoarder",
+        "name": "Hoarder",
+        "description": "Collect 100 items",
+        "icon": "📦",
+        "rarity": "common",
+        "points": 15,
+        "criteria": {
+          "type": "items_collected",
+          "count": 100
+        },
+        "rewards": {
+          "gold": 50,
+          "items": ["extra_bag_slot"]
+        }
+      },
+      {
+        "id": "monster_scholar",
+        "name": "Monster Scholar",
+        "description": "Defeat at least one of each monster type",
+        "icon": "📚",
+        "rarity": "epic",
+        "points": 100,
+        "criteria": {
+          "type": "bestiary_complete",
+          "percentage": 100
+        },
+        "rewards": {
+          "title": "monster_scholar",
+          "xp": 5000,
+          "passive_unlock": "monster_knowledge",
+          "items": ["bestiary_tome"]
+        }
+      },
+      {
+        "id": "gear_collector",
+        "name": "Gear Collector",
+        "description": "Own 50 different pieces of equipment",
+        "icon": "⚔️",
+        "rarity": "uncommon",
+        "points": 40,
+        "criteria": {
+          "type": "unique_gear_owned",
+          "count": 50
+        },
+        "rewards": {
+          "gold": 300,
+          "xp": 800
+        }
+      },
+      {
+        "id": "legendary_collector",
+        "name": "Legendary Collector",
+        "description": "Own 5 legendary items",
+        "icon": "✨",
+        "rarity": "legendary",
+        "points": 150,
+        "criteria": {
+          "type": "legendary_items_owned",
+          "count": 5
+        },
+        "rewards": {
+          "title": "legendary_collector",
+          "xp": 10000,
+          "passive_unlock": "legendary_luck"
+        }
+      }
+    ],
+    "wealth": [
+      {
+        "id": "penny_pincher",
+        "name": "Penny Pincher",
+        "description": "Accumulate 1,000 gold",
+        "icon": "💰",
+        "rarity": "common",
+        "points": 10,
+        "criteria": {
+          "type": "gold_accumulated",
+          "amount": 1000
+        },
+        "rewards": {
+          "xp": 100
+        }
+      },
+      {
+        "id": "merchant_prince",
+        "name": "Merchant Prince",
+        "description": "Accumulate 50,000 gold",
+        "icon": "💰",
+        "rarity": "epic",
+        "points": 80,
+        "criteria": {
+          "type": "gold_accumulated",
+          "amount": 50000
+        },
+        "rewards": {
+          "title": "merchant_prince",
+          "passive_unlock": "bargain_hunter",
+          "xp": 3000
+        }
+      },
+      {
+        "id": "big_spender",
+        "name": "Big Spender",
+        "description": "Spend 10,000 gold",
+        "icon": "💸",
+        "rarity": "uncommon",
+        "points": 25,
+        "criteria": {
+          "type": "gold_spent",
+          "amount": 10000
+        },
+        "rewards": {
+          "gold": 500,
+          "xp": 500
+        }
+      }
+    ],
+    "progression": [
+      {
+        "id": "level_10",
+        "name": "Apprentice",
+        "description": "Reach level 10",
+        "icon": "⬆️",
+        "rarity": "common",
+        "points": 20,
+        "criteria": {
+          "type": "level_reached",
+          "level": 10
+        },
+        "rewards": {
+          "title": "apprentice",
+          "gold": 100,
+          "xp": 200
+        }
+      },
+      {
+        "id": "level_25",
+        "name": "Veteran",
+        "description": "Reach level 25",
+        "icon": "⬆️",
+        "rarity": "rare",
+        "points": 50,
+        "criteria": {
+          "type": "level_reached",
+          "level": 25
+        },
+        "rewards": {
+          "title": "veteran",
+          "gold": 500,
+          "passive_unlock": "veteran_experience"
+        }
+      },
+      {
+        "id": "level_50",
+        "name": "Ascended",
+        "description": "Reach the maximum level",
+        "icon": "⬆️",
+        "rarity": "legendary",
+        "points": 200,
+        "criteria": {
+          "type": "level_reached",
+          "level": 50
+        },
+        "rewards": {
+          "title": "ascended",
+          "gold": 5000,
+          "passive_unlock": "ascended_power",
+          "items": ["ascension_token"]
+        }
+      },
+      {
+        "id": "quick_learner",
+        "name": "Quick Learner",
+        "description": "Reach level 10 within 2 hours of playtime",
+        "icon": "⚡",
+        "rarity": "rare",
+        "points": 60,
+        "criteria": {
+          "type": "level_time_challenge",
+          "level": 10,
+          "time_limit": 7200
+        },
+        "rewards": {
+          "title": "quick_learner",
+          "passive_unlock": "fast_learner",
+          "xp": 1000
+        }
+      }
+    ],
+    "social": [
+      {
+        "id": "twitch_debut",
+        "name": "Twitch Debut",
+        "description": "Play the game while streaming on Twitch",
+        "icon": "📺",
+        "rarity": "common",
+        "points": 10,
+        "criteria": {
+          "type": "twitch_stream",
+          "count": 1
+        },
+        "rewards": {
+          "title": "streamer",
+          "gold": 100
+        }
+      },
+      {
+        "id": "chat_favorite",
+        "name": "Chat Favorite",
+        "description": "Receive 100 chat interactions during gameplay",
+        "icon": "💬",
+        "rarity": "uncommon",
+        "points": 30,
+        "criteria": {
+          "type": "chat_interactions",
+          "count": 100
+        },
+        "rewards": {
+          "title": "chat_favorite",
+          "xp": 500
+        }
+      },
+      {
+        "id": "raid_leader",
+        "name": "Raid Leader",
+        "description": "Complete a raid with 5+ Twitch viewers",
+        "icon": "👥",
+        "rarity": "rare",
+        "points": 50,
+        "criteria": {
+          "type": "raid_with_viewers",
+          "viewer_count": 5
+        },
+        "rewards": {
+          "title": "raid_leader",
+          "xp": 1500,
+          "gold": 500
+        }
+      }
+    ],
+    "special": [
+      {
+        "id": "death_defier",
+        "name": "Death Defier",
+        "description": "Die and resurrect 10 times",
+        "icon": "💀",
+        "rarity": "uncommon",
+        "points": 25,
+        "criteria": {
+          "type": "deaths",
+          "count": 10
+        },
+        "rewards": {
+          "title": "death_defier",
+          "passive_unlock": "death_experience",
+          "xp": 500
+        }
+      },
+      {
+        "id": "iron_man",
+        "name": "Iron Man",
+        "description": "Reach level 20 without dying once",
+        "icon": "🛡️",
+        "rarity": "legendary",
+        "points": 250,
+        "criteria": {
+          "type": "no_death_level",
+          "level": 20
+        },
+        "rewards": {
+          "title": "iron_man",
+          "passive_unlock": "iron_resolve",
+          "xp": 10000,
+          "items": ["iron_champion_ring"]
+        }
+      },
+      {
+        "id": "speed_runner",
+        "name": "Speed Runner",
+        "description": "Complete a dungeon in under 5 minutes",
+        "icon": "⏱️",
+        "rarity": "epic",
+        "points": 100,
+        "criteria": {
+          "type": "dungeon_speed",
+          "time_limit": 300
+        },
+        "rewards": {
+          "title": "speed_runner",
+          "passive_unlock": "haste",
+          "gold": 1000
+        }
+      },
+      {
+        "id": "cursed_one",
+        "name": "The Cursed One",
+        "description": "Acquire 5 different curses simultaneously",
+        "icon": "🌑",
+        "rarity": "rare",
+        "points": 50,
+        "criteria": {
+          "type": "curses_active",
+          "count": 5
+        },
+        "rewards": {
+          "title": "cursed_one",
+          "passive_unlock": "curse_affinity",
+          "items": ["cursed_relic"]
+        },
+        "hidden": true
+      },
+      {
+        "id": "mystery_solver",
+        "name": "Mystery Solver",
+        "description": "Solve all mysteries in the realm",
+        "icon": "🔮",
+        "rarity": "legendary",
+        "points": 200,
+        "criteria": {
+          "type": "mysteries_solved",
+          "count": "all"
+        },
+        "rewards": {
+          "title": "mystery_solver",
+          "passive_unlock": "intuition",
+          "xp": 15000,
+          "items": ["orb_of_knowledge"]
+        },
+        "hidden": true
+      },
+      {
+        "id": "faction_diplomat",
+        "name": "Faction Diplomat",
+        "description": "Reach exalted status with all factions",
+        "icon": "🤝",
+        "rarity": "legendary",
+        "points": 300,
+        "criteria": {
+          "type": "all_factions_exalted",
+          "count": 1
+        },
+        "rewards": {
+          "title": "faction_diplomat",
+          "passive_unlock": "universal_respect",
+          "xp": 20000,
+          "items": ["diplomatic_seal"]
+        }
+      },
+      {
+        "id": "time_traveler",
+        "name": "Time Traveler",
+        "description": "Experience all time periods in the realm",
+        "icon": "⏳",
+        "rarity": "epic",
+        "points": 100,
+        "criteria": {
+          "type": "time_periods_visited",
+          "count": "all"
+        },
+        "rewards": {
+          "title": "time_traveler",
+          "passive_unlock": "temporal_awareness",
+          "xp": 5000
+        },
+        "hidden": true
+      }
+    ],
+    "seasonal": [
+      {
+        "id": "season_1_champion",
+        "name": "Season 1 Champion",
+        "description": "Complete all Season 1 challenges",
+        "icon": "🏆",
+        "rarity": "legendary",
+        "points": 500,
+        "season": 1,
+        "criteria": {
+          "type": "season_complete",
+          "season": 1
+        },
+        "rewards": {
+          "title": "season_1_champion",
+          "items": ["season_1_trophy"],
+          "xp": 25000
+        },
+        "time_limited": true
+      }
+    ]
+  },
+  "achievement_tiers": {
+    "common": {
+      "color": "#808080",
+      "base_points": 10
+    },
+    "uncommon": {
+      "color": "#00FF00",
+      "base_points": 25
+    },
+    "rare": {
+      "color": "#0070DD",
+      "base_points": 50
+    },
+    "epic": {
+      "color": "#A335EE",
+      "base_points": 100
+    },
+    "legendary": {
+      "color": "#FF8000",
+      "base_points": 200
+    }
+  }
+}

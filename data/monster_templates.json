@@ -1,0 +1,128 @@
+{
+  "templates": {
+    "beast_base": {
+      "creature_type": "beast",
+      "base_multipliers": {
+        "hp": 1.0,
+        "attack": 1.0,
+        "defense": 0.8,
+        "agility": 1.2
+      }
+    },
+    "undead_base": {
+      "creature_type": "undead",
+      "base_abilities": ["regen"],
+      "base_multipliers": {
+        "hp": 1.2,
+        "attack": 0.9,
+        "defense": 0.7,
+        "agility": 0.6
+      }
+    },
+    "elemental_base": {
+      "creature_type": "elemental",
+      "base_multipliers": {
+        "hp": 0.8,
+        "attack": 1.3,
+        "defense": 0.5,
+        "agility": 1.4,
+        "magic": 1.5
+      }
+    },
+    "humanoid_base": {
+      "creature_type": "humanoid",
+      "base_multipliers": {
+        "hp": 1.0,
+        "attack": 1.0,
+        "defense": 1.0,
+        "agility": 1.0
+      }
+    },
+    "dragon_base": {
+      "creature_type": "dragon",
+      "base_abilities": ["intimidate", "dragon_breath"],
+      "base_multipliers": {
+        "hp": 1.5,
+        "attack": 1.4,
+        "defense": 1.3,
+        "agility": 0.9,
+        "magic": 1.2
+      }
+    },
+    "demon_base": {
+      "creature_type": "demon",
+      "base_abilities": ["intimidate"],
+      "base_multipliers": {
+        "hp": 1.3,
+        "attack": 1.3,
+        "defense": 1.1,
+        "agility": 1.0,
+        "magic": 1.3
+      }
+    },
+    "construct_base": {
+      "creature_type": "construct",
+      "base_abilities": ["magic_resist"],
+      "base_multipliers": {
+        "hp": 1.4,
+        "attack": 0.9,
+        "defense": 1.5,
+        "agility": 0.5
+      }
+    },
+    "aberration_base": {
+      "creature_type": "aberration",
+      "base_abilities": ["void_magic", "phase_shift"],
+      "base_multipliers": {
+        "hp": 1.2,
+        "attack": 1.2,
+        "defense": 0.8,
+        "agility": 1.1,
+        "magic": 1.6
+      }
+    },
+    "celestial_base": {
+      "creature_type": "celestial",
+      "base_abilities": ["divine_power"],
+      "base_multipliers": {
+        "hp": 1.3,
+        "attack": 1.2,
+        "defense": 1.2,
+        "agility": 1.2,
+        "magic": 1.4
+      }
+    }
+  },
+  "rarity_modifiers": {
+    "common": {
+      "stat_multiplier": 1.0,
+      "ability_count": [0, 2],
+      "xp_base": 10
+    },
+    "uncommon": {
+      "stat_multiplier": 1.5,
+      "ability_count": [1, 3],
+      "xp_base": 40
+    },
+    "rare": {
+      "stat_multiplier": 2.5,
+      "ability_count": [2, 4],
+      "xp_base": 100
+    },
+    "epic": {
+      "stat_multiplier": 4.0,
+      "ability_count": [3, 5],
+      "xp_base": 300
+    },
+    "legendary": {
+      "stat_multiplier": 8.0,
+      "ability_count": [4, 6],
+      "xp_base": 1500
+    },
+    "mythic": {
+      "stat_multiplier": 15.0,
+      "ability_count": [5, 8],
+      "xp_base": 5000
+    }
+  }
+}

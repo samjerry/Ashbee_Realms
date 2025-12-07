@@ -1,0 +1,331 @@
+{
+  "mysteries": {
+    "the_missing_heir": {
+      "name": "The Missing Heir",
+      "description": "The royal heir vanished 20 years ago. What happened?",
+      "difficulty": "medium",
+      "clues": [
+        {
+          "id": "clue_1",
+          "name": "Torn Royal Banner",
+          "location": "Cursed Swamp",
+          "description": "A piece of royal fabric, stained with blood",
+          "unlocks": "Lead to Hollow Manor investigation"
+        },
+        {
+          "id": "clue_2",
+          "name": "Mysterious Locket",
+          "location": "Hollow Manor",
+          "description": "Contains a portrait of the missing heir",
+          "unlocks": "NPC dialogue with Lady Ashford's ghost"
+        },
+        {
+          "id": "clue_3",
+          "name": "Ransom Note",
+          "location": "Shadow Syndicate hideout",
+          "description": "Demands that were never met",
+          "unlocks": "Investigation of Shadow Syndicate involvement"
+        },
+        {
+          "id": "clue_4",
+          "name": "Witness Account",
+          "source": "Old merchant NPC",
+          "description": "Saw a hooded figure take the child",
+          "unlocks": "Search for the hooded figure"
+        },
+        {
+          "id": "clue_5",
+          "name": "Hidden Chamber",
+          "location": "Royal Castle basement",
+          "description": "Secret room with signs of struggle",
+          "unlocks": "Final revelation"
+        }
+      ],
+      "solution": {
+        "revealed_by": "collecting_all_clues",
+        "truth": "The heir was kidnapped by the Shadow Syndicate but rescued by a mysterious figure. The heir now lives in hiding as an adventurer, unaware of their true identity.",
+        "npc_revealed": "garen_wandering_merchant",
+        "rewards": {
+          "experience": 10000,
+          "title": "Truth Seeker",
+          "achievement": "the_missing_heir_solved",
+          "item": "royal_signet_ring",
+          "quest_chain_unlock": "restoration_of_the_throne"
+        }
+      }
+    },
+    "singing_stones": {
+      "name": "The Singing Stones Mystery",
+      "description": "Ancient stones that hum during celestial events. What is their purpose?",
+      "difficulty": "hard",
+      "clues": [
+        {
+          "id": "clue_1",
+          "name": "First Stone",
+          "location": "Highland Reaches",
+          "description": "A stone that hums with power during full moons",
+          "requires": "Visit during full moon"
+        },
+        {
+          "id": "clue_2",
+          "name": "Second Stone",
+          "location": "Crystal Depths",
+          "description": "This stone resonates with the first",
+          "requires": "Activate first stone"
+        },
+        {
+          "id": "clue_3",
+          "name": "Third Stone",
+          "location": "Forgotten Isle",
+          "description": "The final stone in the triangle",
+          "requires": "Boat or water-walking ability"
+        },
+        {
+          "id": "clue_4",
+          "name": "Ancient Star Map",
+          "location": "Mages' Conclave library",
+          "description": "Shows constellation alignment with stone locations",
+          "unlocks": "Understanding of stone purpose"
+        },
+        {
+          "id": "clue_5",
+          "name": "Celestial Alignment",
+          "requires": "Activate all 3 stones during eclipse",
+          "description": "The stones must be activated simultaneously",
+          "difficulty": "Requires coordination or time magic"
+        }
+      ],
+      "solution": {
+        "revealed_by": "activating_all_stones_during_eclipse",
+        "truth": "The singing stones are an ancient communication device left by the Celestial Heroes. When activated, they reveal the location of a hidden celestial sanctuary.",
+        "unlocks": "celestial_sanctuary_location",
+        "rewards": {
+          "experience": 15000,
+          "title": "Celestial Seeker",
+          "achievement": "singing_stones_solved",
+          "location_unlock": "celestial_sanctuary",
+          "item": "star_fragment"
+        }
+      }
+    },
+    "sixth_celestial": {
+      "name": "The Sixth Celestial",
+      "description": "Legends speak of five Celestial Heroes, but ancient texts hint at a sixth",
+      "difficulty": "legendary",
+      "clues": [
+        {
+          "id": "clue_1",
+          "name": "Defaced Monument",
+          "location": "Obsidian Citadel",
+          "description": "A statue with one figure chiseled away",
+          "requires": "High perception or lore knowledge"
+        },
+        {
+          "id": "clue_2",
+          "name": "Forbidden Text",
+          "location": "Mages' Conclave restricted section",
+          "description": "Mentions 'the Betrayer' who joined the darkness",
+          "requires": "High reputation with Mages' Conclave"
+        },
+        {
+          "id": "clue_3",
+          "name": "Shadow Whispers",
+          "location": "Deep in Shadow Realm",
+          "description": "The darkness speaks of 'the one who fell'",
+          "requires": "Survive shadow realm exploration"
+        },
+        {
+          "id": "clue_4",
+          "name": "Ancient Weapon",
+          "location": "Vault of the Fallen",
+          "description": "A legendary weapon with an unknown owner",
+          "requires": "Defeat vault guardians"
+        },
+        {
+          "id": "clue_5",
+          "name": "Ghost of the Sixth",
+          "location": "Appears during blood moon at Obsidian Citadel",
+          "description": "The spirit of the sixth celestial appears",
+          "requires": "Blood moon + all previous clues"
+        }
+      ],
+      "solution": {
+        "revealed_by": "confronting_the_ghost",
+        "truth": "The sixth Celestial was erased from history after betraying the others. They didn't join the darkness willingly - they were corrupted by the Ancient Evil while trying to destroy it alone. Their sacrifice actually strengthened the seal, but the others erased their memory out of shame.",
+        "unlocks": "redemption_quest_for_sixth",
+        "rewards": {
+          "experience": 25000,
+          "title": "Historian of Truths",
+          "achievement": "sixth_celestial_revealed",
+          "quest": "redemption_of_the_fallen",
+          "legendary_item": "betrayer's_blade_reforged"
+        }
+      }
+    },
+    "cursed_village": {
+      "name": "The Cursed Village",
+      "description": "An entire village disappeared overnight 100 years ago",
+      "difficulty": "medium",
+      "clues": [
+        {
+          "id": "clue_1",
+          "name": "Abandoned Buildings",
+          "location": "Misty Hollow",
+          "description": "Empty homes with meals still on tables"
+        },
+        {
+          "id": "clue_2",
+          "name": "Journal Entry",
+          "location": "Village elder's home",
+          "description": "Final entry speaks of 'the fog that takes'"
+        },
+        {
+          "id": "clue_3",
+          "name": "Strange Ritual Site",
+          "location": "Village center",
+          "description": "Evidence of forbidden magic"
+        },
+        {
+          "id": "clue_4",
+          "name": "Survivor",
+          "location": "Wandering the roads at night",
+          "description": "An ageless person who escaped the curse"
+        }
+      ],
+      "solution": {
+        "truth": "The village attempted a ritual to gain immortality but instead trapped themselves in a time loop. They repeat the same day forever in a parallel dimension.",
+        "can_be_saved": true,
+        "requires": "temporal_essence_and_dispel_curse",
+        "rewards": {
+          "experience": 8000,
+          "title": "Curse Breaker",
+          "achievement": "cursed_village_solved",
+          "grateful_villagers": "Become permanent merchants and allies"
+        }
+      }
+    },
+    "phantom_ship": {
+      "name": "The Phantom Ship",
+      "description": "A ghostly ship appears on foggy nights",
+      "difficulty": "hard",
+      "clues": [
+        {
+          "id": "clue_1",
+          "name": "Ship Sightings",
+          "source": "Multiple fishermen NPCs",
+          "description": "All describe the same spectral vessel"
+        },
+        {
+          "id": "clue_2",
+          "name": "Shipwreck Map",
+          "location": "Lighthouse",
+          "description": "Shows where ships have sunk over centuries"
+        },
+        {
+          "id": "clue_3",
+          "name": "Captain's Log",
+          "location": "Underwater shipwreck",
+          "description": "Final entry: 'The storm takes us. Treasure hidden on the isle.'"
+        },
+        {
+          "id": "clue_4",
+          "name": "Cursed Treasure",
+          "location": "Hidden Isle",
+          "description": "Treasure protected by the crew's curse"
+        }
+      ],
+      "solution": {
+        "revealed_by": "Return treasure to the ship during fog",
+        "truth": "The crew was cursed for stealing sacred treasure. Returning it lifts the curse.",
+        "rewards": {
+          "experience": 12000,
+          "title": "Ghost Friend",
+          "achievement": "phantom_ship_solved",
+          "item": "captain's_compass",
+          "mount": "spectral_ship_pet"
+        }
+      }
+    },
+    "world_tree_secret": {
+      "name": "The World Tree's Secret",
+      "description": "The World Tree harbors an ancient secret",
+      "difficulty": "legendary",
+      "clues": [
+        {
+          "id": "clue_1",
+          "name": "Druid Prophecy",
+          "source": "Druid Circle elder",
+          "description": "Speaks of 'the heart within the tree'"
+        },
+        {
+          "id": "clue_2",
+          "name": "Tree Rings Pattern",
+          "requires": "Study the tree carefully",
+          "description": "The rings form a map"
+        },
+        {
+          "id": "clue_3",
+          "name": "Underground Chamber",
+          "location": "Beneath World Tree roots",
+          "description": "Entrance hidden by nature magic"
+        },
+        {
+          "id": "clue_4",
+          "name": "Ancient Guardian",
+          "location": "Chamber",
+          "description": "A nature spirit protects something"
+        }
+      ],
+      "solution": {
+        "truth": "The World Tree grows from the heart of a sleeping primordial god. If awakened, it could reshape the world.",
+        "danger": "Can lead to good or catastrophic ending",
+        "rewards": {
+          "experience": 30000,
+          "title": "Keeper of Secrets",
+          "achievement": "world_tree_secret_revealed",
+          "choice": "Awaken the god or let them sleep"
+        }
+      }
+    }
+  },
+  "mystery_mechanics": {
+    "clue_tracking": {
+      "personal_journal": true,
+      "clues_persist": true,
+      "can_share_clues": "With other players"
+    },
+    "community_mysteries": {
+      "enabled": true,
+      "description": "Some mysteries require community effort",
+      "examples": ["world_tree_secret", "sixth_celestial"],
+      "server_wide_progress": true,
+      "first_solver_bonus": "Special reward"
+    },
+    "investigation_skills": {
+      "perception": {
+        "description": "Find hidden clues",
+        "increases_with": "Exploration achievements"
+      },
+      "lore_knowledge": {
+        "description": "Understand ancient texts",
+        "increases_with": "Reading books and talking to scholars"
+      },
+      "intuition": {
+        "description": "Connect clues",
+        "passive_unlocks": true
+      }
+    },
+    "hint_system": {
+      "npc_hints": {
+        "available": true,
+        "cost": "gold or reputation",
+        "description": "NPCs can provide hints"
+      },
+      "divination": {
+        "available": true,
+        "cost": "temporal_essence or special items",
+        "description": "Magical hints from fortune tellers"
+      }
+    }
+  }
+}

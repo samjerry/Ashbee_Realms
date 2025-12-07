@@ -1,0 +1,1030 @@
+{
+  "accessories": {
+    "rings": {
+      "common": [
+        {
+          "id": "copper_ring",
+          "name": "Copper Ring",
+          "description": "Simple tarnished copper band",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "magic": 1
+          },
+          "passive": {
+            "lightning_damage": 3
+          },
+          "value": 5
+        },
+        {
+          "id": "bone_ring",
+          "name": "Bone Ring",
+          "description": "Carved animal bone ring",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "defense": 2
+          },
+          "value": 4
+        },
+        {
+          "id": "wood_ring",
+          "name": "Wood Ring",
+          "description": "Carved hardwood finger ring",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "hp_regen": 2
+          },
+          "value": 3
+        },
+        {
+          "id": "stone_ring",
+          "name": "Stone Ring",
+          "description": "Polished stone band",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 2,
+          "stats": {
+            "defense": 2
+          },
+          "value": 6
+        },
+        {
+          "id": "clay_band",
+          "name": "Clay Band",
+          "description": "Fired clay finger ring",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "defense": 2
+          },
+          "value": 2
+        },
+        {
+          "id": "brass_ring",
+          "name": "Brass Ring",
+          "description": "Tarnished brass finger ring",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 3,
+          "passive": {
+            "all_resist": 0.02
+          },
+          "value": 7
+        },
+        {
+          "id": "shell_ring",
+          "name": "Shell Ring",
+          "description": "Carved sea shell band",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "cold_resist": 0.03
+          },
+          "value": 5
+        },
+        {
+          "id": "leather_ring",
+          "name": "Leather Ring",
+          "description": "Braided leather finger band",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "hp_regen": 1
+          },
+          "value": 3
+        },
+        {
+          "id": "hemp_ring",
+          "name": "Hemp Ring",
+          "description": "Woven hemp fiber ring",
+          "slot": "ring",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "defense": 1
+          },
+          "value": 2
+        }
+      ],
+      "uncommon": [
+        {
+          "id": "emerald_ring",
+          "name": "Emerald Ring",
+          "description": "Polished green gem ring",
+          "slot": "ring",
+          "rarity": "uncommon",
+          "required_level": 8,
+          "stats": {
+            "magic": 5
+          },
+          "passive": {
+            "spell_power": 0.03
+          },
+          "value": 28
+        },
+        {
+          "id": "ruby_ring",
+          "name": "Ruby Ring",
+          "description": "Glints with inner fire",
+          "slot": "ring",
+          "rarity": "uncommon",
+          "required_level": 8,
+          "stats": {
+            "attack": 2
+          },
+          "value": 28
+        },
+        {
+          "id": "topaz_ring",
+          "name": "Topaz Ring",
+          "description": "Holds a spark of luck",
+          "slot": "ring",
+          "rarity": "uncommon",
+          "required_level": 9,
+          "passive": {
+            "crit_chance": 0.05
+          },
+          "value": 30
+        }
+      ],
+      "rare": [
+        {
+          "id": "warmage_ring",
+          "name": "Warmage Ring",
+          "description": "A ring that enhances magical abilities",
+          "slot": "ring",
+          "rarity": "rare",
+          "required_level": 12,
+          "stats": {
+            "magic": 8,
+            "attack": 2
+          },
+          "passive": {
+            "mana_regen": 2
+          },
+          "value": 50
+        },
+        {
+          "id": "ring_of_protection",
+          "name": "Ring of Protection",
+          "description": "Provides magical protection",
+          "slot": "ring",
+          "rarity": "rare",
+          "required_level": 13,
+          "stats": {
+            "defense": 3
+          },
+          "passive": {
+            "magic_resist": 0.20
+          },
+          "value": 55
+        },
+        {
+          "id": "ring_of_elemental_mastery",
+          "name": "Ring of Elemental Mastery",
+          "description": "Ring attuned to all elements",
+          "slot": "ring",
+          "rarity": "rare",
+          "required_level": 16,
+          "passive": {
+            "fire_damage": 4,
+            "ice_damage": 4,
+            "lightning_damage": 4
+          },
+          "value": 650
+        },
+        {
+          "id": "band_of_berserker",
+          "name": "Band of the Berserker",
+          "description": "Ring that unleashes inner fury",
+          "slot": "ring",
+          "rarity": "rare",
+          "required_level": 15,
+          "stats": {
+            "attack": 8
+          },
+          "passive": {
+            "crit_chance": 0.12,
+            "damage_bonus": 5
+          },
+          "value": 580
+        },
+        {
+          "id": "signet_of_archmage",
+          "name": "Signet of the Archmage",
+          "description": "Ring of magical authority",
+          "slot": "ring",
+          "rarity": "rare",
+          "required_level": 17,
+          "stats": {
+            "magic": 15
+          },
+          "passive": {
+            "spell_power": 0.08,
+            "magic_damage": 6
+          },
+          "value": 720
+        },
+        {
+          "id": "ring_of_shadows",
+          "name": "Ring of Shadows",
+          "description": "Ring that bends darkness to your will",
+          "slot": "ring",
+          "rarity": "rare",
+          "required_level": 16,
+          "passive": {
+            "stealth_bonus": 0.10,
+            "void_damage": 6,
+            "phase_shift": 0.10
+          },
+          "value": 680
+        },
+        {
+          "id": "ring_of_power",
+          "name": "Ring of Power",
+          "description": "A ring that amplifies the wearer's natural abilities",
+          "slot": "ring",
+          "rarity": "rare",
+          "required_level": 15,
+          "stats": {
+            "strength": 8,
+            "magic": 8,
+            "agility": 8
+          },
+          "value": 700
+        }
+      ],
+      "epic": [
+        {
+          "id": "ring_of_omnipotence",
+          "name": "Ring of Omnipotence",
+          "description": "Grants limited omnipotent abilities",
+          "slot": "ring",
+          "rarity": "epic",
+          "required_level": 35,
+          "stats": {
+            "attack": 30,
+            "defense": 30,
+            "magic": 30
+          },
+          "passive": {
+            "divine_power": 15
+          },
+          "value": 8000
+        },
+        {
+          "id": "band_of_infinity",
+          "name": "Band of Infinity",
+          "description": "Contains infinite power within finite form",
+          "slot": "ring",
+          "rarity": "epic",
+          "required_level": 38,
+          "stats": {
+            "attack": 40,
+            "defense": 40,
+            "magic": 40
+          },
+          "passive": {
+            "mana_regen": 999,
+            "reality_control": 0.25
+          },
+          "value": 9500
+        }
+      ],
+      "legendary": [
+        {
+          "id": "legendary_ring",
+          "name": "The One Ring",
+          "description": "A ring of ultimate power, corrupting yet irresistible",
+          "slot": "ring",
+          "rarity": "legendary",
+          "required_level": 30,
+          "stats": {
+            "all_stats": 20
+          },
+          "passive": {
+            "invisibility": true,
+            "corruption": 0.01
+          },
+          "value": 15000
+        }
+      ],
+      "mythic": []
+    },
+    "amulets": {
+      "common": [
+        {
+          "id": "bone_charm",
+          "name": "Bone Charm",
+          "description": "Simple carved bone pendant",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "agility": 1
+          },
+          "value": 8
+        },
+        {
+          "id": "wood_pendant",
+          "name": "Wood Pendant",
+          "description": "Carved wooden necklace charm",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "hp_regen": 3
+          },
+          "value": 6
+        },
+        {
+          "id": "stone_amulet",
+          "name": "Stone Amulet",
+          "description": "Polished stone on cord",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 2,
+          "stats": {
+            "defense": 3
+          },
+          "value": 7
+        },
+        {
+          "id": "clay_charm",
+          "name": "Clay Charm",
+          "description": "Simple fired clay pendant",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "defense": 3
+          },
+          "value": 4
+        },
+        {
+          "id": "shell_necklace",
+          "name": "Shell Necklace",
+          "description": "Sea shells strung together",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "cold_resist": 0.05
+          },
+          "value": 9
+        },
+        {
+          "id": "feather_charm",
+          "name": "Feather Charm",
+          "description": "Bird feathers bound with twine",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 2,
+          "stats": {
+            "agility": 3
+          },
+          "value": 5
+        },
+        {
+          "id": "copper_chain",
+          "name": "Copper Chain",
+          "description": "Tarnished copper neck chain",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 3,
+          "passive": {
+            "lightning_damage": 5
+          },
+          "value": 12
+        },
+        {
+          "id": "leather_cord",
+          "name": "Leather Cord",
+          "description": "Simple leather neck cord",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "hp_regen": 2
+          },
+          "value": 3
+        },
+        {
+          "id": "glass_bead",
+          "name": "Glass Bead",
+          "description": "Small glass bead on string",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 3,
+          "passive": {
+            "night_vision": true
+          },
+          "value": 8
+        },
+        {
+          "id": "herb_pouch",
+          "name": "Herb Pouch",
+          "description": "Small pouch of dried herbs",
+          "slot": "amulet",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "hp_regen": 2
+          },
+          "value": 10
+        }
+      ],
+      "uncommon": [
+        {
+          "id": "amulet_of_health",
+          "name": "Amulet of Health",
+          "description": "A simple pendant that fortifies the body",
+          "slot": "amulet",
+          "rarity": "uncommon",
+          "required_level": 5,
+          "stats": {
+            "hp": 40
+          },
+          "value": 80
+        },
+        {
+          "id": "amulet_of_focus",
+          "name": "Amulet of Focus",
+          "description": "A simple amulet that aids concentration",
+          "slot": "amulet",
+          "rarity": "uncommon",
+          "required_level": 6,
+          "passive": {
+            "mana_regen": 1
+          },
+          "value": 22
+        },
+        {
+          "id": "amulet_of_warding",
+          "name": "Amulet of Warding",
+          "description": "Protective sigils etched within",
+          "slot": "amulet",
+          "rarity": "uncommon",
+          "required_level": 8,
+          "passive": {
+            "magic_resist": 0.10
+          },
+          "value": 26
+        },
+        {
+          "id": "scouts_locket",
+          "name": "Scout's Locket",
+          "description": "Lightweight charm for travelers",
+          "slot": "amulet",
+          "rarity": "uncommon",
+          "required_level": 7,
+          "stats": {
+            "agility": 8
+          },
+          "value": 24
+        }
+      ],
+      "rare": [
+        {
+          "id": "blood_ruby_amulet",
+          "name": "Blood Ruby Amulet",
+          "description": "A crimson gem that pulses with stolen life force",
+          "slot": "amulet",
+          "rarity": "rare",
+          "required_level": 12,
+          "stats": {
+            "hp": 70,
+            "strength": 8
+          },
+          "passive": {
+            "lifesteal": 0.1
+          },
+          "value": 600
+        },
+        {
+          "id": "healing_amulet",
+          "name": "Healing Amulet",
+          "description": "Slowly regenerates health",
+          "slot": "amulet",
+          "rarity": "rare",
+          "required_level": 14,
+          "passive": {
+            "regeneration": 2
+          },
+          "value": 65
+        },
+        {
+          "id": "moonstone_pendant",
+          "name": "Moonstone Pendant",
+          "description": "Glows with lunar energy",
+          "slot": "amulet",
+          "rarity": "rare",
+          "required_level": 15,
+          "stats": {
+            "magic": 12
+          },
+          "passive": {
+            "mana_regen": 4,
+            "night_vision": true
+          },
+          "value": 75
+        }
+      ],
+      "epic": [
+        {
+          "id": "amulet_of_cosmic_harmony",
+          "name": "Amulet of Cosmic Harmony",
+          "description": "Pendant that harmonizes with universal forces",
+          "slot": "amulet",
+          "rarity": "epic",
+          "required_level": 30,
+          "stats": {
+            "attack": 8,
+            "defense": 8,
+            "magic": 12
+          },
+          "passive": {
+            "cosmic_power": 0.12,
+            "energy_absorb": 0.10
+          },
+          "value": 6800
+        },
+        {
+          "id": "necklace_of_infinite_lives",
+          "name": "Necklace of Infinite Lives",
+          "description": "Grants multiple chances at life",
+          "slot": "amulet",
+          "rarity": "epic",
+          "required_level": 35,
+          "stats": {
+            "max_hp": 25
+          },
+          "passive": {
+            "resurrect_charges": 3,
+            "infinite_regen": true
+          },
+          "value": 12000
+        },
+        {
+          "id": "necklace_of_souls",
+          "name": "Necklace of Souls",
+          "description": "Contains the essence of a thousand spirits",
+          "slot": "amulet",
+          "rarity": "epic",
+          "required_level": 32,
+          "passive": {
+            "soul_steal": 50,
+            "spirit_immunity": true
+          },
+          "value": 4000
+        },
+        {
+          "id": "chain_of_binding",
+          "name": "Chain of Binding",
+          "description": "Binds the wearer to cosmic forces",
+          "slot": "amulet",
+          "rarity": "epic",
+          "required_level": 34,
+          "stats": {
+            "magic": 35
+          },
+          "passive": {
+            "cosmic_power": true,
+            "probability_control": 0.20
+          },
+          "value": 4800
+        }
+      ],
+      "legendary": [
+        {
+          "id": "phoenix_heart",
+          "name": "Phoenix Heart Amulet",
+          "description": "Contains the immortal essence of a phoenix",
+          "slot": "amulet",
+          "rarity": "epic",
+          "required_level": 20,
+          "stats": {
+            "hp": 100,
+            "magic": 15
+          },
+          "passive": {
+            "auto_revive_once": true,
+            "fire_immunity": true
+          },
+          "value": 2500
+        }
+      ],
+      "mythic": []
+    },
+    "belts": {
+      "common": [
+        {
+          "id": "rope_belt",
+          "name": "Rope Belt",
+          "description": "Simple rope waist tie",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "defense": 3
+          },
+          "value": 4
+        },
+        {
+          "id": "leather_belt",
+          "name": "Leather Belt",
+          "description": "Basic leather waist belt",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "hp_bonus": 5
+          },
+          "value": 8
+        },
+        {
+          "id": "canvas_sash",
+          "name": "Canvas Sash",
+          "description": "Sturdy canvas waist wrap",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 2,
+          "stats": {
+            "defense": 5
+          },
+          "value": 6
+        },
+        {
+          "id": "cloth_belt",
+          "name": "Cloth Belt",
+          "description": "Simple fabric waist tie",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "hp_bonus": 3
+          },
+          "value": 3
+        },
+        {
+          "id": "hemp_cord",
+          "name": "Hemp Cord",
+          "description": "Rough hemp fiber belt",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 1,
+          "stats": {
+            "defense": 8
+          },
+          "value": 5
+        },
+        {
+          "id": "vine_belt",
+          "name": "Vine Belt",
+          "description": "Woven plant vine waist tie",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "hp_bonus": 3
+          },
+          "value": 4
+        },
+        {
+          "id": "copper_chain_belt",
+          "name": "Copper Chain Belt",
+          "description": "Tarnished copper link belt",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 4,
+          "passive": {
+            "lightning_damage": 5
+          },
+          "value": 12
+        },
+        {
+          "id": "braided_sash",
+          "name": "Braided Sash",
+          "description": "Interwoven fabric waist sash",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 3,
+          "stats": {
+            "agility": 5
+          },
+          "value": 7
+        },
+        {
+          "id": "hide_belt",
+          "name": "Hide Belt",
+          "description": "Animal hide waist strap",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 3,
+          "stats": {
+            "defense": 1
+          },
+          "value": 9
+        },
+        {
+          "id": "cloth_sash",
+          "name": "Cloth Sash",
+          "description": "Long cloth waist wrap",
+          "slot": "belt",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "hp_bonus": 8
+          },
+          "value": 6
+        }
+      ],
+      "uncommon": [
+        {
+          "id": "buckled_belt",
+          "name": "Buckled Belt",
+          "description": "Keeps gear tight in a fight",
+          "slot": "belt",
+          "rarity": "uncommon",
+          "required_level": 6,
+          "stats": {
+            "attack": 1
+          },
+          "passive": {
+            "grip_strength": 3
+          },
+          "value": 16
+        }
+      ],
+      "rare": [],
+      "epic": [
+        {
+          "id": "girdle_of_titans",
+          "name": "Girdle of Titans",
+          "description": "Grants the strength of the ancient titans",
+          "slot": "belt",
+          "rarity": "epic",
+          "required_level": 30,
+          "stats": {
+            "attack": 60
+          },
+          "passive": {
+            "strength_multiplier": 0.25
+          },
+          "value": 3500
+        },
+        {
+          "id": "sash_of_dimensions",
+          "name": "Sash of Dimensions",
+          "description": "Links the wearer to all dimensions",
+          "slot": "belt",
+          "rarity": "epic",
+          "required_level": 32,
+          "passive": {
+            "phase_shift": true,
+            "multiverse_control": 0.35,
+            "dimension_immunity": true
+          },
+          "value": 4200
+        }
+      ],
+      "legendary": [],
+      "mythic": []
+    },
+    "trinkets": {
+      "common": [
+        {
+          "id": "lucky_coin",
+          "name": "Lucky Coin",
+          "description": "A worn copper coin for luck",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "dodge_chance": 0.02
+          },
+          "value": 5
+        },
+        {
+          "id": "rabbit_foot",
+          "name": "Rabbit Foot",
+          "description": "A small creature's foot for luck",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "luck": 2
+          },
+          "value": 6
+        },
+        {
+          "id": "prayer_beads",
+          "name": "Prayer Beads",
+          "description": "String of carved wooden beads",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "hp_regen": 5
+          },
+          "value": 8
+        },
+        {
+          "id": "worry_stone",
+          "name": "Worry Stone",
+          "description": "Smooth stone worn by handling",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 1,
+          "passive": {
+            "hp_regen": 3
+          },
+          "value": 4
+        },
+        {
+          "id": "dice_set",
+          "name": "Dice Set",
+          "description": "Bone dice for games of chance",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "luck": 3
+          },
+          "value": 7
+        },
+        {
+          "id": "compass",
+          "name": "Compass",
+          "description": "Simple direction-finding device",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 3,
+          "passive": {
+            "navigation": true
+          },
+          "value": 15
+        },
+        {
+          "id": "spyglass",
+          "name": "Spyglass",
+          "description": "Small telescope for distance viewing",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 4,
+          "passive": {
+            "vision_range": 5
+          },
+          "value": 20
+        },
+        {
+          "id": "flute",
+          "name": "Flute",
+          "description": "Simple wooden wind instrument",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "hp_regen": 5
+          },
+          "value": 12
+        },
+        {
+          "id": "magnifying_glass",
+          "name": "Magnifying Glass",
+          "description": "Glass lens for examining details",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 3,
+          "passive": {
+            "investigation": true
+          },
+          "value": 18
+        },
+        {
+          "id": "tinder_box",
+          "name": "Tinder Box",
+          "description": "Fire starting materials",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "fire_damage": 10
+          },
+          "value": 8
+        },
+        {
+          "id": "sewing_kit",
+          "name": "Sewing Kit",
+          "description": "Needle, thread, and small scissors",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 2,
+          "passive": {
+            "healing_bonus": 8
+          },
+          "value": 10
+        },
+        {
+          "id": "perfume_vial",
+          "name": "Perfume Vial",
+          "description": "Small bottle of pleasant scent",
+          "slot": "trinket",
+          "rarity": "common",
+          "required_level": 3,
+          "stats": {
+            "agility": 3
+          },
+          "value": 15
+        }
+      ],
+      "uncommon": [],
+      "rare": [],
+      "epic": [
+        {
+          "id": "orb_of_infinite_knowledge",
+          "name": "Orb of Infinite Knowledge",
+          "description": "Contains all knowledge that ever was or will be",
+          "slot": "trinket",
+          "rarity": "epic",
+          "required_level": 35,
+          "passive": {
+            "infinite_knowledge": true,
+            "omniscience": 0.50
+          },
+          "value": 7500
+        },
+        {
+          "id": "crystal_of_pure_magic",
+          "name": "Crystal of Pure Magic",
+          "description": "Crystallized essence of magic itself",
+          "slot": "trinket",
+          "rarity": "epic",
+          "required_level": 33,
+          "stats": {
+            "magic": 60
+          },
+          "passive": {
+            "spell_power": 1.0,
+            "mana_regen": 999
+          },
+          "value": 6800
+        },
+        {
+          "id": "shard_of_creation",
+          "name": "Shard of Creation",
+          "description": "Fragment from the birth of the universe",
+          "slot": "trinket",
+          "rarity": "epic",
+          "required_level": 40,
+          "passive": {
+            "creation_power": 0.45,
+            "cosmic_power": true
+          },
+          "value": 12000
+        },
+        {
+          "id": "paradox_engine",
+          "name": "Paradox Engine",
+          "description": "A device that creates and resolves paradoxes",
+          "slot": "trinket",
+          "rarity": "epic",
+          "required_level": 38,
+          "passive": {
+            "reality_control": true,
+            "paradox_mastery": 3.0
+          },
+          "value": 2000000
+        },
+        {
+          "id": "essence_of_everything",
+          "name": "Essence of Everything",
+          "description": "Contains a fragment of all that exists",
+          "slot": "trinket",
+          "rarity": "epic",
+          "required_level": 40,
+          "stats": {
+            "attack": 500,
+            "defense": 500,
+            "magic": 500
+          },
+          "passive": {
+            "cosmic_power": true,
+            "omnipotence": 5.0
+          },
+          "value": 5000000
+        }
+      ],
+      "legendary": [],
+      "mythic": []
+    }
+  }
+}

@@ -1,0 +1,338 @@
+{
+  "time_system": {
+    "day_night_cycle": {
+      "enabled": true,
+      "real_time_minutes_per_game_day": 60,
+      "phases": {
+        "dawn": {
+          "start_hour": 5,
+          "end_hour": 7,
+          "description": "The sun rises, birds begin to sing",
+          "effects": {
+            "light_level": 0.6,
+            "spawn_rates": {
+              "nocturnal_creatures": 0.3,
+              "diurnal_creatures": 0.7
+            }
+          }
+        },
+        "day": {
+          "start_hour": 7,
+          "end_hour": 17,
+          "description": "Full daylight, perfect for exploration",
+          "effects": {
+            "light_level": 1.0,
+            "visibility": "maximum",
+            "undead_weakened": true,
+            "merchants_open": true,
+            "spawn_rates": {
+              "nocturnal_creatures": 0.1,
+              "diurnal_creatures": 1.0
+            }
+          }
+        },
+        "dusk": {
+          "start_hour": 17,
+          "end_hour": 19,
+          "description": "The sun sets, shadows grow longer",
+          "effects": {
+            "light_level": 0.6,
+            "spawn_rates": {
+              "nocturnal_creatures": 0.7,
+              "diurnal_creatures": 0.3
+            }
+          }
+        },
+        "night": {
+          "start_hour": 19,
+          "end_hour": 5,
+          "description": "Darkness falls, dangerous creatures emerge",
+          "effects": {
+            "light_level": 0.2,
+            "visibility": "reduced",
+            "undead_empowered": true,
+            "spawn_rates": {
+              "nocturnal_creatures": 2.0,
+              "diurnal_creatures": 0.1
+            },
+            "monster_damage_bonus": 1.2,
+            "merchants_closed": true,
+            "special_encounters": ["vampire", "werewolf", "ghost", "shadow_creature"]
+          }
+        }
+      }
+    },
+    "moon_phases": {
+      "enabled": true,
+      "cycle_days": 8,
+      "phases": {
+        "new_moon": {
+          "description": "The darkest night, magic is weak",
+          "effects": {
+            "darkness": 1.5,
+            "magic_damage": 0.8,
+            "stealth_bonus": 1.5
+          }
+        },
+        "waxing_crescent": {
+          "description": "The moon begins to grow",
+          "effects": {}
+        },
+        "first_quarter": {
+          "description": "Half moon rising",
+          "effects": {
+            "balanced": true
+          }
+        },
+        "waxing_gibbous": {
+          "description": "The moon grows fuller",
+          "effects": {}
+        },
+        "full_moon": {
+          "description": "The moon is complete, supernatural forces surge",
+          "effects": {
+            "werewolf_transformation": true,
+            "magic_damage": 1.5,
+            "undead_spawn": 2.0,
+            "special_bosses_spawn": ["werewolf_alpha", "vampire_lord"],
+            "regeneration_bonus": 1.3,
+            "critical_chance": 1.2
+          },
+          "special_events": ["blood_moon_chance", "wild_hunt"]
+        },
+        "waning_gibbous": {
+          "description": "The moon begins to wane",
+          "effects": {}
+        },
+        "last_quarter": {
+          "description": "Half moon falling",
+          "effects": {}
+        },
+        "waning_crescent": {
+          "description": "The moon fades away",
+          "effects": {}
+        }
+      },
+      "blood_moon": {
+        "chance_per_full_moon": 0.1,
+        "description": "The moon turns red with blood",
+        "effects": {
+          "all_monster_stats": 1.5,
+          "legendary_spawn_rate": 5.0,
+          "drop_rate": 2.0,
+          "experience": 2.0,
+          "no_town_safety": true
+        },
+        "duration_hours": 4,
+        "announcement": "🌙 THE BLOOD MOON RISES! All creatures are empowered!"
+      }
+    },
+    "seasons": {
+      "enabled": true,
+      "real_time_days_per_season": 30,
+      "cycle": {
+        "spring": {
+          "description": "Flowers bloom, life returns to the land",
+          "weather": ["rain", "clear", "drizzle"],
+          "effects": {
+            "plant_growth": "accelerated",
+            "healing_effectiveness": 1.2,
+            "nature_damage": 1.3,
+            "special_events": ["spring_festival", "flower_bloom"]
+          },
+          "spawns": ["nature_spirits", "forest_guardians"]
+        },
+        "summer": {
+          "description": "Hot and bright, perfect for adventure",
+          "weather": ["clear", "heat_wave"],
+          "effects": {
+            "fire_damage": 1.3,
+            "ice_damage": 0.7,
+            "stamina_drain": 1.2,
+            "special_events": ["summer_games", "beach_event"]
+          },
+          "spawns": ["fire_elementals", "sun_spirits"]
+        },
+        "autumn": {
+          "description": "Leaves fall, harvest time arrives",
+          "weather": ["clear", "wind", "rain"],
+          "effects": {
+            "loot_drops": 1.2,
+            "gold_gain": 1.2,
+            "special_events": ["harvest_festival", "halloween"]
+          },
+          "spawns": ["scarecrows", "pumpkin_creatures"]
+        },
+        "winter": {
+          "description": "Snow blankets the land, cold and unforgiving",
+          "weather": ["snow", "blizzard", "clear_cold"],
+          "effects": {
+            "ice_damage": 1.3,
+            "fire_damage": 0.7,
+            "movement_speed": 0.8,
+            "cold_damage_over_time": true,
+            "special_events": ["winter_festival", "frost_invasion"]
+          },
+          "spawns": ["ice_elementals", "frost_giants", "yetis"]
+        }
+      }
+    },
+    "weather": {
+      "dynamic": true,
+      "conditions": {
+        "clear": {
+          "chance": 0.5,
+          "effects": {}
+        },
+        "rain": {
+          "chance": 0.2,
+          "effects": {
+            "fire_damage": 0.5,
+            "lightning_damage": 1.5,
+            "visibility": 0.7,
+            "movement_speed": 0.9
+          }
+        },
+        "thunderstorm": {
+          "chance": 0.05,
+          "effects": {
+            "lightning_damage": 2.0,
+            "random_lightning_strikes": true,
+            "visibility": 0.5
+          }
+        },
+        "fog": {
+          "chance": 0.1,
+          "effects": {
+            "visibility": 0.3,
+            "ambush_chance": 2.0,
+            "ghost_spawn": 1.5
+          }
+        },
+        "snow": {
+          "chance": 0.1,
+          "season": "winter",
+          "effects": {
+            "ice_damage": 1.3,
+            "movement_speed": 0.7,
+            "cold_damage": true
+          }
+        },
+        "blizzard": {
+          "chance": 0.03,
+          "season": "winter",
+          "effects": {
+            "visibility": 0.2,
+            "movement_speed": 0.5,
+            "cold_damage": 10,
+            "frequent": true
+          }
+        },
+        "heat_wave": {
+          "chance": 0.05,
+          "season": "summer",
+          "effects": {
+            "fire_damage": 1.5,
+            "stamina_drain": 2.0,
+            "water_consumption": "required"
+          }
+        }
+      }
+    },
+    "time_magic": {
+      "time_travel": {
+        "enabled": true,
+        "requires": "temporal_essence",
+        "destinations": {
+          "ancient_past": {
+            "description": "Travel to the Age of Creation",
+            "cost": 10,
+            "duration_minutes": 30,
+            "effects": {
+              "see_ancient_events": true,
+              "collect_fossils": true,
+              "meet_ancient_beings": true
+            },
+            "dangers": ["temporal_paradox", "lost_in_time"]
+          },
+          "recent_past": {
+            "description": "Travel to events from hours ago",
+            "cost": 1,
+            "duration_minutes": 10,
+            "effects": {
+              "redo_missed_events": true,
+              "change_minor_outcomes": true
+            }
+          },
+          "possible_future": {
+            "description": "Glimpse potential futures",
+            "cost": 5,
+            "duration_minutes": 5,
+            "effects": {
+              "see_consequences": true,
+              "preview_loot": true,
+              "warning_of_danger": true
+            }
+          }
+        }
+      },
+      "time_acceleration": {
+        "description": "Speed up time for crafting/cooldowns",
+        "cost": "temporal_essence",
+        "max_acceleration": 10
+      },
+      "time_freeze": {
+        "description": "Freeze time in combat",
+        "cost": "temporal_essence",
+        "duration": 5,
+        "cooldown": 600
+      }
+    },
+    "temporal_events": {
+      "time_rift": {
+        "spawn_chance": 0.01,
+        "description": "Rifts in time appear randomly",
+        "leads_to": ["past", "future", "alternate_timeline"]
+      },
+      "time_loop": {
+        "trigger": "certain_deaths",
+        "description": "Relive the last hour",
+        "cost": "temporal_essence_auto_consumed"
+      },
+      "temporal_storm": {
+        "rarity": "legendary",
+        "effects": {
+          "time_flows_unpredictably": true,
+          "past_and_future_collide": true,
+          "unique_loot": "time_artifacts"
+        }
+      }
+    },
+    "calendar": {
+      "days_per_month": 30,
+      "months": ["First Dawn", "Growing", "Sun's Peak", "Harvest", "Fading", "First Frost", "Deep Winter", "Renewal"],
+      "special_days": {
+        "new_year": {
+          "month": "First Dawn",
+          "day": 1,
+          "celebration": "Festival of New Beginnings"
+        },
+        "midsummer": {
+          "month": "Sun's Peak",
+          "day": 15,
+          "celebration": "Summer Solstice"
+        },
+        "harvest_day": {
+          "month": "Harvest",
+          "day": 20,
+          "celebration": "Great Harvest Festival"
+        },
+        "midwinter": {
+          "month": "Deep Winter",
+          "day": 15,
+          "celebration": "Winter Solstice"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "consumables": {
+    "common": [
+      {
+        "id": "potion",
+        "name": "Potion",
+        "description": "A basic healing potion that restores 30 HP",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 30,
+          "instant": true
+        },
+        "value": 10,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "bread",
+        "name": "Bread",
+        "description": "Simple bread that restores 15 HP",
+        "rarity": "common",
+        "usage": {
+          "type": "heal",
+          "amount": 15,
+          "instant": true
+        },
+        "value": 5,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "antidote",
+        "name": "Antidote",
+        "description": "Cures poison and disease",
+        "rarity": "common",
+        "usage": {
+          "type": "cure",
+          "removes": ["poison", "disease"]
+        },
+        "value": 15,
+        "stackable": true,
+        "max_stack": 50
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "health_potion",
+        "name": "Health Potion",
+        "description": "A quality potion that restores 80 HP",
+        "rarity": "uncommon",
+        "usage": {
+          "type": "heal",
+          "amount": 80,
+          "instant": true
+        },
+        "value": 35,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "mana_potion",
+        "name": "Mana Potion",
+        "description": "Restores magical energy, reducing ability cooldowns by 2 turns",
+        "rarity": "uncommon",
+        "usage": {
+          "type": "cooldown_reduction",
+          "amount": 2
+        },
+        "value": 40,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "strength_elixir",
+        "name": "Strength Elixir",
+        "description": "Temporarily increases attack power by 50% for 5 turns",
+        "rarity": "uncommon",
+        "usage": {
+          "type": "buff",
+          "stat": "attack",
+          "multiplier": 1.5,
+          "duration": 5
+        },
+        "value": 50,
+        "stackable": true,
+        "max_stack": 20
+      }
+    ],
+    "rare": [
+      {
+        "id": "greater_health_potion",
+        "name": "Greater Health Potion",
+        "description": "A powerful potion that restores 200 HP",
+        "rarity": "rare",
+        "usage": {
+          "type": "heal",
+          "amount": 200,
+          "instant": true
+        },
+        "value": 100,
+        "stackable": true,
+        "max_stack": 25
+      },
+      {
+        "id": "phoenix_down",
+        "name": "Phoenix Down",
+        "description": "Automatically revives you with 50% HP if you die (consumed on use)",
+        "rarity": "rare",
+        "usage": {
+          "type": "auto_revive",
+          "hp_percent": 0.5,
+          "passive": true
+        },
+        "value": 250,
+        "stackable": true,
+        "max_stack": 5
+      },
+      {
+        "id": "scroll_of_teleportation",
+        "name": "Scroll of Teleportation",
+        "description": "Instantly escape from combat or teleport to a known location",
+        "rarity": "rare",
+        "usage": {
+          "type": "teleport",
+          "escape_combat": true
+        },
+        "value": 150,
+        "stackable": true,
+        "max_stack": 10
+      }
+    ],
+    "epic": [
+      {
+        "id": "elixir_of_immortality",
+        "name": "Elixir of Immortality",
+        "description": "Grants invulnerability for 3 turns and heals to full HP",
+        "rarity": "epic",
+        "usage": {
+          "type": "invulnerability",
+          "duration": 3,
+          "heal_full": true
+        },
+        "value": 500,
+        "stackable": true,
+        "max_stack": 3
+      },
+      {
+        "id": "dragon_blood_vial",
+        "name": "Dragon Blood Vial",
+        "description": "Permanently increases max HP by 50",
+        "rarity": "epic",
+        "usage": {
+          "type": "permanent_stat",
+          "stat": "max_hp",
+          "amount": 50
+        },
+        "value": 1000,
+        "stackable": true,
+        "max_stack": 10
+      }
+    ],
+    "legendary": [
+      {
+        "id": "ambrosia",
+        "name": "Ambrosia",
+        "description": "Food of the gods. Fully restores HP and grants all stat bonuses (+20% all stats) for 10 turns",
+        "rarity": "legendary",
+        "usage": {
+          "type": "full_buff",
+          "heal_full": true,
+          "stat_bonus": 0.2,
+          "duration": 10
+        },
+        "value": 2500,
+        "stackable": true,
+        "max_stack": 5
+      }
+    ]
+  }
+}

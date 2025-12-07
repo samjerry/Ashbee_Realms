@@ -1,0 +1,63 @@
+{
+  "constants": {
+    "BASE_MAX_HP": 100,
+    "BASE_XP_TO_LEVEL": 100,
+    "XP_SCALING": 1.5,
+    "MAX_LEVEL": 50,
+    "MAX_INVENTORY_SIZE": 50,
+    
+    "damage_formula": {
+      "description": "base_damage = (attack * level_modifier) - (enemy_defense * 0.5)",
+      "crit_multiplier": 2.0,
+      "base_crit_chance": 0.05
+    },
+    
+    "rarity_colors": {
+      "common": "#808080",
+      "uncommon": "#00FF00",
+      "rare": "#0070DD",
+      "epic": "#A335EE",
+      "legendary": "#FF8000",
+      "mythic": "#E6CC80"
+    },
+    
+    "rarity_drop_rates": {
+      "common": 0.35,
+      "uncommon": 0.25,
+      "rare": 0.12,
+      "epic": 0.05,
+      "legendary": 0.015,
+      "mythic": 0.005,
+      "none": 0.21
+    },
+    
+    "stat_scaling": {
+      "strength": {
+        "description": "Increases physical damage",
+        "per_point": 1.5
+      },
+      "magic": {
+        "description": "Increases magical damage",
+        "per_point": 2.0
+      },
+      "defense": {
+        "description": "Reduces damage taken",
+        "per_point": 0.5
+      },
+      "agility": {
+        "description": "Increases dodge and crit chance",
+        "dodge_per_point": 0.01,
+        "crit_per_point": 0.005
+      }
+    },
+    
+    "gold_value_scaling": {
+      "common": 1.0,
+      "uncommon": 3.0,
+      "rare": 10.0,
+      "epic": 30.0,
+      "legendary": 100.0,
+      "mythic": 500.0
+    }
+  }
+}

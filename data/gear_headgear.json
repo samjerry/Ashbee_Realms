@@ -1,0 +1,679 @@
+{
+  "headgear": {
+    "common": [
+      {
+        "id": "cloth_hood",
+        "name": "Cloth Hood",
+        "description": "Simple fabric hood for basic protection",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "passive": {
+          "cold_resist": 0.05
+        },
+        "value": 4
+      },
+      {
+        "id": "leather_cap",
+        "name": "Leather Cap",
+        "description": "Basic leather headwear",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 1
+        },
+        "value": 6
+      },
+      {
+        "id": "wool_hat",
+        "name": "Wool Hat",
+        "description": "Warm woolen hat",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 1
+        },
+        "passive": {
+          "cold_resist": 0.10
+        },
+        "value": 5
+      },
+      {
+        "id": "iron_coif",
+        "name": "Iron Coif",
+        "description": "Simple iron chain mail hood",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 5,
+        "stats": {
+          "defense": 2
+        },
+        "value": 15
+      },
+      {
+        "id": "bandana",
+        "name": "Bandana",
+        "description": "Cloth head covering",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 0
+        },
+        "value": 3
+      },
+      {
+        "id": "straw_hat",
+        "name": "Straw Hat",
+        "description": "Woven straw sun hat",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 0
+        },
+        "value": 4
+      },
+      {
+        "id": "rusty_helm",
+        "name": "Rusty Helm",
+        "description": "Old corroded helmet",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 3,
+        "stats": {
+          "defense": 1
+        },
+        "value": 8
+      },
+      {
+        "id": "fur_cap",
+        "name": "Fur Cap",
+        "description": "Warm animal fur cap",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "defense": 1
+        },
+        "passive": {
+          "cold_resist": 0.15
+        },
+        "value": 7
+      },
+      {
+        "id": "cotton_headwrap",
+        "name": "Cotton Headwrap",
+        "description": "Simple cloth head covering",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 1,
+        "stats": {
+          "defense": 0
+        },
+        "value": 3
+      },
+      {
+        "id": "copper_circlet",
+        "name": "Copper Circlet",
+        "description": "Tarnished copper band",
+        "slot": "headgear",
+        "rarity": "common",
+        "required_level": 4,
+        "stats": {
+          "defense": 1,
+          "magic": 2
+        },
+        "value": 12
+      }
+    ],
+    "uncommon": [
+      {
+        "id": "bronze_helm",
+        "name": "Bronze Helm",
+        "description": "Sturdy bronze headgear",
+        "slot": "headgear",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "defense": 2
+        },
+        "value": 18
+      },
+      {
+        "id": "scout_hood",
+        "name": "Scout Hood",
+        "description": "Hood for keen-eyed wanderers",
+        "slot": "headgear",
+        "rarity": "uncommon",
+        "required_level": 6,
+        "stats": {
+          "defense": 1,
+          "agility": 4
+        },
+        "passive": {
+          "stealth_bonus": 0.05
+        },
+        "value": 20
+      }
+    ],
+    "rare": [
+      {
+        "id": "steel_helmet",
+        "name": "Steel Helmet",
+        "description": "Reinforced metal head protection",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 6
+        },
+        "value": 120
+      },
+      {
+        "id": "mages_circlet",
+        "name": "Mage's Circlet",
+        "description": "Enchanted band that enhances magical focus",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 2,
+          "magic": 10
+        },
+        "passive": {
+          "spell_power": 0.08
+        },
+        "value": 180
+      },
+      {
+        "id": "hood_of_shadows",
+        "name": "Hood of Shadows",
+        "description": "Dark fabric that bends light around wearer",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "defense": 3,
+          "agility": 10
+        },
+        "passive": {
+          "stealth_bonus": 0.15
+        },
+        "value": 160
+      },
+      {
+        "id": "barbarian_helm",
+        "name": "Barbarian Helm",
+        "description": "Horned helmet that intimidates enemies",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 13,
+        "stats": {
+          "defense": 4,
+          "attack": 2
+        },
+        "passive": {
+          "intimidate": 0.20
+        },
+        "value": 140
+      },
+      {
+        "id": "silver_diadem",
+        "name": "Silver Diadem",
+        "description": "Elegant silver headpiece with gems",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 4,
+          "agility": 12
+        },
+        "value": 200
+      },
+      {
+        "id": "rangers_cap",
+        "name": "Ranger's Cap",
+        "description": "Leather cap with nature's blessing",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 12,
+        "stats": {
+          "defense": 3,
+          "agility": 8
+        },
+        "passive": {
+          "nature_affinity": true
+        },
+        "value": 130
+      },
+      {
+        "id": "crown_of_thorns",
+        "name": "Crown of Thorns",
+        "description": "Painful headpiece that grants resilience",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "defense": 3
+        },
+        "passive": {
+          "damage_reflection": 0.10
+        },
+        "value": 110
+      },
+      {
+        "id": "feathered_headdress",
+        "name": "Feathered Headdress",
+        "description": "Ceremonial plumes that enhance wisdom",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 2,
+          "magic": 10,
+          "agility": 12
+        },
+        "value": 170
+      },
+      {
+        "id": "iron_crown",
+        "name": "Iron Crown",
+        "description": "Heavy metal crown of authority",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 16,
+        "stats": {
+          "defense": 5,
+          "attack": 3
+        },
+        "value": 190
+      },
+      {
+        "id": "crystal_helm",
+        "name": "Crystal Helm",
+        "description": "Translucent helmet that protects mind",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 17,
+        "stats": {
+          "defense": 3,
+          "magic": 12
+        },
+        "passive": {
+          "mind_protection": true
+        },
+        "value": 210
+      },
+      {
+        "id": "winged_helmet",
+        "name": "Winged Helmet",
+        "description": "Helmet with decorative wing motifs",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 5,
+          "agility": 8
+        },
+        "value": 175
+      },
+      {
+        "id": "bone_crown",
+        "name": "Bone Crown",
+        "description": "Macabre headpiece of bleached bone",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 14,
+        "stats": {
+          "defense": 4
+        },
+        "passive": {
+          "intimidate": 0.25
+        },
+        "value": 135
+      },
+      {
+        "id": "frost_circlet",
+        "name": "Frost Circlet",
+        "description": "Ice-cold band that never melts",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 15,
+        "stats": {
+          "defense": 3,
+          "magic": 8
+        },
+        "passive": {
+          "ice_resist": 0.30,
+          "fire_resist": -0.10
+        },
+        "value": 155
+      },
+      {
+        "id": "war_crown",
+        "name": "War Crown",
+        "description": "Spiked crown worn by battle kings",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 16,
+        "stats": {
+          "defense": 4,
+          "attack": 4
+        },
+        "value": 165
+      },
+      {
+        "id": "sages_hat",
+        "name": "Sage's Hat",
+        "description": "Wide-brimmed hat of learned scholars",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 13,
+        "stats": {
+          "defense": 2,
+          "magic": 15
+        },
+        "value": 145
+      },
+      {
+        "id": "moon_tiara",
+        "name": "Moon Tiara",
+        "description": "Crescent-shaped silver headpiece",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 16,
+        "stats": {
+          "defense": 3,
+          "magic": 10
+        },
+        "passive": {
+          "night_vision": true
+        },
+        "value": 185
+      },
+      {
+        "id": "dragon_helm",
+        "name": "Dragon Helm",
+        "description": "Helmet shaped like a dragon's head",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 18,
+        "stats": {
+          "defense": 7
+        },
+        "passive": {
+          "fire_resist": 0.20
+        },
+        "value": 220
+      },
+      {
+        "id": "crown_of_minds",
+        "name": "Crown of Minds",
+        "description": "Allows limited telepathic communication",
+        "slot": "headgear",
+        "rarity": "rare",
+        "required_level": 20,
+        "stats": {
+          "defense": 4,
+          "magic": 15
+        },
+        "passive": {
+          "telepathy": true
+        },
+        "value": 250
+      }
+    ],
+    "epic": [
+      {
+        "id": "crown_of_wisdom",
+        "name": "Crown of Wisdom",
+        "description": "Grants incredible magical insight",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 25,
+        "stats": {
+          "defense": 8,
+          "magic": 20
+        },
+        "passive": {
+          "spell_power": 0.30
+        },
+        "value": 450
+      },
+      {
+        "id": "crown_of_void_lord",
+        "name": "Crown of the Void Lord",
+        "description": "Crown that commands the space between worlds",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "defense": 10,
+          "magic": 18
+        },
+        "passive": {
+          "void_damage": 15,
+          "void_protection": 0.20
+        },
+        "value": 4200
+      },
+      {
+        "id": "helm_of_dragon_king",
+        "name": "Helm of the Dragon King",
+        "description": "Helmet forged from ancient dragon bone",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 28,
+        "stats": {
+          "defense": 12,
+          "attack": 6
+        },
+        "passive": {
+          "fire_damage": 18,
+          "intimidate": 0.15
+        },
+        "value": 3800
+      },
+      {
+        "id": "circlet_of_time",
+        "name": "Circlet of Time",
+        "description": "Circlet that grants mastery over time",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 30,
+        "stats": {
+          "defense": 8,
+          "magic": 22
+        },
+        "passive": {
+          "time_control": true
+        },
+        "value": 5500
+      },
+      {
+        "id": "helm_of_divine_sight",
+        "name": "Helm of Divine Sight",
+        "description": "Allows the wearer to see through illusions",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 32,
+        "stats": {
+          "defense": 10,
+          "magic": 25
+        },
+        "passive": {
+          "night_vision": true,
+          "illusion_immunity": true
+        },
+        "value": 1500
+      },
+      {
+        "id": "phoenix_crown",
+        "name": "Phoenix Crown",
+        "description": "Crown of flames that never burns out",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 32,
+        "stats": {
+          "defense": 10,
+          "magic": 20
+        },
+        "passive": {
+          "fire_damage": 30,
+          "regeneration": 8
+        },
+        "value": 1800
+      },
+      {
+        "id": "storm_king_circlet",
+        "name": "Storm King's Circlet",
+        "description": "Commands the power of storms and weather",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 34,
+        "stats": {
+          "defense": 11,
+          "magic": 26
+        },
+        "passive": {
+          "storm_call": true,
+          "lightning_damage": 35,
+          "lightning_immunity": true
+        },
+        "value": 2200
+      },
+      {
+        "id": "crystal_mind_crown",
+        "name": "Crystal Mind Crown",
+        "description": "Amplifies mental abilities beyond mortal limits",
+        "slot": "headgear",
+        "rarity": "epic",
+        "required_level": 35,
+        "stats": {
+          "defense": 12,
+          "magic": 35
+        },
+        "passive": {
+          "spell_power": 0.50,
+          "mind_control": true
+        },
+        "value": 2500
+      }
+    ],
+    "legendary": [
+      {
+        "id": "crown_of_eternity",
+        "name": "Crown of Eternity",
+        "description": "Grants dominion over time and space",
+        "slot": "headgear",
+        "rarity": "legendary",
+        "required_level": 40,
+        "stats": {
+          "defense": 20,
+          "magic": 50
+        },
+        "passive": {
+          "all_resist": 0.90,
+          "time_control": true,
+          "max_hp_bonus": 50
+        },
+        "value": 5000
+      },
+      {
+        "id": "crown_of_all_realities",
+        "name": "Crown of All Realities",
+        "description": "Rules over all possible universes and timelines",
+        "slot": "headgear",
+        "rarity": "legendary",
+        "required_level": 45,
+        "stats": {
+          "defense": 30,
+          "magic": 80
+        },
+        "passive": {
+          "multiverse_control": true,
+          "reality_control": 0.80,
+          "time_mastery": 0.60
+        },
+        "value": 50000
+      },
+      {
+        "id": "diadem_of_first_god",
+        "name": "Diadem of the First God",
+        "description": "Worn by the deity who created existence",
+        "slot": "headgear",
+        "rarity": "legendary",
+        "required_level": 45,
+        "stats": {
+          "defense": 35,
+          "magic": 100
+        },
+        "passive": {
+          "divine_power": 100,
+          "create_world": true
+        },
+        "value": 75000
+      }
+    ],
+    "mythic": [
+      {
+        "id": "cosmic_crown",
+        "name": "Cosmic Crown",
+        "description": "Commands the forces of the universe itself",
+        "slot": "headgear",
+        "rarity": "mythic",
+        "required_level": 50,
+        "stats": {
+          "defense": 50,
+          "magic": 150
+        },
+        "passive": {
+          "cosmic_power": true,
+          "star_control": true,
+          "time_mastery": true
+        },
+        "value": 1500000
+      },
+      {
+        "id": "crown_of_absolute_existence",
+        "name": "Crown of Absolute Existence",
+        "description": "Represents the concept of existence itself",
+        "slot": "headgear",
+        "rarity": "mythic",
+        "required_level": 50,
+        "stats": {
+          "defense": 100,
+          "magic": 200
+        },
+        "passive": {
+          "omnipotence": true,
+          "reality_control": 2.0
+        },
+        "value": 500000
+      },
+      {
+        "id": "circlet_of_pure_thought",
+        "name": "Circlet of Pure Thought",
+        "description": "The crystallized essence of thought itself",
+        "slot": "headgear",
+        "rarity": "mythic",
+        "required_level": 50,
+        "stats": {
+          "defense": 80,
+          "magic": 300
+        },
+        "passive": {
+          "infinite_knowledge": true,
+          "mind_mastery": true
+        },
+        "value": 750000
+      }
+    ]
+  }
+}

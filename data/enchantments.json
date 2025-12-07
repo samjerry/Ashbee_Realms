@@ -1,0 +1,520 @@
+{
+  "enchantments": {
+    "weapon_enchantments": {
+      "common": [
+        {
+          "id": "sharpness_1",
+          "name": "Sharpness I",
+          "description": "+5 attack damage",
+          "rarity": "common",
+          "slot": "main_hand",
+          "stats": {
+            "attack": 5
+          },
+          "cost": 100
+        },
+        {
+          "id": "fire_damage_1",
+          "name": "Flame I",
+          "description": "Adds 3-8 fire damage",
+          "rarity": "common",
+          "slot": "main_hand",
+          "effects": {
+            "fire_damage": [3, 8],
+            "burn_chance": 0.10
+          },
+          "cost": 150
+        },
+        {
+          "id": "frost_damage_1",
+          "name": "Frost I",
+          "description": "Adds 3-8 ice damage and 10% slow chance",
+          "rarity": "common",
+          "slot": "main_hand",
+          "effects": {
+            "ice_damage": [3, 8],
+            "slow_chance": 0.10
+          },
+          "cost": 150
+        }
+      ],
+      "uncommon": [
+        {
+          "id": "sharpness_2",
+          "name": "Sharpness II",
+          "description": "+12 attack damage",
+          "rarity": "uncommon",
+          "slot": "main_hand",
+          "stats": {
+            "attack": 12
+          },
+          "cost": 300,
+          "requires": "sharpness_1"
+        },
+        {
+          "id": "life_steal",
+          "name": "Life Steal",
+          "description": "Heal 10% of damage dealt",
+          "rarity": "uncommon",
+          "slot": "main_hand",
+          "effects": {
+            "life_steal": 0.10
+          },
+          "cost": 500
+        },
+        {
+          "id": "critical_strike",
+          "name": "Critical Strike",
+          "description": "+10% critical strike chance",
+          "rarity": "uncommon",
+          "slot": "main_hand",
+          "effects": {
+            "crit_chance": 0.10
+          },
+          "cost": 400
+        },
+        {
+          "id": "poison_blade",
+          "name": "Poison Blade",
+          "description": "30% chance to poison on hit (15 damage over 3 turns)",
+          "rarity": "uncommon",
+          "slot": "main_hand",
+          "effects": {
+            "poison_chance": 0.30,
+            "poison_damage": 15,
+            "poison_duration": 3
+          },
+          "cost": 450
+        }
+      ],
+      "rare": [
+        {
+          "id": "sharpness_3",
+          "name": "Sharpness III",
+          "description": "+25 attack damage",
+          "rarity": "rare",
+          "slot": "main_hand",
+          "stats": {
+            "attack": 25
+          },
+          "cost": 800,
+          "requires": "sharpness_2"
+        },
+        {
+          "id": "vorpal",
+          "name": "Vorpal",
+          "description": "5% chance to instantly kill non-boss enemies",
+          "rarity": "rare",
+          "slot": "main_hand",
+          "effects": {
+            "instant_kill_chance": 0.05,
+            "boss_excluded": true
+          },
+          "cost": 2000
+        },
+        {
+          "id": "chain_lightning",
+          "name": "Chain Lightning",
+          "description": "Attacks chain to 2 additional enemies",
+          "rarity": "rare",
+          "slot": "main_hand",
+          "effects": {
+            "chain_attacks": 2,
+            "chain_damage_reduction": 0.3
+          },
+          "cost": 1500
+        },
+        {
+          "id": "soul_reaper",
+          "name": "Soul Reaper",
+          "description": "Killing enemies restores 15 HP",
+          "rarity": "rare",
+          "slot": "main_hand",
+          "effects": {
+            "heal_on_kill": 15
+          },
+          "cost": 1200
+        }
+      ],
+      "epic": [
+        {
+          "id": "devastation",
+          "name": "Devastation",
+          "description": "+50 attack damage and +15% critical damage",
+          "rarity": "epic",
+          "slot": "main_hand",
+          "stats": {
+            "attack": 50
+          },
+          "effects": {
+            "crit_damage": 0.15
+          },
+          "cost": 3000
+        },
+        {
+          "id": "dragonslayer",
+          "name": "Dragonslayer",
+          "description": "+100% damage to dragons and +30% to all beasts",
+          "rarity": "epic",
+          "slot": "main_hand",
+          "effects": {
+            "dragon_damage": 1.0,
+            "beast_damage": 0.30
+          },
+          "cost": 2500
+        },
+        {
+          "id": "infinity_edge",
+          "name": "Infinity Edge",
+          "description": "Critical strikes deal 250% damage instead of 200%",
+          "rarity": "epic",
+          "slot": "main_hand",
+          "effects": {
+            "crit_multiplier": 2.5
+          },
+          "cost": 4000
+        }
+      ],
+      "legendary": [
+        {
+          "id": "godslayer",
+          "name": "Godslayer",
+          "description": "+100 attack, +20% crit chance, +50% crit damage, life steal 15%",
+          "rarity": "legendary",
+          "slot": "main_hand",
+          "stats": {
+            "attack": 100
+          },
+          "effects": {
+            "crit_chance": 0.20,
+            "crit_damage": 0.50,
+            "life_steal": 0.15
+          },
+          "cost": 10000
+        },
+        {
+          "id": "reality_render",
+          "name": "Reality Render",
+          "description": "Ignores 50% of enemy defense and armor",
+          "rarity": "legendary",
+          "slot": "main_hand",
+          "effects": {
+            "armor_penetration": 0.50,
+            "defense_ignore": 0.50
+          },
+          "cost": 8000
+        }
+      ]
+    },
+    "armor_enchantments": {
+      "common": [
+        {
+          "id": "protection_1",
+          "name": "Protection I",
+          "description": "+5 defense",
+          "rarity": "common",
+          "slot": "armor",
+          "stats": {
+            "defense": 5
+          },
+          "cost": 100
+        },
+        {
+          "id": "health_boost_1",
+          "name": "Vitality I",
+          "description": "+20 maximum HP",
+          "rarity": "common",
+          "slot": "armor",
+          "stats": {
+            "max_hp": 20
+          },
+          "cost": 150
+        }
+      ],
+      "uncommon": [
+        {
+          "id": "protection_2",
+          "name": "Protection II",
+          "description": "+12 defense",
+          "rarity": "uncommon",
+          "slot": "armor",
+          "stats": {
+            "defense": 12
+          },
+          "cost": 300,
+          "requires": "protection_1"
+        },
+        {
+          "id": "regeneration",
+          "name": "Regeneration",
+          "description": "Regenerate 2 HP per turn out of combat",
+          "rarity": "uncommon",
+          "slot": "armor",
+          "effects": {
+            "hp_regen": 2,
+            "out_of_combat_only": true
+          },
+          "cost": 400
+        },
+        {
+          "id": "thorns",
+          "name": "Thorns",
+          "description": "Reflect 10% of damage back to attacker",
+          "rarity": "uncommon",
+          "slot": "armor",
+          "effects": {
+            "damage_reflection": 0.10
+          },
+          "cost": 450
+        }
+      ],
+      "rare": [
+        {
+          "id": "protection_3",
+          "name": "Protection III",
+          "description": "+25 defense",
+          "rarity": "rare",
+          "slot": "armor",
+          "stats": {
+            "defense": 25
+          },
+          "cost": 800,
+          "requires": "protection_2"
+        },
+        {
+          "id": "fire_resistance",
+          "name": "Fire Resistance",
+          "description": "Reduce fire damage by 40%",
+          "rarity": "rare",
+          "slot": "armor",
+          "effects": {
+            "fire_resistance": 0.40
+          },
+          "cost": 700
+        },
+        {
+          "id": "ice_resistance",
+          "name": "Ice Resistance",
+          "description": "Reduce ice damage by 40% and immunity to slow",
+          "rarity": "rare",
+          "slot": "armor",
+          "effects": {
+            "ice_resistance": 0.40,
+            "slow_immunity": true
+          },
+          "cost": 700
+        },
+        {
+          "id": "last_stand",
+          "name": "Last Stand",
+          "description": "When reduced below 25% HP, gain +50% defense for 5 turns",
+          "rarity": "rare",
+          "slot": "armor",
+          "effects": {
+            "trigger_threshold": 0.25,
+            "defense_bonus": 0.50,
+            "duration": 5,
+            "cooldown": 60
+          },
+          "cost": 1200
+        }
+      ],
+      "epic": [
+        {
+          "id": "invulnerability",
+          "name": "Invulnerability",
+          "description": "+50 defense and reduce all damage by 10%",
+          "rarity": "epic",
+          "slot": "armor",
+          "stats": {
+            "defense": 50
+          },
+          "effects": {
+            "damage_reduction": 0.10
+          },
+          "cost": 3000
+        },
+        {
+          "id": "phoenix_rebirth",
+          "name": "Phoenix Rebirth",
+          "description": "Once per day, resurrect with 50% HP when killed",
+          "rarity": "epic",
+          "slot": "armor",
+          "effects": {
+            "auto_resurrect": true,
+            "resurrect_hp_percent": 0.50,
+            "cooldown": 86400
+          },
+          "cost": 5000
+        }
+      ],
+      "legendary": [
+        {
+          "id": "immortal_aegis",
+          "name": "Immortal Aegis",
+          "description": "+100 defense, +100 max HP, reduce all damage by 20%",
+          "rarity": "legendary",
+          "slot": "armor",
+          "stats": {
+            "defense": 100,
+            "max_hp": 100
+          },
+          "effects": {
+            "damage_reduction": 0.20
+          },
+          "cost": 10000
+        }
+      ]
+    },
+    "accessory_enchantments": {
+      "uncommon": [
+        {
+          "id": "swiftness",
+          "name": "Swiftness",
+          "description": "+10% movement speed and attack speed",
+          "rarity": "uncommon",
+          "slot": "accessory",
+          "effects": {
+            "movement_speed": 0.10,
+            "attack_speed": 0.10
+          },
+          "cost": 300
+        },
+        {
+          "id": "lucky",
+          "name": "Lucky",
+          "description": "+5% chance to find better loot",
+          "rarity": "uncommon",
+          "slot": "accessory",
+          "effects": {
+            "loot_quality": 0.05
+          },
+          "cost": 400
+        }
+      ],
+      "rare": [
+        {
+          "id": "treasure_hunter",
+          "name": "Treasure Hunter",
+          "description": "+15% gold find and +10% loot quality",
+          "rarity": "rare",
+          "slot": "accessory",
+          "effects": {
+            "gold_find": 0.15,
+            "loot_quality": 0.10
+          },
+          "cost": 800
+        },
+        {
+          "id": "experience",
+          "name": "Experience",
+          "description": "+20% experience gained",
+          "rarity": "rare",
+          "slot": "accessory",
+          "effects": {
+            "xp_bonus": 0.20
+          },
+          "cost": 1000
+        }
+      ],
+      "epic": [
+        {
+          "id": "midas_touch",
+          "name": "Midas Touch",
+          "description": "+50% gold find and chance to turn enemies into gold",
+          "rarity": "epic",
+          "slot": "accessory",
+          "effects": {
+            "gold_find": 0.50,
+            "gold_transform_chance": 0.05
+          },
+          "cost": 3000
+        }
+      ]
+    },
+    "special_enchantments": {
+      "cursed": [
+        {
+          "id": "berserker_curse",
+          "name": "Berserker's Curse",
+          "description": "+100% damage but -50% defense",
+          "rarity": "epic",
+          "slot": "any",
+          "effects": {
+            "damage_bonus": 1.0,
+            "defense_penalty": -0.50
+          },
+          "is_curse": true,
+          "cost": 2000
+        },
+        {
+          "id": "glass_cannon",
+          "name": "Glass Cannon",
+          "description": "+200% damage but you have only 1 HP",
+          "rarity": "legendary",
+          "slot": "any",
+          "effects": {
+            "damage_bonus": 2.0,
+            "max_hp_override": 1
+          },
+          "is_curse": true,
+          "cost": 5000
+        }
+      ]
+    }
+  },
+  "enchanting_system": {
+    "max_enchantments_per_item": {
+      "common": 1,
+      "uncommon": 2,
+      "rare": 3,
+      "epic": 4,
+      "legendary": 5,
+      "mythic": 6
+    },
+    "success_rates": {
+      "common": 0.95,
+      "uncommon": 0.85,
+      "rare": 0.70,
+      "epic": 0.50,
+      "legendary": 0.30
+    },
+    "failure_consequences": {
+      "nothing": 0.60,
+      "lose_enchant": 0.30,
+      "destroy_item": 0.10
+    },
+    "materials": [
+      {
+        "id": "enchanting_dust",
+        "name": "Enchanting Dust",
+        "description": "Basic enchanting material",
+        "rarity": "common"
+      },
+      {
+        "id": "mystic_essence",
+        "name": "Mystic Essence",
+        "description": "Uncommon enchanting material",
+        "rarity": "uncommon"
+      },
+      {
+        "id": "arcane_crystal",
+        "name": "Arcane Crystal",
+        "description": "Rare enchanting material",
+        "rarity": "rare"
+      },
+      {
+        "id": "ethereal_shard",
+        "name": "Ethereal Shard",
+        "description": "Epic enchanting material",
+        "rarity": "epic"
+      },
+      {
+        "id": "celestial_fragment",
+        "name": "Celestial Fragment",
+        "description": "Legendary enchanting material",
+        "rarity": "legendary"
+      }
+    ]
+  }
+}
