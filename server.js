@@ -199,6 +199,258 @@ app.post('/api/player/progress', async (req, res) => {
   }
 });
 
+// ===== CHARACTER SYSTEM API ENDPOINTS =====
+
+/**
+ * GET /api/classes
+ * Get all available character classes
+ */
+app.get('/api/classes', (req, res) => {
+  try {
+    const CharacterInitializer = require('./game/CharacterInitializer');
+    const classes = CharacterInitializer.getAvailableClasses();
+    res.json({ success: true, classes });
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+    res.status(500).json({ error: 'Failed to fetch classes' });
+  }
+});
+
+/**
+ * GET /api/classes/:classType
+ * Get detailed info about a specific class
+ */
+app.get('/api/classes/:classType', (req, res) => {
+  try {
+    const CharacterInitializer = require('./game/CharacterInitializer');
+    const { classType } = req.params;
+    const classInfo = CharacterInitializer.getClassInfo(classType);
+    
+    if (!classInfo) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+    
+    res.json({ success: true, class: classInfo });
+  } catch (error) {
+    console.error('Error fetching class info:', error);
+    res.status(500).json({ error: 'Failed to fetch class info' });
+  }
+});
+
+/**
+ * GET /api/classes/:classType/preview
+ * Preview class progression (stats at different levels)
+ */
+app.get('/api/classes/:classType/preview', (req, res) => {
+  try {
+    const CharacterInitializer = require('./game/CharacterInitializer');
+    const { classType } = req.params;
+    const maxLevel = parseInt(req.query.maxLevel) || 10;
+    
+    const preview = CharacterInitializer.previewClassProgression(classType, maxLevel);
+    
+    if (!preview) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+    
+    res.json({ success: true, preview });
+  } catch (error) {
+    console.error('Error generating class preview:', error);
+    res.status(500).json({ error: 'Failed to generate preview' });
+  }
+});
+
+/**
+ * GET /api/player/stats
+ * Get detailed character stats breakdown
+ */
+app.get('/api/player/stats', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const stats = character.getStatsBreakdown();
+    res.json({ success: true, stats });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
+/**
+ * GET /api/player/inventory
+ * Get player inventory with item details
+ */
+app.get('/api/player/inventory', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const inventory = character.inventory.getSummary();
+    res.json({ success: true, inventory });
+  } catch (error) {
+    console.error('Error fetching inventory:', error);
+    res.status(500).json({ error: 'Failed to fetch inventory' });
+  }
+});
+
+/**
+ * GET /api/player/equipment
+ * Get player equipped items with details
+ */
+app.get('/api/player/equipment', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const equipment = character.equipment.getSummary();
+    res.json({ success: true, equipment });
+  } catch (error) {
+    console.error('Error fetching equipment:', error);
+    res.status(500).json({ error: 'Failed to fetch equipment' });
+  }
+});
+
+/**
+ * POST /api/player/equip
+ * Equip an item from inventory
+ */
+app.post('/api/player/equip', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { channel, itemId } = req.body;
+  if (!channel || !itemId) {
+    return res.status(400).json({ error: 'Channel and itemId required' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const result = character.equipItem(itemId);
+    
+    if (result.success) {
+      await db.saveCharacter(user.id, channelName, character);
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error equipping item:', error);
+    res.status(500).json({ error: 'Failed to equip item' });
+  }
+});
+
+/**
+ * POST /api/player/unequip
+ * Unequip an item to inventory
+ */
+app.post('/api/player/unequip', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { channel, slot } = req.body;
+  if (!channel || !slot) {
+    return res.status(400).json({ error: 'Channel and slot required' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const result = character.unequipItem(slot);
+    
+    if (result.success) {
+      await db.saveCharacter(user.id, channelName, character);
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error unequipping item:', error);
+    res.status(500).json({ error: 'Failed to unequip item' });
+  }
+});
+
+/**
+ * POST /api/player/create
+ * Create a new character with a class
+ */
+app.post('/api/player/create', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { channel, classType, name } = req.body;
+  if (!channel || !classType) {
+    return res.status(400).json({ error: 'Channel and classType required' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  const characterName = name || user.displayName;
+  
+  try {
+    // Check if character already exists
+    const existing = await db.getCharacter(user.id, channelName);
+    if (existing) {
+      return res.status(400).json({ error: 'Character already exists for this channel' });
+    }
+    
+    // Create new character
+    const character = await db.createCharacter(user.id, channelName, characterName, classType);
+    
+    res.json({ 
+      success: true, 
+      message: `Created ${classType} character: ${characterName}`,
+      character: character.toDatabase()
+    });
+  } catch (error) {
+    console.error('Error creating character:', error);
+    res.status(500).json({ error: error.message || 'Failed to create character' });
+  }
+});
+
 // Update the existing /api/action endpoint to save after each action
 app.post('/api/action', async (req, res) => {
   const user = req.session.user;

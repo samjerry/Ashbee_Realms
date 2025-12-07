@@ -170,3 +170,52 @@ if (require.main === module) {
 }
 
 module.exports = MonsterDataLoader;
+
+// General data loading utility
+const dataCache = new Map();
+
+/**
+ * Load any JSON data file from the data directory
+ * @param {string} dataName - Name of the data file without .json extension
+ * @returns {Object|null} Parsed JSON data or null if not found
+ */
+function loadData(dataName) {
+  // Check cache first
+  if (dataCache.has(dataName)) {
+    return dataCache.get(dataName);
+  }
+
+  try {
+    const filePath = path.join(__dirname, `${dataName}.json`);
+    const data = fs.readFileSync(filePath, 'utf8');
+    const parsed = JSON.parse(data);
+    
+    // Cache the result
+    dataCache.set(dataName, parsed);
+    return parsed;
+  } catch (error) {
+    console.error(`Error loading data file ${dataName}.json:`, error.message);
+    return null;
+  }
+}
+
+/**
+ * Clear the data cache
+ */
+function clearDataCache() {
+  dataCache.clear();
+}
+
+/**
+ * Reload a specific data file
+ * @param {string} dataName - Name of the data file to reload
+ * @returns {Object|null} Parsed JSON data or null if not found
+ */
+function reloadData(dataName) {
+  dataCache.delete(dataName);
+  return loadData(dataName);
+}
+
+module.exports.loadData = loadData;
+module.exports.clearDataCache = clearDataCache;
+module.exports.reloadData = reloadData;

@@ -64,6 +64,7 @@ async function initPostgres() {
       is_player BOOLEAN DEFAULT true,
       in_combat BOOLEAN DEFAULT false,
       equipped JSONB DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"flavor1":null,"flavor2":null,"flavor3":null}',
+      base_stats JSONB DEFAULT '{}',
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
@@ -222,6 +223,49 @@ function close() {
   }
 }
 
+/**
+ * Get or create a character instance for a player
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @returns {Character|null} Character instance or null
+ */
+async function getCharacter(playerId, channelName) {
+  const Character = require('./game/Character');
+  const data = await loadPlayerProgress(playerId, channelName);
+  
+  if (!data) {
+    return null;
+  }
+  
+  return new Character(data);
+}
+
+/**
+ * Save a character instance to database
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {Character} character - Character instance
+ */
+async function saveCharacter(playerId, channelName, character) {
+  await savePlayerProgress(playerId, channelName, character.toDatabase());
+}
+
+/**
+ * Create a new character with a class
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {string} playerName - Character name
+ * @param {string} classType - Class type (warrior, mage, etc.)
+ * @param {string} location - Starting location
+ * @returns {Character} New character instance
+ */
+async function createCharacter(playerId, channelName, playerName, classType, location = "Town Square") {
+  const Character = require('./game/Character');
+  const character = Character.createNew(playerName, classType, location);
+  await saveCharacter(playerId, channelName, character);
+  return character;
+}
+
 module.exports = {
   initDB,
   query,
@@ -231,5 +275,8 @@ module.exports = {
   getDB: () => db,
   savePlayerProgress,
   loadPlayerProgress,
-  initializeNewPlayer
+  initializeNewPlayer,
+  getCharacter,
+  saveCharacter,
+  createCharacter
 };
