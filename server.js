@@ -6,7 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const db = require('./db');
 const Combat = require('./game/Combat');
-const { Character, ProgressionManager, ExplorationManager } = require('./game');
+const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager } = require('./game');
 const { loadData } = require('./data/data_loader');
 
 const app = express();
@@ -1424,6 +1424,1075 @@ app.get('/api/exploration/travel-info', async (req, res) => {
 });
 
 // ==================== END EXPLORATION ENDPOINTS ====================
+
+// ==================== QUEST ENDPOINTS ====================
+
+/**
+ * GET /api/quests/available
+ * Get all available quests for the character
+ */
+app.get('/api/quests/available', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const activeQuests = character.activeQuests || [];
+    const completedQuests = character.completedQuests || [];
+
+    const questMgr = new QuestManager();
+    const available = questMgr.getAvailableQuests(character, activeQuests, completedQuests);
+
+    res.json({
+      success: true,
+      quests: available
+    });
+  } catch (error) {
+    console.error('Error getting available quests:', error);
+    res.status(500).json({ error: 'Failed to get available quests' });
+  }
+});
+
+/**
+ * POST /api/quests/accept
+ * Accept a quest
+ */
+app.post('/api/quests/accept', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, questId } = req.body;
+  if (!channel || !questId) {
+    return res.status(400).json({ error: 'Channel and questId required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const activeQuests = character.activeQuests || [];
+    const completedQuests = character.completedQuests || [];
+
+    // Check if already active
+    if (activeQuests.some(q => q.questId === questId)) {
+      return res.status(400).json({ error: 'Quest already active' });
+    }
+
+    const questMgr = new QuestManager();
+    const result = questMgr.acceptQuest(questId);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    // Add to active quests
+    activeQuests.push(result.questState);
+    character.activeQuests = activeQuests;
+
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      quest: result.quest,
+      dialogue: result.dialogue,
+      questState: result.questState
+    });
+  } catch (error) {
+    console.error('Error accepting quest:', error);
+    res.status(500).json({ error: 'Failed to accept quest' });
+  }
+});
+
+/**
+ * GET /api/quests/active
+ * Get all active quests
+ */
+app.get('/api/quests/active', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const activeQuests = character.activeQuests || [];
+    const questMgr = new QuestManager();
+
+    const questProgress = activeQuests.map(questState => 
+      questMgr.getQuestProgress(questState)
+    ).filter(q => q !== null);
+
+    res.json({
+      success: true,
+      quests: questProgress
+    });
+  } catch (error) {
+    console.error('Error getting active quests:', error);
+    res.status(500).json({ error: 'Failed to get active quests' });
+  }
+});
+
+/**
+ * POST /api/quests/complete
+ * Complete a quest and receive rewards
+ */
+app.post('/api/quests/complete', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, questId } = req.body;
+  if (!channel || !questId) {
+    return res.status(400).json({ error: 'Channel and questId required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const activeQuests = character.activeQuests || [];
+    const questState = activeQuests.find(q => q.questId === questId);
+
+    if (!questState) {
+      return res.status(404).json({ error: 'Quest not active' });
+    }
+
+    const questMgr = new QuestManager();
+    const result = questMgr.completeQuest(character, questState);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    // Remove from active quests
+    character.activeQuests = activeQuests.filter(q => q.questId !== questId);
+
+    // Add to completed quests
+    const completedQuests = character.completedQuests || [];
+    completedQuests.push(questId);
+    character.completedQuests = completedQuests;
+
+    // Apply XP reward
+    if (result.rewards.xp > 0) {
+      const progressionMgr = new ProgressionManager();
+      const xpResult = progressionMgr.addXP(character, result.rewards.xp);
+      
+      if (xpResult.leveledUp) {
+        result.levelUp = {
+          newLevel: character.level,
+          statsGained: xpResult.statsGained
+        };
+      }
+    }
+
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      quest: result.quest,
+      rewards: result.rewards,
+      dialogue: result.dialogue,
+      levelUp: result.levelUp || null
+    });
+  } catch (error) {
+    console.error('Error completing quest:', error);
+    res.status(500).json({ error: 'Failed to complete quest' });
+  }
+});
+
+/**
+ * POST /api/quests/abandon
+ * Abandon an active quest
+ */
+app.post('/api/quests/abandon', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, questId } = req.body;
+  if (!channel || !questId) {
+    return res.status(400).json({ error: 'Channel and questId required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const activeQuests = character.activeQuests || [];
+    const questState = activeQuests.find(q => q.questId === questId);
+
+    if (!questState) {
+      return res.status(404).json({ error: 'Quest not active' });
+    }
+
+    const questMgr = new QuestManager();
+    const result = questMgr.abandonQuest(questState);
+
+    // Remove from active quests
+    character.activeQuests = activeQuests.filter(q => q.questId !== questId);
+
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      quest: result.quest,
+      message: result.message
+    });
+  } catch (error) {
+    console.error('Error abandoning quest:', error);
+    res.status(500).json({ error: 'Failed to abandon quest' });
+  }
+});
+
+/**
+ * GET /api/quests/progress/:questId
+ * Get detailed progress for a specific quest
+ */
+app.get('/api/quests/progress/:questId', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { questId } = req.params;
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const activeQuests = character.activeQuests || [];
+    const questState = activeQuests.find(q => q.questId === questId);
+
+    if (!questState) {
+      return res.status(404).json({ error: 'Quest not active' });
+    }
+
+    const questMgr = new QuestManager();
+    const progress = questMgr.getQuestProgress(questState);
+
+    res.json({
+      success: true,
+      progress
+    });
+  } catch (error) {
+    console.error('Error getting quest progress:', error);
+    res.status(500).json({ error: 'Failed to get quest progress' });
+  }
+});
+
+/**
+ * GET /api/quests/chain/:questId
+ * Get quest chain information
+ */
+app.get('/api/quests/chain/:questId', (req, res) => {
+  const { questId } = req.params;
+
+  try {
+    const questMgr = new QuestManager();
+    const chain = questMgr.getQuestChain(questId);
+
+    if (!chain) {
+      return res.status(404).json({ error: 'Quest not found' });
+    }
+
+    res.json({
+      success: true,
+      chain
+    });
+  } catch (error) {
+    console.error('Error getting quest chain:', error);
+    res.status(500).json({ error: 'Failed to get quest chain' });
+  }
+});
+
+/**
+ * GET /api/quests/story
+ * Get main story quest progression
+ */
+app.get('/api/quests/story', (req, res) => {
+  try {
+    const questMgr = new QuestManager();
+    const story = questMgr.getMainStoryQuests();
+
+    res.json({
+      success: true,
+      quests: story
+    });
+  } catch (error) {
+    console.error('Error getting story quests:', error);
+    res.status(500).json({ error: 'Failed to get story quests' });
+  }
+});
+
+// ==================== END QUEST ENDPOINTS ====================
+
+// ==================== SHOP & LOOT ENDPOINTS ====================
+
+// Get all merchants
+app.get('/api/shop/merchants', (req, res) => {
+  try {
+    const shopMgr = new ShopManager();
+    const merchants = shopMgr.getAllMerchants();
+
+    res.json({
+      success: true,
+      merchants
+    });
+  } catch (error) {
+    console.error('Error getting merchants:', error);
+    res.status(500).json({ error: 'Failed to get merchants' });
+  }
+});
+
+// Get merchants in a location
+app.get('/api/shop/merchants/:location', (req, res) => {
+  try {
+    const { location } = req.params;
+    const shopMgr = new ShopManager();
+    const merchants = shopMgr.getMerchantsInLocation(location);
+
+    res.json({
+      success: true,
+      location,
+      merchants: merchants.map(m => ({
+        id: m.id,
+        name: m.name,
+        description: m.description,
+        merchant_type: m.merchant_type,
+        greeting: m.greeting
+      }))
+    });
+  } catch (error) {
+    console.error('Error getting location merchants:', error);
+    res.status(500).json({ error: 'Failed to get location merchants' });
+  }
+});
+
+// Get merchant inventory
+app.get('/api/shop/:merchantId', (req, res) => {
+  try {
+    const { merchantId } = req.params;
+    const shopMgr = new ShopManager();
+    const merchant = shopMgr.getMerchant(merchantId);
+
+    if (!merchant) {
+      return res.status(404).json({ error: 'Merchant not found' });
+    }
+
+    const inventory = shopMgr.getMerchantInventory(merchantId);
+    const greeting = shopMgr.getMerchantGreeting(merchantId);
+
+    res.json({
+      success: true,
+      merchant: {
+        id: merchant.id,
+        name: merchant.name,
+        description: merchant.description,
+        merchant_type: merchant.merchant_type
+      },
+      greeting,
+      inventory
+    });
+  } catch (error) {
+    console.error('Error getting merchant inventory:', error);
+    res.status(500).json({ error: 'Failed to get merchant inventory' });
+  }
+});
+
+// Buy item from merchant
+app.post('/api/shop/buy', async (req, res) => {
+  try {
+    const { player, channel, merchantId, itemId, quantity = 1 } = req.body;
+
+    if (!player || !channel || !merchantId || !itemId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const shopMgr = new ShopManager();
+
+    const result = shopMgr.buyItem(character, merchantId, itemId, quantity);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error buying item:', error);
+    res.status(500).json({ error: 'Failed to buy item' });
+  }
+});
+
+// Sell item to merchant
+app.post('/api/shop/sell', async (req, res) => {
+  try {
+    const { player, channel, merchantId, itemId, quantity = 1 } = req.body;
+
+    if (!player || !channel || !merchantId || !itemId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const shopMgr = new ShopManager();
+
+    const result = shopMgr.sellItem(character, merchantId, itemId, quantity);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error selling item:', error);
+    res.status(500).json({ error: 'Failed to sell item' });
+  }
+});
+
+// Use consumable item
+app.post('/api/consumable/use', async (req, res) => {
+  try {
+    const { player, channel, itemId, context = {} } = req.body;
+
+    if (!player || !channel || !itemId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const consumableMgr = new ConsumableManager();
+
+    const result = consumableMgr.useConsumable(character, itemId, context);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error using consumable:', error);
+    res.status(500).json({ error: 'Failed to use consumable' });
+  }
+});
+
+// Compare two items
+app.post('/api/items/compare', async (req, res) => {
+  try {
+    const { player, channel, itemId1, itemId2 } = req.body;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player/channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const comparator = new ItemComparator();
+
+    // If only itemId1 provided, compare with equipped
+    if (itemId1 && !itemId2) {
+      const result = comparator.compareWithEquipped(character, itemId1);
+      return res.json(result);
+    }
+
+    // Both items provided - direct comparison
+    const item1Data = comparator.getItemData(itemId1);
+    const item2Data = comparator.getItemData(itemId2);
+
+    const result = comparator.compareEquipment(item1Data, item2Data);
+    res.json(result);
+  } catch (error) {
+    console.error('Error comparing items:', error);
+    res.status(500).json({ error: 'Failed to compare items' });
+  }
+});
+
+// Get upgrade suggestions
+app.get('/api/items/upgrades', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player/channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const comparator = new ItemComparator();
+
+    const suggestions = comparator.getUpgradeSuggestions(character);
+
+    res.json({
+      success: true,
+      suggestions,
+      count: suggestions.length
+    });
+  } catch (error) {
+    console.error('Error getting upgrade suggestions:', error);
+    res.status(500).json({ error: 'Failed to get upgrade suggestions' });
+  }
+});
+
+// ==================== END SHOP & LOOT ENDPOINTS ====================
+
+// ==================== NPC & DIALOGUE ENDPOINTS ====================
+
+/**
+ * GET /api/npcs
+ * Get all NPCs with basic info
+ */
+app.get('/api/npcs', (req, res) => {
+  try {
+    const npcMgr = new NPCManager();
+    const npcs = npcMgr.getAllNPCs();
+
+    res.json({
+      success: true,
+      npcs
+    });
+  } catch (error) {
+    console.error('Error getting NPCs:', error);
+    res.status(500).json({ error: 'Failed to get NPCs' });
+  }
+});
+
+/**
+ * GET /api/npcs/location/:location
+ * Get NPCs in a specific location
+ */
+app.get('/api/npcs/location/:location', (req, res) => {
+  try {
+    const { location } = req.params;
+    const npcMgr = new NPCManager();
+    const npcs = npcMgr.getNPCsInLocation(location);
+
+    res.json({
+      success: true,
+      location,
+      npcs
+    });
+  } catch (error) {
+    console.error('Error getting location NPCs:', error);
+    res.status(500).json({ error: 'Failed to get location NPCs' });
+  }
+});
+
+/**
+ * GET /api/npcs/type/:type
+ * Get NPCs by type (merchant, quest_giver, companion, lore_keeper)
+ */
+app.get('/api/npcs/type/:type', (req, res) => {
+  try {
+    const { type } = req.params;
+    const npcMgr = new NPCManager();
+    const npcs = npcMgr.getNPCsByType(type);
+
+    res.json({
+      success: true,
+      type,
+      npcs
+    });
+  } catch (error) {
+    console.error('Error getting NPCs by type:', error);
+    res.status(500).json({ error: 'Failed to get NPCs by type' });
+  }
+});
+
+/**
+ * GET /api/npcs/:npcId
+ * Get detailed info about a specific NPC
+ */
+app.get('/api/npcs/:npcId', (req, res) => {
+  try {
+    const { npcId } = req.params;
+    const npcMgr = new NPCManager();
+    const npc = npcMgr.getNPC(npcId);
+
+    if (!npc) {
+      return res.status(404).json({ error: 'NPC not found' });
+    }
+
+    res.json({
+      success: true,
+      npc
+    });
+  } catch (error) {
+    console.error('Error getting NPC:', error);
+    res.status(500).json({ error: 'Failed to get NPC' });
+  }
+});
+
+/**
+ * POST /api/npcs/:npcId/interact
+ * Interact with an NPC (get greeting, dialogue, and available actions)
+ * Body: { player, channel }
+ */
+app.post('/api/npcs/:npcId/interact', async (req, res) => {
+  try {
+    const { npcId } = req.params;
+    const { player, channel } = req.body;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player/channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const npcMgr = new NPCManager();
+
+    const interaction = npcMgr.interactWithNPC(npcId, character);
+
+    if (!interaction.success) {
+      return res.status(400).json(interaction);
+    }
+
+    res.json(interaction);
+  } catch (error) {
+    console.error('Error interacting with NPC:', error);
+    res.status(500).json({ error: 'Failed to interact with NPC' });
+  }
+});
+
+/**
+ * POST /api/npcs/:npcId/spawn-check
+ * Check if NPC should spawn (for random encounters)
+ * Body: { location }
+ */
+app.post('/api/npcs/:npcId/spawn-check', (req, res) => {
+  try {
+    const { npcId } = req.params;
+    const { location } = req.body;
+    const npcMgr = new NPCManager();
+
+    const spawned = npcMgr.checkNPCSpawn(npcId);
+    const npc = npcMgr.getNPC(npcId);
+
+    if (!npc) {
+      return res.status(404).json({ error: 'NPC not found' });
+    }
+
+    res.json({
+      success: true,
+      spawned,
+      npc: spawned ? {
+        id: npc.id,
+        name: npc.name,
+        description: npc.description,
+        greeting: npc.greeting
+      } : null
+    });
+  } catch (error) {
+    console.error('Error checking NPC spawn:', error);
+    res.status(500).json({ error: 'Failed to check NPC spawn' });
+  }
+});
+
+/**
+ * GET /api/dialogue/:npcId
+ * Get available dialogue conversations for an NPC
+ * Query params: player, channel
+ */
+app.get('/api/dialogue/:npcId', async (req, res) => {
+  try {
+    const { npcId } = req.params;
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player/channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const dialogueMgr = new DialogueManager();
+
+    const conversations = dialogueMgr.getAvailableConversations(npcId, character);
+
+    res.json({
+      success: true,
+      npcId,
+      conversations
+    });
+  } catch (error) {
+    console.error('Error getting dialogue:', error);
+    res.status(500).json({ error: 'Failed to get dialogue' });
+  }
+});
+
+/**
+ * POST /api/dialogue/start
+ * Start a dialogue conversation with an NPC
+ * Body: { player, channel, npcId, conversationId }
+ */
+app.post('/api/dialogue/start', async (req, res) => {
+  try {
+    const { player, channel, npcId, conversationId } = req.body;
+
+    if (!player || !channel || !npcId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const dialogueMgr = new DialogueManager();
+
+    const result = dialogueMgr.startConversation(npcId, character, conversationId);
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    // Save dialogue state
+    await db.saveCharacter(userId, channel, character);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error starting dialogue:', error);
+    res.status(500).json({ error: 'Failed to start dialogue' });
+  }
+});
+
+/**
+ * POST /api/dialogue/choice
+ * Make a choice in a dialogue conversation
+ * Body: { player, channel, npcId, conversationId, currentNodeId, choiceIndex }
+ */
+app.post('/api/dialogue/choice', async (req, res) => {
+  try {
+    const { player, channel, npcId, conversationId, currentNodeId, choiceIndex } = req.body;
+
+    if (!player || !channel || !npcId || !conversationId || !currentNodeId || choiceIndex === undefined) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const dialogueMgr = new DialogueManager();
+
+    const result = dialogueMgr.makeChoice(npcId, conversationId, currentNodeId, choiceIndex, character);
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    // Save dialogue state and any rewards/effects
+    await db.saveCharacter(userId, channel, character);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error making dialogue choice:', error);
+    res.status(500).json({ error: 'Failed to make dialogue choice' });
+  }
+});
+
+// ==================== END NPC & DIALOGUE ENDPOINTS ====================
+
+// ==================== ACHIEVEMENT SYSTEM ENDPOINTS ====================
+
+const { AchievementManager } = require('./game');
+const achievementMgr = new AchievementManager();
+
+/**
+ * GET /api/achievements
+ * Get all achievements with progress for a character
+ * Query: player, channel, includeHidden (optional)
+ */
+app.get('/api/achievements', async (req, res) => {
+  try {
+    const { player, channel, includeHidden } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const achievements = achievementMgr.getAllAchievements(character, includeHidden === 'true');
+
+    res.json({ achievements });
+  } catch (error) {
+    console.error('Error fetching achievements:', error);
+    res.status(500).json({ error: 'Failed to fetch achievements' });
+  }
+});
+
+/**
+ * GET /api/achievements/category/:category
+ * Get achievements by category
+ * Query: player, channel
+ */
+app.get('/api/achievements/category/:category', async (req, res) => {
+  try {
+    const { category } = req.params;
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const achievements = achievementMgr.getAchievementsByCategory(category, character);
+
+    res.json({ category, achievements });
+  } catch (error) {
+    console.error('Error fetching achievements by category:', error);
+    res.status(500).json({ error: 'Failed to fetch achievements' });
+  }
+});
+
+/**
+ * GET /api/achievements/:achievementId
+ * Get specific achievement details
+ * Query: player, channel
+ */
+app.get('/api/achievements/:achievementId', async (req, res) => {
+  try {
+    const { achievementId } = req.params;
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const achievement = achievementMgr.getAchievement(achievementId, character);
+
+    if (!achievement) {
+      return res.status(404).json({ error: 'Achievement not found' });
+    }
+
+    res.json(achievement);
+  } catch (error) {
+    console.error('Error fetching achievement:', error);
+    res.status(500).json({ error: 'Failed to fetch achievement' });
+  }
+});
+
+/**
+ * GET /api/achievements/stats
+ * Get achievement statistics for a character
+ * Query: player, channel
+ */
+app.get('/api/achievements/stats', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const stats = achievementMgr.getStatistics(character);
+
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching achievement stats:', error);
+    res.status(500).json({ error: 'Failed to fetch achievement stats' });
+  }
+});
+
+/**
+ * POST /api/achievements/check
+ * Check for newly unlocked achievements after an event
+ * Body: { player, channel, eventType, eventData }
+ */
+app.post('/api/achievements/check', async (req, res) => {
+  try {
+    const { player, channel, eventType, eventData } = req.body;
+
+    if (!player || !channel || !eventType) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const newlyUnlocked = achievementMgr.checkAchievements(character, eventType, eventData);
+
+    // Unlock each achievement and grant rewards
+    const unlockResults = [];
+    for (const achievement of newlyUnlocked) {
+      const result = achievementMgr.unlockAchievement(character, achievement.id);
+      if (result.success) {
+        unlockResults.push(result);
+      }
+    }
+
+    // Save character with new achievements
+    if (unlockResults.length > 0) {
+      await db.updateAchievementData(userId, channel, {
+        unlockedAchievements: character.unlockedAchievements,
+        achievementProgress: character.achievementProgress,
+        achievementUnlockDates: character.achievementUnlockDates,
+        achievementPoints: character.achievementPoints,
+        unlockedTitles: character.unlockedTitles,
+        activeTitle: character.activeTitle
+      });
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json({
+      unlockedCount: unlockResults.length,
+      unlocks: unlockResults
+    });
+  } catch (error) {
+    console.error('Error checking achievements:', error);
+    res.status(500).json({ error: 'Failed to check achievements' });
+  }
+});
+
+/**
+ * POST /api/achievements/title/set
+ * Set active title for character
+ * Body: { player, channel, titleId }
+ */
+app.post('/api/achievements/title/set', async (req, res) => {
+  try {
+    const { player, channel, titleId } = req.body;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+
+    // Check if title is unlocked
+    if (titleId && !character.unlockedTitles.includes(titleId)) {
+      return res.status(403).json({ error: 'Title not unlocked' });
+    }
+
+    character.activeTitle = titleId;
+
+    await db.updateAchievementData(userId, channel, {
+      unlockedAchievements: character.unlockedAchievements,
+      achievementProgress: character.achievementProgress,
+      achievementUnlockDates: character.achievementUnlockDates,
+      achievementPoints: character.achievementPoints,
+      unlockedTitles: character.unlockedTitles,
+      activeTitle: character.activeTitle
+    });
+
+    res.json({
+      success: true,
+      activeTitle: titleId
+    });
+  } catch (error) {
+    console.error('Error setting title:', error);
+    res.status(500).json({ error: 'Failed to set title' });
+  }
+});
+
+/**
+ * GET /api/achievements/recent
+ * Get recently unlocked achievements
+ * Query: player, channel, limit (optional, default 5)
+ */
+app.get('/api/achievements/recent', async (req, res) => {
+  try {
+    const { player, channel, limit } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const recentLimit = limit ? parseInt(limit) : 5;
+    const recent = achievementMgr.getRecentUnlocks(character, recentLimit);
+
+    res.json({ recent });
+  } catch (error) {
+    console.error('Error fetching recent achievements:', error);
+    res.status(500).json({ error: 'Failed to fetch recent achievements' });
+  }
+});
+
+// ==================== END ACHIEVEMENT ENDPOINTS ====================
 
 // ==================== END COMBAT ENDPOINTS ====================
 

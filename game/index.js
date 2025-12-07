@@ -13,6 +13,13 @@ const LootGenerator = require('./LootGenerator');
 const ProgressionManager = require('./ProgressionManager');
 const SkillManager = require('./SkillManager');
 const ExplorationManager = require('./ExplorationManager');
+const QuestManager = require('./QuestManager');
+const ConsumableManager = require('./ConsumableManager');
+const ShopManager = require('./ShopManager');
+const ItemComparator = require('./ItemComparator');
+const NPCManager = require('./NPCManager');
+const DialogueManager = require('./DialogueManager');
+const AchievementManager = require('./AchievementManager');
 
 module.exports = {
   Character,
@@ -24,5 +31,12 @@ module.exports = {
   LootGenerator,
   ProgressionManager,
   SkillManager,
-  ExplorationManager
+  ExplorationManager,
+  QuestManager,
+  ConsumableManager,
+  ShopManager,
+  ItemComparator,
+  NPCManager,
+  DialogueManager,
+  AchievementManager
 };

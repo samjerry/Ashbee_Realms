@@ -68,6 +68,18 @@ async function initPostgres() {
       skills JSONB DEFAULT '{"skills":{},"globalCooldown":0}',
       skill_points INTEGER DEFAULT 0,
       travel_state JSONB DEFAULT NULL,
+      active_quests JSONB DEFAULT '[]',
+      completed_quests JSONB DEFAULT '[]',
+      consumable_cooldowns JSONB DEFAULT '{}',
+      dialogue_history JSONB DEFAULT '{}',
+      reputation JSONB DEFAULT '{"general":0}',
+      unlocked_achievements JSONB DEFAULT '[]',
+      achievement_progress JSONB DEFAULT '{}',
+      achievement_unlock_dates JSONB DEFAULT '{}',
+      achievement_points INTEGER DEFAULT 0,
+      unlocked_titles JSONB DEFAULT '[]',
+      active_title TEXT DEFAULT NULL,
+      stats JSONB DEFAULT '{"totalKills":0,"bossKills":0,"criticalHits":0,"highestDamage":0,"deaths":0,"locationsVisited":[],"biomesVisited":[],"totalGoldEarned":0,"totalGoldSpent":0,"mysteriesSolved":0}',
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
@@ -383,6 +395,52 @@ async function incrementPermanentStat(playerId, statName, increment = 1) {
   );
 }
 
+/**
+ * Update character achievement data
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {Object} achievementData - Achievement data to update
+ */
+async function updateAchievementData(playerId, channelName, achievementData) {
+  await query(
+    `UPDATE player_progress SET 
+      unlocked_achievements = $3,
+      achievement_progress = $4,
+      achievement_unlock_dates = $5,
+      achievement_points = $6,
+      unlocked_titles = $7,
+      active_title = $8,
+      updated_at = NOW()
+    WHERE player_id = $1 AND channel_name = $2`,
+    [
+      playerId,
+      channelName,
+      JSON.stringify(achievementData.unlockedAchievements || []),
+      JSON.stringify(achievementData.achievementProgress || {}),
+      JSON.stringify(achievementData.achievementUnlockDates || {}),
+      achievementData.achievementPoints || 0,
+      JSON.stringify(achievementData.unlockedTitles || []),
+      achievementData.activeTitle || null
+    ]
+  );
+}
+
+/**
+ * Update character stats (for achievement tracking)
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {Object} stats - Stats object
+ */
+async function updateCharacterStats(playerId, channelName, stats) {
+  await query(
+    `UPDATE player_progress SET 
+      stats = $3,
+      updated_at = NOW()
+    WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName, JSON.stringify(stats)]
+  );
+}
+
 module.exports = {
   initDB,
   query,
@@ -399,5 +457,7 @@ module.exports = {
   deleteCharacter,
   getPermanentStats,
   savePermanentStats,
-  incrementPermanentStat
+  incrementPermanentStat,
+  updateAchievementData,
+  updateCharacterStats
 };

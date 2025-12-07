@@ -4,29 +4,38 @@
       {
         "id": "wandering_merchant",
         "name": "Garen the Wanderer",
-        "description": "A cheerful trader with a cart full of oddities",
+        "description": "A cheerful trader with a cart full of oddities and survival supplies",
         "greeting": "Ah, a customer! Come, come! I have wares from all corners of the realm!",
         "merchant_type": "general",
         "spawn_locations": ["whispering_woods", "highland_reaches", "twilight_wetlands"],
         "spawn_chance": 0.15,
-        "inventory_theme": "general",
+        "inventory_theme": "general_supplies",
         "stock": {
           "always_available": [
-            { "item": "potion", "price": 10, "stock": 10 },
+            { "item": "potion", "price": 12, "stock": 10 },
             { "item": "bread", "price": 5, "stock": 20 },
-            { "item": "antidote", "price": 15, "stock": 5 }
+            { "item": "antidote", "price": 15, "stock": 8 },
+            { "item": "waterskin", "price": 3, "stock": 15 },
+            { "item": "torch", "price": 2, "stock": 20 }
           ],
           "random_pool": [
-            { "item": "health_potion", "price": 35, "chance": 0.6 },
-            { "item": "mana_potion", "price": 40, "chance": 0.4 },
-            { "item": "strength_elixir", "price": 50, "chance": 0.3 },
-            { "item": "scroll_of_teleportation", "price": 150, "chance": 0.1 }
+            { "item": "health_potion", "price": 40, "chance": 0.5 },
+            { "item": "mana_potion", "price": 45, "chance": 0.4 },
+            { "item": "rope", "price": 8, "chance": 0.6 },
+            { "item": "lockpick_set", "price": 25, "chance": 0.3 },
+            { "item": "map_fragment", "price": 50, "chance": 0.2 },
+            { "item": "compass", "price": 35, "chance": 0.3 },
+            { "item": "scroll_of_teleportation", "price": 150, "chance": 0.1 },
+            { "item": "rusty_sword", "price": 15, "chance": 0.4 },
+            { "item": "leather_armor", "price": 20, "chance": 0.3 }
           ]
         },
         "dialogue": [
           "These roads are dangerous, friend. Stock up while you can!",
           "I once met a dragon... from a very safe distance.",
-          "The prices are fair, I assure you. Well, mostly fair."
+          "The prices are fair, I assure you. Well, mostly fair.",
+          "Need a map? A torch? A mysterious trinket? I've got it all!",
+          "Traveling merchant life isn't glamorous, but the stories I could tell..."
         ]
       },
       {
@@ -37,77 +46,108 @@
         "merchant_type": "potions",
         "spawn_locations": ["cursed_swamp", "twilight_wetlands", "forsaken_ruins"],
         "spawn_chance": 0.12,
-        "inventory_theme": "potions",
+        "inventory_theme": "alchemy_consumables",
         "stock": {
           "always_available": [
-            { "item": "potion", "price": 8, "stock": 15 },
-            { "item": "health_potion", "price": 30, "stock": 10 },
-            { "item": "mana_potion", "price": 35, "stock": 8 },
-            { "item": "antidote", "price": 12, "stock": 10 }
+            { "item": "potion", "price": 8, "stock": 20 },
+            { "item": "health_potion", "price": 28, "stock": 12 },
+            { "item": "mana_potion", "price": 32, "stock": 10 },
+            { "item": "antidote", "price": 10, "stock": 15 },
+            { "item": "elixir_of_vigor", "price": 40, "stock": 8 }
           ],
           "random_pool": [
-            { "item": "greater_health_potion", "price": 90, "chance": 0.5 },
-            { "item": "strength_elixir", "price": 45, "chance": 0.6 },
-            { "item": "phoenix_down", "price": 225, "chance": 0.15 },
-            { "item": "elixir_of_immortality", "price": 450, "chance": 0.05 }
+            { "item": "greater_health_potion", "price": 85, "chance": 0.6 },
+            { "item": "greater_mana_potion", "price": 90, "chance": 0.5 },
+            { "item": "strength_elixir", "price": 45, "chance": 0.7 },
+            { "item": "iron_skin_potion", "price": 50, "chance": 0.6 },
+            { "item": "swiftness_potion", "price": 45, "chance": 0.6 },
+            { "item": "invisibility_potion", "price": 120, "chance": 0.3 },
+            { "item": "fortune_potion", "price": 150, "chance": 0.25 },
+            { "item": "phoenix_down", "price": 200, "chance": 0.2 },
+            { "item": "elixir_of_immortality", "price": 400, "chance": 0.08 },
+            { "item": "dragon_blood_vial", "price": 850, "chance": 0.05 }
           ]
         },
         "dialogue": [
           "This particular brew took three years to perfect!",
           "Never drink the purple one. Trust me on this.",
-          "Alchemy is an art, not a science. Well... mostly art."
+          "Alchemy is an art, not a science. Well... mostly art.",
+          "Each potion is crafted with ingredients from across the realm.",
+          "A good alchemist knows the difference between poison and medicine. A great one uses both."
         ]
       },
       {
         "id": "weapon_dealer",
         "name": "Thorgrim Ironhand",
-        "description": "A scarred dwarf with arms like tree trunks",
+        "description": "A scarred dwarf with arms like tree trunks, weapons covering every wall",
         "greeting": "Need something that bites? I've got blades that'll cut through anything!",
         "merchant_type": "weapons",
         "spawn_locations": ["goblin_tunnels", "forsaken_ruins", "volcanic_peaks"],
         "spawn_chance": 0.1,
-        "inventory_theme": "weapons",
+        "inventory_theme": "weapons_only",
         "stock": {
           "always_available": [
-            { "item": "steel_sword", "price": 100, "stock": 3 },
-            { "item": "orcish_axe", "price": 150, "stock": 2 }
+            { "item": "rusty_sword", "price": 15, "stock": 5 },
+            { "item": "wooden_staff", "price": 12, "stock": 4 },
+            { "item": "short_bow", "price": 25, "stock": 3 },
+            { "item": "iron_dagger", "price": 20, "stock": 5 }
           ],
           "random_pool": [
-            { "item": "flamebrand", "price": 500, "chance": 0.3 },
-            { "item": "staff_of_storms", "price": 600, "chance": 0.25 },
-            { "item": "dragonslayer", "price": 2000, "chance": 0.05 }
+            { "item": "steel_sword", "price": 120, "chance": 0.6 },
+            { "item": "battle_axe", "price": 150, "chance": 0.5 },
+            { "item": "war_hammer", "price": 140, "chance": 0.5 },
+            { "item": "longbow", "price": 160, "chance": 0.4 },
+            { "item": "mage_staff", "price": 180, "chance": 0.4 },
+            { "item": "flamebrand", "price": 550, "chance": 0.25 },
+            { "item": "staff_of_storms", "price": 600, "chance": 0.2 },
+            { "item": "shadow_blade", "price": 700, "chance": 0.15 },
+            { "item": "dragonslayer", "price": 2200, "chance": 0.05 },
+            { "item": "frostmourne", "price": 2500, "chance": 0.03 }
           ]
         },
         "dialogue": [
           "Every blade I sell has tasted blood. Usually mine, during testing.",
           "A warrior without a good weapon is just... well, dead.",
-          "I don't ask questions, and you don't tell lies. Deal?"
+          "I don't ask questions, and you don't tell lies. Deal?",
+          "Forged each of these with my own two hands. Well, most of them.",
+          "Want something that'll make your enemies reconsider their life choices? Step right up!"
         ]
       },
       {
         "id": "armor_merchant",
         "name": "Seraphina Steelweave",
-        "description": "An elegant elf displaying gleaming armor sets",
+        "description": "An elegant elf displaying gleaming armor sets and protective gear",
         "greeting": "Protection is not a luxury—it's a necessity. Let me outfit you properly.",
         "merchant_type": "armor",
         "spawn_locations": ["town_square", "forsaken_ruins", "highland_reaches"],
         "spawn_chance": 0.1,
-        "inventory_theme": "armor",
+        "inventory_theme": "armor_defense",
         "stock": {
           "always_available": [
-            { "item": "leather_armor", "price": 15, "stock": 5 },
-            { "item": "chainmail", "price": 120, "stock": 3 }
+            { "item": "leather_armor", "price": 18, "stock": 6 },
+            { "item": "cloth_robe", "price": 15, "stock": 5 },
+            { "item": "leather_helmet", "price": 12, "stock": 6 },
+            { "item": "wooden_shield", "price": 10, "stock": 5 }
           ],
           "random_pool": [
-            { "item": "mage_robes", "price": 150, "chance": 0.4 },
-            { "item": "dragon_scale_mail", "price": 800, "chance": 0.2 },
-            { "item": "titan_plate_armor", "price": 3000, "chance": 0.03 }
+            { "item": "chainmail", "price": 140, "chance": 0.6 },
+            { "item": "scale_mail", "price": 160, "chance": 0.5 },
+            { "item": "plate_armor", "price": 200, "chance": 0.4 },
+            { "item": "mage_robes", "price": 150, "chance": 0.5 },
+            { "item": "studded_leather", "price": 110, "chance": 0.6 },
+            { "item": "steel_helmet", "price": 90, "chance": 0.5 },
+            { "item": "tower_shield", "price": 180, "chance": 0.4 },
+            { "item": "dragon_scale_mail", "price": 900, "chance": 0.15 },
+            { "item": "enchanted_robes", "price": 800, "chance": 0.15 },
+            { "item": "titan_plate_armor", "price": 3200, "chance": 0.03 }
           ]
         },
         "dialogue": [
           "Style and protection need not be mutually exclusive.",
           "I crafted armor for the King's Guard, you know.",
-          "The best defense is not being hit. The second best is good armor."
+          "The best defense is not being hit. The second best is good armor.",
+          "Each piece is fitted to move with you, not against you.",
+          "Dead adventurers don't collect treasure. Invest in staying alive."
         ]
       },
       {
@@ -118,21 +158,399 @@
         "merchant_type": "rare",
         "spawn_locations": ["cursed_swamp", "void_realm", "ancient_crypts", "forsaken_ruins"],
         "spawn_chance": 0.05,
-        "inventory_theme": "rare_illegal",
+        "inventory_theme": "rare_illegal_exotic",
         "stock": {
           "random_pool": [
-            { "item": "phoenix_down", "price": 200, "chance": 0.6 },
-            { "item": "greater_health_potion", "price": 80, "chance": 0.7 },
-            { "item": "scroll_of_teleportation", "price": 120, "chance": 0.5 },
-            { "item": "dragon_blood_vial", "price": 900, "chance": 0.2 },
-            { "item": "elixir_of_immortality", "price": 400, "chance": 0.15 },
-            { "item": "ambrosia", "price": 2000, "chance": 0.05 }
+            { "item": "phoenix_down", "price": 190, "chance": 0.7 },
+            { "item": "greater_health_potion", "price": 75, "chance": 0.8 },
+            { "item": "scroll_of_teleportation", "price": 110, "chance": 0.6 },
+            { "item": "invisibility_potion", "price": 100, "chance": 0.5 },
+            { "item": "cursed_ring", "price": 300, "chance": 0.4 },
+            { "item": "soul_gem", "price": 500, "chance": 0.3 },
+            { "item": "dragon_blood_vial", "price": 850, "chance": 0.25 },
+            { "item": "elixir_of_immortality", "price": 380, "chance": 0.2 },
+            { "item": "ambrosia", "price": 1900, "chance": 0.08 },
+            { "item": "necromancers_tome", "price": 1200, "chance": 0.1 },
+            { "item": "void_crystal", "price": 2500, "chance": 0.05 },
+            { "item": "philosophers_stone", "price": 5000, "chance": 0.02 }
           ]
         },
         "dialogue": [
           "Ask no questions, and I'll tell no lies.",
           "Where I got these? Let's just say... they fell off a cart.",
-          "Some call me a smuggler. I prefer 'logistics specialist'."
+          "Some call me a smuggler. I prefer 'logistics specialist'.",
+          "These items are... let's say 'pre-owned' by powerful entities.",
+          "*glances around nervously* Quick, before the guards come."
+        ]
+      },
+      {
+        "id": "jeweler",
+        "name": "Mira Gemheart",
+        "description": "A halfling woman with a magnifying glass examining sparkling accessories",
+        "greeting": "Jewelry, trinkets, and magical baubles! Everything shiny and powerful!",
+        "merchant_type": "accessories",
+        "spawn_locations": ["town_square", "highland_reaches", "twilight_wetlands"],
+        "spawn_chance": 0.08,
+        "inventory_theme": "accessories_jewelry",
+        "stock": {
+          "always_available": [
+            { "item": "copper_ring", "price": 8, "stock": 10 },
+            { "item": "leather_belt", "price": 6, "stock": 8 },
+            { "item": "simple_necklace", "price": 10, "stock": 6 }
+          ],
+          "random_pool": [
+            { "item": "silver_ring", "price": 50, "chance": 0.6 },
+            { "item": "amulet_of_protection", "price": 120, "chance": 0.5 },
+            { "item": "ring_of_strength", "price": 150, "chance": 0.4 },
+            { "item": "mystic_pendant", "price": 200, "chance": 0.4 },
+            { "item": "belt_of_giants", "price": 180, "chance": 0.3 },
+            { "item": "ring_of_regeneration", "price": 400, "chance": 0.2 },
+            { "item": "amulet_of_souls", "price": 800, "chance": 0.1 },
+            { "item": "crown_of_kings", "price": 2000, "chance": 0.05 }
+          ]
+        },
+        "dialogue": [
+          "A little sparkle can make all the difference in battle!",
+          "Jewelry isn't just pretty—these pieces have real power.",
+          "I've got rings that'll make you stronger than any armor.",
+          "Each gem is carefully selected for its magical properties.",
+          "Don't underestimate what a good accessory can do!"
+        ]
+      },
+      {
+        "id": "food_vendor",
+        "name": "Brock the Baker",
+        "description": "A portly man with flour-dusted apron and friendly smile",
+        "greeting": "Fresh bread, hearty stews, and travel rations! Fill your belly before the road!",
+        "merchant_type": "food",
+        "spawn_locations": ["town_square", "whispering_woods", "highland_reaches"],
+        "spawn_chance": 0.12,
+        "inventory_theme": "food_provisions",
+        "stock": {
+          "always_available": [
+            { "item": "bread", "price": 4, "stock": 30 },
+            { "item": "cheese", "price": 6, "stock": 20 },
+            { "item": "dried_meat", "price": 8, "stock": 15 },
+            { "item": "waterskin", "price": 3, "stock": 20 }
+          ],
+          "random_pool": [
+            { "item": "roasted_boar", "price": 25, "chance": 0.7 },
+            { "item": "honey_bread", "price": 20, "chance": 0.8 },
+            { "item": "travelers_stew", "price": 15, "chance": 0.7 },
+            { "item": "elven_waybread", "price": 40, "chance": 0.4 },
+            { "item": "dwarven_ale", "price": 12, "chance": 0.6 },
+            { "item": "spiced_wine", "price": 18, "chance": 0.5 },
+            { "item": "hero_feast", "price": 100, "chance": 0.2 }
+          ]
+        },
+        "dialogue": [
+          "Can't adventure on an empty stomach!",
+          "My bread's been feeding heroes for twenty years!",
+          "Nothing fancy, but it'll keep you alive out there.",
+          "Hot meals and cold drinks—what more do you need?",
+          "The secret ingredient? Love. And butter. Mostly butter."
+        ]
+      },
+      {
+        "id": "scroll_merchant",
+        "name": "Archmage Aldric",
+        "description": "An elderly wizard surrounded by floating scrolls and ancient tomes",
+        "greeting": "Magical scrolls and mystical tomes! Knowledge is power, literally!",
+        "merchant_type": "scrolls",
+        "spawn_locations": ["forsaken_ruins", "ancient_library", "town_square"],
+        "spawn_chance": 0.08,
+        "inventory_theme": "scrolls_magic",
+        "stock": {
+          "always_available": [
+            { "item": "scroll_of_identify", "price": 20, "stock": 8 },
+            { "item": "scroll_of_light", "price": 10, "stock": 10 }
+          ],
+          "random_pool": [
+            { "item": "scroll_of_teleportation", "price": 100, "chance": 0.6 },
+            { "item": "scroll_of_fireball", "price": 80, "chance": 0.5 },
+            { "item": "scroll_of_healing", "price": 60, "chance": 0.6 },
+            { "item": "scroll_of_protection", "price": 90, "chance": 0.5 },
+            { "item": "scroll_of_resurrection", "price": 300, "chance": 0.3 },
+            { "item": "scroll_of_time_stop", "price": 500, "chance": 0.15 },
+            { "item": "forbidden_grimoire", "price": 1500, "chance": 0.08 },
+            { "item": "tome_of_eternal_wisdom", "price": 3000, "chance": 0.03 }
+          ]
+        },
+        "dialogue": [
+          "These scrolls contain spells even the greatest mages struggle to cast!",
+          "One-use magic, but oh what a use!",
+          "Read carefully—some of these scrolls have... side effects.",
+          "I've been collecting magical texts for seventy years.",
+          "Knowledge preserved in ink is knowledge preserved forever."
+        ]
+      },
+      {
+        "id": "curiosity_collector",
+        "name": "Jasper Oddsworth",
+        "description": "An eccentric gnome surrounded by bizarre trinkets and oddities",
+        "greeting": "Curiosities! Oddities! Things you didn't know you needed!",
+        "merchant_type": "oddities",
+        "spawn_locations": ["twilight_wetlands", "cursed_swamp", "whispering_woods"],
+        "spawn_chance": 0.1,
+        "inventory_theme": "random_oddities",
+        "stock": {
+          "always_available": [
+            { "item": "lucky_charm", "price": 15, "stock": 5 },
+            { "item": "mysterious_key", "price": 25, "stock": 3 }
+          ],
+          "random_pool": [
+            { "item": "compass", "price": 30, "chance": 0.5 },
+            { "item": "map_fragment", "price": 40, "chance": 0.4 },
+            { "item": "music_box", "price": 50, "chance": 0.4 },
+            { "item": "pocket_watch", "price": 60, "chance": 0.3 },
+            { "item": "crystal_ball", "price": 200, "chance": 0.3 },
+            { "item": "enchanted_mirror", "price": 150, "chance": 0.3 },
+            { "item": "cursed_doll", "price": 100, "chance": 0.4 },
+            { "item": "bottled_ghost", "price": 250, "chance": 0.2 },
+            { "item": "wishing_stone", "price": 800, "chance": 0.1 },
+            { "item": "eternal_candle", "price": 120, "chance": 0.3 }
+          ]
+        },
+        "dialogue": [
+          "I have no idea what half of these do, but they're fascinating!",
+          "One person's junk is another person's legendary artifact!",
+          "This one talks sometimes. I think it's haunted.",
+          "Collected from dungeons, ruins, and... other places.",
+          "Want something weird? You came to the right place!"
+        ]
+      },
+      {
+        "id": "enchanter",
+        "name": "Zephyr the Enchanter",
+        "description": "A mystical elf with glowing hands, surrounded by magical auras",
+        "greeting": "Enchantments, blessings, and magical enhancements! I can make your gear legendary!",
+        "merchant_type": "enchantments",
+        "spawn_locations": ["town_square", "ancient_library", "forsaken_ruins"],
+        "spawn_chance": 0.07,
+        "inventory_theme": "enchantments_magic",
+        "stock": {
+          "always_available": [
+            { "item": "minor_enchantment_scroll", "price": 50, "stock": 5 },
+            { "item": "weapon_oil", "price": 30, "stock": 8 },
+            { "item": "armor_polish", "price": 25, "stock": 8 }
+          ],
+          "random_pool": [
+            { "item": "enchantment_of_sharpness", "price": 200, "chance": 0.5 },
+            { "item": "enchantment_of_protection", "price": 220, "chance": 0.5 },
+            { "item": "enchantment_of_speed", "price": 180, "chance": 0.4 },
+            { "item": "soul_stone", "price": 400, "chance": 0.3 },
+            { "item": "rune_of_power", "price": 500, "chance": 0.25 },
+            { "item": "crystal_of_amplification", "price": 600, "chance": 0.2 },
+            { "item": "legendary_enchantment_scroll", "price": 1500, "chance": 0.08 }
+          ]
+        },
+        "dialogue": [
+          "Every weapon deserves to reach its full potential.",
+          "I've enchanted blades for kings and sorcerers alike.",
+          "Magic flows through these stones. Can you feel it?",
+          "A good enchantment can mean the difference between victory and defeat.",
+          "My enchantments last forever. Well, mostly forever."
+        ]
+      },
+      {
+        "id": "herbalist",
+        "name": "Sage Willow",
+        "description": "A druid woman with flowers in her hair and herb pouches on her belt",
+        "greeting": "Natural remedies, healing herbs, and nature's bounty!",
+        "merchant_type": "herbs",
+        "spawn_locations": ["whispering_woods", "twilight_wetlands", "highland_reaches"],
+        "spawn_chance": 0.11,
+        "inventory_theme": "herbs_nature",
+        "stock": {
+          "always_available": [
+            { "item": "healing_herbs", "price": 6, "stock": 20 },
+            { "item": "mana_herbs", "price": 7, "stock": 15 },
+            { "item": "antidote_herbs", "price": 8, "stock": 12 },
+            { "item": "stamina_root", "price": 10, "stock": 10 }
+          ],
+          "random_pool": [
+            { "item": "rare_mushroom", "price": 35, "chance": 0.6 },
+            { "item": "vitality_flower", "price": 50, "chance": 0.5 },
+            { "item": "spirit_moss", "price": 45, "chance": 0.5 },
+            { "item": "moonlight_petal", "price": 80, "chance": 0.4 },
+            { "item": "dragons_breath_herb", "price": 150, "chance": 0.25 },
+            { "item": "world_tree_seed", "price": 300, "chance": 0.15 },
+            { "item": "immortal_lotus", "price": 800, "chance": 0.05 }
+          ]
+        },
+        "dialogue": [
+          "Nature provides all the healing we need.",
+          "These herbs grow in the deepest parts of the forest.",
+          "Chemical potions are fine, but nothing beats natural remedies.",
+          "I harvest these myself under the full moon.",
+          "The earth gives freely to those who listen."
+        ]
+      },
+      {
+        "id": "beast_master",
+        "name": "Kael the Beastmaster",
+        "description": "A rugged ranger with animal companions at his side",
+        "greeting": "Companions, pets, and beast supplies! Every adventurer needs a loyal friend!",
+        "merchant_type": "pets",
+        "spawn_locations": ["whispering_woods", "highland_reaches", "volcanic_peaks"],
+        "spawn_chance": 0.06,
+        "inventory_theme": "pets_companions",
+        "stock": {
+          "always_available": [
+            { "item": "pet_food", "price": 5, "stock": 30 },
+            { "item": "beast_whistle", "price": 20, "stock": 5 },
+            { "item": "pet_collar", "price": 15, "stock": 8 }
+          ],
+          "random_pool": [
+            { "item": "wolf_pup_egg", "price": 200, "chance": 0.4 },
+            { "item": "hawk_egg", "price": 180, "chance": 0.4 },
+            { "item": "spirit_fox_charm", "price": 300, "chance": 0.3 },
+            { "item": "drake_egg", "price": 500, "chance": 0.2 },
+            { "item": "phoenix_feather", "price": 400, "chance": 0.2 },
+            { "item": "dragon_whelp_egg", "price": 2000, "chance": 0.05 },
+            { "item": "legendary_mount_token", "price": 3000, "chance": 0.03 }
+          ]
+        },
+        "dialogue": [
+          "A good beast is worth ten mercenaries.",
+          "I've trained everything from wolves to wyverns.",
+          "These creatures are loyal to the end.",
+          "Treat them well, and they'll save your life.",
+          "Looking for a companion? I've got the perfect match!"
+        ]
+      },
+      {
+        "id": "rune_carver",
+        "name": "Durnok Runeforge",
+        "description": "A dwarven craftsman carving glowing runes into stone tablets",
+        "greeting": "Runes of power! Ancient magic carved in stone!",
+        "merchant_type": "runes",
+        "spawn_locations": ["goblin_tunnels", "ancient_crypts", "volcanic_peaks"],
+        "spawn_chance": 0.07,
+        "inventory_theme": "runes_ancient",
+        "stock": {
+          "always_available": [
+            { "item": "minor_rune_of_strength", "price": 40, "stock": 6 },
+            { "item": "minor_rune_of_protection", "price": 40, "stock": 6 },
+            { "item": "rune_stone_blank", "price": 10, "stock": 15 }
+          ],
+          "random_pool": [
+            { "item": "rune_of_berserker", "price": 150, "chance": 0.5 },
+            { "item": "rune_of_iron_will", "price": 160, "chance": 0.5 },
+            { "item": "rune_of_swiftness", "price": 140, "chance": 0.5 },
+            { "item": "rune_of_regeneration", "price": 200, "chance": 0.4 },
+            { "item": "rune_of_titans", "price": 400, "chance": 0.25 },
+            { "item": "ancient_dwarven_rune", "price": 800, "chance": 0.15 },
+            { "item": "elder_rune_set", "price": 2000, "chance": 0.05 }
+          ]
+        },
+        "dialogue": [
+          "These runes have been passed down for generations.",
+          "Dwarven runecraft is the finest in all the realms!",
+          "Each rune holds the power of ancient kings.",
+          "Carve these properly and feel true power.",
+          "My grandfather taught me these patterns. His grandfather taught him."
+        ]
+      },
+      {
+        "id": "tavern_keeper",
+        "name": "Barnaby Brewfoot",
+        "description": "A jolly innkeeper with a perpetual smile and frothy mug",
+        "greeting": "Welcome to my tavern! Drinks, stories, and good company!",
+        "merchant_type": "tavern",
+        "spawn_locations": ["town_square", "highland_reaches"],
+        "spawn_chance": 0.13,
+        "inventory_theme": "drinks_social",
+        "stock": {
+          "always_available": [
+            { "item": "ale", "price": 3, "stock": 50 },
+            { "item": "wine", "price": 8, "stock": 30 },
+            { "item": "tavern_meal", "price": 12, "stock": 20 },
+            { "item": "hot_soup", "price": 6, "stock": 25 }
+          ],
+          "random_pool": [
+            { "item": "dwarven_stout", "price": 15, "chance": 0.7 },
+            { "item": "elven_mead", "price": 20, "chance": 0.6 },
+            { "item": "firebelly_whiskey", "price": 25, "chance": 0.5 },
+            { "item": "liquid_courage", "price": 40, "chance": 0.4 },
+            { "item": "heroes_brew", "price": 60, "chance": 0.3 },
+            { "item": "dragons_blood_wine", "price": 150, "chance": 0.15 }
+          ]
+        },
+        "dialogue": [
+          "Pull up a chair! First round's on... well, you.",
+          "I've heard every tale worth telling. Got a new one?",
+          "Best ale this side of the mountains!",
+          "Drink up! Adventure awaits in the morning!",
+          "Nothing solves problems like a cold mug and warm food."
+        ]
+      },
+      {
+        "id": "trap_specialist",
+        "name": "Sly Quickfingers",
+        "description": "A sneaky rogue with lockpicks and trap components spread on a table",
+        "greeting": "*whispers* Need tools for... delicate work? I've got what you need.",
+        "merchant_type": "rogue_tools",
+        "spawn_locations": ["goblin_tunnels", "ancient_crypts", "cursed_swamp"],
+        "spawn_chance": 0.08,
+        "inventory_theme": "thieves_tools",
+        "stock": {
+          "always_available": [
+            { "item": "lockpick_set", "price": 20, "stock": 10 },
+            { "item": "smoke_bomb", "price": 15, "stock": 12 },
+            { "item": "caltrops", "price": 10, "stock": 15 },
+            { "item": "rope_and_grapple", "price": 25, "stock": 8 }
+          ],
+          "random_pool": [
+            { "item": "poison_vial", "price": 50, "chance": 0.6 },
+            { "item": "paralysis_dart", "price": 60, "chance": 0.5 },
+            { "item": "master_lockpick", "price": 100, "chance": 0.4 },
+            { "item": "shadow_cloak", "price": 200, "chance": 0.3 },
+            { "item": "assassins_blade", "price": 400, "chance": 0.25 },
+            { "item": "ring_of_invisibility", "price": 800, "chance": 0.15 },
+            { "item": "thieves_guild_token", "price": 1000, "chance": 0.1 }
+          ]
+        },
+        "dialogue": [
+          "Locks? I don't see locks. Just puzzles waiting to be solved.",
+          "These tools have opened doors best left closed.",
+          "Need to disappear? I can help with that.",
+          "A good rogue is never caught. A great rogue is never seen.",
+          "*grins* I didn't steal these. They just... found their way to me."
+        ]
+      },
+      {
+        "id": "priest",
+        "name": "Father Lumis",
+        "description": "A kind priest in white robes, radiating holy energy",
+        "greeting": "Blessings upon you, child. May the Light guide your path.",
+        "merchant_type": "holy",
+        "spawn_locations": ["town_square", "ancient_library", "highland_reaches"],
+        "spawn_chance": 0.09,
+        "inventory_theme": "holy_divine",
+        "stock": {
+          "always_available": [
+            { "item": "holy_water", "price": 15, "stock": 15 },
+            { "item": "blessing_scroll", "price": 25, "stock": 10 },
+            { "item": "prayer_beads", "price": 20, "stock": 8 },
+            { "item": "divine_candle", "price": 10, "stock": 20 }
+          ],
+          "random_pool": [
+            { "item": "consecrated_weapon_oil", "price": 80, "chance": 0.6 },
+            { "item": "shield_of_faith", "price": 150, "chance": 0.5 },
+            { "item": "holy_symbol", "price": 120, "chance": 0.5 },
+            { "item": "angelic_feather", "price": 200, "chance": 0.4 },
+            { "item": "scroll_of_resurrection", "price": 400, "chance": 0.3 },
+            { "item": "holy_grail_replica", "price": 1000, "chance": 0.1 },
+            { "item": "divine_intervention_scroll", "price": 2000, "chance": 0.05 }
+          ]
+        },
+        "dialogue": [
+          "The Light protects those with pure hearts.",
+          "Faith is the strongest armor.",
+          "I've blessed these items myself.",
+          "Even in darkness, the divine shines through.",
+          "Your deeds are known to the heavens, my child."
         ]
       }
     ],

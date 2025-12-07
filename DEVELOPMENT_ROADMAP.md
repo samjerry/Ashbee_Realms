@@ -291,92 +291,352 @@ node Testing/test_exploration_system.js
 
 Connect all the JSON data to working game systems.
 
-#### 2.1 Quest System Implementation
+#### 2.1 Quest System Implementation ✅ **COMPLETED**
 **Goal:** Players can accept, complete, and turn in quests.
 
 **Tasks:**
-- [ ] Create quest manager (load from quests.json)
-- [ ] Implement quest tracking (objectives, progress)
-- [ ] Add quest state machine (available, active, completed, failed)
-- [ ] Create quest rewards system (XP, gold, items, reputation)
-- [ ] Implement quest triggers (talk to NPC, kill monsters, collect items)
-- [ ] Add quest log UI/API
+- [x] ✅ Create quest manager (load from quests.json - 5 main, 6 side, 2 daily quests)
+- [x] ✅ Implement quest tracking (objectives, progress with partial completion)
+- [x] ✅ Add quest state machine (available, active, ready_to_complete, failed, abandoned)
+- [x] ✅ Create quest rewards system (XP, gold, items, reputation, titles, unlocks)
+- [x] ✅ Implement quest triggers (talk_to_npc, kill_monster, kill_boss, collect_item, explore_location)
+- [x] ✅ Add quest log UI/API (8 comprehensive endpoints)
 
-**Files to create:**
-- `game/quests.js` - Quest engine
+**Files created:**
+- ✅ `game/QuestManager.js` - Complete quest management system (420 lines)
+- ✅ `game/QUEST_README.md` - Comprehensive documentation with API guide
+- ✅ `Testing/test_quest_system.js` - 26 comprehensive tests
 
-**Files to modify:**
-- `server.js` - Add quest endpoints
-- `game/combat.js` - Track quest kill objectives
-- `game/inventory.js` - Track quest item objectives
+**Files modified:**
+- ✅ `game/index.js` - Exported QuestManager
+- ✅ `game/Character.js` - Added activeQuests and completedQuests properties
+- ✅ `server.js` - Added 8 quest API endpoints
+- ✅ `db.js` - Added active_quests and completed_quests JSONB columns
 
-**API Design:**
+**Features Implemented:**
+- ✅ **Quest Loading**: All 13 quests loaded from quests.json
+- ✅ **Quest Types**: Main story (5), Side quests (6), Daily quests (2)
+- ✅ **State Machine**: available → active → ready_to_complete → completed (with failed/abandoned)
+- ✅ **Objective Types**: 5 types (talk_to_npc, kill_monster, kill_boss, collect_item, explore_location)
+- ✅ **Progress Tracking**: Partial completion (2/3 kills = 22% progress)
+- ✅ **Prerequisites**: Quest chaining with level requirements
+- ✅ **Rewards System**: XP, gold, items, reputation, titles, quest unlocks
+- ✅ **Event Triggering**: Automatic updates from game actions
+- ✅ **Quest Chains**: Prerequisites and unlock relationships
+
+**API Endpoints:**
 ```javascript
-GET /api/quests/available // Quests player can accept
-POST /api/quests/accept { questId }
-GET /api/quests/active // Player's current quests
-POST /api/quests/complete { questId }
+GET /api/quests/available // Quests player can accept (filtered by level/prereqs)
+POST /api/quests/accept // Accept quest and start tracking
+GET /api/quests/active // Player's active quests with progress
+POST /api/quests/complete // Complete quest, receive rewards
+POST /api/quests/abandon // Abandon quest (lose progress)
+GET /api/quests/progress/:questId // Detailed progress for specific quest
+GET /api/quests/chain/:questId // Quest chain info (prereqs/unlocks)
+GET /api/quests/story // Main story quests in order
 ```
+
+**Quest Progression Examples:**
+- **The Awakening** (Level 1): Talk to Elder Thorne, kill 3 Forest Wolves
+- **The Wolf's Den** (Level 3): Requires Awakening, kill Alpha Wolf boss
+- **The Goblin Menace** (Level 5): Requires Wolf's Den, kill 10 Goblin Scouts
+
+**Testing:**
+```bash
+node Testing/test_quest_system.js
+# 26/26 tests passing ✅
+# Covers: quest loading, availability, acceptance, progress, completion, chains, events
+```
+
+**Documentation:**
+- See `game/QUEST_README.md` for complete API documentation
+- Includes Twitch bot integration examples and quest design patterns
 
 ---
 
-#### 2.2 Loot & Item System
+#### 2.2 Loot & Item System ✅ **COMPLETED**
 **Goal:** Monsters drop items, players can use/sell them.
 
 **Tasks:**
-- [ ] Implement loot generation (from monster_loot.json)
-- [ ] Create item pickup and auto-loot
-- [ ] Add consumable item usage (potions, food, scrolls)
-- [ ] Implement vendor/shop system (NPCs sell items)
-- [ ] Add item rarity drops (common → mythic)
-- [ ] Create item comparison (better/worse than equipped)
+- [x] ✅ Implement loot generation (from monster_loot.json - already complete from Phase 1.2)
+- [x] ✅ Create item pickup and auto-loot (automatic from combat rewards)
+- [x] ✅ Add consumable item usage (potions, food, scrolls with cooldowns)
+- [x] ✅ Implement vendor/shop system (NPCs sell items, buy/sell mechanics)
+- [x] ✅ Add item rarity drops (common → mythic - already in LootGenerator)
+- [x] ✅ Create item comparison (better/worse than equipped, upgrade suggestions)
 
-**Files to create:**
-- `game/shop.js` - Vendor system
+**Files created:**
+- ✅ `game/ConsumableManager.js` - Complete consumable usage system (470+ lines)
+- ✅ `game/ShopManager.js` - Full vendor/shop system (400+ lines)
+- ✅ `game/ItemComparator.js` - Item comparison utilities (390+ lines)
+- ✅ `game/LOOT_ITEM_README.md` - Comprehensive documentation
+- ✅ `Testing/test_loot_item_system.js` - 30 comprehensive tests
 
-**Files to modify:**
-- `game/loot.js` - Expand loot generation
-- `game/inventory.js` - Add item usage
-- `server.js` - Add shop/item endpoints
+**Files modified:**
+- ✅ `game/index.js` - Exported ConsumableManager, ShopManager, ItemComparator
+- ✅ `game/Character.js` - Added consumableCooldowns property
+- ✅ `server.js` - Added 8 shop/consumable/comparison API endpoints
+- ✅ `db.js` - Added consumable_cooldowns JSONB column
+- ✅ `data/npcs.json` - Enhanced merchant inventory themes
+
+**Features Implemented:**
+- ✅ **Consumable Usage**: 6 types (health, mana, buff, food, utility, survival)
+- ✅ **Cooldown System**: Per-item cooldowns (30-3600 seconds)
+- ✅ **Effect Application**: Immediate healing, buffs, status effects
+- ✅ **16 Themed Merchants**: Each with unique inventory pools
+  1. General Supplies (survival gear, tools, basics)
+  2. Alchemy/Potions (consumables specialist)
+  3. Weapons Only (swords, axes, bows, staves)
+  4. Armor/Defense (armor, shields, helmets)
+  5. Jewelry/Accessories (rings, amulets, belts)
+  6. Food/Provisions (cheap healing, rations)
+  7. Scrolls/Magic (spell scrolls, tomes)
+  8. Oddities/Curiosities (random strange items)
+  9. Rare/Illegal (exotic high-end items, 5% spawn)
+  10. Enchantments (gear upgrades, soul stones)
+  11. Herbs/Nature (natural remedies, rare plants)
+  12. Pets/Beasts (companions, mounts, eggs)
+  13. Runes/Dwarven (ancient runes, dwarven magic)
+  14. Tavern/Drinks (social buffs, cheap food)
+  15. Rogue Tools (lockpicks, poisons, stealth)
+  16. Holy/Divine (clerical items, resurrection)
+- ✅ **Inventory Management**: Always available + random pool items
+- ✅ **Buy/Sell Mechanics**: Gold transactions, stock management
+- ✅ **Item Comparison**: Equipment comparison, upgrade detection
+- ✅ **Upgrade Suggestions**: Scan inventory for better items
+- ✅ **Price Calculation**: Rarity-based pricing, 40% sell-back rate
+
+**API Endpoints:**
+```javascript
+POST /api/consumable/use      // Use potion, food, scroll
+GET /api/shop/merchants        // List all merchants
+GET /api/shop/merchants/:location // Merchants in location
+GET /api/shop/:merchantId      // View merchant inventory
+POST /api/shop/buy            // Buy item from merchant
+POST /api/shop/sell           // Sell item to merchant
+POST /api/items/compare       // Compare items
+GET /api/items/upgrades       // Get upgrade suggestions
+```
+
+**Testing:**
+```bash
+node Testing/test_loot_item_system.js
+# 30/30 tests passing ✅
+```
+
+**Documentation:**
+- See `game/LOOT_ITEM_README.md` for complete API documentation
+- Includes Twitch bot integration examples for !shop, !buy, !sell, !use, !compare commands
+
+--- buy/sell mechanics)
+- [x] ✅ Add item rarity drops (common → mythic - already in LootGenerator)
+- [x] ✅ Create item comparison (better/worse than equipped, upgrade suggestions)
+
+**Files created:**
+- ✅ `game/ConsumableManager.js` - Complete consumable usage system (470+ lines)
+- ✅ `game/ShopManager.js` - Full vendor/shop system (400+ lines)
+- ✅ `game/ItemComparator.js` - Item comparison utilities (390+ lines)
+- ✅ `game/LOOT_ITEM_README.md` - Comprehensive documentation
+- ✅ `Testing/test_loot_item_system.js` - 30 comprehensive tests
+
+**Files modified:**
+- ✅ `game/index.js` - Exported ConsumableManager, ShopManager, ItemComparator
+- ✅ `game/Character.js` - Added consumableCooldowns property
+- ✅ `server.js` - Added 8 shop/consumable/comparison API endpoints
+- ✅ `db.js` - Added consumable_cooldowns JSONB column
+
+**Features Implemented:**
+- ✅ **Consumable Usage**: Health/mana potions, buff elixirs, food, scrolls, utility items
+- ✅ **Consumable Types**: 6 types (health, mana, buff, food, utility, survival)
+- ✅ **Cooldown System**: Per-item cooldowns (30-3600 seconds)
+- ✅ **Effect Application**: Immediate healing, buffs, status effects
+- ✅ **Merchant System**: 4+ merchant types (general, potion, weapon, armor)
+- ✅ **Inventory Management**: Always available + random pool items
+- ✅ **Buy/Sell Mechanics**: Gold transactions, stock management
+- ✅ **Item Comparison**: Equipment comparison, upgrade detection
+- ✅ **Upgrade Suggestions**: Scan inventory for better items
+- ✅ **Price Calculation**: Rarity-based pricing, 40% sell-back rate
+
+**API Endpoints:**
+```javascript
+// Consumables
+POST /api/consumable/use // Use potion, food, scroll, etc.
+
+// Shop System
+GET /api/shop/merchants // List all merchants
+GET /api/shop/merchants/:location // Merchants in location
+GET /api/shop/:merchantId // View merchant inventory
+POST /api/shop/buy // Buy item from merchant
+POST /api/shop/sell // Sell item to merchant
+
+// Item Comparison
+POST /api/items/compare // Compare two items or with equipped
+GET /api/items/upgrades // Get upgrade suggestions
+```
+
+**Consumable System:**
+- **Health Potions**: Lesser (50 HP), Normal (150 HP), Greater (350 HP)
+- **Buff Potions**: Strength (+25% damage), Iron Skin (+30% defense), Swiftness (+50% speed)
+- **Food**: Roasted Boar, Honey Bread (heal + buffs)
+- **Utility**: Invisibility, Teleportation, Fortune (drop rate boost)
+- **Survival**: Phoenix Down (auto-revive), Elixir of Immortality
+
+**Merchant Types:**
+- **Wandering Merchant**: General goods, spawns in 3+ locations
+- **Potion Master**: Alchemical items, best potion prices
+- **Weapon Dealer**: High-damage weapons, rare equipment
+- **Armor Merchant**: Defensive gear, shields
+
+**Item Comparison Features:**
+- Direct equipment comparison (attack, defense, magic, agility, HP, crit)
+- Compare inventory item with currently equipped
+- Find best item for slot in inventory
+- Full upgrade scan across all slots
+- Recommendation engine (which item is better)
+
+**Testing:**
+```bash
+node Testing/test_loot_item_system.js
+# 30/30 tests passing ✅
+# Covers: consumable usage, shop transactions, item comparison, cooldowns, inventory updates
+```
+
+**Documentation:**
+- See `game/LOOT_ITEM_README.md` for complete API documentation
+- Includes Twitch bot integration examples for !shop, !buy, !sell, !use, !compare commands
 
 ---
 
-#### 2.3 NPC & Dialogue System
+#### 2.3 NPC & Dialogue System ✅ COMPLETE
 **Goal:** Players can interact with NPCs and get quests/lore.
 
+**Status:** ✅ COMPLETE - All 38 tests passing
+
 **Tasks:**
-- [ ] Load NPCs from npcs.json
-- [ ] Implement dialogue tree system (from dialogues.json)
-- [ ] Create NPC interaction triggers
-- [ ] Add branching dialogue choices
-- [ ] Implement dialogue rewards and quest unlocks
-- [ ] Create merchant NPC functionality
+- [x] Load NPCs from npcs.json
+- [x] Implement dialogue tree system (from dialogues.json)
+- [x] Create NPC interaction triggers
+- [x] Add branching dialogue choices
+- [x] Implement dialogue rewards and quest unlocks
+- [x] Create merchant NPC functionality
+- [x] Add API endpoints (8 endpoints)
+- [x] Create comprehensive test suite
+- [x] Update database schema
+- [x] Write documentation
 
-**Files to create:**
-- `game/npcs.js` - NPC manager
-- `game/dialogue.js` - Dialogue engine
+**Files created:**
+- `game/NPCManager.js` (345 lines) - NPC management system
+- `game/DialogueManager.js` (504 lines) - Dialogue tree system
+- `Testing/test_npc_dialogue.js` (471 lines) - 38 comprehensive tests
+- `game/NPC_DIALOGUE_README.md` - Complete system documentation
 
-**Files to modify:**
-- `server.js` - Add NPC/dialogue endpoints
+**Files modified:**
+- `game/Character.js` - Added dialogueHistory and reputation properties
+- `db.js` - Added dialogue_history and reputation JSONB columns
+- `game/index.js` - Exported NPCManager and DialogueManager
+- `server.js` - Added 8 API endpoints
+
+**Features implemented:**
+- 16+ unique merchants with themed inventories
+- Quest givers, companions, lore keepers
+- Dialogue triggers: first_encounter, new_player, quest completion, level requirements
+- Choice requirements: gold, items, tokens
+- Choice effects: reputation, gold, XP, class changes, unlocks
+- Variable replacement: {player_name}, {player_level}, {player_class}
+- Dialogue history tracking with timestamps
+- Multi-faction reputation system
+- NPC spawn probability system (5-15% spawn rates)
+- Location-based NPC spawning
+
+**API Endpoints:**
+```
+GET  /api/npcs                      # List all NPCs
+GET  /api/npcs/location/:location   # NPCs in location
+GET  /api/npcs/type/:type           # NPCs by type
+GET  /api/npcs/:npcId               # NPC details
+POST /api/npcs/:npcId/interact      # Interact with NPC
+POST /api/npcs/:npcId/spawn-check   # Check spawn
+GET  /api/dialogue/:npcId           # Get conversations
+POST /api/dialogue/start            # Start conversation
+POST /api/dialogue/choice           # Make choice
+```
+
+**Testing:**
+```bash
+node Testing/test_npc_dialogue.js
+# 38/38 tests passing ✅
+# Covers: NPC loading, spawning, interaction, dialogue trees, triggers, requirements, 
+#         choice effects, rewards, history tracking, integration with other systems
+```
+
+**Documentation:**
+- See `game/NPC_DIALOGUE_README.md` for complete API documentation
+- Includes Twitch bot integration examples for !talk, !dialogue, !choose commands
+- Full trigger, requirement, and effect syntax reference
+- Database schema documentation
+- Integration guides for QuestManager, ShopManager, Character system
 
 ---
 
-#### 2.4 Achievement System
+#### 2.4 Achievement System ✅ COMPLETE
 **Goal:** Track player accomplishments and grant rewards.
 
+**Status:** ✅ COMPLETE - All 39 tests passing
+
 **Tasks:**
-- [ ] Load achievements from achievements.json
-- [ ] Implement achievement tracking (progress monitoring)
-- [ ] Add achievement unlock notifications
-- [ ] Create achievement rewards (titles, items, passives)
-- [ ] Add achievement API and UI
+- [x] Load achievements from achievements.json
+- [x] Implement achievement tracking (progress monitoring)
+- [x] Add achievement unlock notifications
+- [x] Create achievement rewards (titles, items, passives)
+- [x] Add achievement API and UI
 
-**Files to create:**
-- `game/achievements.js` - Achievement tracker
+**Files created:**
+- `game/AchievementManager.js` (640 lines) - Complete achievement tracking system
+- `Testing/test_achievement_system.js` (471 lines) - 39 comprehensive tests
+- `game/ACHIEVEMENT_README.md` - Complete system documentation
 
-**Files to modify:**
-- All game systems - Add achievement triggers
-- `server.js` - Add achievement endpoints
+**Files modified:**
+- `game/Character.js` - Added achievement tracking properties
+- `db.js` - Added achievement database schema and helper functions
+- `game/index.js` - Exported AchievementManager
+- `server.js` - Added 7 achievement API endpoints
+
+**Features implemented:**
+- 36 achievements across 8 categories (combat, exploration, quests, collection, wealth, progression, challenge, seasonal)
+- Automatic progress tracking for kills, levels, gold, locations, quests
+- Event-driven unlock detection (combat_victory, level_up, quest_complete, etc.)
+- Rich reward system: XP, gold, items, titles, passive unlocks
+- Hidden achievement support
+- Achievement points system with rarity tiers (common → legendary)
+- Statistics dashboard with completion percentage
+- Title system with unlockable display titles
+- Unlock notifications with achievement details
+- 20+ trackable statistics (kills, boss kills, crits, damage, locations, biomes, gold, quests, items)
+
+**API Endpoints:**
+```
+GET  /api/achievements                    # Get all achievements with progress
+GET  /api/achievements/category/:category # Filter by category
+GET  /api/achievements/:achievementId     # Get specific achievement
+GET  /api/achievements/stats              # Get statistics summary
+POST /api/achievements/check              # Check for unlocks after event
+POST /api/achievements/title/set          # Set active display title
+GET  /api/achievements/recent             # Get recent unlocks
+```
+
+**Testing:**
+```bash
+node Testing/test_achievement_system.js
+# 39/39 tests passing ✅
+# Covers: achievement loading, progress calculation, unlocking, rewards,
+#         points tracking, statistics, event checking, all criteria types
+```
+
+**Documentation:**
+- See `game/ACHIEVEMENT_README.md` for complete API documentation
+- Includes integration examples for all game systems
+- Twitch bot command examples (!achievements, !achievement, !title)
+- Full criteria types and reward system documentation
 
 ---
 

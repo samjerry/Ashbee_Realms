@@ -40,6 +40,37 @@ class Character {
     this.pending = data.pending || null;
     this.skillPoints = data.skill_points || 0;
     this.travelState = data.travel_state || null;
+    this.activeQuests = data.active_quests || [];
+    this.completedQuests = data.completed_quests || [];
+    this.consumableCooldowns = data.consumable_cooldowns || {};
+    this.dialogueHistory = data.dialogue_history || {};
+    this.reputation = data.reputation || { general: 0 };
+    
+    // Achievement tracking
+    this.unlockedAchievements = data.unlocked_achievements || [];
+    this.achievementProgress = data.achievement_progress || {};
+    this.achievementUnlockDates = data.achievement_unlock_dates || {};
+    this.achievementPoints = data.achievement_points || 0;
+    this.unlockedTitles = data.unlocked_titles || [];
+    this.activeTitle = data.active_title || null;
+    
+    // Stats tracking for achievements
+    if (!data.stats) {
+      this.stats = {
+        totalKills: 0,
+        bossKills: 0,
+        criticalHits: 0,
+        highestDamage: 0,
+        deaths: 0,
+        locationsVisited: [],
+        biomesVisited: [],
+        totalGoldEarned: 0,
+        totalGoldSpent: 0,
+        mysteriesSolved: 0
+      };
+    } else {
+      this.stats = data.stats;
+    }
 
     // Initialize managers
     this.equipment = new EquipmentManager(data.equipped || {});
@@ -418,6 +449,11 @@ class Character {
       skills: this.skills.toJSON(),
       skill_points: this.skillPoints,
       travel_state: this.travelState,
+      active_quests: this.activeQuests,
+      completed_quests: this.completedQuests,
+      consumable_cooldowns: this.consumableCooldowns,
+      dialogue_history: this.dialogueHistory,
+      reputation: this.reputation,
       in_combat: this.inCombat,
       combat: this.combat,
       skill_cd: this.skillCd,

@@ -210,7 +210,7 @@
               "id": "glory_seeker",
               "text": "Glory, is it? Well, there's certainly plenty of danger to go around. But remember, true glory comes from protecting others, not just seeking fame. Perhaps you'll learn that in time.",
               "reward": {"xp": 50},
-              "next": "quest_offer"
+              "next": "end"
             },
             {
               "id": "protector",
@@ -255,6 +255,18 @@
               ]
             },
             {
+              "id": "brave",
+              "text": "Good. The Wolf's Den lies deep in the woods. The alpha wolf there must be slain. Only then can we begin to understand what corrupts these lands. Be careful, and may fortune favor you.",
+              "reward": {"xp": 150},
+              "unlocks": ["quest:wolves_den"],
+              "next": "end"
+            },
+            {
+              "id": "cautious",
+              "text": "Wise to prepare. Stock up on potions and better equipment. Return when you're ready. The darkness can wait... but not for long.",
+              "next": "end"
+            },
+            {
               "id": "lore_dump",
               "text": "Long ago, this realm was peaceful. But an ancient evil was sealed beneath the earth. Recently, the seals have weakened. Corruption spreads. The creatures grow bold. We must act before it's too late.",
               "unlocks": ["lore:ancient_evil"],
@@ -269,7 +281,7 @@
         }
       }
     },
-    "garen_wandering_merchant": {
+    "wandering_merchant": {
       "npc_id": "wandering_merchant",
       "name": "Garen the Wanderer",
       "greeting": "Ho there, friend! Care to see my wares?",
@@ -316,6 +328,13 @@
               ]
             },
             {
+              "id": "ruins_hint",
+              "text": "The Forsaken Ruins, they call 'em. Ancient place, full of treasure... and danger. I wouldn't go there alone if I were you. But if you're brave enough, you'll find it east of the Twilight Wetlands.",
+              "unlocks": ["map_marker:forsaken_ruins"],
+              "reward": {"xp": 25},
+              "next": "start"
+            },
+            {
               "id": "rumors",
               "text": "Heard tell of goblin raids increasing. Something's riling them up. Also, a traveler mentioned seeing strange lights in the Cursed Swamp at night. Wouldn't go there if I were you!",
               "quest_hint": true,
@@ -341,7 +360,8 @@
               "choices": [
                 {
                   "text": "I'll pay gold (500 gold)",
-                  "cost": {"gold": 500},
+                  "requires": "gold:500",
+                  "gold": -500,
                   "next": "knowledge_gold"
                 },
                 {
@@ -361,6 +381,18 @@
               ]
             },
             {
+              "id": "quest_ingredients",
+              "text": "Ah, a traditionalist. Very well. Bring me: three Mandrake Roots from the deepest swamp, a vial of Moonlight Dew collected at midnight, and the Heart of a Corrupted Wolf. Return when you have them all.",
+              "adds_quest_objective": "morgana_ingredients",
+              "next": "end"
+            },
+            {
+              "id": "refuse",
+              "text": "*cackles* Suit yourself, dearie. But you'll be back. They always come back when the darkness closes in. My door is always open... for the right price.",
+              "reputation": -5,
+              "next": "end"
+            },
+            {
               "id": "knowledge_gold",
               "text": "Wise choice. The curse stems from an artifact, shattered long ago. Its fragments still pulse with dark power. Destroy them, and the curse will weaken. But beware... the Plague Bearer guards them.",
               "reward": {"xp": 200},
@@ -373,6 +405,14 @@
               "gives_curse": "witches_sight",
               "unlocks": ["see_hidden_things"],
               "reward": {"xp": 500},
+              "reputation": -25,
+              "next": "end"
+            },
+            {
+              "id": "knowledge_gold",
+              "text": "Wise choice. Gold speaks louder than pride. *pockets the coins* The curse stems from an artifact, shattered long ago. Its fragments still pulse with dark power. Destroy them, and the curse will weaken. But beware... the Plague Bearer guards them jealously.",
+              "reward": {"xp": 200},
+              "unlocks": ["quest:curse_fragments"],
               "next": "end"
             }
           ]
