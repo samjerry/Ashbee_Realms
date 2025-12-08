@@ -1,0 +1,111 @@
+{
+  "id": "twilight_court",
+  "name": "The Twilight Court",
+  "description": "The enchanted realm where the fey nobility hold court between light and shadow",
+  "difficulty": "hard",
+  "required_level": 32,
+  "max_level": 38,
+  "recommended_party_size": 4,
+  "location": "whispering_woods",
+  "floors": 5,
+  "rooms_per_floor": [9, 10, 11, 12, 13],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "raid",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Mischievous sprites play deadly games",
+      "monsters": [
+        {
+          "id": "pixie",
+          "count": [4, 6]
+        },
+        {
+          "id": "sprite",
+          "count": [3, 5]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Will-o'-wisps lead travelers astray",
+      "monsters": [
+        {
+          "id": "will_o_wisp",
+          "count": [3, 4]
+        },
+        {
+          "id": "nixie",
+          "count": [2, 3]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Fey warriors guard the court entrance",
+      "monsters": [
+        {
+          "id": "sidhe_knight",
+          "count": [2, 3]
+        },
+        {
+          "id": "redcap",
+          "count": [2, 4]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Ancient fey nobles hold dominion here",
+      "monsters": [
+        {
+          "id": "trickster_archfey",
+          "count": [1, 2]
+        },
+        {
+          "id": "erlking",
+          "count": [1, 1]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "unseelie_lord",
+      "name": "Lord of the Unseelie Court",
+      "description": "The dark fey lord who rules the shadow court",
+      "level_range": [36, 38],
+      "health_multiplier": 6.5,
+      "damage_multiplier": 3.8,
+      "special_abilities": ["shadow_magic", "fey_charm", "court_summon"],
+      "spawn_weight": 35,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "sidhe_knight",
+            "count": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "seelie_lady",
+      "name": "Lady of the Seelie Court",
+      "description": "The radiant fey queen of light and life",
+      "level_range": [37, 38],
+      "health_multiplier": 7,
+      "damage_multiplier": 4,
+      "special_abilities": ["light_magic", "nature_blessing", "fey_transformation"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 30000,
+    "first_clear_bonus": 60000,
+    "gold_range": [10000, 18000],
+    "possible_drops": ["fey_crystal", "moonlight_essence", "enchanted_crown", "twilight_cloak"]
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "id": "spider_nest",
+  "name": "Spider Nest",
+  "description": "A cavern filled with webs and poisonous arachnids",
+  "difficulty": "easy",
+  "required_level": 8,
+  "max_level": 13,
+  "recommended_party_size": 1,
+  "location": "webbed_caverns",
+  "floors": 3,
+  "rooms_per_floor": [
+    5,
+    6,
+    7
+  ],
+  "boss_floor": 3,
+  "time_limit": null,
+  "respawn_time": 3600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "sticky_webs": {
+      "description": "Movement speed reduced",
+      "speed_penalty": 0.2
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Giant spiders lurk in the shadows",
+      "monsters": [
+        {
+          "id": "giant_spider",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "id": "web_spinner",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "giant_beetle",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "giant_mantis",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "broodmother",
+      "name": "Arachna the Broodmother",
+      "description": "A massive spider that births countless offspring",
+      "level_range": [
+        8,
+        13
+      ],
+      "health_multiplier": 3,
+      "damage_multiplier": 1.6,
+      "special_abilities": [
+        "spawn_spiderlings",
+        "web_trap",
+        "poison_bite"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.6,
+          "adds_spawn": {
+            "id": "spiderling",
+            "count": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "widow_queen",
+      "name": "Black Widow Queen",
+      "description": "A sleek black spider with lethal venom",
+      "level_range": [
+        8,
+        13
+      ],
+      "health_multiplier": 2.5,
+      "damage_multiplier": 2,
+      "special_abilities": [
+        "neurotoxin",
+        "web_cocoon",
+        "death_strike"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "tarantula_king",
+      "name": "Fang the Tarantula King",
+      "description": "A hairy behemoth with crushing mandibles",
+      "level_range": [
+        9,
+        13
+      ],
+      "health_multiplier": 3.4,
+      "damage_multiplier": 1.5,
+      "special_abilities": [
+        "crushing_bite",
+        "ground_shake",
+        "barbed_hairs"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "crystal_spider",
+      "name": "Shimmer the Crystal Spider",
+      "description": "A beautiful but deadly spider with crystalline carapace",
+      "level_range": [
+        8,
+        13
+      ],
+      "health_multiplier": 2.7,
+      "damage_multiplier": 1.7,
+      "special_abilities": [
+        "crystal_shard",
+        "reflect",
+        "prismatic_web"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "web_weaver",
+      "name": "Silkspinner the Weaver",
+      "description": "A spider capable of creating complex magical web patterns",
+      "level_range": [
+        9,
+        13
+      ],
+      "health_multiplier": 2.6,
+      "damage_multiplier": 1.8,
+      "special_abilities": [
+        "web_maze",
+        "silk_bind",
+        "pattern_magic"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 800,
+    "gold": [
+      350,
+      550
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_spider",
+    "first_clear_bonus": {
+      "xp": 1600,
+      "title": "arachnophobe",
+      "items": [
+        "web_silk_cloak"
+      ]
+    }
+  }
+}

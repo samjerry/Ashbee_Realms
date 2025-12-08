@@ -6,7 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const db = require('./db');
 const Combat = require('./game/Combat');
-const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager } = require('./game');
+const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager } = require('./game');
 const { loadData } = require('./data/data_loader');
 
 const app = express();
@@ -2493,6 +2493,300 @@ app.get('/api/achievements/recent', async (req, res) => {
 });
 
 // ==================== END ACHIEVEMENT ENDPOINTS ====================
+
+// ==================== DUNGEON ENDPOINTS ====================
+
+/**
+ * GET /api/dungeons
+ * Get all available dungeons with access info
+ */
+app.get('/api/dungeons', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const dungeonMgr = new DungeonManager();
+    const dungeons = await dungeonMgr.getAvailableDungeons(character);
+
+    res.json({ dungeons });
+  } catch (error) {
+    console.error('Error fetching dungeons:', error);
+    res.status(500).json({ error: 'Failed to fetch dungeons' });
+  }
+});
+
+/**
+ * GET /api/dungeons/:dungeonId
+ * Get detailed information about a specific dungeon
+ */
+app.get('/api/dungeons/:dungeonId', async (req, res) => {
+  try {
+    const { dungeonId } = req.params;
+    const dungeonMgr = new DungeonManager();
+    const dungeon = await dungeonMgr.getDungeon(dungeonId);
+
+    if (!dungeon) {
+      return res.status(404).json({ error: 'Dungeon not found' });
+    }
+
+    res.json({ dungeon });
+  } catch (error) {
+    console.error('Error fetching dungeon details:', error);
+    res.status(500).json({ error: 'Failed to fetch dungeon details' });
+  }
+});
+
+/**
+ * POST /api/dungeons/start
+ * Start a dungeon run
+ * Body: { dungeonId: string, modifiers?: string[] }
+ */
+app.post('/api/dungeons/start', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const { dungeonId, modifiers = [] } = req.body;
+    if (!dungeonId) {
+      return res.status(400).json({ error: 'Dungeon ID required' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const dungeonMgr = new DungeonManager();
+    const result = await dungeonMgr.startDungeon(character, dungeonId, modifiers);
+
+    // Save dungeon state
+    await db.updateDungeonState(user.id, user.channel, character.dungeonState);
+    await db.saveCharacter(user.id, user.channel, character);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error starting dungeon:', error);
+    res.status(500).json({ error: error.message || 'Failed to start dungeon' });
+  }
+});
+
+/**
+ * POST /api/dungeons/advance
+ * Advance to the next room in the dungeon
+ */
+app.post('/api/dungeons/advance', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    if (!character.dungeonState) {
+      return res.status(400).json({ error: 'Not in a dungeon' });
+    }
+
+    const dungeonMgr = new DungeonManager();
+    const result = await dungeonMgr.advanceRoom(character);
+
+    // Save updated state
+    await db.updateDungeonState(user.id, user.channel, character.dungeonState);
+    await db.saveCharacter(user.id, user.channel, character);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error advancing dungeon room:', error);
+    res.status(500).json({ error: error.message || 'Failed to advance room' });
+  }
+});
+
+/**
+ * POST /api/dungeons/complete-room
+ * Mark current room as complete (after combat, puzzle, etc.)
+ */
+app.post('/api/dungeons/complete-room', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const dungeonMgr = new DungeonManager();
+    const result = dungeonMgr.completeRoom(character);
+
+    // Save updated state
+    await db.updateDungeonState(user.id, user.channel, character.dungeonState);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error completing room:', error);
+    res.status(500).json({ error: error.message || 'Failed to complete room' });
+  }
+});
+
+/**
+ * POST /api/dungeons/complete
+ * Complete the dungeon (after boss defeated)
+ */
+app.post('/api/dungeons/complete', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const dungeonMgr = new DungeonManager();
+    const result = await dungeonMgr.completeDungeon(character);
+
+    // Save completion and clear state
+    if (result.success) {
+      await db.addCompletedDungeon(user.id, user.channel, result.leaderboard_entry.dungeon_id);
+      await db.updateDungeonState(user.id, user.channel, null);
+    }
+    
+    await db.saveCharacter(user.id, user.channel, character);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error completing dungeon:', error);
+    res.status(500).json({ error: error.message || 'Failed to complete dungeon' });
+  }
+});
+
+/**
+ * POST /api/dungeons/exit
+ * Exit/abandon current dungeon
+ */
+app.post('/api/dungeons/exit', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const dungeonMgr = new DungeonManager();
+    const result = dungeonMgr.exitDungeon(character);
+
+    // Clear dungeon state
+    await db.updateDungeonState(user.id, user.channel, null);
+    await db.saveCharacter(user.id, user.channel, character);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error exiting dungeon:', error);
+    res.status(500).json({ error: error.message || 'Failed to exit dungeon' });
+  }
+});
+
+/**
+ * GET /api/dungeons/state
+ * Get current dungeon state
+ */
+app.get('/api/dungeons/state', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    res.json({ 
+      in_dungeon: !!character.dungeonState,
+      dungeon_state: character.dungeonState || null
+    });
+  } catch (error) {
+    console.error('Error fetching dungeon state:', error);
+    res.status(500).json({ error: 'Failed to fetch dungeon state' });
+  }
+});
+
+/**
+ * GET /api/dungeons/leaderboard/:dungeonId
+ * Get leaderboard for a dungeon
+ */
+app.get('/api/dungeons/leaderboard/:dungeonId', async (req, res) => {
+  try {
+    const { dungeonId } = req.params;
+    const { limit = 10 } = req.query;
+
+    const dungeonMgr = new DungeonManager();
+    const leaderboard = await dungeonMgr.getLeaderboard(dungeonId, parseInt(limit));
+
+    res.json({ leaderboard });
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    res.status(500).json({ error: 'Failed to fetch leaderboard' });
+  }
+});
+
+/**
+ * POST /api/dungeons/solve-puzzle
+ * Attempt to solve a puzzle
+ * Body: { answer: string }
+ */
+app.post('/api/dungeons/solve-puzzle', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const { answer } = req.body;
+    if (!answer) {
+      return res.status(400).json({ error: 'Answer required' });
+    }
+
+    const character = await db.getCharacter(user.id, user.channel);
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const dungeonMgr = new DungeonManager();
+    const result = dungeonMgr.solvePuzzle(character, answer);
+
+    // Save updated state
+    await db.updateDungeonState(user.id, user.channel, character.dungeonState);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error solving puzzle:', error);
+    res.status(500).json({ error: error.message || 'Failed to solve puzzle' });
+  }
+});
+
+// ==================== END DUNGEON ENDPOINTS ====================
 
 // ==================== END COMBAT ENDPOINTS ====================
 

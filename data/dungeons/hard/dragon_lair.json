@@ -1,0 +1,203 @@
+{
+  "id": "dragon_lair",
+  "name": "Dragon's Lair",
+  "description": "A mountain cave serving as home to powerful dragonkin",
+  "difficulty": "hard",
+  "required_level": 26,
+  "max_level": 32,
+  "recommended_party_size": 1,
+  "location": "dragonmount_peak",
+  "floors": 7,
+  "rooms_per_floor": [
+    8,
+    9,
+    9,
+    10,
+    10,
+    11,
+    12
+  ],
+  "boss_floor": 7,
+  "time_limit": 5400,
+  "respawn_time": 14400,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "dragon_fear": {
+      "description": "Attack power reduced by 20%",
+      "attack_penalty": 0.2
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Dragon wyrmlings defend their territory",
+      "monsters": [
+        {
+          "id": "dragonkin_warrior",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "wyrmling",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "frost_wyvern",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "young_leviathan",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "shadow_dragon",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "ancient_red_dragon",
+      "name": "Ignaroth the Ancient Red",
+      "description": "An ancient red dragon with millennia of rage",
+      "level_range": [
+        26,
+        32
+      ],
+      "health_multiplier": 7,
+      "damage_multiplier": 3,
+      "special_abilities": [
+        "dragon_breath",
+        "tail_sweep",
+        "wing_buffet",
+        "frightful_presence"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "ability_unlock": "inferno_mode",
+          "description": "Enters a rage, breath weapon becomes more deadly"
+        }
+      ]
+    },
+    {
+      "id": "frost_wyrm",
+      "name": "Glacius the Frost Wyrm",
+      "description": "A dragon of ice and eternal winter",
+      "level_range": [
+        26,
+        32
+      ],
+      "health_multiplier": 6.5,
+      "damage_multiplier": 3.2,
+      "special_abilities": [
+        "frost_breath",
+        "ice_prison",
+        "blizzard"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "storm_dragon",
+      "name": "Tempestus the Storm Dragon",
+      "description": "A dragon wreathed in lightning and thunder",
+      "level_range": [
+        27,
+        32
+      ],
+      "health_multiplier": 6.3,
+      "damage_multiplier": 3.3,
+      "special_abilities": [
+        "lightning_breath",
+        "storm_call",
+        "thunder_roar"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "shadow_drake",
+      "name": "Tenebris the Shadow Drake",
+      "description": "A dragon born from darkness itself",
+      "level_range": [
+        27,
+        32
+      ],
+      "health_multiplier": 6,
+      "damage_multiplier": 3.4,
+      "special_abilities": [
+        "shadow_breath",
+        "darkness",
+        "phase_strike"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "elder_dracolich",
+      "name": "Morthanax the Dracolich",
+      "description": "An undead dragon of terrible power",
+      "level_range": [
+        28,
+        32
+      ],
+      "health_multiplier": 6.8,
+      "damage_multiplier": 3.1,
+      "special_abilities": [
+        "necrotic_breath",
+        "raise_dead",
+        "soul_drain"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 8000,
+    "gold": [
+      2000,
+      4000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_dragon",
+    "legendary_chance": 0.6,
+    "first_clear_bonus": {
+      "xp": 16000,
+      "title": "dragonslayer",
+      "items": [
+        "dragon_scale_armor_legendary"
+      ]
+    }
+  }
+}

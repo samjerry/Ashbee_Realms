@@ -1,0 +1,216 @@
+{
+  "id": "cosmic_observatory",
+  "name": "Cosmic Observatory",
+  "description": "A tower gazing into the cosmos, revealing horrors beyond comprehension",
+  "difficulty": "extreme",
+  "required_level": 46,
+  "max_level": 55,
+  "recommended_party_size": 1,
+  "location": "stargazer_peak",
+  "floors": 10,
+  "rooms_per_floor": [
+    12,
+    13,
+    13,
+    14,
+    14,
+    15,
+    15,
+    16,
+    16,
+    17
+  ],
+  "boss_floor": 10,
+  "time_limit": 9000,
+  "respawn_time": 43200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "cosmic_radiation": {
+      "description": "Exposure to cosmic energy causes random mutations",
+      "periodic_damage": 150,
+      "stat_fluctuation": 0.2
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Cosmic horrors materialize",
+      "monsters": [
+        {
+          "id": "star_spawn",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "void_horror",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "astral_colossus",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "void_leviathan",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "azathoth_star_eater",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "star_eater",
+      "name": "Azathoth the Star Eater",
+      "description": "A cosmic entity that devours stars",
+      "level_range": [
+        46,
+        55
+      ],
+      "health_multiplier": 12,
+      "damage_multiplier": 5,
+      "special_abilities": [
+        "cosmic_devour",
+        "supernova",
+        "black_hole",
+        "stellar_collapse"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "arena_change": "void_space",
+          "description": "Drags you into the void of space"
+        },
+        {
+          "hp_threshold": 0.2,
+          "transformation": "true_cosmic_form",
+          "description": "Reveals incomprehensible true form"
+        }
+      ],
+      "enrage_timer": 900
+    },
+    {
+      "id": "void_god",
+      "name": "Nyarlathotep the Void God",
+      "description": "The crawling chaos from beyond reality",
+      "level_range": [
+        46,
+        55
+      ],
+      "health_multiplier": 11,
+      "damage_multiplier": 5.3,
+      "special_abilities": [
+        "reality_distortion",
+        "maddening_truth",
+        "void_tentacles"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "dimension_lord",
+      "name": "Cthulhu the Dreaming God",
+      "description": "An ancient being from another dimension",
+      "level_range": [
+        48,
+        55
+      ],
+      "health_multiplier": 11.5,
+      "damage_multiplier": 5.1,
+      "special_abilities": [
+        "nightmare_realm",
+        "psychic_scream",
+        "dimensional_rift"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "cosmic_dragon",
+      "name": "Bahamut the Cosmic Dragon",
+      "description": "A dragon born from the cosmos itself",
+      "level_range": [
+        48,
+        55
+      ],
+      "health_multiplier": 12.5,
+      "damage_multiplier": 4.8,
+      "special_abilities": [
+        "cosmic_breath",
+        "star_fall",
+        "nebula_burst"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "entropy_god",
+      "name": "The End of All Things",
+      "description": "The personification of universe's heat death",
+      "level_range": [
+        50,
+        55
+      ],
+      "health_multiplier": 13,
+      "damage_multiplier": 4.7,
+      "special_abilities": [
+        "heat_death",
+        "entropy_wave",
+        "universal_decay"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 50000,
+    "gold": [
+      20000,
+      35000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_cosmic",
+    "legendary_chance": 1,
+    "mythic_chance": 0.7,
+    "first_clear_bonus": {
+      "xp": 100000,
+      "title": "cosmic_horror_slayer",
+      "items": [
+        "star_eater_cloak_mythic",
+        "cosmic_knowledge_tome"
+      ],
+      "passive_unlock": "cosmic_insight"
+    }
+  }
+}

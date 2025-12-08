@@ -1,0 +1,93 @@
+{
+  "id": "gelatinous_caverns",
+  "name": "The Gelatinous Caverns",
+  "description": "A damp cave system where oozes and slimes breed in toxic pools",
+  "difficulty": "easy",
+  "required_level": 8,
+  "max_level": 14,
+  "recommended_party_size": 2,
+  "location": "cursed_swamp",
+  "floors": 3,
+  "rooms_per_floor": [5, 6, 7],
+  "boss_floor": 3,
+  "time_limit": null,
+  "respawn_time": 3600,
+  "instance_type": "party",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "A chamber with puddles of acidic slime",
+      "monsters": [
+        {
+          "id": "slime_puddle",
+          "count": [3, 4]
+        },
+        {
+          "id": "gray_ooze",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "A corridor dripping with green slime",
+      "monsters": [
+        {
+          "id": "green_slime",
+          "count": [2, 3]
+        },
+        {
+          "id": "ochre_jelly",
+          "count": [1, 1]
+        }
+      ]
+    },
+    {
+      "type": "hazard",
+      "description": "A pool of corrosive ooze blocks the path",
+      "hazard_type": "acid_pool",
+      "damage": [20, 40],
+      "avoidable": true
+    },
+    {
+      "type": "treasure",
+      "description": "Items suspended in a gelatinous cube",
+      "loot_table": "ooze_treasure",
+      "guaranteed_gold": [100, 250]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "the_blob",
+      "name": "The Blob",
+      "description": "A massive ooze that consumes all in its path",
+      "level_range": [12, 14],
+      "health_multiplier": 3.5,
+      "damage_multiplier": 1.8,
+      "special_abilities": ["engulf", "split", "acid_spray"],
+      "spawn_weight": 40,
+      "phases": [
+        {
+          "hp_threshold": 0.6,
+          "effect": "splits into smaller oozes"
+        }
+      ]
+    },
+    {
+      "id": "core_ooze",
+      "name": "The Core Ooze",
+      "description": "The primordial ooze from which all others spawned",
+      "level_range": [13, 14],
+      "health_multiplier": 4,
+      "damage_multiplier": 2,
+      "special_abilities": ["spawn_oozes", "corrosive_aura", "adaptive_form"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 2500,
+    "first_clear_bonus": 5000,
+    "gold_range": [500, 1200],
+    "possible_drops": ["slime_essence", "acidic_core", "gelatinous_membrane"]
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "id": "haunted_ruins",
+  "name": "Haunted Ruins",
+  "description": "Ancient stone halls where restless spirits wander",
+  "difficulty": "easy",
+  "required_level": 7,
+  "max_level": 12,
+  "recommended_party_size": 1,
+  "location": "abandoned_monastery",
+  "floors": 3,
+  "rooms_per_floor": [
+    6,
+    6,
+    7
+  ],
+  "boss_floor": 3,
+  "time_limit": null,
+  "respawn_time": 3600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "haunting": {
+      "description": "Spirits drain your will to fight",
+      "defense_penalty": 0.1
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Ghosts drift through the corridors",
+      "monsters": [
+        {
+          "id": "vengeful_spirit",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "phantom",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "skeleton_warrior",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "shade",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "wraith",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "mad_monk",
+      "name": "Brother Mortus the Mad",
+      "description": "A monk driven insane by forbidden knowledge",
+      "level_range": [
+        7,
+        12
+      ],
+      "health_multiplier": 2.8,
+      "damage_multiplier": 1.7,
+      "special_abilities": [
+        "dark_prayer",
+        "spirit_drain",
+        "madness_aura"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "headless_guardian",
+      "name": "The Headless Guardian",
+      "description": "A decapitated knight still defending the ruins",
+      "level_range": [
+        7,
+        12
+      ],
+      "health_multiplier": 3.2,
+      "damage_multiplier": 1.5,
+      "special_abilities": [
+        "blind_fury",
+        "unstoppable",
+        "spectral_slash"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "wailing_widow",
+      "name": "The Wailing Widow",
+      "description": "A ghost bride searching for her lost love",
+      "level_range": [
+        8,
+        12
+      ],
+      "health_multiplier": 2.5,
+      "damage_multiplier": 1.8,
+      "special_abilities": [
+        "mournful_wail",
+        "life_drain",
+        "phase_through"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "cursed_librarian",
+      "name": "Keeper of Forbidden Tomes",
+      "description": "A librarian cursed to guard dark knowledge forever",
+      "level_range": [
+        8,
+        12
+      ],
+      "health_multiplier": 2.6,
+      "damage_multiplier": 1.9,
+      "special_abilities": [
+        "tome_blast",
+        "silence",
+        "knowledge_overwhelm"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "poltergeist_lord",
+      "name": "Malevolent Poltergeist",
+      "description": "A powerful spirit that hurls objects with telekinetic force",
+      "level_range": [
+        7,
+        12
+      ],
+      "health_multiplier": 2.4,
+      "damage_multiplier": 2,
+      "special_abilities": [
+        "telekinesis",
+        "possession",
+        "ethereal_form"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 700,
+    "gold": [
+      300,
+      500
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_spirit",
+    "first_clear_bonus": {
+      "xp": 1400,
+      "title": "ghost_buster",
+      "items": [
+        "spirit_ward_amulet"
+      ]
+    }
+  }
+}

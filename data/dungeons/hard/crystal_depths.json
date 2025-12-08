@@ -1,0 +1,220 @@
+{
+  "id": "crystal_depths",
+  "name": "Crystal Depths",
+  "description": "A shimmering cavern filled with magical crystals and elemental guardians",
+  "difficulty": "hard",
+  "required_level": 20,
+  "max_level": 30,
+  "recommended_party_size": 1,
+  "location": "deep_caverns",
+  "floors": 7,
+  "rooms_per_floor": [
+    8,
+    8,
+    9,
+    9,
+    10,
+    10,
+    11
+  ],
+  "boss_floor": 7,
+  "time_limit": 3600,
+  "respawn_time": 14400,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "crystal_resonance": {
+      "description": "Magic damage increased by 30%",
+      "magic_damage_bonus": 0.3
+    },
+    "unstable_mana": {
+      "description": "Random spell effects occur",
+      "random_magic_chance": 0.15
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Crystal elementals guard the passage",
+      "monsters": [
+        {
+          "id": "crystal_golem",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "crystal_sprite",
+          "count": [
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "type": "puzzle",
+      "description": "Crystal pillars must be activated in sequence",
+      "puzzle_type": "crystal_sequence",
+      "difficulty": "hard",
+      "failure_consequence": "spawn_enemies"
+    },
+    {
+      "type": "treasure",
+      "description": "A geode containing rare crystals",
+      "loot_table": "crystal_treasure",
+      "guaranteed_rare": true
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "crystal_guardian",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "diamond_golem",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "crystal_titan",
+      "name": "Crystallis the Eternal Prism",
+      "description": "A massive elemental entity of pure crystal",
+      "level_range": [
+        20,
+        30
+      ],
+      "health_multiplier": 6,
+      "damage_multiplier": 2.5,
+      "special_abilities": [
+        "prismatic_ray",
+        "crystal_nova",
+        "refraction",
+        "shatter"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.66,
+          "transformation": "fire_aspect",
+          "description": "Shifts to fire element, deals fire damage"
+        },
+        {
+          "hp_threshold": 0.33,
+          "transformation": "ice_aspect",
+          "description": "Shifts to ice element, slows players"
+        }
+      ]
+    },
+    {
+      "id": "earth_colossus",
+      "name": "Terragor the Earth Colossus",
+      "description": "A living mountain of stone and crystal",
+      "level_range": [
+        20,
+        25
+      ],
+      "health_multiplier": 6.5,
+      "damage_multiplier": 2.2,
+      "special_abilities": [
+        "earthquake",
+        "stone_barrage",
+        "armored_form"
+      ],
+      "spawn_weight": 30
+    },
+    {
+      "id": "magma_wyrm",
+      "name": "Infernus the Magma Wyrm",
+      "description": "A serpentine dragon of molten rock and flame",
+      "level_range": [
+        25,
+        30
+      ],
+      "health_multiplier": 5.5,
+      "damage_multiplier": 2.8,
+      "special_abilities": [
+        "lava_breath",
+        "molten_armor",
+        "tunnel_dive"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.4,
+          "ability_unlock": "tunnel_dive",
+          "description": "Dives underground and erupts with lava"
+        }
+      ]
+    },
+    {
+      "id": "crystal_archon",
+      "name": "Luminos the Crystal Archon",
+      "description": "An ancient guardian of the crystal depths",
+      "level_range": [
+        23,
+        28
+      ],
+      "health_multiplier": 5.8,
+      "damage_multiplier": 2.6,
+      "special_abilities": [
+        "light_beam",
+        "crystal_prison",
+        "teleport"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "storm_warden",
+      "name": "Voltaxus the Storm Warden",
+      "description": "An elemental lord of lightning and thunder",
+      "level_range": [
+        22,
+        30
+      ],
+      "health_multiplier": 5.7,
+      "damage_multiplier": 2.7,
+      "special_abilities": [
+        "chain_lightning",
+        "thunderstorm",
+        "static_field",
+        "overcharge"
+      ],
+      "spawn_weight": 20
+    }
+  ],
+  "rewards": {
+    "xp": 5000,
+    "gold": [
+      1000,
+      2000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_crystal",
+    "rare_chance": 0.8,
+    "first_clear_bonus": {
+      "xp": 10000,
+      "title": "crystal_conqueror",
+      "items": [
+        "crystalline_shard_legendary"
+      ]
+    }
+  }
+}

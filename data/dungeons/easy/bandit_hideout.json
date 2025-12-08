@@ -1,0 +1,171 @@
+{
+  "id": "bandit_hideout",
+  "name": "Bandit Hideout",
+  "description": "A fortified camp where outlaws plot their next raid",
+  "difficulty": "easy",
+  "required_level": 6,
+  "max_level": 11,
+  "recommended_party_size": 1,
+  "location": "forest_encampment",
+  "floors": 3,
+  "rooms_per_floor": [
+    5,
+    6,
+    7
+  ],
+  "boss_floor": 3,
+  "time_limit": null,
+  "respawn_time": 3600,
+  "instance_type": "solo",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Bandits patrol the perimeter",
+      "monsters": [
+        {
+          "id": "bandit_thug",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "bandit_archer",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "shadow_assassin",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "dark_cultist",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "bandit_king",
+      "name": "Blackjack the Bandit King",
+      "description": "The ruthless leader of this outlaw band",
+      "level_range": [
+        6,
+        11
+      ],
+      "health_multiplier": 3,
+      "damage_multiplier": 1.6,
+      "special_abilities": [
+        "dual_wield",
+        "smoke_bomb",
+        "backstab"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "crossbow_master",
+      "name": "Hawkeye the Crossbow Master",
+      "description": "A deadly marksman who never misses",
+      "level_range": [
+        6,
+        11
+      ],
+      "health_multiplier": 2.4,
+      "damage_multiplier": 2,
+      "special_abilities": [
+        "piercing_shot",
+        "poison_bolt",
+        "rapid_fire"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "rogue_assassin",
+      "name": "Silent Shade",
+      "description": "A mysterious assassin employed by the bandits",
+      "level_range": [
+        7,
+        11
+      ],
+      "health_multiplier": 2.6,
+      "damage_multiplier": 1.9,
+      "special_abilities": [
+        "vanish",
+        "critical_strike",
+        "poison"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "brute_enforcer",
+      "name": "Crusher the Brute",
+      "description": "A hulking enforcer who keeps order through fear",
+      "level_range": [
+        7,
+        11
+      ],
+      "health_multiplier": 3.4,
+      "damage_multiplier": 1.5,
+      "special_abilities": [
+        "power_slam",
+        "intimidate",
+        "thick_skin"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "pyromancer_bandit",
+      "name": "Ember the Pyromancer",
+      "description": "A rogue mage who burns first and asks questions never",
+      "level_range": [
+        6,
+        11
+      ],
+      "health_multiplier": 2.3,
+      "damage_multiplier": 2.1,
+      "special_abilities": [
+        "fireball",
+        "flame_wall",
+        "explosive_trap"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 600,
+    "gold": [
+      250,
+      450
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_bandit",
+    "first_clear_bonus": {
+      "xp": 1200,
+      "title": "outlaw_hunter",
+      "items": [
+        "blackjack_dual_daggers"
+      ]
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "id": "moonlit_grove",
+  "name": "The Moonlit Hunting Grounds",
+  "description": "A cursed forest where lycanthropes hunt under the eternal full moon",
+  "difficulty": "medium",
+  "required_level": 20,
+  "max_level": 26,
+  "recommended_party_size": 3,
+  "location": "whispering_woods",
+  "floors": 4,
+  "rooms_per_floor": [6, 7, 8, 9],
+  "boss_floor": 4,
+  "time_limit": null,
+  "respawn_time": 5400,
+  "instance_type": "party",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Wererats scurry through the undergrowth",
+      "monsters": [
+        {
+          "id": "wererat",
+          "count": [3, 5]
+        },
+        {
+          "id": "werebat",
+          "count": [2, 3]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Howls echo through the moonlit trees",
+      "monsters": [
+        {
+          "id": "werewolf",
+          "count": [2, 4]
+        },
+        {
+          "id": "wereboar",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Apex predators prowl this clearing",
+      "monsters": [
+        {
+          "id": "weretiger",
+          "count": [1, 2]
+        },
+        {
+          "id": "werebear",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "description": "The full moon intensifies lycanthropic rage",
+      "event_type": "moon_phase",
+      "effect": "all_lycanthropes_gain_rage"
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "alpha_werewolf",
+      "name": "The Alpha",
+      "description": "The pack leader, a werewolf of immense power",
+      "level_range": [24, 26],
+      "health_multiplier": 4.5,
+      "damage_multiplier": 2.5,
+      "special_abilities": ["pack_summon", "primal_howl", "lunar_blessing"],
+      "spawn_weight": 40,
+      "phases": [
+        {
+          "hp_threshold": 0.6,
+          "adds_spawn": {
+            "id": "werewolf",
+            "count": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "lunar_sovereign",
+      "name": "The Lunar Sovereign",
+      "description": "A lycanthrope blessed by the moon goddess herself",
+      "level_range": [25, 26],
+      "health_multiplier": 5,
+      "damage_multiplier": 2.8,
+      "special_abilities": ["moon_rage", "silver_immunity", "shapeshifter_mastery"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 9500,
+    "first_clear_bonus": 18000,
+    "gold_range": [2500, 5000],
+    "possible_drops": ["moonstone_shard", "lycanthrope_pelt", "feral_essence", "silver_fang"]
+  }
+}

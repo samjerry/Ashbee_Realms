@@ -1,0 +1,112 @@
+{
+  "id": "fallen_sanctuary",
+  "name": "The Fallen Sanctuary",
+  "description": "A celestial temple corrupted by the fall of its angelic guardians",
+  "difficulty": "very_hard",
+  "required_level": 42,
+  "max_level": 48,
+  "recommended_party_size": 5,
+  "location": "void_realm",
+  "floors": 6,
+  "rooms_per_floor": [10, 11, 12, 13, 14, 15],
+  "boss_floor": 6,
+  "time_limit": null,
+  "respawn_time": 10800,
+  "instance_type": "raid",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Fallen angels patrol the desecrated halls",
+      "monsters": [
+        {
+          "id": "fallen_angel",
+          "count": [2, 3]
+        },
+        {
+          "id": "angel_of_wrath",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Celestial guardians turned dark",
+      "monsters": [
+        {
+          "id": "celestial_guardian",
+          "count": [2, 3]
+        },
+        {
+          "id": "light_seraph",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Phoenix lords burn with corrupted flame",
+      "monsters": [
+        {
+          "id": "phoenix_lord",
+          "count": [1, 2]
+        },
+        {
+          "id": "eternal_phoenix",
+          "count": [1, 1]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "The most powerful fallen angels gather",
+      "monsters": [
+        {
+          "id": "eclipsed_seraph",
+          "count": [1, 2]
+        },
+        {
+          "id": "fallen_god",
+          "count": [1, 1]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "lucifer_fallen",
+      "name": "Lucifer the Lightbringer",
+      "description": "The first and most powerful fallen angel",
+      "level_range": [46, 48],
+      "health_multiplier": 8,
+      "damage_multiplier": 5,
+      "special_abilities": ["morning_star", "fallen_grace", "rebellious_light"],
+      "spawn_weight": 35,
+      "phases": [
+        {
+          "hp_threshold": 0.7,
+          "effect": "summons_fallen_angels"
+        },
+        {
+          "hp_threshold": 0.4,
+          "effect": "enters_true_form"
+        }
+      ]
+    },
+    {
+      "id": "archangel_fallen",
+      "name": "Michael the Betrayer",
+      "description": "The greatest warrior angel, now fallen",
+      "level_range": [47, 48],
+      "health_multiplier": 8.5,
+      "damage_multiplier": 5.5,
+      "special_abilities": ["holy_blade", "angelic_wrath", "divine_judgment"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 60000,
+    "first_clear_bonus": 120000,
+    "gold_range": [25000, 45000],
+    "possible_drops": ["fallen_halo", "angelic_feather", "divine_shard", "lightbringer_blade"]
+  }
+}

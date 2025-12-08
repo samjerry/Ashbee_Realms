@@ -1,0 +1,118 @@
+{
+  "id": "reality_breach",
+  "name": "The Reality Breach",
+  "description": "A tear in reality where aberrations from beyond slip into our world",
+  "difficulty": "extreme",
+  "required_level": 50,
+  "max_level": 60,
+  "recommended_party_size": 6,
+  "location": "void_realm",
+  "floors": 7,
+  "rooms_per_floor": [12, 13, 14, 15, 16, 17, 18],
+  "boss_floor": 7,
+  "time_limit": null,
+  "respawn_time": 14400,
+  "instance_type": "raid",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Void stalkers emerge from tears in space",
+      "monsters": [
+        {
+          "id": "void_stalker",
+          "count": [3, 5]
+        },
+        {
+          "id": "void_spawn",
+          "count": [2, 4]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Starborn horrors twist reality itself",
+      "monsters": [
+        {
+          "id": "starborn_horror",
+          "count": [2, 3]
+        },
+        {
+          "id": "void_horror",
+          "count": [2, 3]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Cosmic entities defy comprehension",
+      "monsters": [
+        {
+          "id": "cosmic_horror",
+          "count": [1, 2]
+        },
+        {
+          "id": "astral_colossus",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "The most powerful aberrations gather",
+      "monsters": [
+        {
+          "id": "void_emperor",
+          "count": [1, 1]
+        },
+        {
+          "id": "void_leviathan",
+          "count": [1, 1]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "azathoth_star_eater",
+      "name": "Azathoth the Star Eater",
+      "description": "The blind idiot god who dreams reality",
+      "level_range": [58, 60],
+      "health_multiplier": 10,
+      "damage_multiplier": 6.5,
+      "special_abilities": ["reality_warp", "cosmic_chaos", "star_consumption"],
+      "spawn_weight": 30,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "effect": "reality_collapses"
+        }
+      ]
+    },
+    {
+      "id": "nyarlathotep_void_god",
+      "name": "Nyarlathotep the Void God",
+      "description": "The crawling chaos, messenger of the outer gods",
+      "level_range": [59, 60],
+      "health_multiplier": 11,
+      "damage_multiplier": 7,
+      "special_abilities": ["thousand_forms", "void_mastery", "sanity_drain"],
+      "spawn_weight": 25
+    },
+    {
+      "id": "the_nameless_one",
+      "name": "The Nameless One",
+      "description": "An entity so ancient even the gods fear to speak its name",
+      "level_range": [60, 60],
+      "health_multiplier": 12,
+      "damage_multiplier": 7.5,
+      "special_abilities": ["nameless_horror", "existence_erasure", "beyond_time"],
+      "spawn_weight": 20
+    }
+  ],
+  "rewards": {
+    "completion_xp": 150000,
+    "first_clear_bonus": 300000,
+    "gold_range": [75000, 150000],
+    "possible_drops": ["void_crystal", "cosmic_essence", "reality_shard", "eye_of_chaos"]
+  }
+}

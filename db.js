@@ -80,6 +80,8 @@ async function initPostgres() {
       unlocked_titles JSONB DEFAULT '[]',
       active_title TEXT DEFAULT NULL,
       stats JSONB DEFAULT '{"totalKills":0,"bossKills":0,"criticalHits":0,"highestDamage":0,"deaths":0,"locationsVisited":[],"biomesVisited":[],"totalGoldEarned":0,"totalGoldSpent":0,"mysteriesSolved":0}',
+      dungeon_state JSONB DEFAULT NULL,
+      completed_dungeons JSONB DEFAULT '[]',
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
@@ -441,6 +443,49 @@ async function updateCharacterStats(playerId, channelName, stats) {
   );
 }
 
+/**
+ * Update character dungeon state
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {Object} dungeonState - Dungeon state object (null to clear)
+ */
+async function updateDungeonState(playerId, channelName, dungeonState) {
+  await query(
+    `UPDATE player_progress SET 
+      dungeon_state = $3,
+      updated_at = NOW()
+    WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName, dungeonState ? JSON.stringify(dungeonState) : null]
+  );
+}
+
+/**
+ * Add completed dungeon to player's list
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {string} dungeonId - Dungeon ID to add
+ */
+async function addCompletedDungeon(playerId, channelName, dungeonId) {
+  const result = await query(
+    'SELECT completed_dungeons FROM player_progress WHERE player_id = $1 AND channel_name = $2',
+    [playerId, channelName]
+  );
+  
+  if (result.rows.length > 0) {
+    const completed = result.rows[0].completed_dungeons || [];
+    if (!completed.includes(dungeonId)) {
+      completed.push(dungeonId);
+      await query(
+        `UPDATE player_progress SET 
+          completed_dungeons = $3,
+          updated_at = NOW()
+        WHERE player_id = $1 AND channel_name = $2`,
+        [playerId, channelName, JSON.stringify(completed)]
+      );
+    }
+  }
+}
+
 module.exports = {
   initDB,
   query,
@@ -459,5 +504,7 @@ module.exports = {
   savePermanentStats,
   incrementPermanentStat,
   updateAchievementData,
-  updateCharacterStats
+  updateCharacterStats,
+  updateDungeonState,
+  addCompletedDungeon
 };

@@ -1,0 +1,205 @@
+{
+  "id": "void_rift",
+  "name": "Void Rift",
+  "description": "A tear in reality where void creatures pour through",
+  "difficulty": "medium",
+  "required_level": 18,
+  "max_level": 23,
+  "recommended_party_size": 1,
+  "location": "reality_tear",
+  "floors": 5,
+  "rooms_per_floor": [
+    7,
+    8,
+    8,
+    9,
+    10
+  ],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "void_corruption": {
+      "description": "Maximum HP reduced by 15%",
+      "max_hp_penalty": 0.15
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Void creatures materialize from nothing",
+      "monsters": [
+        {
+          "id": "void_spawn",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "id": "void_walker",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "void_stalker",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "void_spawn",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "starborn_horror",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "cosmic_horror",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "void_herald",
+      "name": "Herald of the Void",
+      "description": "A messenger from the space between spaces",
+      "level_range": [
+        18,
+        23
+      ],
+      "health_multiplier": 4,
+      "damage_multiplier": 2.2,
+      "special_abilities": [
+        "void_bolt",
+        "null_zone",
+        "dimensional_rift"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "entropy_elemental",
+      "name": "Entropy Incarnate",
+      "description": "A being of pure dissolution",
+      "level_range": [
+        18,
+        23
+      ],
+      "health_multiplier": 3.6,
+      "damage_multiplier": 2.4,
+      "special_abilities": [
+        "decay_aura",
+        "disintegrate",
+        "entropy_wave"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "voidborn_horror",
+      "name": "The Voidborn",
+      "description": "A creature native to the void itself",
+      "level_range": [
+        19,
+        23
+      ],
+      "health_multiplier": 4.2,
+      "damage_multiplier": 2.1,
+      "special_abilities": [
+        "reality_tear",
+        "void_grasp",
+        "null_sphere"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "dark_matter_beast",
+      "name": "Dark Matter Anomaly",
+      "description": "A living contradiction that shouldn't exist",
+      "level_range": [
+        19,
+        23
+      ],
+      "health_multiplier": 4.4,
+      "damage_multiplier": 1.9,
+      "special_abilities": [
+        "gravity_well",
+        "mass_crush",
+        "dark_pulse"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "void_sorcerer",
+      "name": "Nullmancer Vex",
+      "description": "A mage who learned to harness the void",
+      "level_range": [
+        18,
+        23
+      ],
+      "health_multiplier": 3.4,
+      "damage_multiplier": 2.5,
+      "special_abilities": [
+        "void_magic",
+        "anti_magic_field",
+        "nullification"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 2600,
+    "gold": [
+      900,
+      1300
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_void",
+    "first_clear_bonus": {
+      "xp": 5200,
+      "title": "void_walker",
+      "items": [
+        "void_touched_staff"
+      ]
+    }
+  }
+}

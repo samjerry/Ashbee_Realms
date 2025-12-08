@@ -1,0 +1,206 @@
+{
+  "id": "titan_vault",
+  "name": "Titan Vault",
+  "description": "An ancient prison holding the last of the titan race",
+  "difficulty": "very_hard",
+  "required_level": 36,
+  "max_level": 42,
+  "recommended_party_size": 1,
+  "location": "primordial_prison",
+  "floors": 8,
+  "rooms_per_floor": [
+    10,
+    11,
+    11,
+    12,
+    12,
+    13,
+    13,
+    14
+  ],
+  "boss_floor": 8,
+  "time_limit": 7200,
+  "respawn_time": 21600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "titan_pressure": {
+      "description": "Overwhelming presence reduces all stats by 15%",
+      "all_stats_penalty": 0.15
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Titan constructs guard the vault",
+      "monsters": [
+        {
+          "id": "titan_sentinel",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "stone_giant",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "cloud_giant",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "storm_giant",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "primordial_titan",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "atlas_titan",
+      "name": "Atlas the World Bearer",
+      "description": "A titan who once held the world on his shoulders",
+      "level_range": [
+        36,
+        42
+      ],
+      "health_multiplier": 10,
+      "damage_multiplier": 4,
+      "special_abilities": [
+        "world_crush",
+        "titan_roar",
+        "earthquake",
+        "mountain_throw"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.4,
+          "transformation": "titan_fury",
+          "description": "Enters berserker rage, attacks become devastating"
+        }
+      ]
+    },
+    {
+      "id": "frost_titan",
+      "name": "Ymir the Frost Titan",
+      "description": "A titan of eternal ice and winter",
+      "level_range": [
+        36,
+        42
+      ],
+      "health_multiplier": 9.5,
+      "damage_multiplier": 4.2,
+      "special_abilities": [
+        "glacial_fist",
+        "blizzard_breath",
+        "ice_age"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "storm_titan",
+      "name": "Typhon the Storm Titan",
+      "description": "A titan commanding storms and lightning",
+      "level_range": [
+        37,
+        42
+      ],
+      "health_multiplier": 9,
+      "damage_multiplier": 4.4,
+      "special_abilities": [
+        "lightning_storm",
+        "hurricane_winds",
+        "thunder_clap"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "fire_titan",
+      "name": "Prometheus the Fire Titan",
+      "description": "The titan who stole fire from the gods",
+      "level_range": [
+        37,
+        42
+      ],
+      "health_multiplier": 9.3,
+      "damage_multiplier": 4.3,
+      "special_abilities": [
+        "eternal_flame",
+        "inferno_strike",
+        "burning_world"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "void_titan",
+      "name": "Cronus the Devourer",
+      "description": "A titan who consumes all things",
+      "level_range": [
+        38,
+        42
+      ],
+      "health_multiplier": 10.5,
+      "damage_multiplier": 3.8,
+      "special_abilities": [
+        "devour",
+        "time_stop",
+        "reality_rend"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 30000,
+    "gold": [
+      8000,
+      15000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_titan",
+    "legendary_chance": 0.9,
+    "mythic_chance": 0.2,
+    "first_clear_bonus": {
+      "xp": 60000,
+      "title": "titan_slayer",
+      "items": [
+        "atlas_gauntlets_mythic"
+      ],
+      "passive_unlock": "titan_strength"
+    }
+  }
+}

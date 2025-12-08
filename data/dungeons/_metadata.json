@@ -1,0 +1,77 @@
+{
+  "dungeon_difficulties": {
+    "easy": {
+      "name": "Normal",
+      "stat_multiplier": 1,
+      "reward_multiplier": 1,
+      "color": "#00FF00"
+    },
+    "medium": {
+      "name": "Heroic",
+      "stat_multiplier": 1.5,
+      "reward_multiplier": 1.5,
+      "color": "#0070DD"
+    },
+    "hard": {
+      "name": "Mythic",
+      "stat_multiplier": 2.5,
+      "reward_multiplier": 2.5,
+      "color": "#A335EE"
+    },
+    "nightmare": {
+      "name": "Nightmare",
+      "stat_multiplier": 5,
+      "reward_multiplier": 5,
+      "color": "#FF0000"
+    },
+    "scaling": {
+      "name": "Scaling",
+      "description": "Difficulty increases with progress",
+      "color": "#FF8000"
+    },
+    "very_hard": {
+      "name": "Legendary",
+      "stat_multiplier": 4,
+      "reward_multiplier": 4,
+      "color": "#FF6600"
+    },
+    "extreme": {
+      "name": "Transcendent",
+      "stat_multiplier": 6,
+      "reward_multiplier": 6,
+      "color": "#FF0080"
+    }
+  },
+  "dungeon_modifiers": {
+    "ironman": {
+      "name": "Ironman Mode",
+      "description": "No potions or items can be used",
+      "reward_bonus": 2
+    },
+    "speed_run": {
+      "name": "Speed Run",
+      "description": "Complete within time limit for bonus rewards",
+      "time_bonus_tiers": [
+        {
+          "time": 300,
+          "bonus": 3
+        },
+        {
+          "time": 600,
+          "bonus": 2
+        },
+        {
+          "time": 900,
+          "bonus": 1.5
+        }
+      ]
+    },
+    "cursed": {
+      "name": "Cursed Run",
+      "description": "All monsters have +100% stats, cursed items guaranteed",
+      "monster_boost": 2,
+      "cursed_loot": true,
+      "reward_bonus": 3
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "id": "blood_cathedral",
+  "name": "Blood Cathedral",
+  "description": "A corrupted church where blood magic is practiced",
+  "difficulty": "very_hard",
+  "required_level": 39,
+  "max_level": 45,
+  "recommended_party_size": 1,
+  "location": "crimson_sanctum",
+  "floors": 8,
+  "rooms_per_floor": [
+    11,
+    12,
+    12,
+    13,
+    13,
+    14,
+    14,
+    15
+  ],
+  "boss_floor": 8,
+  "time_limit": 7200,
+  "respawn_time": 21600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "blood_curse": {
+      "description": "Damage taken converted to blood magic energy for enemies",
+      "enemy_power_gain": 0.1
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Blood cultists perform dark rituals",
+      "monsters": [
+        {
+          "id": "blood_mage",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "vampire_noble",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "dracula_ancient",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "blood_fiend",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "vampire_ascendant",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "blood_archbishop",
+      "name": "Cardinal Sanguis",
+      "description": "The high priest of blood magic",
+      "level_range": [
+        39,
+        45
+      ],
+      "health_multiplier": 9,
+      "damage_multiplier": 4.4,
+      "special_abilities": [
+        "blood_sacrifice",
+        "crimson_nova",
+        "hemorrhage",
+        "transfusion"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.3,
+          "ability_unlock": "blood_god_blessing",
+          "description": "Channels the power of the blood god"
+        }
+      ]
+    },
+    {
+      "id": "vampire_progenitor",
+      "name": "Cain the First Vampire",
+      "description": "The original vampire, source of the bloodline",
+      "level_range": [
+        39,
+        45
+      ],
+      "health_multiplier": 9.5,
+      "damage_multiplier": 4.3,
+      "special_abilities": [
+        "primal_bite",
+        "blood_pool",
+        "immortal_form"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "blood_elemental",
+      "name": "Hemoglobin the Living Blood",
+      "description": "Blood given sentience and malevolence",
+      "level_range": [
+        40,
+        45
+      ],
+      "health_multiplier": 8.5,
+      "damage_multiplier": 4.6,
+      "special_abilities": [
+        "blood_wave",
+        "coagulate",
+        "arterial_spray"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "crimson_knight",
+      "name": "Sir Sanguine",
+      "description": "A knight corrupted by blood magic",
+      "level_range": [
+        40,
+        45
+      ],
+      "health_multiplier": 10,
+      "damage_multiplier": 4,
+      "special_abilities": [
+        "blood_blade",
+        "life_tap",
+        "crimson_shield"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "hemomancer",
+      "name": "Vladislaus the Hemomancer",
+      "description": "A master of blood manipulation",
+      "level_range": [
+        41,
+        45
+      ],
+      "health_multiplier": 8.8,
+      "damage_multiplier": 4.5,
+      "special_abilities": [
+        "blood_puppet",
+        "exsanguinate",
+        "blood_prison"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 36000,
+    "gold": [
+      11000,
+      18000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_blood",
+    "legendary_chance": 1,
+    "mythic_chance": 0.35,
+    "first_clear_bonus": {
+      "xp": 72000,
+      "title": "blood_purger",
+      "items": [
+        "sanguis_chalice_mythic"
+      ],
+      "passive_unlock": "blood_magic_mastery"
+    }
+  }
+}

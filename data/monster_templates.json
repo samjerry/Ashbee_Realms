@@ -91,6 +91,79 @@
         "agility": 1.2,
         "magic": 1.4
       }
+    },
+    "fey_base": {
+      "creature_type": "fey",
+      "base_abilities": ["nature_magic", "nimble"],
+      "base_multipliers": {
+        "hp": 0.7,
+        "attack": 0.9,
+        "defense": 0.6,
+        "agility": 1.6,
+        "magic": 1.3
+      }
+    },
+    "giant_base": {
+      "creature_type": "giant",
+      "base_abilities": ["massive", "ground_slam"],
+      "base_multipliers": {
+        "hp": 2.0,
+        "attack": 1.5,
+        "defense": 1.3,
+        "agility": 0.4
+      }
+    },
+    "ooze_base": {
+      "creature_type": "ooze",
+      "base_abilities": ["acid_aura", "amorphous"],
+      "base_multipliers": {
+        "hp": 1.6,
+        "attack": 0.7,
+        "defense": 0.3,
+        "agility": 0.3
+      }
+    },
+    "insectoid_base": {
+      "creature_type": "insectoid",
+      "base_abilities": ["exoskeleton", "swarm_tactics"],
+      "base_multipliers": {
+        "hp": 0.9,
+        "attack": 1.1,
+        "defense": 1.2,
+        "agility": 1.3
+      }
+    },
+    "aquatic_base": {
+      "creature_type": "aquatic",
+      "base_abilities": ["water_breathing", "tidal_power"],
+      "base_multipliers": {
+        "hp": 1.1,
+        "attack": 1.0,
+        "defense": 0.9,
+        "agility": 1.2,
+        "magic": 1.1
+      }
+    },
+    "plant_base": {
+      "creature_type": "plant",
+      "base_abilities": ["rooted", "photosynthesis"],
+      "base_multipliers": {
+        "hp": 1.4,
+        "attack": 0.8,
+        "defense": 1.1,
+        "agility": 0.4,
+        "magic": 0.9
+      }
+    },
+    "lycanthrope_base": {
+      "creature_type": "lycanthrope",
+      "base_abilities": ["regeneration", "lycanthropic_fury"],
+      "base_multipliers": {
+        "hp": 1.3,
+        "attack": 1.4,
+        "defense": 1.0,
+        "agility": 1.3
+      }
     }
   },
   "rarity_modifiers": {
@@ -118,6 +191,11 @@
       "stat_multiplier": 8.0,
       "ability_count": [4, 6],
       "xp_base": 1500
+    },
+    "boss": {
+      "stat_multiplier": 12.0,
+      "ability_count": [5, 8],
+      "xp_base": 3000
     },
     "mythic": {
       "stat_multiplier": 15.0,

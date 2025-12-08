@@ -1,0 +1,483 @@
+{
+  "creature_type": "constructs",
+  "count": 18,
+  "monsters": [
+    {
+      "id": "crystal_golem",
+      "name": "Crystal Golem",
+      "template": "construct_base",
+      "rarity": "rare",
+      "description": "A construct made of enchanted crystals",
+      "biomes": [
+        "deep_caverns",
+        "frozen_wastes",
+        "volcanic_peaks"
+      ],
+      "level_range": [
+        13,
+        18
+      ],
+      "stats": [
+        155,
+        15,
+        18,
+        3
+      ],
+      "abilities": [
+        "magic_resist",
+        "reflect"
+      ],
+      "loot": "construct_crystal"
+    },
+    {
+      "id": "stone_guardian",
+      "name": "Stone Guardian",
+      "template": "construct_base",
+      "rarity": "rare",
+      "description": "An ancient golem defending forgotten ruins",
+      "biomes": [
+        "forsaken_ruins",
+        "deep_caverns",
+        "highland_reaches"
+      ],
+      "level_range": [
+        16,
+        21
+      ],
+      "stats": [
+        210,
+        18,
+        20,
+        2
+      ],
+      "abilities": [
+        "stone_skin",
+        "earthquake"
+      ],
+      "loot": "construct_stone"
+    },
+    {
+      "id": "stone_sentinel",
+      "name": "Stone Sentinel",
+      "template": "construct_base",
+      "rarity": "epic",
+      "description": "An ancient guardian of immense strength",
+      "biomes": [
+        "forsaken_ruins",
+        "deep_caverns",
+        "highland_reaches",
+        "volcanic_peaks"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        320,
+        20,
+        22,
+        4
+      ],
+      "abilities": [
+        "stone_skin",
+        "magic_resist"
+      ],
+      "loot": "construct_sentinel",
+      "magic": 10
+    },
+    {
+      "id": "iron_golem",
+      "name": "Iron Golem",
+      "template": "construct_base",
+      "rarity": "epic",
+      "description": "An indestructible construct of enchanted metal",
+      "biomes": [
+        "forsaken_ruins",
+        "volcanic_peaks",
+        "deep_caverns",
+        "highland_reaches"
+      ],
+      "level_range": [
+        20,
+        26
+      ],
+      "stats": [
+        380,
+        24,
+        24,
+        3
+      ],
+      "abilities": [
+        "magic_resist",
+        "slam"
+      ],
+      "loot": "construct_iron",
+      "magic": 8
+    },
+    {
+      "id": "titan_golem",
+      "name": "Titan Golem",
+      "template": "construct_base",
+      "rarity": "legendary",
+      "description": "A colossal construct of ancient magic and pure stone, towering stories high",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes",
+        "forsaken_ruins",
+        "highland_reaches",
+        "deep_caverns"
+      ],
+      "level_range": [
+        28,
+        38
+      ],
+      "stats": [
+        1200,
+        45,
+        60,
+        2
+      ],
+      "abilities": [
+        "earthquake",
+        "stone_fist",
+        "fortress_stance",
+        "regenerate_armor"
+      ],
+      "loot": "construct_titan",
+      "magic": 10
+    },
+    {
+      "id": "war_golem_prime",
+      "name": "War Golem Mark X",
+      "template": "construct_base",
+      "rarity": "boss",
+      "description": "The ultimate war machine",
+      "biomes": [],
+      "level_range": [
+        28,
+        34
+      ],
+      "stats": [
+        24800,
+        868,
+        620,
+        248
+      ],
+      "abilities": [
+        "artillery_cannon",
+        "missile_barrage",
+        "shield_matrix"
+      ],
+      "loot": "boss_epic"
+    },
+    {
+      "id": "arcane_construct",
+      "name": "Magitek Destroyer",
+      "template": "construct_base",
+      "rarity": "boss",
+      "description": "A fusion of magic and machine",
+      "biomes": [],
+      "level_range": [
+        29,
+        34
+      ],
+      "stats": [
+        21420,
+        1040,
+        536,
+        252
+      ],
+      "abilities": [
+        "arcane_cannon",
+        "energy_shield",
+        "overload"
+      ],
+      "loot": "boss_epic"
+    },
+    {
+      "id": "iron_golem_alpha",
+      "name": "Golem Prime",
+      "template": "construct_base",
+      "rarity": "boss",
+      "description": "The first and most powerful golem ever forged",
+      "biomes": [],
+      "level_range": [
+        17,
+        21
+      ],
+      "stats": [
+        8550,
+        361,
+        214,
+        152
+      ],
+      "abilities": [
+        "metal_crush",
+        "magnetic_pull",
+        "repair_protocol"
+      ],
+      "loot": "boss_rare"
+    },
+    {
+      "id": "automaton",
+      "name": "Automaton",
+      "template": "construct_base",
+      "rarity": "uncommon",
+      "description": "A mechanical construct powered by magic",
+      "biomes": [
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "stats": [
+        140,
+        30,
+        24,
+        12
+      ],
+      "abilities": [
+        "mechanical_precision"
+      ],
+      "loot": "uncommon_construct"
+    },
+    {
+      "id": "construct_guardian",
+      "name": "Construct Guardian",
+      "template": "construct_base",
+      "rarity": "rare",
+      "description": "A magical construct built to protect",
+      "biomes": [
+        "forsaken_ruins",
+        "deep_caverns"
+      ],
+      "level_range": [
+        14,
+        20
+      ],
+      "stats": [
+        260,
+        44,
+        40,
+        10
+      ],
+      "abilities": [
+        "magic_resist",
+        "counter_attack"
+      ],
+      "loot": "rare_construct"
+    },
+    {
+      "id": "titan_sentinel",
+      "name": "Titan Sentinel",
+      "template": "construct_base",
+      "rarity": "epic",
+      "description": "A colossal guardian construct of immense power",
+      "biomes": [
+        "void_realm",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        24,
+        30
+      ],
+      "stats": [
+        650,
+        85,
+        68,
+        15
+      ],
+      "abilities": [
+        "titan_slam",
+        "defensive_matrix"
+      ],
+      "loot": "epic_construct"
+    },
+    {
+      "id": "crystal_guardian",
+      "name": "Crystal Guardian",
+      "template": "construct_base",
+      "rarity": "epic",
+      "description": "An elite construct forged from pure crystal",
+      "biomes": [
+        "deep_caverns",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        28,
+        34
+      ],
+      "stats": [
+        580,
+        72,
+        85,
+        12
+      ],
+      "abilities": [
+        "crystal_prison",
+        "reflect_magic",
+        "shatter"
+      ],
+      "loot": "epic_construct"
+    },
+    {
+      "id": "mithril_golem",
+      "name": "Mithril Golem",
+      "template": "construct_base",
+      "rarity": "epic",
+      "description": "A golem forged from legendary mithril metal",
+      "biomes": [
+        "forsaken_ruins",
+        "deep_caverns"
+      ],
+      "level_range": [
+        28,
+        34
+      ],
+      "stats": [
+        620,
+        78,
+        92,
+        8
+      ],
+      "abilities": [
+        "mithril_strike",
+        "magic_immunity",
+        "unstoppable"
+      ],
+      "loot": "epic_construct"
+    },
+    {
+      "id": "war_golem_mark_x",
+      "name": "War Golem Mark X",
+      "template": "construct_base",
+      "rarity": "epic",
+      "description": "The ultimate war machine, prototype version",
+      "biomes": [
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        28,
+        34
+      ],
+      "stats": [
+        680,
+        88,
+        78,
+        15
+      ],
+      "abilities": [
+        "siege_mode",
+        "artillery_strike",
+        "repair_protocol"
+      ],
+      "loot": "epic_construct"
+    },
+    {
+      "id": "diamond_golem",
+      "name": "Diamond Golem",
+      "template": "construct_base",
+      "rarity": "legendary",
+      "description": "The rarest construct, forged from pure diamond",
+      "biomes": [
+        "deep_caverns"
+      ],
+      "level_range": [
+        30,
+        38
+      ],
+      "stats": [
+        820,
+        95,
+        125,
+        18
+      ],
+      "abilities": [
+        "diamond_edge",
+        "unbreakable",
+        "prismatic_beam"
+      ],
+      "loot": "legendary_construct"
+    },
+    {
+      "id": "golem_prime",
+      "name": "Golem Prime",
+      "template": "construct_base",
+      "rarity": "legendary",
+      "description": "The first and most powerful golem ever created",
+      "biomes": [
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        32,
+        34
+      ],
+      "stats": [
+        950,
+        115,
+        145,
+        25
+      ],
+      "abilities": [
+        "adaptive_armor",
+        "power_core",
+        "system_overload",
+        "regenerate"
+      ],
+      "loot": "legendary_construct"
+    },
+    {
+      "id": "magitek_destroyer",
+      "name": "Magitek Destroyer",
+      "template": "construct_base",
+      "rarity": "legendary",
+      "description": "A fusion of magic and technology, unstable and deadly",
+      "biomes": [
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        33,
+        34
+      ],
+      "stats": [
+        1050,
+        125,
+        135,
+        45
+      ],
+      "abilities": [
+        "arcane_cannon",
+        "magic_surge",
+        "tech_overcharge",
+        "meltdown"
+      ],
+      "loot": "legendary_construct",
+      "magic": 85
+    },
+    {
+      "id": "sentinel_alpha",
+      "name": "Sentinel Protocol Alpha",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The first and deadliest security construct",
+      "biomes": [],
+      "level_range": [
+        30,
+        34
+      ],
+      "stats": [
+        23040,
+        1024,
+        576,
+        256
+      ],
+      "abilities": [
+        "laser_array",
+        "defense_protocol",
+        "self_destruct"
+      ],
+      "loot": "boss_epic"
+    }
+  ]
+}

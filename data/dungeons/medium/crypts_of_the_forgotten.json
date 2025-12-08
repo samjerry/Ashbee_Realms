@@ -1,0 +1,254 @@
+{
+  "id": "crypts_of_the_forgotten",
+  "name": "Crypts of the Forgotten",
+  "description": "Ancient burial grounds where the restless dead walk",
+  "difficulty": "medium",
+  "required_level": 10,
+  "max_level": 20,
+  "recommended_party_size": 1,
+  "location": "ancient_crypts",
+  "floors": 5,
+  "rooms_per_floor": [
+    6,
+    7,
+    7,
+    8,
+    9
+  ],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "curse_of_undeath": {
+      "description": "Healing reduced by 30%",
+      "healing_penalty": 0.3
+    },
+    "darkness": {
+      "description": "Visibility severely limited",
+      "ambush_chance": 0.2
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "A hall filled with animated skeletons",
+      "monsters": [
+        {
+          "id": "skeleton",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "id": "skeleton_warrior",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Tomb guardians rise from their coffins",
+      "monsters": [
+        {
+          "id": "tomb_guardian",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "wraith",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "type": "treasure",
+      "description": "An ornate sarcophagus contains ancient relics",
+      "loot_table": "crypt_treasure",
+      "cursed_item_chance": 0.3
+    },
+    {
+      "type": "event",
+      "event_id": "mysterious_shrine",
+      "description": "An altar dedicated to forgotten gods"
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "plague_lich",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "necromancer_supreme",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "bone_colossus",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "crypt_lord",
+      "name": "Lord Mortis the Eternal",
+      "description": "An ancient lich who refuses to rest",
+      "level_range": [
+        10,
+        20
+      ],
+      "health_multiplier": 4,
+      "damage_multiplier": 2,
+      "special_abilities": [
+        "death_bolt",
+        "summon_undead",
+        "life_drain",
+        "soul_cage"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.75,
+          "adds_spawn": {
+            "id": "skeleton_warrior",
+            "count": 3
+          }
+        },
+        {
+          "hp_threshold": 0.4,
+          "ability_unlock": "phylactery_shield",
+          "description": "Becomes immune until phylactery is destroyed"
+        }
+      ],
+      "mechanics": {
+        "phylactery": {
+          "description": "Destroy the phylactery to remove immunity",
+          "hp": 500,
+          "location": "side_room"
+        }
+      }
+    },
+    {
+      "id": "deathknight_valdris",
+      "name": "Deathknight Valdris",
+      "description": "A fallen paladin who now serves death itself",
+      "level_range": [
+        10,
+        15
+      ],
+      "health_multiplier": 3.5,
+      "damage_multiplier": 1.9,
+      "special_abilities": [
+        "death_strike",
+        "unholy_aura",
+        "grave_召喚"
+      ],
+      "spawn_weight": 30
+    },
+    {
+      "id": "banshee_queen",
+      "name": "Elara the Banshee Queen",
+      "description": "A tormented queen whose wail can shatter souls",
+      "level_range": [
+        15,
+        20
+      ],
+      "health_multiplier": 3.8,
+      "damage_multiplier": 2.1,
+      "special_abilities": [
+        "banshee_wail",
+        "soul_drain",
+        "ethereal_form"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "ability_unlock": "ethereal_form",
+          "description": "Becomes untargetable for 10 seconds"
+        }
+      ]
+    },
+    {
+      "id": "flesh_golem",
+      "name": "Abomination Mk VII",
+      "description": "A grotesque creation of stitched corpses and dark magic",
+      "level_range": [
+        12,
+        18
+      ],
+      "health_multiplier": 4.5,
+      "damage_multiplier": 1.7,
+      "special_abilities": [
+        "ground_slam",
+        "toxic_gas",
+        "regenerate"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "vampire_count",
+      "name": "Count Bloodmire",
+      "description": "An immortal vampire who feeds on the living",
+      "level_range": [
+        12,
+        20
+      ],
+      "health_multiplier": 3.9,
+      "damage_multiplier": 2,
+      "special_abilities": [
+        "blood_drain",
+        "mist_form",
+        "charm",
+        "bat_swarm"
+      ],
+      "spawn_weight": 20
+    }
+  ],
+  "rewards": {
+    "xp": 1500,
+    "gold": [
+      400,
+      800
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_undead",
+    "first_clear_bonus": {
+      "xp": 3000,
+      "title": "crypt_delver",
+      "items": [
+        "mortis_bone_staff"
+      ]
+    }
+  }
+}

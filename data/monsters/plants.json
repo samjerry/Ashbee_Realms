@@ -1,0 +1,553 @@
+{
+  "creature_type": "plants",
+  "count": 20,
+  "monsters": [
+    {
+      "id": "vine_creeper",
+      "name": "Vine Creeper",
+      "template": "plant_base",
+      "rarity": "common",
+      "description": "An animated vine that grasps at passing creatures",
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        1,
+        5
+      ],
+      "stats": [
+        28,
+        4,
+        6,
+        2
+      ],
+      "abilities": [
+        "entangle"
+      ],
+      "loot": "common_plant",
+      "magic": 4
+    },
+    {
+      "id": "thorn_bush",
+      "name": "Thorn Bush",
+      "template": "plant_base",
+      "rarity": "common",
+      "description": "A mobile bush covered in painful thorns",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        2,
+        6
+      ],
+      "stats": [
+        32,
+        5,
+        7,
+        2
+      ],
+      "abilities": [
+        "thorn_spray"
+      ],
+      "loot": "common_plant",
+      "magic": 3
+    },
+    {
+      "id": "spore_walker",
+      "name": "Spore Walker",
+      "template": "plant_base",
+      "rarity": "uncommon",
+      "description": "A fungal-infested host controlled by parasitic spores",
+      "biomes": [
+        "cursed_swamp",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "stats": [
+        70,
+        12,
+        15,
+        3
+      ],
+      "abilities": [
+        "spore_cloud",
+        "fungal_infection"
+      ],
+      "loot": "uncommon_plant",
+      "magic": 8
+    },
+    {
+      "id": "shambling_mound",
+      "name": "Shambling Mound",
+      "template": "plant_base",
+      "rarity": "uncommon",
+      "description": "A walking heap of rotting vegetation",
+      "biomes": [
+        "cursed_swamp",
+        "whispering_woods"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "stats": [
+        85,
+        14,
+        18,
+        3
+      ],
+      "abilities": [
+        "lightning_absorption",
+        "engulf",
+        "regenerate"
+      ],
+      "loot": "uncommon_plant",
+      "magic": 10
+    },
+    {
+      "id": "carnivorous_plant",
+      "name": "Carnivorous Plant",
+      "template": "plant_base",
+      "rarity": "uncommon",
+      "description": "A massive plant with snapping jaws",
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "stats": [
+        95,
+        18,
+        20,
+        2
+      ],
+      "abilities": [
+        "bite_trap",
+        "digestive_acid",
+        "lure"
+      ],
+      "loot": "uncommon_plant",
+      "magic": 6
+    },
+    {
+      "id": "treant_sapling",
+      "name": "Treant Sapling",
+      "template": "plant_base",
+      "rarity": "rare",
+      "description": "A young treant learning to protect the forest",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        14,
+        20
+      ],
+      "stats": [
+        210,
+        40,
+        48,
+        4
+      ],
+      "abilities": [
+        "root_bash",
+        "animate_trees",
+        "bark_armor"
+      ],
+      "loot": "rare_plant",
+      "magic": 38
+    },
+    {
+      "id": "spore_tyrant",
+      "name": "Spore Tyrant",
+      "template": "plant_base",
+      "rarity": "rare",
+      "description": "A massive fungal colony with a malevolent intelligence",
+      "biomes": [
+        "cursed_swamp",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        16,
+        22
+      ],
+      "stats": [
+        240,
+        38,
+        52,
+        3
+      ],
+      "abilities": [
+        "toxic_spores",
+        "mind_control_spores",
+        "fungal_network"
+      ],
+      "loot": "rare_plant",
+      "magic": 48
+    },
+    {
+      "id": "poison_ivy_horror",
+      "name": "Poison Ivy Horror",
+      "template": "plant_base",
+      "rarity": "rare",
+      "description": "A sentient mass of poisonous vines",
+      "biomes": [
+        "whispering_woods",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        260,
+        42,
+        55,
+        5
+      ],
+      "abilities": [
+        "poison_touch",
+        "vine_whip",
+        "toxic_bloom"
+      ],
+      "loot": "rare_plant",
+      "magic": 42
+    },
+    {
+      "id": "ancient_treant",
+      "name": "Ancient Treant",
+      "template": "plant_base",
+      "rarity": "epic",
+      "description": "A millennial tree guardian of tremendous power",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        22,
+        28
+      ],
+      "stats": [
+        532,
+        96,
+        132,
+        8
+      ],
+      "abilities": [
+        "forest_stride",
+        "animate_grove",
+        "crushing_limbs",
+        "earth_tremor"
+      ],
+      "loot": "epic_plant",
+      "magic": 108
+    },
+    {
+      "id": "myconid_sovereign",
+      "name": "Myconid Sovereign",
+      "template": "plant_base",
+      "rarity": "epic",
+      "description": "The telepathic ruler of a fungal colony",
+      "biomes": [
+        "cursed_swamp",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        24,
+        30
+      ],
+      "stats": [
+        588,
+        104,
+        140,
+        6
+      ],
+      "abilities": [
+        "rapport_spores",
+        "hallucination_spores",
+        "pacification_spores",
+        "fungal_mastery"
+      ],
+      "loot": "epic_plant",
+      "magic": 132
+    },
+    {
+      "id": "awakened_grove",
+      "name": "Awakened Grove",
+      "template": "plant_base",
+      "rarity": "epic",
+      "description": "An entire grove of trees acting with one mind",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        26,
+        32
+      ],
+      "stats": [
+        644,
+        112,
+        148,
+        7
+      ],
+      "abilities": [
+        "thousand_branches",
+        "root_prison",
+        "photosynthesis_burst",
+        "grove_mind"
+      ],
+      "loot": "epic_plant",
+      "magic": 116
+    },
+    {
+      "id": "yggdrasil_sprout",
+      "name": "Yggdrasil Sprout",
+      "template": "plant_base",
+      "rarity": "legendary",
+      "description": "A seedling of the world tree itself",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "stats": [
+        1120,
+        240,
+        308,
+        12
+      ],
+      "abilities": [
+        "world_root",
+        "planar_connection",
+        "cosmic_growth",
+        "eternal_life"
+      ],
+      "loot": "legendary_plant",
+      "magic": 252
+    },
+    {
+      "id": "green_man",
+      "name": "The Green Man",
+      "template": "plant_base",
+      "rarity": "legendary",
+      "description": "The living embodiment of nature's wrath",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        34,
+        40
+      ],
+      "stats": [
+        1280,
+        272,
+        332,
+        14
+      ],
+      "abilities": [
+        "nature_incarnate",
+        "wild_growth",
+        "season_change",
+        "forest_lord"
+      ],
+      "loot": "legendary_plant",
+      "magic": 308
+    },
+    {
+      "id": "forest_primal",
+      "name": "Forest Primal",
+      "template": "plant_base",
+      "rarity": "boss",
+      "description": "The oldest spirit of the primordial forest",
+      "biomes": [],
+      "level_range": [
+        26,
+        28
+      ],
+      "stats": [
+        4368,
+        896,
+        1540,
+        112
+      ],
+      "abilities": [
+        "ancient_forest",
+        "root_apocalypse",
+        "nature_fury",
+        "eternal_growth"
+      ],
+      "loot": "boss_plant",
+      "magic": 1232
+    },
+    {
+      "id": "world_tree_avatar",
+      "name": "World Tree Avatar",
+      "template": "plant_base",
+      "rarity": "boss",
+      "description": "An avatar of Yggdrasil, the cosmic tree",
+      "biomes": [],
+      "level_range": [
+        34,
+        36
+      ],
+      "stats": [
+        5544,
+        1296,
+        1848,
+        144
+      ],
+      "abilities": [
+        "cosmic_roots",
+        "planar_shift",
+        "world_binding",
+        "immortal_tree"
+      ],
+      "loot": "boss_plant",
+      "magic": 1584
+    },
+    {
+      "id": "poison_titan",
+      "name": "Poison Titan",
+      "template": "plant_base",
+      "rarity": "boss",
+      "description": "A colossal plant dripping with deadly toxins",
+      "biomes": [],
+      "level_range": [
+        30,
+        32
+      ],
+      "stats": [
+        4896,
+        1088,
+        1672,
+        128
+      ],
+      "abilities": [
+        "mega_poison",
+        "toxic_rain",
+        "venomous_thorns",
+        "plague_bringer"
+      ],
+      "loot": "boss_plant",
+      "magic": 1408
+    },
+    {
+      "id": "spore_overmind",
+      "name": "Spore Overmind",
+      "template": "plant_base",
+      "rarity": "boss",
+      "description": "The collective consciousness of all fungi",
+      "biomes": [],
+      "level_range": [
+        32,
+        34
+      ],
+      "stats": [
+        5088,
+        1152,
+        1760,
+        120
+      ],
+      "abilities": [
+        "global_spores",
+        "hive_infection",
+        "mycelial_network",
+        "fungal_god"
+      ],
+      "loot": "boss_plant",
+      "magic": 1496
+    },
+    {
+      "id": "yggdrasil_aspect",
+      "name": "Aspect of Yggdrasil",
+      "template": "plant_base",
+      "rarity": "mythic",
+      "description": "A fragment of the world tree's consciousness",
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "stats": [
+        1960,
+        560,
+        616,
+        28
+      ],
+      "abilities": [
+        "nine_realms",
+        "cosmic_tree",
+        "fate_weaver",
+        "eternal_trunk",
+        "root_of_all"
+      ],
+      "loot": "mythic_plant",
+      "magic": 720
+    },
+    {
+      "id": "gaea_bloom",
+      "name": "Gaea's Bloom",
+      "template": "plant_base",
+      "rarity": "mythic",
+      "description": "The flower that births worlds",
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        44,
+        49
+      ],
+      "stats": [
+        1848,
+        532,
+        588,
+        24
+      ],
+      "abilities": [
+        "creation_pollen",
+        "life_giver",
+        "world_seed",
+        "mother_earth",
+        "genesis_bloom"
+      ],
+      "loot": "mythic_plant",
+      "magic": 660
+    },
+    {
+      "id": "elder_treant",
+      "name": "Elder Treant",
+      "template": "beast_base",
+      "rarity": "uncommon",
+      "description": "A nature spirit bound to ancient trees",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "stats": [
+        52,
+        10,
+        4,
+        7
+      ],
+      "abilities": [
+        "regen"
+      ],
+      "loot": "beast_nature",
+      "magic": 14
+    }
+  ]
+}

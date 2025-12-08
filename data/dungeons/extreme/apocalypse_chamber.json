@@ -1,0 +1,222 @@
+{
+  "id": "apocalypse_chamber",
+  "name": "Apocalypse Chamber",
+  "description": "Where the four horsemen await the end of all things",
+  "difficulty": "extreme",
+  "required_level": 52,
+  "max_level": 60,
+  "recommended_party_size": 1,
+  "location": "end_times",
+  "floors": 10,
+  "rooms_per_floor": [
+    14,
+    14,
+    15,
+    15,
+    16,
+    16,
+    17,
+    17,
+    18,
+    19
+  ],
+  "boss_floor": 10,
+  "time_limit": 9000,
+  "respawn_time": 43200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "apocalyptic_aura": {
+      "description": "The end times drain all hope",
+      "all_stats_penalty": 0.25,
+      "periodic_damage": 250
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Harbingers of the apocalypse attack",
+      "monsters": [
+        {
+          "id": "apocalypse_herald",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "doomsday_cultist",
+          "count": [
+            2,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "lucifer_fallen",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "archangel_fallen",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "demon_lord_ultimate",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "death_horseman",
+      "name": "Death, the Pale Rider",
+      "description": "The fourth horseman, Death itself",
+      "level_range": [
+        52,
+        60
+      ],
+      "health_multiplier": 15,
+      "damage_multiplier": 6,
+      "special_abilities": [
+        "pale_horse",
+        "death_scythe",
+        "reaping",
+        "mortality"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.25,
+          "ability_unlock": "apocalypse",
+          "description": "Brings the end of all life"
+        }
+      ],
+      "enrage_timer": 1200
+    },
+    {
+      "id": "war_horseman",
+      "name": "War, the Red Rider",
+      "description": "The first horseman, bringer of conflict",
+      "level_range": [
+        52,
+        60
+      ],
+      "health_multiplier": 14.5,
+      "damage_multiplier": 6.2,
+      "special_abilities": [
+        "war_cry",
+        "blood_frenzy",
+        "endless_conflict"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "famine_horseman",
+      "name": "Famine, the Black Rider",
+      "description": "The third horseman, drainer of life",
+      "level_range": [
+        54,
+        60
+      ],
+      "health_multiplier": 13.5,
+      "damage_multiplier": 6.4,
+      "special_abilities": [
+        "starvation",
+        "life_drain",
+        "resource_depletion"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "pestilence_horseman",
+      "name": "Pestilence, the White Rider",
+      "description": "The second horseman, spreader of plague",
+      "level_range": [
+        54,
+        60
+      ],
+      "health_multiplier": 14,
+      "damage_multiplier": 6.1,
+      "special_abilities": [
+        "pandemic",
+        "plague_cloud",
+        "mass_infection"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "beast_revelation",
+      "name": "The Beast of Revelation",
+      "description": "The ultimate evil prophesied in apocalypse",
+      "level_range": [
+        56,
+        60
+      ],
+      "health_multiplier": 16,
+      "damage_multiplier": 5.8,
+      "special_abilities": [
+        "mark_of_beast",
+        "seven_heads",
+        "ten_horns",
+        "blasphemy"
+      ],
+      "spawn_weight": 15,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "apocalypse_herald",
+            "count": 7
+          }
+        }
+      ]
+    }
+  ],
+  "rewards": {
+    "xp": 80000,
+    "gold": [
+      35000,
+      50000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_apocalypse",
+    "legendary_chance": 1,
+    "mythic_chance": 1,
+    "first_clear_bonus": {
+      "xp": 160000,
+      "title": "apocalypse_survivor",
+      "items": [
+        "death_scythe_mythic",
+        "pale_horse_mount",
+        "end_times_armor_set"
+      ],
+      "passive_unlock": "apocalypse_mastery"
+    }
+  }
+}

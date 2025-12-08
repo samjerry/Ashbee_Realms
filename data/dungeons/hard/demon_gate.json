@@ -1,0 +1,217 @@
+{
+  "id": "demon_gate",
+  "name": "Demon Gate",
+  "description": "A portal to the infernal realms where demons cross into our world",
+  "difficulty": "hard",
+  "required_level": 27,
+  "max_level": 33,
+  "recommended_party_size": 1,
+  "location": "hellfire_portal",
+  "floors": 7,
+  "rooms_per_floor": [
+    8,
+    9,
+    10,
+    10,
+    11,
+    11,
+    12
+  ],
+  "boss_floor": 7,
+  "time_limit": 5400,
+  "respawn_time": 14400,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "infernal_heat": {
+      "description": "Fire damage increased, healing reduced",
+      "fire_damage_bonus": 0.4,
+      "healing_penalty": 0.25
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Lesser demons pour through the gate",
+      "monsters": [
+        {
+          "id": "imp",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "id": "hell_hound",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "fire_imp",
+          "count": [
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "demon_lord_baal",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "retriever",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "zuggtmoy_aspect",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "demon_lord_baal",
+      "name": "Baal'thor the Demon Lord",
+      "description": "A mighty demon lord leading the invasion",
+      "level_range": [
+        27,
+        33
+      ],
+      "health_multiplier": 7.5,
+      "damage_multiplier": 3.2,
+      "special_abilities": [
+        "hellfire",
+        "demon_swarm",
+        "infernal_chains",
+        "corruption"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.3,
+          "transformation": "true_demon_form",
+          "description": "Reveals true demonic form"
+        }
+      ]
+    },
+    {
+      "id": "pit_fiend",
+      "name": "Infernus the Pit Fiend",
+      "description": "A general of the demon armies",
+      "level_range": [
+        27,
+        33
+      ],
+      "health_multiplier": 7,
+      "damage_multiplier": 3.3,
+      "special_abilities": [
+        "flame_whip",
+        "fear_aura",
+        "teleport"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "succubus_queen",
+      "name": "Lilithara the Succubus Queen",
+      "description": "A seductress who drains life force",
+      "level_range": [
+        28,
+        33
+      ],
+      "health_multiplier": 6.2,
+      "damage_multiplier": 3.5,
+      "special_abilities": [
+        "life_drain",
+        "charm",
+        "soul_kiss"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "balrog",
+      "name": "Gorathul the Balrog",
+      "description": "A demon of shadow and flame",
+      "level_range": [
+        28,
+        33
+      ],
+      "health_multiplier": 7.3,
+      "damage_multiplier": 3.2,
+      "special_abilities": [
+        "flame_sword",
+        "shadow_fire",
+        "demon_wings"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "archdemon",
+      "name": "Mephistopheles",
+      "description": "An archdemon of immense cunning and power",
+      "level_range": [
+        29,
+        33
+      ],
+      "health_multiplier": 6.8,
+      "damage_multiplier": 3.6,
+      "special_abilities": [
+        "dark_pact",
+        "hellish_rebuke",
+        "demonic_ritual"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 9000,
+    "gold": [
+      2500,
+      4500
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_demon",
+    "legendary_chance": 0.65,
+    "first_clear_bonus": {
+      "xp": 18000,
+      "title": "demon_bane",
+      "items": [
+        "infernal_blade_legendary"
+      ]
+    }
+  }
+}

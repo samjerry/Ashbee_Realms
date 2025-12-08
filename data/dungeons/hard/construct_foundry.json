@@ -1,0 +1,204 @@
+{
+  "id": "construct_foundry",
+  "name": "Construct Foundry",
+  "description": "An automated factory producing deadly war machines",
+  "difficulty": "hard",
+  "required_level": 28,
+  "max_level": 34,
+  "recommended_party_size": 1,
+  "location": "ancient_factory",
+  "floors": 7,
+  "rooms_per_floor": [
+    9,
+    9,
+    10,
+    10,
+    11,
+    12,
+    12
+  ],
+  "boss_floor": 7,
+  "time_limit": 5400,
+  "respawn_time": 14400,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "electromagnetic_field": {
+      "description": "Lightning damage increased",
+      "lightning_damage_bonus": 0.35
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Mechanical guardians activate",
+      "monsters": [
+        {
+          "id": "construct_guardian",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "automaton",
+          "count": [
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "mithril_golem",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "titan_golem",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "golem_prime",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "war_golem_prime",
+      "name": "War Golem Mark X",
+      "description": "The ultimate war machine",
+      "level_range": [
+        28,
+        34
+      ],
+      "health_multiplier": 8,
+      "damage_multiplier": 2.8,
+      "special_abilities": [
+        "artillery_cannon",
+        "missile_barrage",
+        "shield_matrix"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "repair_drone",
+            "count": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "clockwork_titan",
+      "name": "Chronos the Clockwork Titan",
+      "description": "A massive mechanical being powered by time magic",
+      "level_range": [
+        28,
+        34
+      ],
+      "health_multiplier": 7.5,
+      "damage_multiplier": 3,
+      "special_abilities": [
+        "temporal_bolt",
+        "rewind",
+        "time_stop"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "arcane_construct",
+      "name": "Magitek Destroyer",
+      "description": "A fusion of magic and machine",
+      "level_range": [
+        29,
+        34
+      ],
+      "health_multiplier": 6.8,
+      "damage_multiplier": 3.3,
+      "special_abilities": [
+        "arcane_cannon",
+        "energy_shield",
+        "overload"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "iron_colossus",
+      "name": "Ironclad Behemoth",
+      "description": "An unstoppable iron giant",
+      "level_range": [
+        29,
+        34
+      ],
+      "health_multiplier": 8.5,
+      "damage_multiplier": 2.6,
+      "special_abilities": [
+        "seismic_stomp",
+        "iron_fist",
+        "fortress_mode"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "sentinel_alpha",
+      "name": "Sentinel Protocol Alpha",
+      "description": "The first and deadliest security construct",
+      "level_range": [
+        30,
+        34
+      ],
+      "health_multiplier": 7.2,
+      "damage_multiplier": 3.2,
+      "special_abilities": [
+        "laser_array",
+        "defense_protocol",
+        "self_destruct"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 10000,
+    "gold": [
+      3000,
+      5000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_construct",
+    "legendary_chance": 0.7,
+    "first_clear_bonus": {
+      "xp": 20000,
+      "title": "machine_breaker",
+      "items": [
+        "construct_core_legendary"
+      ]
+    }
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "id": "ancient_workshop",
+  "name": "The Ancient Workshop",
+  "description": "A forgotten facility where ancient constructs still follow their original orders",
+  "difficulty": "hard",
+  "required_level": 28,
+  "max_level": 34,
+  "recommended_party_size": 4,
+  "location": "forsaken_ruins",
+  "floors": 5,
+  "rooms_per_floor": [8, 9, 10, 11, 12],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "raid",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Stone guardians activate as you enter",
+      "monsters": [
+        {
+          "id": "stone_guardian",
+          "count": [2, 3]
+        },
+        {
+          "id": "stone_sentinel",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Crystal golems patrol the crystal mines",
+      "monsters": [
+        {
+          "id": "crystal_golem",
+          "count": [2, 3]
+        },
+        {
+          "id": "crystal_guardian",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Iron golems guard the foundry",
+      "monsters": [
+        {
+          "id": "iron_golem",
+          "count": [2, 3]
+        },
+        {
+          "id": "mithril_golem",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Ancient war machines power on",
+      "monsters": [
+        {
+          "id": "war_golem_mark_x",
+          "count": [1, 2]
+        },
+        {
+          "id": "titan_golem",
+          "count": [1, 1]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "golem_prime",
+      "name": "Golem Prime",
+      "description": "The first and most powerful construct ever created",
+      "level_range": [32, 34],
+      "health_multiplier": 7,
+      "damage_multiplier": 4,
+      "special_abilities": ["adaptive_armor", "power_core", "system_overload"],
+      "spawn_weight": 35,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "iron_golem",
+            "count": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "magitek_destroyer",
+      "name": "The Magitek Destroyer",
+      "description": "A fusion of magic and technology gone wrong",
+      "level_range": [33, 34],
+      "health_multiplier": 7.5,
+      "damage_multiplier": 4.5,
+      "special_abilities": ["arcane_cannon", "magic_surge", "tech_overcharge"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 22000,
+    "first_clear_bonus": 44000,
+    "gold_range": [7000, 13000],
+    "possible_drops": ["golem_core", "mithril_plating", "arcane_circuit", "power_crystal"]
+  }
+}

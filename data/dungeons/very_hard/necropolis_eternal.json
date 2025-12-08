@@ -1,0 +1,214 @@
+{
+  "id": "necropolis_eternal",
+  "name": "Necropolis Eternal",
+  "description": "A city of the dead ruled by ancient death lords",
+  "difficulty": "very_hard",
+  "required_level": 38,
+  "max_level": 44,
+  "recommended_party_size": 1,
+  "location": "city_of_death",
+  "floors": 8,
+  "rooms_per_floor": [
+    11,
+    11,
+    12,
+    12,
+    13,
+    14,
+    14,
+    15
+  ],
+  "boss_floor": 8,
+  "time_limit": 7200,
+  "respawn_time": 21600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "death_aura": {
+      "description": "Life force slowly drains",
+      "hp_drain_per_second": 5,
+      "healing_penalty": 0.5
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Elite undead warriors patrol",
+      "monsters": [
+        {
+          "id": "death_knight",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "lich",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "frost_lich_lord",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "hrungnir_reborn",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "the_grim_reaper",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "death_emperor",
+      "name": "Nagash the Death Emperor",
+      "description": "The supreme lord of undeath",
+      "level_range": [
+        38,
+        44
+      ],
+      "health_multiplier": 10.5,
+      "damage_multiplier": 4.2,
+      "special_abilities": [
+        "death_wave",
+        "soul_harvest",
+        "undead_legion",
+        "mortality_curse"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "death_knight",
+            "count": 4
+          }
+        },
+        {
+          "hp_threshold": 0.2,
+          "ability_unlock": "undead_ascension",
+          "description": "Ascends to ultimate undead form"
+        }
+      ]
+    },
+    {
+      "id": "vampire_lord_ancient",
+      "name": "Dracula the Ancient",
+      "description": "The progenitor of all vampires",
+      "level_range": [
+        38,
+        44
+      ],
+      "health_multiplier": 9,
+      "damage_multiplier": 4.5,
+      "special_abilities": [
+        "blood_god",
+        "mist_lord",
+        "vampire_swarm"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "bone_colossus",
+      "name": "Ossuary the Bone Lord",
+      "description": "A massive construct of countless bones",
+      "level_range": [
+        39,
+        44
+      ],
+      "health_multiplier": 11,
+      "damage_multiplier": 3.8,
+      "special_abilities": [
+        "bone_prison",
+        "skeletal_army",
+        "death_rattle"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "archlich",
+      "name": "Vecna the Archlich",
+      "description": "An ancient lich of terrible power",
+      "level_range": [
+        39,
+        44
+      ],
+      "health_multiplier": 8.5,
+      "damage_multiplier": 4.7,
+      "special_abilities": [
+        "finger_of_death",
+        "time_stop",
+        "wish_perversion"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "pale_rider",
+      "name": "Death Incarnate",
+      "description": "Death itself given physical form",
+      "level_range": [
+        40,
+        44
+      ],
+      "health_multiplier": 9.5,
+      "damage_multiplier": 4.5,
+      "special_abilities": [
+        "death_touch",
+        "reap_souls",
+        "inevitability"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 34000,
+    "gold": [
+      10000,
+      17000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_necropolis",
+    "legendary_chance": 1,
+    "mythic_chance": 0.3,
+    "first_clear_bonus": {
+      "xp": 68000,
+      "title": "deathless",
+      "items": [
+        "death_emperor_crown_mythic"
+      ],
+      "passive_unlock": "undeath_mastery"
+    }
+  }
+}

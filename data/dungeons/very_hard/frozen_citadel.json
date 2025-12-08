@@ -1,0 +1,207 @@
+{
+  "id": "frozen_citadel",
+  "name": "Frozen Citadel",
+  "description": "An ice fortress ruled by the Winter Queen",
+  "difficulty": "very_hard",
+  "required_level": 37,
+  "max_level": 43,
+  "recommended_party_size": 1,
+  "location": "eternal_winter",
+  "floors": 8,
+  "rooms_per_floor": [
+    10,
+    11,
+    12,
+    12,
+    13,
+    13,
+    14,
+    15
+  ],
+  "boss_floor": 8,
+  "time_limit": 7200,
+  "respawn_time": 21600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "absolute_zero": {
+      "description": "Extreme cold, movement speed reduced 30%",
+      "speed_penalty": 0.3,
+      "periodic_damage": 100
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Ice elementals and frost wraiths attack",
+      "monsters": [
+        {
+          "id": "ice_elemental",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "id": "frost_wraith",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "thrym_frost_king",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "ymir_frost_titan",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "frostmourne_winter_queen",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "winter_queen",
+      "name": "Frostmourne the Winter Queen",
+      "description": "The immortal ruler of eternal winter",
+      "level_range": [
+        37,
+        43
+      ],
+      "health_multiplier": 9.5,
+      "damage_multiplier": 4.1,
+      "special_abilities": [
+        "ice_crown",
+        "frozen_tomb",
+        "winter_storm",
+        "absolute_zero"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.3,
+          "arena_change": "eternal_winter",
+          "description": "Summons eternal winter, freezing everything"
+        }
+      ]
+    },
+    {
+      "id": "ice_dragon_ancient",
+      "name": "Boreas the Frost Dragon",
+      "description": "An ancient dragon of pure ice",
+      "level_range": [
+        37,
+        43
+      ],
+      "health_multiplier": 9.8,
+      "damage_multiplier": 4,
+      "special_abilities": [
+        "ice_breath",
+        "blizzard",
+        "frozen_aura"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "frost_lich_lord",
+      "name": "Kel'thuzad the Frost Lich",
+      "description": "A powerful lich commanding ice magic",
+      "level_range": [
+        38,
+        43
+      ],
+      "health_multiplier": 8.8,
+      "damage_multiplier": 4.4,
+      "special_abilities": [
+        "frost_nova",
+        "ice_lance",
+        "glacial_prison"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "ice_giant_king",
+      "name": "Fimbulvetr the Giant King",
+      "description": "King of the ice giants",
+      "level_range": [
+        38,
+        43
+      ],
+      "health_multiplier": 10.2,
+      "damage_multiplier": 3.8,
+      "special_abilities": [
+        "avalanche",
+        "ice_hammer",
+        "permafrost"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "northern_hydra",
+      "name": "Nidhogg the Northern Hydra",
+      "description": "A multi-headed serpent of ice",
+      "level_range": [
+        39,
+        43
+      ],
+      "health_multiplier": 9.2,
+      "damage_multiplier": 4.2,
+      "special_abilities": [
+        "hydra_bite",
+        "regrow_heads",
+        "frozen_blood"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 32000,
+    "gold": [
+      9000,
+      16000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_frost",
+    "legendary_chance": 0.95,
+    "mythic_chance": 0.25,
+    "first_clear_bonus": {
+      "xp": 64000,
+      "title": "winter_breaker",
+      "items": [
+        "frostmourne_blade_mythic"
+      ],
+      "passive_unlock": "cold_immunity"
+    }
+  }
+}

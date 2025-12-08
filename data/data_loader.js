@@ -15,10 +15,52 @@ class MonsterDataLoader {
     this.abilities = this.loadJSON('monster_abilities.json').abilities;
     this.templates = this.loadJSON('monster_templates.json');
     this.lootTables = this.loadJSON('monster_loot.json').loot_tables;
-    this.monsters = this.loadJSON('monsters.json').monsters;
+    
+    // Try to load monsters from new folder structure first
+    this.monsters = this.loadMonsters();
 
     // Build full monster objects
     return this.buildMonsters();
+  }
+
+  loadMonsters() {
+    const monstersPath = path.join(this.dataDir, 'monsters');
+    
+    // Check if new folder structure exists
+    if (fs.existsSync(monstersPath) && fs.statSync(monstersPath).isDirectory()) {
+      console.log('Loading monsters from new folder structure...');
+      return this.loadMonstersFromFolders();
+    } else {
+      // Fallback to legacy monsters.json
+      console.log('Loading monsters from legacy monsters.json...');
+      return this.loadJSON('monsters.json').monsters;
+    }
+  }
+
+  loadMonstersFromFolders() {
+    const monsters = [];
+    const monstersPath = path.join(this.dataDir, 'monsters');
+    const creatureTypeFiles = [
+      'beasts.json', 'humanoids.json', 'undead.json', 'dragons.json', 
+      'demons.json', 'elementals.json', 'aberrations.json', 'constructs.json', 'celestials.json',
+      'fey.json', 'giants.json', 'oozes.json', 'insectoids.json', 
+      'aquatic.json', 'plants.json', 'lycanthropes.json'
+    ];
+    
+    for (const file of creatureTypeFiles) {
+      const filePath = path.join(monstersPath, file);
+      
+      if (!fs.existsSync(filePath)) continue;
+      
+      const creatureTypeData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      
+      // Each file has { creature_type, count, monsters: [...] }
+      if (creatureTypeData.monsters && Array.isArray(creatureTypeData.monsters)) {
+        monsters.push(...creatureTypeData.monsters);
+      }
+    }
+    
+    return monsters;
   }
 
   loadJSON(filename) {
@@ -31,7 +73,7 @@ class MonsterDataLoader {
     const builtMonsters = {};
 
     // Organize by rarity
-    const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
+    const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'boss', 'mythic'];
     
     rarities.forEach(rarity => {
       builtMonsters[rarity] = [];

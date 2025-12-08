@@ -1,0 +1,97 @@
+{
+  "id": "trial_of_ascension",
+  "name": "Trial of Ascension",
+  "description": "An endless tower that tests the limits of your power",
+  "difficulty": "scaling",
+  "required_level": 10,
+  "max_level": 999,
+  "recommended_party_size": 1,
+  "location": "tower_of_trials",
+  "floors": 100,
+  "boss_floor": "every_10",
+  "time_limit": null,
+  "respawn_time": 0,
+  "instance_type": "progression",
+  "special_mechanics": {
+    "endless_mode": true,
+    "difficulty_scaling": {
+      "per_floor": 0.05,
+      "boss_multiplier": 2
+    },
+    "checkpoint_system": {
+      "every_floors": 10,
+      "can_resume": true
+    },
+    "leaderboard": true
+  },
+  "floor_types": [
+    {
+      "type": "combat",
+      "weight": 60,
+      "description": "Standard monster encounter"
+    },
+    {
+      "type": "boss",
+      "weight": 10,
+      "description": "Powerful boss encounter",
+      "every_x_floors": 10
+    },
+    {
+      "type": "treasure",
+      "weight": 15,
+      "description": "Bonus treasure room"
+    },
+    {
+      "type": "rest",
+      "weight": 10,
+      "description": "Safe room to rest and recover",
+      "every_x_floors": 5
+    },
+    {
+      "type": "merchant",
+      "weight": 5,
+      "description": "Shop with special items"
+    }
+  ],
+  "rewards": {
+    "per_floor": {
+      "xp_base": 100,
+      "xp_scaling": 1.1,
+      "gold_base": 50,
+      "gold_scaling": 1.1
+    },
+    "milestone_rewards": {
+      "floor_10": {
+        "title": "trial_initiate",
+        "items": [
+          "trial_token"
+        ]
+      },
+      "floor_25": {
+        "title": "trial_challenger",
+        "items": [
+          "trial_badge"
+        ]
+      },
+      "floor_50": {
+        "title": "trial_champion",
+        "items": [
+          "ascension_ring_epic"
+        ]
+      },
+      "floor_75": {
+        "title": "trial_master",
+        "items": [
+          "trial_master_cloak"
+        ]
+      },
+      "floor_100": {
+        "title": "ascended_one",
+        "items": [
+          "crown_of_ascension_legendary"
+        ],
+        "passive_unlock": "trial_victor"
+      }
+    }
+  }
+}

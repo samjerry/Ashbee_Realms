@@ -1,0 +1,220 @@
+{
+  "id": "primordial_abyss",
+  "name": "Primordial Abyss",
+  "description": "The birthplace of existence, where ancient evils older than time dwell",
+  "difficulty": "extreme",
+  "required_level": 48,
+  "max_level": 57,
+  "recommended_party_size": 1,
+  "location": "creation_void",
+  "floors": 10,
+  "rooms_per_floor": [
+    13,
+    13,
+    14,
+    14,
+    15,
+    15,
+    16,
+    16,
+    17,
+    18
+  ],
+  "boss_floor": 10,
+  "time_limit": 9000,
+  "respawn_time": 43200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "primordial_chaos": {
+      "description": "Reality itself is unstable",
+      "all_stats_penalty": 0.2,
+      "random_damage": 200
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Primordial beings attack",
+      "monsters": [
+        {
+          "id": "primordial",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "chaos_elemental",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "leviathan",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "kraken_spawn",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "elder_aboleth",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "primordial_one",
+      "name": "The First Being",
+      "description": "The entity that existed before existence",
+      "level_range": [
+        48,
+        57
+      ],
+      "health_multiplier": 13,
+      "damage_multiplier": 5.2,
+      "special_abilities": [
+        "primordial_word",
+        "creation_unmaking",
+        "before_time",
+        "chaos_birth"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.3,
+          "ability_unlock": "primordial_form",
+          "description": "Returns to its original chaotic form"
+        }
+      ],
+      "enrage_timer": 1000
+    },
+    {
+      "id": "chaos_serpent",
+      "name": "Apophis the Chaos Serpent",
+      "description": "The serpent of infinite chaos",
+      "level_range": [
+        48,
+        57
+      ],
+      "health_multiplier": 12.5,
+      "damage_multiplier": 5.4,
+      "special_abilities": [
+        "chaos_breath",
+        "reality_consume",
+        "endless_coil"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "old_god",
+      "name": "Yogg-Saron the Old God",
+      "description": "An ancient god of madness and death",
+      "level_range": [
+        50,
+        57
+      ],
+      "health_multiplier": 12,
+      "damage_multiplier": 5.6,
+      "special_abilities": [
+        "sanity_drain",
+        "tentacle_storm",
+        "old_god_whispers"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "leviathan_primordial",
+      "name": "Tiamat the Primordial Leviathan",
+      "description": "The mother of all monsters",
+      "level_range": [
+        50,
+        57
+      ],
+      "health_multiplier": 14,
+      "damage_multiplier": 4.9,
+      "special_abilities": [
+        "spawn_monsters",
+        "hydra_heads",
+        "primordial_roar"
+      ],
+      "spawn_weight": 20,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "dragon_spawn",
+            "count": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "abyss_walker",
+      "name": "The Nameless Horror",
+      "description": "A being so ancient it has no name",
+      "level_range": [
+        52,
+        57
+      ],
+      "health_multiplier": 13.5,
+      "damage_multiplier": 5.3,
+      "special_abilities": [
+        "nameless_dread",
+        "abyss_gaze",
+        "forgotten_power"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 60000,
+    "gold": [
+      25000,
+      40000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_primordial",
+    "legendary_chance": 1,
+    "mythic_chance": 0.8,
+    "first_clear_bonus": {
+      "xp": 120000,
+      "title": "primordial_vanquisher",
+      "items": [
+        "chaos_heart_mythic",
+        "primordial_essence"
+      ],
+      "passive_unlock": "primordial_power"
+    }
+  }
+}

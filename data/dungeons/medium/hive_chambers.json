@@ -1,0 +1,111 @@
+{
+  "id": "hive_chambers",
+  "name": "The Hive Chambers",
+  "description": "A massive insectoid nest where giant bugs swarm in organized chaos",
+  "difficulty": "medium",
+  "required_level": 18,
+  "max_level": 24,
+  "recommended_party_size": 3,
+  "location": "deep_caverns",
+  "floors": 4,
+  "rooms_per_floor": [6, 7, 8, 9],
+  "boss_floor": 4,
+  "time_limit": null,
+  "respawn_time": 5400,
+  "instance_type": "party",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "A chamber filled with worker ants",
+      "monsters": [
+        {
+          "id": "giant_ant_worker",
+          "count": [4, 6]
+        },
+        {
+          "id": "giant_beetle",
+          "count": [2, 3]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Spider webs cover the walls",
+      "monsters": [
+        {
+          "id": "giant_spider",
+          "count": [3, 4]
+        },
+        {
+          "id": "phase_spider",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Aggressive mantises guard this passage",
+      "monsters": [
+        {
+          "id": "giant_mantis",
+          "count": [2, 3]
+        },
+        {
+          "id": "giant_wasp",
+          "count": [2, 3]
+        }
+      ]
+    },
+    {
+      "type": "hazard",
+      "description": "Poisonous spores fill the air",
+      "hazard_type": "poison_cloud",
+      "damage": [30, 60],
+      "avoidable": false
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "formian_queen",
+      "name": "The Formian Queen",
+      "description": "The matriarch of the hive, surrounded by her brood",
+      "level_range": [22, 24],
+      "health_multiplier": 4,
+      "damage_multiplier": 2.2,
+      "special_abilities": ["spawn_workers", "queen_command", "swarm_frenzy"],
+      "spawn_weight": 35,
+      "phases": [
+        {
+          "hp_threshold": 0.7,
+          "adds_spawn": {
+            "id": "formian_warrior",
+            "count": 4
+          }
+        },
+        {
+          "hp_threshold": 0.4,
+          "adds_spawn": {
+            "id": "formian_warrior",
+            "count": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "colossal_spider",
+      "name": "The Colossal Spider",
+      "description": "An ancient arachnid of terrifying size",
+      "level_range": [23, 24],
+      "health_multiplier": 4.5,
+      "damage_multiplier": 2.5,
+      "special_abilities": ["web_prison", "venom_burst", "egg_sac"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 8000,
+    "first_clear_bonus": 15000,
+    "gold_range": [2000, 4500],
+    "possible_drops": ["chitin_plate", "spider_silk", "venom_gland", "mandible_blade"]
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "id": "cursed_asylum",
+  "name": "Cursed Asylum",
+  "description": "An abandoned sanatorium where madness took physical form",
+  "difficulty": "medium",
+  "required_level": 17,
+  "max_level": 22,
+  "recommended_party_size": 1,
+  "location": "madhouse_ruins",
+  "floors": 5,
+  "rooms_per_floor": [
+    7,
+    7,
+    8,
+    8,
+    9
+  ],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "madness_aura": {
+      "description": "Random debuffs applied periodically",
+      "random_debuff_chance": 0.15
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Twisted patients attack from the shadows",
+      "monsters": [
+        {
+          "id": "deranged_patient",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "id": "aberration",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "banshee",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "wailing_fey",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "doppelganger",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "doctor_malice",
+      "name": "Dr. Malice",
+      "description": "The asylum's head physician who experimented on patients",
+      "level_range": [
+        17,
+        22
+      ],
+      "health_multiplier": 3.5,
+      "damage_multiplier": 2.2,
+      "special_abilities": [
+        "lobotomy",
+        "inject_madness",
+        "surgical_precision"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "nightmare_patient",
+      "name": "Patient Zero",
+      "description": "The first victim of the asylum's dark experiments",
+      "level_range": [
+        17,
+        22
+      ],
+      "health_multiplier": 4,
+      "damage_multiplier": 2,
+      "special_abilities": [
+        "split_personality",
+        "infectious_madness",
+        "reality_break"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "mind_flayer_spawn",
+      "name": "The Whisper",
+      "description": "An aberration that feeds on sanity itself",
+      "level_range": [
+        18,
+        22
+      ],
+      "health_multiplier": 3.3,
+      "damage_multiplier": 2.4,
+      "special_abilities": [
+        "mind_blast",
+        "psychic_drain",
+        "confusion"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "straitjacket_horror",
+      "name": "The Bound One",
+      "description": "A creature so dangerous it must remain restrained",
+      "level_range": [
+        18,
+        22
+      ],
+      "health_multiplier": 4.3,
+      "damage_multiplier": 1.9,
+      "special_abilities": [
+        "thrash",
+        "break_free",
+        "unstoppable_rage"
+      ],
+      "spawn_weight": 20,
+      "phases": [
+        {
+          "hp_threshold": 0.4,
+          "ability_unlock": "break_free",
+          "description": "Breaks restraints and becomes more dangerous"
+        }
+      ]
+    },
+    {
+      "id": "asylum_demon",
+      "name": "Manifestation of Madness",
+      "description": "The collective insanity given form",
+      "level_range": [
+        17,
+        22
+      ],
+      "health_multiplier": 3.7,
+      "damage_multiplier": 2.3,
+      "special_abilities": [
+        "insanity_wave",
+        "hallucination",
+        "mind_shatter"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 2400,
+    "gold": [
+      800,
+      1200
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_aberration",
+    "first_clear_bonus": {
+      "xp": 4800,
+      "title": "sanity_keeper",
+      "items": [
+        "asylum_straitjacket_armor"
+      ]
+    }
+  }
+}

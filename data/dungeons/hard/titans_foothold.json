@@ -1,0 +1,111 @@
+{
+  "id": "titans_foothold",
+  "name": "The Titan's Foothold",
+  "description": "Ancient ruins where giants have established a new stronghold",
+  "difficulty": "hard",
+  "required_level": 30,
+  "max_level": 36,
+  "recommended_party_size": 4,
+  "location": "highland_reaches",
+  "floors": 5,
+  "rooms_per_floor": [8, 9, 10, 11, 12],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "raid",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Young giants train in this courtyard",
+      "monsters": [
+        {
+          "id": "hill_giant_youth",
+          "count": [2, 3]
+        },
+        {
+          "id": "ogre_brute",
+          "count": [3, 4]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Stone giants stand guard",
+      "monsters": [
+        {
+          "id": "stone_giant",
+          "count": [2, 3]
+        },
+        {
+          "id": "ettin",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Frost giants patrol the icy halls",
+      "monsters": [
+        {
+          "id": "frost_giant_warrior",
+          "count": [2, 3]
+        },
+        {
+          "id": "fire_giant",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Elite giants defend the inner sanctum",
+      "monsters": [
+        {
+          "id": "cloud_giant",
+          "count": [1, 2]
+        },
+        {
+          "id": "storm_giant",
+          "count": [1, 1]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "thrym_frost_king",
+      "name": "Thrym the Frost King",
+      "description": "The ancient king of the frost giants",
+      "level_range": [34, 36],
+      "health_multiplier": 6,
+      "damage_multiplier": 3.5,
+      "special_abilities": ["ice_storm", "giant_strength", "frost_armor"],
+      "spawn_weight": 35,
+      "phases": [
+        {
+          "hp_threshold": 0.6,
+          "adds_spawn": {
+            "id": "frost_giant_warrior",
+            "count": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "primordial_titan",
+      "name": "The Primordial Titan",
+      "description": "A being from the dawn of creation",
+      "level_range": [35, 36],
+      "health_multiplier": 7,
+      "damage_multiplier": 4,
+      "special_abilities": ["earth_shatter", "titan_rage", "primordial_force"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 25000,
+    "first_clear_bonus": 50000,
+    "gold_range": [8000, 15000],
+    "possible_drops": ["titan_bone", "giant_strength_gem", "frost_crown", "primordial_stone"]
+  }
+}

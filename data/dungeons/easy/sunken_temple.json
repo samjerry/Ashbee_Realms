@@ -1,0 +1,190 @@
+{
+  "id": "sunken_temple",
+  "name": "Sunken Temple",
+  "description": "An ancient temple submerged beneath murky waters",
+  "difficulty": "easy",
+  "required_level": 9,
+  "max_level": 14,
+  "recommended_party_size": 1,
+  "location": "flooded_ruins",
+  "floors": 3,
+  "rooms_per_floor": [
+    6,
+    7,
+    7
+  ],
+  "boss_floor": 3,
+  "time_limit": null,
+  "respawn_time": 3600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "waterlogged": {
+      "description": "All attacks have water element",
+      "adds_water_damage": 10
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Aquatic creatures defend the temple",
+      "monsters": [
+        {
+          "id": "water_elemental",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "coral_guardian",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "giant_crab",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "reef_shark",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "merfolk_warrior",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "tidal_lord",
+      "name": "Thalassor the Tidal Lord",
+      "description": "An ancient elemental that commands the seas",
+      "level_range": [
+        9,
+        14
+      ],
+      "health_multiplier": 3.1,
+      "damage_multiplier": 1.7,
+      "special_abilities": [
+        "tidal_wave",
+        "whirlpool",
+        "water_prison"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "kraken_spawn",
+      "name": "Spawn of the Deep",
+      "description": "A tentacled horror from the ocean depths",
+      "level_range": [
+        10,
+        14
+      ],
+      "health_multiplier": 3.3,
+      "damage_multiplier": 1.6,
+      "special_abilities": [
+        "tentacle_grab",
+        "ink_cloud",
+        "crushing_grip"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "coral_titan",
+      "name": "Coralox the Living Reef",
+      "description": "A massive creature made of living coral",
+      "level_range": [
+        9,
+        14
+      ],
+      "health_multiplier": 3.5,
+      "damage_multiplier": 1.4,
+      "special_abilities": [
+        "coral_spikes",
+        "reef_regeneration",
+        "calcify"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "drowned_priest",
+      "name": "High Priest Aquilus",
+      "description": "The drowned priest still performing dark rituals",
+      "level_range": [
+        10,
+        14
+      ],
+      "health_multiplier": 2.8,
+      "damage_multiplier": 1.9,
+      "special_abilities": [
+        "drowning_curse",
+        "water_blast",
+        "summon_tide"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "leviathan_calf",
+      "name": "Young Leviathan",
+      "description": "A juvenile sea serpent of immense size",
+      "level_range": [
+        9,
+        14
+      ],
+      "health_multiplier": 3.2,
+      "damage_multiplier": 1.7,
+      "special_abilities": [
+        "serpent_coil",
+        "water_breath",
+        "dive_strike"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 900,
+    "gold": [
+      400,
+      600
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_aquatic",
+    "first_clear_bonus": {
+      "xp": 1800,
+      "title": "deep_diver",
+      "items": [
+        "tidal_trident"
+      ]
+    }
+  }
+}

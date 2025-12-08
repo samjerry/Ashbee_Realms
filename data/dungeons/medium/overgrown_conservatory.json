@@ -1,0 +1,108 @@
+{
+  "id": "overgrown_conservatory",
+  "name": "The Overgrown Conservatory",
+  "description": "An ancient botanical garden where plants have gained sentience and hunger",
+  "difficulty": "medium",
+  "required_level": 22,
+  "max_level": 28,
+  "recommended_party_size": 3,
+  "location": "whispering_woods",
+  "floors": 4,
+  "rooms_per_floor": [7, 8, 9, 10],
+  "boss_floor": 4,
+  "time_limit": null,
+  "respawn_time": 5400,
+  "instance_type": "party",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Animated vines lash out from the walls",
+      "monsters": [
+        {
+          "id": "vine_creeper",
+          "count": [4, 6]
+        },
+        {
+          "id": "thorn_bush",
+          "count": [2, 3]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Fungal spores fill this humid chamber",
+      "monsters": [
+        {
+          "id": "spore_walker",
+          "count": [3, 4]
+        },
+        {
+          "id": "spore_tyrant",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Carnivorous plants snap at anything that moves",
+      "monsters": [
+        {
+          "id": "carnivorous_plant",
+          "count": [2, 3]
+        },
+        {
+          "id": "poison_ivy_horror",
+          "count": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "Ancient treants guard the inner sanctum",
+      "monsters": [
+        {
+          "id": "treant_sapling",
+          "count": [1, 2]
+        },
+        {
+          "id": "ancient_treant",
+          "count": [1, 1]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "myconid_sovereign",
+      "name": "The Myconid Sovereign",
+      "description": "The telepathic ruler of the fungal colony",
+      "level_range": [26, 28],
+      "health_multiplier": 4.5,
+      "damage_multiplier": 2.5,
+      "special_abilities": ["rapport_spores", "hallucination_spores", "fungal_mastery"],
+      "spawn_weight": 35,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "effect": "releases_hallucinogenic_spores"
+        }
+      ]
+    },
+    {
+      "id": "awakened_grove",
+      "name": "The Awakened Grove",
+      "description": "An entire grove of trees acting with one mind",
+      "level_range": [27, 28],
+      "health_multiplier": 5,
+      "damage_multiplier": 2.8,
+      "special_abilities": ["thousand_branches", "root_prison", "grove_mind"],
+      "spawn_weight": 30
+    }
+  ],
+  "rewards": {
+    "completion_xp": 10500,
+    "first_clear_bonus": 20000,
+    "gold_range": [3000, 5500],
+    "possible_drops": ["life_seed", "spore_sac", "bark_armor", "nature_essence"]
+  }
+}

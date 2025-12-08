@@ -1,0 +1,887 @@
+{
+  "creature_type": "aberrations",
+  "count": 33,
+  "monsters": [
+    {
+      "id": "void_stalker",
+      "name": "Void Stalker",
+      "template": "aberration_base",
+      "rarity": "epic",
+      "description": "An aberration from beyond reality",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        20,
+        26
+      ],
+      "stats": [
+        400,
+        34,
+        10,
+        14
+      ],
+      "abilities": [
+        "void_step",
+        "reality_tear",
+        "stealth"
+      ],
+      "loot": "aberration_stalker",
+      "magic": 28
+    },
+    {
+      "id": "void_spawn",
+      "name": "Void Spawn",
+      "template": "aberration_base",
+      "rarity": "legendary",
+      "description": "An aberration from the space between realities",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        24,
+        32
+      ],
+      "stats": [
+        600,
+        38,
+        22,
+        18
+      ],
+      "abilities": [
+        "void_magic",
+        "reality_tear",
+        "phase_shift"
+      ],
+      "loot": "aberration_void_spawn",
+      "magic": 42
+    },
+    {
+      "id": "starborn_horror",
+      "name": "Starborn Horror",
+      "template": "aberration_base",
+      "rarity": "legendary",
+      "description": "An eldritch entity from beyond the stars",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        32,
+        40
+      ],
+      "stats": [
+        1100,
+        48,
+        32,
+        18
+      ],
+      "abilities": [
+        "cosmic_power",
+        "phase_shift"
+      ],
+      "loot": "aberration_starborn",
+      "magic": 52
+    },
+    {
+      "id": "void_emperor",
+      "name": "Void Emperor",
+      "template": "aberration_base",
+      "rarity": "legendary",
+      "description": "The supreme ruler of the void realm",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        38,
+        46
+      ],
+      "stats": [
+        1300,
+        48,
+        40,
+        16
+      ],
+      "abilities": [
+        "reality_control",
+        "void_mastery",
+        "dimension_rift"
+      ],
+      "loot": "aberration_emperor",
+      "magic": 56
+    },
+    {
+      "id": "kraken_priest",
+      "name": "Kraken Priest",
+      "template": "aberration_base",
+      "rarity": "legendary",
+      "description": "A cultist who has merged with an ancient kraken",
+      "biomes": [
+        "void_realm",
+        "cursed_swamp",
+        "twilight_wetlands",
+        "ancient_crypts",
+        "deep_caverns"
+      ],
+      "level_range": [
+        35,
+        43
+      ],
+      "stats": [
+        1150,
+        46,
+        36,
+        12
+      ],
+      "abilities": [
+        "intimidate",
+        "life_drain"
+      ],
+      "loot": "aberration_kraken",
+      "magic": 44
+    },
+    {
+      "id": "the_nameless_one",
+      "name": "The Nameless One",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "An entity of pure chaos, constantly shifting between forms. Its very presence distorts reality.",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        35,
+        50
+      ],
+      "stats": [
+        2000,
+        70,
+        50,
+        25
+      ],
+      "abilities": [
+        "reality_warp",
+        "void_blast",
+        "chaos_form",
+        "time_stop",
+        "omniscient_strike",
+        "dimension_shift"
+      ],
+      "loot": "mythic_nameless",
+      "magic": 80
+    },
+    {
+      "id": "outer_titan",
+      "name": "Outer Titan",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "A cosmic being from beyond known space",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "stats": [
+        3500,
+        78,
+        70,
+        20
+      ],
+      "abilities": [
+        "cosmic_power",
+        "intimidate"
+      ],
+      "loot": "mythic_titan",
+      "magic": 68
+    },
+    {
+      "id": "void_leviathan",
+      "name": "Void Leviathan",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "A serpent of incomprehensible size from the void",
+      "biomes": [
+        "void_realm",
+        "deep_caverns",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        45,
+        50
+      ],
+      "stats": [
+        3200,
+        82,
+        48,
+        18
+      ],
+      "abilities": [
+        "void_damage",
+        "intimidate"
+      ],
+      "loot": "mythic_leviathan",
+      "magic": 65
+    },
+    {
+      "id": "cosmic_horror",
+      "name": "Cosmic Horror",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "An entity whose true form drives mortals to madness",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "stats": [
+        3000,
+        75,
+        52,
+        24
+      ],
+      "abilities": [
+        "madness",
+        "reality_distortion",
+        "infinite_eyes"
+      ],
+      "loot": "mythic_horror",
+      "magic": 78
+    },
+    {
+      "id": "astral_colossus",
+      "name": "Astral Colossus",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "A titan from the astral plane",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        49,
+        50
+      ],
+      "stats": [
+        5000,
+        92,
+        80,
+        18
+      ],
+      "abilities": [
+        "cosmic_power",
+        "intimidate"
+      ],
+      "loot": "mythic_colossus",
+      "magic": 75
+    },
+    {
+      "id": "king_in_yellow",
+      "name": "The King in Yellow",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "An unknowable entity from beyond reality",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        48,
+        50
+      ],
+      "stats": [
+        3800,
+        95,
+        58,
+        28
+      ],
+      "abilities": [
+        "intimidate",
+        "reality_control"
+      ],
+      "loot": "mythic_king_yellow",
+      "magic": 88
+    },
+    {
+      "id": "tunnel_horror",
+      "name": "The Tunnel Horror",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "A nightmarish creature that dwells in the deepest goblin tunnels",
+      "biomes": [
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        9,
+        10
+      ],
+      "stats": [
+        520,
+        45,
+        20,
+        18
+      ],
+      "abilities": [
+        "acid_spit",
+        "burrow",
+        "terrifying_shriek"
+      ],
+      "loot": "boss_tunnel_horror",
+      "magic": 15
+    },
+    {
+      "id": "nightmare_incarnate",
+      "name": "The Nightmare Incarnate",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "Fear given form, a being that feeds on terror itself",
+      "biomes": [
+        "obsidian_citadel"
+      ],
+      "level_range": [
+        39,
+        41
+      ],
+      "stats": [
+        2700,
+        98,
+        48,
+        42
+      ],
+      "abilities": [
+        "terror_gaze",
+        "nightmare_realm",
+        "fear_feast"
+      ],
+      "loot": "boss_nightmare",
+      "magic": 108
+    },
+    {
+      "id": "star_eater",
+      "name": "Azathoth the Star Eater",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "A cosmic entity that devours stars",
+      "biomes": [],
+      "level_range": [
+        46,
+        55
+      ],
+      "stats": [
+        60600,
+        2525,
+        1515,
+        404
+      ],
+      "abilities": [
+        "cosmic_devour",
+        "supernova",
+        "black_hole",
+        "stellar_collapse"
+      ],
+      "loot": "boss_legendary",
+      "magic": 3030
+    },
+    {
+      "id": "void_god",
+      "name": "Nyarlathotep the Void God",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "The crawling chaos from beyond reality",
+      "biomes": [],
+      "level_range": [
+        46,
+        55
+      ],
+      "stats": [
+        55550,
+        2677,
+        1389,
+        404
+      ],
+      "abilities": [
+        "reality_distortion",
+        "maddening_truth",
+        "void_tentacles"
+      ],
+      "loot": "boss_legendary",
+      "magic": 3212
+    },
+    {
+      "id": "abyss_walker",
+      "name": "The Nameless Horror",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "A being so ancient it has no name",
+      "biomes": [],
+      "level_range": [
+        52,
+        57
+      ],
+      "stats": [
+        73575,
+        2889,
+        1839,
+        436
+      ],
+      "abilities": [
+        "nameless_dread",
+        "abyss_gaze",
+        "forgotten_power"
+      ],
+      "loot": "boss_legendary",
+      "magic": 3466
+    },
+    {
+      "id": "nightmare_patient",
+      "name": "Patient Zero",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "The first victim of the asylum's dark experiments",
+      "biomes": [],
+      "level_range": [
+        17,
+        22
+      ],
+      "stats": [
+        7800,
+        390,
+        195,
+        156
+      ],
+      "abilities": [
+        "split_personality",
+        "infectious_madness",
+        "reality_break"
+      ],
+      "loot": "boss_rare",
+      "magic": 468
+    },
+    {
+      "id": "mind_flayer_spawn",
+      "name": "The Whisper",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "An aberration that feeds on sanity itself",
+      "biomes": [],
+      "level_range": [
+        18,
+        22
+      ],
+      "stats": [
+        6600,
+        480,
+        165,
+        160
+      ],
+      "abilities": [
+        "mind_blast",
+        "psychic_drain",
+        "confusion"
+      ],
+      "loot": "boss_rare",
+      "magic": 576
+    },
+    {
+      "id": "straitjacket_horror",
+      "name": "The Bound One",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "A creature so dangerous it must remain restrained",
+      "biomes": [],
+      "level_range": [
+        18,
+        22
+      ],
+      "stats": [
+        8600,
+        380,
+        215,
+        160
+      ],
+      "abilities": [
+        "thrash",
+        "break_free",
+        "unstoppable_rage"
+      ],
+      "loot": "boss_rare",
+      "magic": 456
+    },
+    {
+      "id": "void_herald",
+      "name": "Herald of the Void",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "A messenger from the space between spaces",
+      "biomes": [],
+      "level_range": [
+        18,
+        23
+      ],
+      "stats": [
+        8200,
+        451,
+        205,
+        164
+      ],
+      "abilities": [
+        "void_bolt",
+        "null_zone",
+        "dimensional_rift"
+      ],
+      "loot": "boss_rare",
+      "magic": 541
+    },
+    {
+      "id": "voidborn_horror",
+      "name": "The Voidborn",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "A creature native to the void itself",
+      "biomes": [],
+      "level_range": [
+        19,
+        23
+      ],
+      "stats": [
+        8820,
+        441,
+        221,
+        168
+      ],
+      "abilities": [
+        "reality_tear",
+        "void_grasp",
+        "null_sphere"
+      ],
+      "loot": "boss_rare",
+      "magic": 529
+    },
+    {
+      "id": "dark_matter_beast",
+      "name": "Dark Matter Anomaly",
+      "template": "aberration_base",
+      "rarity": "boss",
+      "description": "A living contradiction that shouldn't exist",
+      "biomes": [],
+      "level_range": [
+        19,
+        23
+      ],
+      "stats": [
+        9240,
+        399,
+        231,
+        168
+      ],
+      "abilities": [
+        "gravity_well",
+        "mass_crush",
+        "dark_pulse"
+      ],
+      "loot": "boss_rare",
+      "magic": 479
+    },
+    {
+      "id": "aberration",
+      "name": "Aberration",
+      "template": "aberration_base",
+      "rarity": "rare",
+      "description": "A twisted creature from beyond reality",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        14,
+        20
+      ],
+      "stats": [
+        180,
+        52,
+        22,
+        28
+      ],
+      "abilities": [
+        "mind_blast",
+        "tentacle_lash"
+      ],
+      "loot": "rare_aberration",
+      "magic": 48
+    },
+    {
+      "id": "void_horror",
+      "name": "Void Horror",
+      "template": "aberration_base",
+      "rarity": "epic",
+      "description": "A nightmarish entity from the void",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        22,
+        28
+      ],
+      "stats": [
+        340,
+        78,
+        35,
+        32
+      ],
+      "abilities": [
+        "void_grasp",
+        "sanity_drain"
+      ],
+      "loot": "epic_aberration",
+      "magic": 72
+    },
+    {
+      "id": "void_walker",
+      "name": "Void Walker",
+      "template": "aberration_base",
+      "rarity": "rare",
+      "description": "A being that walks between dimensions",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        16,
+        22
+      ],
+      "stats": [
+        220,
+        58,
+        28,
+        35
+      ],
+      "abilities": [
+        "dimension_step",
+        "void_strike"
+      ],
+      "loot": "rare_aberration",
+      "magic": 54
+    },
+    {
+      "id": "star_spawn",
+      "name": "Star Spawn",
+      "template": "aberration_base",
+      "rarity": "rare",
+      "description": "An alien creature from distant stars",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        260,
+        64,
+        32,
+        30
+      ],
+      "abilities": [
+        "cosmic_ray",
+        "star_sight"
+      ],
+      "loot": "rare_aberration",
+      "magic": 62
+    },
+    {
+      "id": "deranged_patient",
+      "name": "Deranged Patient",
+      "template": "aberration_base",
+      "rarity": "uncommon",
+      "description": "A maddened soul trapped in torment",
+      "biomes": [
+        "haunted_manor"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "stats": [
+        125,
+        32,
+        12,
+        22
+      ],
+      "abilities": [
+        "frenzy",
+        "madness"
+      ],
+      "loot": "uncommon_aberration"
+    },
+    {
+      "id": "azathoth_star_eater",
+      "name": "Azathoth the Star Eater",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "The blind idiot god who dreams reality itself",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        58,
+        60
+      ],
+      "stats": [
+        5500,
+        785,
+        445,
+        625
+      ],
+      "abilities": [
+        "reality_warp",
+        "cosmic_chaos",
+        "star_consumption",
+        "dream_reality",
+        "madness_aura"
+      ],
+      "loot": "mythic_aberration",
+      "magic": 595
+    },
+    {
+      "id": "nyarlathotep_void_god",
+      "name": "Nyarlathotep the Void God",
+      "template": "aberration_base",
+      "rarity": "mythic",
+      "description": "The crawling chaos, messenger of the outer gods",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        59,
+        60
+      ],
+      "stats": [
+        6200,
+        845,
+        495,
+        685
+      ],
+      "abilities": [
+        "thousand_forms",
+        "void_mastery",
+        "sanity_drain",
+        "chaos_incarnate",
+        "reality_break"
+      ],
+      "loot": "mythic_aberration",
+      "magic": 655
+    },
+    {
+      "id": "frostmourne_winter_queen",
+      "name": "Frostmourne the Winter Queen",
+      "template": "aberration_base",
+      "rarity": "legendary",
+      "description": "A cosmic entity of eternal winter and ice",
+      "biomes": [
+        "frozen_wastes",
+        "void_realm"
+      ],
+      "level_range": [
+        37,
+        43
+      ],
+      "stats": [
+        1350,
+        205,
+        175,
+        185
+      ],
+      "abilities": [
+        "eternal_winter",
+        "ice_queen",
+        "frozen_domain",
+        "absolute_zero"
+      ],
+      "loot": "legendary_aberration",
+      "magic": 165
+    },
+    {
+      "id": "aboleth",
+      "name": "Aboleth",
+      "template": "aquatic_base",
+      "rarity": "rare",
+      "description": "An ancient psychic aberration that enslaves minds",
+      "biomes": [
+        "twilight_wetlands",
+        "void_realm"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        185,
+        72,
+        55,
+        62
+      ],
+      "abilities": [
+        "psychic_enslavement",
+        "mucus_cloud",
+        "ancient_knowledge"
+      ],
+      "loot": "rare_aquatic",
+      "magic": 92
+    },
+    {
+      "id": "elder_aboleth",
+      "name": "Elder Aboleth",
+      "template": "aquatic_base",
+      "rarity": "legendary",
+      "description": "An aboleth older than civilizations with godlike power",
+      "biomes": [
+        "twilight_wetlands",
+        "void_realm"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "stats": [
+        720,
+        312,
+        228,
+        260
+      ],
+      "abilities": [
+        "mass_domination",
+        "reality_manipulation",
+        "perfect_memory",
+        "enslaver_of_worlds"
+      ],
+      "loot": "legendary_aquatic",
+      "magic": 280
+    },
+    {
+      "id": "hybrid_horror",
+      "name": "Hybrid Horror",
+      "template": "lycanthrope_base",
+      "rarity": "epic",
+      "description": "A lycanthrope cursed with multiple animal forms",
+      "biomes": [
+        "cursed_swamp",
+        "void_realm"
+      ],
+      "level_range": [
+        24,
+        30
+      ],
+      "stats": [
+        468,
+        202,
+        140,
+        182
+      ],
+      "abilities": [
+        "multi_shift",
+        "chimeric_form",
+        "curse_fusion",
+        "unstable_transformation"
+      ],
+      "loot": "epic_lycanthrope"
+    }
+  ]
+}

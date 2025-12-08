@@ -71,6 +71,10 @@ class Character {
     } else {
       this.stats = data.stats;
     }
+    
+    // Dungeon tracking
+    this.dungeonState = data.dungeon_state || null;
+    this.completedDungeons = data.completed_dungeons || [];
 
     // Initialize managers
     this.equipment = new EquipmentManager(data.equipped || {});

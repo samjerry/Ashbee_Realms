@@ -1,0 +1,1658 @@
+{
+  "creature_type": "undead",
+  "count": 62,
+  "monsters": [
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "template": "undead_base",
+      "rarity": "common",
+      "description": "A reanimated pile of bones wielding rusted weapons",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        2,
+        5
+      ],
+      "stats": [
+        22,
+        7,
+        3,
+        5
+      ],
+      "abilities": [],
+      "loot": "undead_common"
+    },
+    {
+      "id": "zombie",
+      "name": "Zombie",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "A shambling corpse with rotting flesh",
+      "biomes": [
+        "ancient_crypts",
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "stats": [
+        65,
+        11,
+        2,
+        2
+      ],
+      "abilities": [
+        "regen",
+        "disease"
+      ],
+      "loot": "undead_zombie"
+    },
+    {
+      "id": "ghoul",
+      "name": "Ghoul",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "A flesh-eating undead with an insatiable hunger",
+      "biomes": [
+        "ancient_crypts",
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "stats": [
+        50,
+        13,
+        3,
+        8
+      ],
+      "abilities": [
+        "life_drain"
+      ],
+      "loot": "undead_ghoul"
+    },
+    {
+      "id": "shade",
+      "name": "Shade",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "A living shadow that feeds on fear",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "forsaken_ruins",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "stats": [
+        38,
+        10,
+        1,
+        13
+      ],
+      "abilities": [
+        "stealth"
+      ],
+      "loot": "undead_shade"
+    },
+    {
+      "id": "bone_shaman",
+      "name": "Bone Shaman",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "An undead spellcaster wielding dark magic",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        7,
+        13
+      ],
+      "stats": [
+        55,
+        12,
+        3,
+        6
+      ],
+      "abilities": [
+        "necromancy"
+      ],
+      "loot": "undead_shaman",
+      "magic": 18
+    },
+    {
+      "id": "gravekeeper",
+      "name": "Gravekeeper",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "An undead guardian bound to protect ancient tombs",
+      "biomes": [
+        "ancient_crypts",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "stats": [
+        80,
+        14,
+        8,
+        5
+      ],
+      "abilities": [
+        "regen",
+        "intimidate"
+      ],
+      "loot": "undead_gravekeeper"
+    },
+    {
+      "id": "vampire_lord",
+      "name": "Vampire Lord",
+      "template": "undead_base",
+      "rarity": "rare",
+      "description": "An elegant undead noble with hypnotic crimson eyes",
+      "biomes": [
+        "cursed_swamp",
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        12,
+        18
+      ],
+      "stats": [
+        120,
+        18,
+        10,
+        12
+      ],
+      "abilities": [
+        "life_drain",
+        "charm",
+        "bat_swarm",
+        "regenerate"
+      ],
+      "loot": "undead_vampire",
+      "magic": 14
+    },
+    {
+      "id": "ghost",
+      "name": "Ghost",
+      "template": "undead_base",
+      "rarity": "rare",
+      "description": "A spectral apparition that phases through walls",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins",
+        "void_realm",
+        "cursed_swamp",
+        "whispering_woods"
+      ],
+      "level_range": [
+        10,
+        15
+      ],
+      "stats": [
+        60,
+        16,
+        2,
+        13
+      ],
+      "abilities": [
+        "phase_shift",
+        "fear"
+      ],
+      "loot": "undead_ghost",
+      "magic": 14
+    },
+    {
+      "id": "cinder_wraith",
+      "name": "Cinder Wraith",
+      "template": "undead_base",
+      "rarity": "rare",
+      "description": "The burning spirit of a fire mage",
+      "biomes": [
+        "volcanic_peaks",
+        "forsaken_ruins",
+        "ashen_barrens"
+      ],
+      "level_range": [
+        13,
+        18
+      ],
+      "stats": [
+        140,
+        22,
+        4,
+        10
+      ],
+      "abilities": [
+        "fire_aura",
+        "phase_shift"
+      ],
+      "loot": "undead_fire_wraith",
+      "magic": 20
+    },
+    {
+      "id": "lich_king",
+      "name": "Lich King",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "An undead sorcerer of terrible power, wrapped in tattered robes and wielding a staff of bones",
+      "biomes": [
+        "frozen_wastes",
+        "void_realm",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        20,
+        27
+      ],
+      "stats": [
+        300,
+        15,
+        18,
+        10
+      ],
+      "abilities": [
+        "death_coil",
+        "summon_undead",
+        "frost_nova",
+        "phylactery_regeneration"
+      ],
+      "loot": "undead_lich_king",
+      "magic": 40
+    },
+    {
+      "id": "banshee",
+      "name": "Banshee",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "A wailing spirit whose scream heralds death",
+      "biomes": [
+        "ancient_crypts",
+        "cursed_swamp",
+        "void_realm",
+        "forsaken_ruins",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        15,
+        21
+      ],
+      "stats": [
+        220,
+        26,
+        5,
+        14
+      ],
+      "abilities": [
+        "wail",
+        "phase_shift",
+        "fear"
+      ],
+      "loot": "undead_banshee",
+      "magic": 24
+    },
+    {
+      "id": "shadow_wraith",
+      "name": "Shadow Wraith",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "A creature of living darkness that drains life",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        16,
+        22
+      ],
+      "stats": [
+        250,
+        23,
+        7,
+        13
+      ],
+      "abilities": [
+        "stealth",
+        "life_drain"
+      ],
+      "loot": "undead_shadow_wraith",
+      "magic": 26
+    },
+    {
+      "id": "night_stalker",
+      "name": "Night Stalker",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "A creature that hunts in eternal darkness",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "cursed_swamp",
+        "forsaken_ruins",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        330,
+        28,
+        9,
+        16
+      ],
+      "abilities": [
+        "stealth",
+        "life_drain"
+      ],
+      "loot": "undead_night_stalker",
+      "magic": 22
+    },
+    {
+      "id": "frost_lich",
+      "name": "Frost Lich",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "An undead sorcerer of ice magic",
+      "biomes": [
+        "frozen_wastes",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        21,
+        27
+      ],
+      "stats": [
+        430,
+        26,
+        14,
+        9
+      ],
+      "abilities": [
+        "ice_magic",
+        "necromancy",
+        "freeze_aura"
+      ],
+      "loot": "undead_frost_lich",
+      "magic": 36
+    },
+    {
+      "id": "death_knight",
+      "name": "Death Knight",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "A fallen paladin who now serves death",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins",
+        "void_realm",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        23,
+        29
+      ],
+      "stats": [
+        480,
+        28,
+        16,
+        10
+      ],
+      "abilities": [
+        "death_coil",
+        "soul_rend",
+        "dark_bargain"
+      ],
+      "loot": "undead_death_knight",
+      "magic": 36
+    },
+    {
+      "id": "lich",
+      "name": "Lich",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "A powerful undead sorcerer who has achieved immortality through dark magic",
+      "biomes": [
+        "ancient_crypts",
+        "void_realm",
+        "frozen_wastes",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        26,
+        34
+      ],
+      "stats": [
+        650,
+        42,
+        26,
+        12
+      ],
+      "abilities": [
+        "necromancy",
+        "death_magic",
+        "phase_shift"
+      ],
+      "loot": "undead_lich",
+      "magic": 48
+    },
+    {
+      "id": "elder_lich",
+      "name": "Elder Lich",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "An ancient lich who has mastered time itself",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "forsaken_ruins",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        30,
+        38
+      ],
+      "stats": [
+        950,
+        46,
+        28,
+        14
+      ],
+      "abilities": [
+        "time_magic",
+        "soul_prison",
+        "undead_mastery"
+      ],
+      "loot": "undead_elder_lich",
+      "magic": 54
+    },
+    {
+      "id": "restless_spirit",
+      "name": "Restless Spirit",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "A tormented ghost that wails in eternal anguish, unable to find peace",
+      "biomes": [
+        "ancient_crypts",
+        "haunted_manor",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "stats": [
+        120,
+        28,
+        5,
+        38
+      ],
+      "abilities": [
+        "possess",
+        "terrifying_wail",
+        "ethereal"
+      ],
+      "loot": "undead_uncommon_plus",
+      "magic": 45
+    },
+    {
+      "id": "crypt_lord",
+      "name": "Lord Mortis the Eternal",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "An ancient lich who refuses to rest, radiating necromantic power",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        15,
+        17
+      ],
+      "stats": [
+        850,
+        55,
+        22,
+        18
+      ],
+      "abilities": [
+        "death_bolt",
+        "summon_undead",
+        "life_drain",
+        "soul_cage"
+      ],
+      "loot": "boss_crypt_lord",
+      "magic": 85
+    },
+    {
+      "id": "deathknight_valdris",
+      "name": "Deathknight Valdris",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "A fallen paladin who now serves death itself",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        12,
+        14
+      ],
+      "stats": [
+        680,
+        48,
+        28,
+        15
+      ],
+      "abilities": [
+        "death_strike",
+        "unholy_aura",
+        "grave_召喚"
+      ],
+      "loot": "boss_deathknight",
+      "magic": 42
+    },
+    {
+      "id": "banshee_queen",
+      "name": "Elara the Banshee Queen",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "A tormented queen whose wail can shatter souls",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        16,
+        18
+      ],
+      "stats": [
+        780,
+        52,
+        18,
+        45
+      ],
+      "abilities": [
+        "banshee_wail",
+        "soul_drain",
+        "ethereal_form"
+      ],
+      "loot": "boss_banshee_queen",
+      "magic": 68
+    },
+    {
+      "id": "flesh_golem",
+      "name": "Abomination Mk VII",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "A grotesque creation of stitched corpses and dark magic",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        14,
+        16
+      ],
+      "stats": [
+        950,
+        58,
+        35,
+        8
+      ],
+      "abilities": [
+        "ground_slam",
+        "toxic_gas",
+        "regenerate"
+      ],
+      "loot": "boss_flesh_golem",
+      "magic": 12
+    },
+    {
+      "id": "death_horseman",
+      "name": "Death, the Pale Rider",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The fourth horseman, Death itself",
+      "biomes": [],
+      "level_range": [
+        52,
+        60
+      ],
+      "stats": [
+        84000,
+        3360,
+        2100,
+        448
+      ],
+      "abilities": [
+        "pale_horse",
+        "death_scythe",
+        "reaping",
+        "mortality"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "war_horseman",
+      "name": "War, the Red Rider",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The first horseman, bringer of conflict",
+      "biomes": [],
+      "level_range": [
+        52,
+        60
+      ],
+      "stats": [
+        81200,
+        3472,
+        2030,
+        448
+      ],
+      "abilities": [
+        "war_cry",
+        "blood_frenzy",
+        "endless_conflict"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "famine_horseman",
+      "name": "Famine, the Black Rider",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The third horseman, drainer of life",
+      "biomes": [],
+      "level_range": [
+        54,
+        60
+      ],
+      "stats": [
+        76950,
+        3648,
+        1924,
+        456
+      ],
+      "abilities": [
+        "starvation",
+        "life_drain",
+        "resource_depletion"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "pestilence_horseman",
+      "name": "Pestilence, the White Rider",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The second horseman, spreader of plague",
+      "biomes": [],
+      "level_range": [
+        54,
+        60
+      ],
+      "stats": [
+        79800,
+        3477,
+        1995,
+        456
+      ],
+      "abilities": [
+        "pandemic",
+        "plague_cloud",
+        "mass_infection"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "entropy_god",
+      "name": "The End of All Things",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The personification of universe's heat death",
+      "biomes": [],
+      "level_range": [
+        50,
+        55
+      ],
+      "stats": [
+        68250,
+        2468,
+        1706,
+        420
+      ],
+      "abilities": [
+        "heat_death",
+        "entropy_wave",
+        "universal_decay"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "old_god",
+      "name": "Yogg-Saron the Old God",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "An ancient god of madness and death",
+      "biomes": [],
+      "level_range": [
+        50,
+        57
+      ],
+      "stats": [
+        64200,
+        2996,
+        1605,
+        428
+      ],
+      "abilities": [
+        "sanity_drain",
+        "tentacle_storm",
+        "old_god_whispers"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "ancient_red_dragon",
+      "name": "Ignaroth the Ancient Red",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "An ancient red dragon with millennia of rage",
+      "biomes": [],
+      "level_range": [
+        26,
+        32
+      ],
+      "stats": [
+        20300,
+        870,
+        508,
+        232
+      ],
+      "abilities": [
+        "dragon_breath",
+        "tail_sweep",
+        "wing_buffet",
+        "frightful_presence"
+      ],
+      "loot": "boss_epic"
+    },
+    {
+      "id": "elder_dracolich",
+      "name": "Morthanax the Dracolich",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "An undead dragon of terrible power",
+      "biomes": [],
+      "level_range": [
+        28,
+        32
+      ],
+      "stats": [
+        20400,
+        930,
+        510,
+        240
+      ],
+      "abilities": [
+        "necrotic_breath",
+        "raise_dead",
+        "soul_drain"
+      ],
+      "loot": "boss_epic",
+      "magic": 1116
+    },
+    {
+      "id": "rot_hulk",
+      "name": "Putrescene the Rot Hulk",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "A massive undead abomination of decay",
+      "biomes": [],
+      "level_range": [
+        29,
+        35
+      ],
+      "stats": [
+        26240,
+        928,
+        656,
+        256
+      ],
+      "abilities": [
+        "vomit_plague",
+        "death_grip",
+        "pestilence_aura"
+      ],
+      "loot": "boss_epic"
+    },
+    {
+      "id": "infection_elemental",
+      "name": "Living Plague",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "Disease given sentient form",
+      "biomes": [],
+      "level_range": [
+        30,
+        35
+      ],
+      "stats": [
+        19500,
+        1203,
+        488,
+        260
+      ],
+      "abilities": [
+        "infectious_touch",
+        "viral_burst",
+        "mutation"
+      ],
+      "loot": "boss_epic"
+    },
+    {
+      "id": "vampire_count",
+      "name": "Count Bloodmire",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "An immortal vampire who feeds on the living",
+      "biomes": [],
+      "level_range": [
+        12,
+        20
+      ],
+      "stats": [
+        6240,
+        320,
+        156,
+        128
+      ],
+      "abilities": [
+        "blood_drain",
+        "mist_form",
+        "charm",
+        "bat_swarm"
+      ],
+      "loot": "boss_rare"
+    },
+    {
+      "id": "vampire_progenitor",
+      "name": "Cain the First Vampire",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The original vampire, source of the bloodline",
+      "biomes": [],
+      "level_range": [
+        39,
+        45
+      ],
+      "stats": [
+        39900,
+        1806,
+        998,
+        336
+      ],
+      "abilities": [
+        "primal_bite",
+        "blood_pool",
+        "immortal_form"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "archlich",
+      "name": "Vecna the Archlich",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "An ancient lich of terrible power",
+      "biomes": [],
+      "level_range": [
+        39,
+        44
+      ],
+      "stats": [
+        35275,
+        1951,
+        882,
+        332
+      ],
+      "abilities": [
+        "finger_of_death",
+        "time_stop",
+        "wish_perversion"
+      ],
+      "loot": "boss_legendary",
+      "magic": 2341
+    },
+    {
+      "id": "pale_rider",
+      "name": "Death Incarnate",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "Death itself given physical form",
+      "biomes": [],
+      "level_range": [
+        40,
+        44
+      ],
+      "stats": [
+        39900,
+        1890,
+        998,
+        336
+      ],
+      "abilities": [
+        "death_touch",
+        "reap_souls",
+        "inevitability"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "phantom",
+      "name": "Phantom",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "A ghostly apparition that phases through walls",
+      "biomes": [
+        "ancient_crypts",
+        "haunted_manor"
+      ],
+      "level_range": [
+        8,
+        13
+      ],
+      "stats": [
+        95,
+        24,
+        8,
+        18
+      ],
+      "abilities": [
+        "phase_shift",
+        "life_drain"
+      ],
+      "loot": "uncommon_undead"
+    },
+    {
+      "id": "wraith",
+      "name": "Wraith",
+      "template": "undead_base",
+      "rarity": "rare",
+      "description": "A malevolent spirit wrapped in shadow",
+      "biomes": [
+        "ancient_crypts",
+        "void_realm"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "stats": [
+        110,
+        32,
+        12,
+        22
+      ],
+      "abilities": [
+        "life_drain",
+        "terrify"
+      ],
+      "loot": "rare_undead",
+      "magic": 28
+    },
+    {
+      "id": "frost_wraith",
+      "name": "Frost Wraith",
+      "template": "undead_base",
+      "rarity": "rare",
+      "description": "An undead spirit of eternal winter",
+      "biomes": [
+        "frozen_wastes",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        14,
+        20
+      ],
+      "stats": [
+        145,
+        38,
+        15,
+        24
+      ],
+      "abilities": [
+        "frost_touch",
+        "freeze"
+      ],
+      "loot": "rare_undead",
+      "magic": 36
+    },
+    {
+      "id": "plague_zombie",
+      "name": "Plague Zombie",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "A diseased corpse that spreads infection",
+      "biomes": [
+        "cursed_swamp",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "stats": [
+        140,
+        20,
+        8,
+        6
+      ],
+      "abilities": [
+        "plague_bite",
+        "disease_aura"
+      ],
+      "loot": "uncommon_undead"
+    },
+    {
+      "id": "plague_carrier",
+      "name": "Plague Carrier",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "An undead host of virulent disease",
+      "biomes": [
+        "cursed_swamp",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "stats": [
+        165,
+        24,
+        10,
+        8
+      ],
+      "abilities": [
+        "plague_burst",
+        "infect"
+      ],
+      "loot": "uncommon_undead"
+    },
+    {
+      "id": "vengeful_spirit",
+      "name": "Vengeful Spirit",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "A ghost driven by rage and hatred",
+      "biomes": [
+        "haunted_manor",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        9,
+        14
+      ],
+      "stats": [
+        105,
+        28,
+        10,
+        20
+      ],
+      "abilities": [
+        "possession",
+        "wail"
+      ],
+      "loot": "uncommon_undead"
+    },
+    {
+      "id": "vampire_noble",
+      "name": "Vampire Noble",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "An aristocratic vampire of ancient bloodline",
+      "biomes": [
+        "ancient_crypts",
+        "haunted_manor"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        380,
+        68,
+        32,
+        38
+      ],
+      "abilities": [
+        "blood_drain",
+        "charm",
+        "mist_form"
+      ],
+      "loot": "epic_undead",
+      "magic": 52
+    },
+    {
+      "id": "tomb_guardian",
+      "name": "Tomb Guardian",
+      "template": "undead_base",
+      "rarity": "rare",
+      "description": "An ancient warrior bound to protect the tomb",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        12,
+        18
+      ],
+      "stats": [
+        240,
+        42,
+        28,
+        14
+      ],
+      "abilities": [
+        "shield_bash",
+        "guardian_stance"
+      ],
+      "loot": "rare_undead"
+    },
+    {
+      "id": "dracolich_spawn",
+      "name": "Dracolich Spawn",
+      "template": "undead_base",
+      "rarity": "epic",
+      "description": "An undead dragon in the making",
+      "biomes": [
+        "void_realm",
+        "frozen_wastes",
+        "ancient_crypts",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        20,
+        26
+      ],
+      "stats": [
+        410,
+        28,
+        18,
+        8
+      ],
+      "abilities": [
+        "regen",
+        "intimidate"
+      ],
+      "loot": "dragon_undead",
+      "magic": 24
+    },
+    {
+      "id": "plague_lich",
+      "name": "Necronus the Plague Lich",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "An undead sorcerer commanding disease",
+      "biomes": [],
+      "level_range": [
+        30,
+        35
+      ],
+      "stats": [
+        22100,
+        1138,
+        553,
+        260
+      ],
+      "abilities": [
+        "death_coil",
+        "plague_storm",
+        "raise_infected"
+      ],
+      "loot": "boss_epic",
+      "magic": 1365
+    },
+    {
+      "id": "necromancer_supreme",
+      "name": "Thanatos the Deathlord",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "Master of necromantic arts",
+      "biomes": [],
+      "level_range": [
+        41,
+        46
+      ],
+      "stats": [
+        36975,
+        2045,
+        924,
+        348
+      ],
+      "abilities": [
+        "death_magic",
+        "soul_rend",
+        "undead_horde"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "frost_lich_lord",
+      "name": "Kel'thuzad the Frost Lich",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "A powerful lich commanding ice magic",
+      "biomes": [],
+      "level_range": [
+        38,
+        43
+      ],
+      "stats": [
+        35640,
+        1782,
+        891,
+        324
+      ],
+      "abilities": [
+        "frost_nova",
+        "ice_lance",
+        "glacial_prison"
+      ],
+      "loot": "boss_legendary",
+      "magic": 2138
+    },
+    {
+      "id": "death_emperor",
+      "name": "Nagash the Death Emperor",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The supreme lord of undeath",
+      "biomes": [],
+      "level_range": [
+        38,
+        44
+      ],
+      "stats": [
+        43050,
+        1722,
+        1076,
+        328
+      ],
+      "abilities": [
+        "death_wave",
+        "soul_harvest",
+        "undead_legion",
+        "mortality_curse"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "vampire_lord_ancient",
+      "name": "Dracula the Ancient",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The progenitor of all vampires",
+      "biomes": [],
+      "level_range": [
+        38,
+        44
+      ],
+      "stats": [
+        36900,
+        1845,
+        923,
+        328
+      ],
+      "abilities": [
+        "blood_god",
+        "mist_lord",
+        "vampire_swarm"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "bone_colossus",
+      "name": "Ossuary the Bone Lord",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "A massive construct of countless bones",
+      "biomes": [],
+      "level_range": [
+        39,
+        44
+      ],
+      "stats": [
+        45650,
+        1577,
+        1141,
+        332
+      ],
+      "abilities": [
+        "bone_prison",
+        "skeletal_army",
+        "death_rattle"
+      ],
+      "loot": "boss_legendary"
+    },
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "template": "undead_base",
+      "rarity": "uncommon",
+      "description": "An armored undead soldier",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "stats": [
+        85,
+        20,
+        16,
+        10
+      ],
+      "abilities": [
+        "undead_fortitude"
+      ],
+      "loot": "uncommon_humanoid"
+    },
+    {
+      "id": "hrungnir_reborn",
+      "name": "Hrungnir Reborn",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The stone giant champion risen again",
+      "biomes": [],
+      "level_range": [
+        25,
+        27
+      ],
+      "stats": [
+        3360,
+        1275,
+        1320,
+        84
+      ],
+      "abilities": [
+        "stone_heart",
+        "whetstone_head",
+        "grindstone_fists"
+      ],
+      "loot": "boss_giant"
+    },
+    {
+      "id": "dracula_ancient",
+      "name": "Dracula the Ancient",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "The first and most powerful vampire",
+      "biomes": [
+        "void_realm",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        39,
+        45
+      ],
+      "stats": [
+        1450,
+        220,
+        135,
+        185
+      ],
+      "abilities": [
+        "blood_drain",
+        "mist_form",
+        "vampire_lord",
+        "dominate"
+      ],
+      "loot": "legendary_undead",
+      "magic": 175
+    },
+    {
+      "id": "vampire_ascendant",
+      "name": "Vampire Ascendant",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "A vampire who has achieved ultimate power",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        39,
+        45
+      ],
+      "stats": [
+        1380,
+        210,
+        125,
+        175
+      ],
+      "abilities": [
+        "blood_magic",
+        "crimson_storm",
+        "life_drain",
+        "immortal"
+      ],
+      "loot": "legendary_undead",
+      "magic": 165
+    },
+    {
+      "id": "the_grim_reaper",
+      "name": "The Grim Reaper",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "Death incarnate, the harvester of souls",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        38,
+        44
+      ],
+      "stats": [
+        1520,
+        235,
+        145,
+        195
+      ],
+      "abilities": [
+        "death_touch",
+        "soul_reap",
+        "inevitable",
+        "final_judgment"
+      ],
+      "loot": "legendary_undead",
+      "magic": 185
+    },
+    {
+      "id": "shade_lord",
+      "name": "Shade Lord",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "A master of shadows and darkness",
+      "biomes": [
+        "void_realm",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        54,
+        60
+      ],
+      "stats": [
+        2850,
+        425,
+        285,
+        385
+      ],
+      "abilities": [
+        "shadow_merge",
+        "darkness_incarnate",
+        "life_drain",
+        "shadow_army"
+      ],
+      "loot": "legendary_undead",
+      "magic": 375
+    },
+    {
+      "id": "night_king",
+      "name": "The Night King",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "The ruler of eternal darkness",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        54,
+        60
+      ],
+      "stats": [
+        3200,
+        485,
+        325,
+        445
+      ],
+      "abilities": [
+        "eternal_night",
+        "undead_command",
+        "ice_touch",
+        "winter_king"
+      ],
+      "loot": "legendary_undead",
+      "magic": 425
+    },
+    {
+      "id": "thrym_frost_king",
+      "name": "Thrym the Frost King",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "The ancient undead king of frost giants",
+      "biomes": [
+        "frozen_wastes",
+        "void_realm"
+      ],
+      "level_range": [
+        37,
+        43
+      ],
+      "stats": [
+        1280,
+        195,
+        165,
+        145
+      ],
+      "abilities": [
+        "ice_storm",
+        "giant_strength",
+        "frost_armor",
+        "frozen_fury"
+      ],
+      "loot": "legendary_undead",
+      "magic": 135
+    },
+    {
+      "id": "ymir_frost_titan",
+      "name": "Ymir the Frost Titan",
+      "template": "undead_base",
+      "rarity": "legendary",
+      "description": "The primordial titan of ice, risen from death",
+      "biomes": [
+        "frozen_wastes",
+        "void_realm"
+      ],
+      "level_range": [
+        37,
+        43
+      ],
+      "stats": [
+        1450,
+        225,
+        195,
+        165
+      ],
+      "abilities": [
+        "titan_rage",
+        "glacial_prison",
+        "fimbulwinter",
+        "unstoppable"
+      ],
+      "loot": "legendary_undead",
+      "magic": 155
+    },
+    {
+      "id": "void_wraith",
+      "name": "Nullifax the Void Wraith",
+      "template": "demon_base",
+      "rarity": "boss",
+      "description": "A creature from the spaces between worlds",
+      "biomes": [
+        "obsidian_citadel"
+      ],
+      "level_range": [
+        38,
+        40
+      ],
+      "stats": [
+        2600,
+        95,
+        55,
+        38
+      ],
+      "abilities": [
+        "void_rift",
+        "reality_drain",
+        "phase_shift"
+      ],
+      "loot": "boss_void_wraith",
+      "magic": 115
+    },
+    {
+      "id": "lich_lord",
+      "name": "Lich Lord",
+      "template": "humanoid_base",
+      "rarity": "legendary",
+      "description": "A powerful undead sorcerer who achieved lichdom",
+      "biomes": [
+        "forsaken_ruins",
+        "void_realm"
+      ],
+      "level_range": [
+        40,
+        46
+      ],
+      "stats": [
+        1200,
+        185,
+        78,
+        165
+      ],
+      "abilities": [
+        "death_magic",
+        "phylactery",
+        "soul_drain",
+        "time_stop"
+      ],
+      "loot": "legendary_humanoid",
+      "magic": 195
+    }
+  ]
+}

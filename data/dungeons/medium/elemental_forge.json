@@ -1,0 +1,200 @@
+{
+  "id": "elemental_forge",
+  "name": "Elemental Forge",
+  "description": "An ancient smithy where fire and earth elementals were bound",
+  "difficulty": "medium",
+  "required_level": 16,
+  "max_level": 21,
+  "recommended_party_size": 1,
+  "location": "volcanic_cavern",
+  "floors": 5,
+  "rooms_per_floor": [
+    6,
+    7,
+    8,
+    8,
+    9
+  ],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "intense_heat": {
+      "description": "Fire damage increased, ice resistance reduced",
+      "fire_damage_bonus": 0.25,
+      "ice_resistance_penalty": 0.3
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Fire elementals guard the forges",
+      "monsters": [
+        {
+          "id": "fire_elemental",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "lava_beast",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "magma_elemental",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "steam_elemental",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "storm_elemental",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "forgemaster_pyros",
+      "name": "Forgemaster Pyros",
+      "description": "A fire elemental lord who shapes metal with bare hands",
+      "level_range": [
+        16,
+        21
+      ],
+      "health_multiplier": 4.2,
+      "damage_multiplier": 2.1,
+      "special_abilities": [
+        "molten_hammer",
+        "forge_nova",
+        "heat_wave"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "transformation": "white_hot",
+          "description": "Becomes white-hot, dealing extra fire damage"
+        }
+      ]
+    },
+    {
+      "id": "earth_colossus_minor",
+      "name": "Stonefist the Unyielding",
+      "description": "A living mountain that cannot be moved",
+      "level_range": [
+        16,
+        21
+      ],
+      "health_multiplier": 5,
+      "damage_multiplier": 1.7,
+      "special_abilities": [
+        "stone_skin",
+        "seismic_slam",
+        "boulder_toss"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "magma_serpent",
+      "name": "Ignathor the Magma Serpent",
+      "description": "A serpent of pure molten rock",
+      "level_range": [
+        17,
+        21
+      ],
+      "health_multiplier": 3.8,
+      "damage_multiplier": 2.3,
+      "special_abilities": [
+        "lava_spit",
+        "coil_burn",
+        "eruption"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "iron_golem_alpha",
+      "name": "Golem Prime",
+      "description": "The first and most powerful golem ever forged",
+      "level_range": [
+        17,
+        21
+      ],
+      "health_multiplier": 4.5,
+      "damage_multiplier": 1.9,
+      "special_abilities": [
+        "metal_crush",
+        "magnetic_pull",
+        "repair_protocol"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "flame_djinn",
+      "name": "Infernus the Flame Djinn",
+      "description": "A powerful fire genie bound to the forge",
+      "level_range": [
+        16,
+        21
+      ],
+      "health_multiplier": 3.6,
+      "damage_multiplier": 2.4,
+      "special_abilities": [
+        "fireball_barrage",
+        "flame_teleport",
+        "burning_wish"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 2200,
+    "gold": [
+      700,
+      1100
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_elemental",
+    "first_clear_bonus": {
+      "xp": 4400,
+      "title": "forge_breaker",
+      "items": [
+        "forgemaster_hammer"
+      ]
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "id": "orc_stronghold",
+  "name": "Orc Stronghold",
+  "description": "A fortified war camp filled with brutal orc warriors",
+  "difficulty": "medium",
+  "required_level": 15,
+  "max_level": 20,
+  "recommended_party_size": 1,
+  "location": "iron_peaks",
+  "floors": 5,
+  "rooms_per_floor": [
+    6,
+    7,
+    7,
+    8,
+    9
+  ],
+  "boss_floor": 5,
+  "time_limit": null,
+  "respawn_time": 7200,
+  "instance_type": "solo",
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Orc warriors train for battle",
+      "monsters": [
+        {
+          "id": "orc_grunt",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "id": "orc_berserker",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "ogre_brute",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "hill_giant_youth",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "ettin",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "warchief_grimfang",
+      "name": "Warchief Grimfang",
+      "description": "The brutal leader of the orc horde",
+      "level_range": [
+        15,
+        20
+      ],
+      "health_multiplier": 4,
+      "damage_multiplier": 2,
+      "special_abilities": [
+        "battle_roar",
+        "cleave",
+        "bloodlust"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "blademaster_korgath",
+      "name": "Blademaster Korgath",
+      "description": "A legendary orc swordsman with unmatched skill",
+      "level_range": [
+        16,
+        20
+      ],
+      "health_multiplier": 3.5,
+      "damage_multiplier": 2.3,
+      "special_abilities": [
+        "whirlwind",
+        "mirror_image",
+        "blade_dance"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "shaman_zugthar",
+      "name": "Shaman Zugthar",
+      "description": "An orc shaman channeling primal elemental fury",
+      "level_range": [
+        15,
+        19
+      ],
+      "health_multiplier": 3.2,
+      "damage_multiplier": 2.2,
+      "special_abilities": [
+        "lightning_chain",
+        "earth_spike",
+        "ancestral_spirits"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "siege_breaker",
+      "name": "Goremaw the Siege Breaker",
+      "description": "A massive orc that destroys fortifications",
+      "level_range": [
+        17,
+        20
+      ],
+      "health_multiplier": 4.5,
+      "damage_multiplier": 1.8,
+      "special_abilities": [
+        "demolish",
+        "fortified_skin",
+        "ground_pound"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "blood_champion",
+      "name": "Bloodaxe the Champion",
+      "description": "Arena champion who has never lost a duel",
+      "level_range": [
+        16,
+        20
+      ],
+      "health_multiplier": 3.8,
+      "damage_multiplier": 2.1,
+      "special_abilities": [
+        "execute",
+        "reckless_fury",
+        "battle_frenzy"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 2000,
+    "gold": [
+      600,
+      1000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_orc",
+    "first_clear_bonus": {
+      "xp": 4000,
+      "title": "horde_breaker",
+      "items": [
+        "grimfang_war_axe"
+      ]
+    }
+  }
+}

@@ -20,6 +20,7 @@ const ItemComparator = require('./ItemComparator');
 const NPCManager = require('./NPCManager');
 const DialogueManager = require('./DialogueManager');
 const AchievementManager = require('./AchievementManager');
+const DungeonManager = require('./DungeonManager');
 
 module.exports = {
   Character,
@@ -38,5 +39,6 @@ module.exports = {
   ItemComparator,
   NPCManager,
   DialogueManager,
-  AchievementManager
+  AchievementManager,
+  DungeonManager
 };

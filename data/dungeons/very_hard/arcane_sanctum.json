@@ -1,0 +1,207 @@
+{
+  "id": "arcane_sanctum",
+  "name": "Arcane Sanctum",
+  "description": "A tower of powerful mages experimenting with forbidden magic",
+  "difficulty": "very_hard",
+  "required_level": 40,
+  "max_level": 46,
+  "recommended_party_size": 1,
+  "location": "wizard_spire",
+  "floors": 8,
+  "rooms_per_floor": [
+    12,
+    12,
+    13,
+    13,
+    14,
+    14,
+    15,
+    16
+  ],
+  "boss_floor": 8,
+  "time_limit": 7200,
+  "respawn_time": 21600,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "wild_magic": {
+      "description": "Random magical effects occur",
+      "random_spell_chance": 0.25,
+      "magic_damage_bonus": 0.4
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Archmages and their constructs defend",
+      "monsters": [
+        {
+          "id": "archmage",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "arcane_construct",
+          "count": [
+            2,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "archmage",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "lich_lord",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "void_emperor",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "archmage_supreme",
+      "name": "Archmage Eternus",
+      "description": "The most powerful mortal mage",
+      "level_range": [
+        40,
+        46
+      ],
+      "health_multiplier": 8,
+      "damage_multiplier": 5,
+      "special_abilities": [
+        "arcane_barrage",
+        "time_warp",
+        "meteor_storm",
+        "spell_steal"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.4,
+          "ability_unlock": "ascendance",
+          "description": "Transforms into pure arcane energy"
+        }
+      ]
+    },
+    {
+      "id": "chronomancer",
+      "name": "Tempus the Chronomancer",
+      "description": "A mage who controls time itself",
+      "level_range": [
+        40,
+        46
+      ],
+      "health_multiplier": 7.5,
+      "damage_multiplier": 5.2,
+      "special_abilities": [
+        "time_stop",
+        "temporal_loop",
+        "future_sight"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "necromancer_supreme",
+      "name": "Thanatos the Deathlord",
+      "description": "Master of necromantic arts",
+      "level_range": [
+        41,
+        46
+      ],
+      "health_multiplier": 8.5,
+      "damage_multiplier": 4.7,
+      "special_abilities": [
+        "death_magic",
+        "soul_rend",
+        "undead_horde"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "elementalist_lord",
+      "name": "Elementor Prime",
+      "description": "Commands all elements simultaneously",
+      "level_range": [
+        41,
+        46
+      ],
+      "health_multiplier": 8.3,
+      "damage_multiplier": 4.8,
+      "special_abilities": [
+        "elemental_fury",
+        "prismatic_blast",
+        "elemental_shield"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "void_mage",
+      "name": "Nul the Void Mage",
+      "description": "A mage who studied the void too deeply",
+      "level_range": [
+        42,
+        46
+      ],
+      "health_multiplier": 7.8,
+      "damage_multiplier": 5.3,
+      "special_abilities": [
+        "void_erasure",
+        "anti_magic",
+        "reality_warp"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 38000,
+    "gold": [
+      12000,
+      19000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_arcane",
+    "legendary_chance": 1,
+    "mythic_chance": 0.4,
+    "first_clear_bonus": {
+      "xp": 76000,
+      "title": "spellbreaker_supreme",
+      "items": [
+        "eternus_staff_mythic"
+      ],
+      "passive_unlock": "arcane_mastery"
+    }
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "id": "shadow_keep",
+  "name": "Shadow Keep",
+  "description": "A fortress consumed by darkness where shadows come alive",
+  "difficulty": "extreme",
+  "required_level": 54,
+  "max_level": 60,
+  "recommended_party_size": 1,
+  "location": "obsidian_citadel",
+  "floors": 10,
+  "rooms_per_floor": [
+    10,
+    11,
+    11,
+    12,
+    12,
+    13,
+    13,
+    14,
+    14,
+    15
+  ],
+  "boss_floor": 10,
+  "time_limit": 7200,
+  "respawn_time": 86400,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "overwhelming_darkness": {
+      "description": "Vision severely limited, shadow damage increased",
+      "visibility_reduction": 0.8,
+      "shadow_damage_bonus": 0.5,
+      "light_resistance_needed": true
+    },
+    "corruption_aura": {
+      "description": "Slowly drains HP and mana",
+      "hp_drain_per_second": 2,
+      "mana_drain_per_second": 1
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Shadow assassins lurk in the darkness",
+      "monsters": [
+        {
+          "id": "shadow_assassin",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "shade",
+          "count": [
+            3,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "type": "boss_mini",
+      "description": "A shadow knight blocks your path",
+      "monster": {
+        "id": "shadow_knight",
+        "count": 1
+      },
+      "required_to_progress": true
+    },
+    {
+      "type": "puzzle",
+      "description": "A room of mirrors and shadows",
+      "puzzle_type": "mirror_maze",
+      "difficulty": "nightmare",
+      "failure_consequence": "massive_damage"
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "shade_lord",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "night_king",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "umbral_dragon",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "lord_of_shadows",
+      "name": "Umbranox, Lord of Eternal Night",
+      "description": "The source of all darkness, a being of pure shadow",
+      "level_range": [
+        35,
+        50
+      ],
+      "health_multiplier": 10,
+      "damage_multiplier": 4,
+      "special_abilities": [
+        "void_bolt",
+        "shadow_army",
+        "dark_embrace",
+        "reality_tear",
+        "eternal_night"
+      ],
+      "spawn_weight": 15,
+      "phases": [
+        {
+          "hp_threshold": 0.75,
+          "arena_change": "darkness_intensifies",
+          "description": "The room becomes pitch black"
+        },
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "shadow_herald",
+            "count": 4
+          },
+          "description": "Shadow heralds emerge from the void"
+        },
+        {
+          "hp_threshold": 0.25,
+          "transformation": "true_form",
+          "description": "Reveals his true horrifying form",
+          "stat_boost": 1.5
+        }
+      ],
+      "enrage_timer": 600,
+      "enrage_effect": "instant_death_aura"
+    },
+    {
+      "id": "void_wraith",
+      "name": "Nullifax the Void Wraith",
+      "description": "A creature from the spaces between worlds",
+      "level_range": [
+        35,
+        42
+      ],
+      "health_multiplier": 8.5,
+      "damage_multiplier": 3.8,
+      "special_abilities": [
+        "void_rift",
+        "reality_drain",
+        "phase_shift"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "shadow_dragon",
+      "name": "Tenebris the Shadow Dragon",
+      "description": "A dragon born from pure darkness",
+      "level_range": [
+        38,
+        45
+      ],
+      "health_multiplier": 9,
+      "damage_multiplier": 4.2,
+      "special_abilities": [
+        "shadow_breath",
+        "dark_flight",
+        "fear_aura"
+      ],
+      "spawn_weight": 20,
+      "phases": [
+        {
+          "hp_threshold": 0.6,
+          "ability_unlock": "dark_flight",
+          "description": "Takes to the air, raining shadow from above"
+        }
+      ]
+    },
+    {
+      "id": "demon_overlord",
+      "name": "Azaroth the Demon Overlord",
+      "description": "A high-ranking demon general commanding legions of shadow",
+      "level_range": [
+        40,
+        48
+      ],
+      "health_multiplier": 9.5,
+      "damage_multiplier": 4,
+      "special_abilities": [
+        "infernal_strike",
+        "summon_demons",
+        "hellfire"
+      ],
+      "spawn_weight": 22,
+      "phases": [
+        {
+          "hp_threshold": 0.5,
+          "adds_spawn": {
+            "id": "lesser_demon",
+            "count": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "nightmare_incarnate",
+      "name": "The Nightmare Incarnate",
+      "description": "Fear given form, a being that feeds on terror itself",
+      "level_range": [
+        37,
+        44
+      ],
+      "health_multiplier": 8.8,
+      "damage_multiplier": 3.9,
+      "special_abilities": [
+        "terror_gaze",
+        "nightmare_realm",
+        "fear_feast"
+      ],
+      "spawn_weight": 18
+    }
+  ],
+  "rewards": {
+    "xp": 25000,
+    "gold": [
+      5000,
+      10000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_shadow_keep",
+    "legendary_chance": 0.5,
+    "mythic_chance": 0.1,
+    "first_clear_bonus": {
+      "xp": 50000,
+      "title": "shadowbane",
+      "items": [
+        "umbranox_shadow_cloak_mythic"
+      ],
+      "passive_unlock": "darkness_conquered"
+    }
+  }
+}

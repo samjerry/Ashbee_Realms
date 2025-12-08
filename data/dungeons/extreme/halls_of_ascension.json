@@ -1,0 +1,211 @@
+{
+  "id": "halls_of_ascension",
+  "name": "Halls of Ascension",
+  "description": "A celestial palace where fallen angels wage eternal war",
+  "difficulty": "extreme",
+  "required_level": 50,
+  "max_level": 59,
+  "recommended_party_size": 1,
+  "location": "celestial_realm",
+  "floors": 10,
+  "rooms_per_floor": [
+    13,
+    14,
+    14,
+    15,
+    15,
+    16,
+    16,
+    17,
+    17,
+    18
+  ],
+  "boss_floor": 10,
+  "time_limit": 9000,
+  "respawn_time": 43200,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "divine_judgment": {
+      "description": "Holy energy damages the unworthy",
+      "holy_damage_tick": 180,
+      "dark_resistance_penalty": 0.3
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Fallen angels bar your path",
+      "monsters": [
+        {
+          "id": "fallen_angel",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "celestial_guardian",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "celestial_guardian",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "phoenix_lord",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "eternal_phoenix",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "lucifer_fallen",
+      "name": "Lucifer the Lightbringer",
+      "description": "The first and most powerful fallen angel",
+      "level_range": [
+        50,
+        59
+      ],
+      "health_multiplier": 14,
+      "damage_multiplier": 5.5,
+      "special_abilities": [
+        "morning_star",
+        "fallen_grace",
+        "rebellious_light",
+        "pride"
+      ],
+      "spawn_weight": 25,
+      "phases": [
+        {
+          "hp_threshold": 0.4,
+          "transformation": "true_angel_form",
+          "description": "Reveals his original angelic power"
+        }
+      ],
+      "enrage_timer": 1100
+    },
+    {
+      "id": "seraphim_corrupted",
+      "name": "Azazel the Fallen Seraph",
+      "description": "A six-winged angel corrupted by power",
+      "level_range": [
+        50,
+        59
+      ],
+      "health_multiplier": 13,
+      "damage_multiplier": 5.7,
+      "special_abilities": [
+        "holy_fire",
+        "wings_of_ruin",
+        "divine_corruption"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "archangel_fallen",
+      "name": "Michael the Betrayer",
+      "description": "The greatest warrior angel, now fallen",
+      "level_range": [
+        52,
+        59
+      ],
+      "health_multiplier": 13.5,
+      "damage_multiplier": 5.6,
+      "special_abilities": [
+        "holy_blade",
+        "angelic_wrath",
+        "divine_judgment"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "cherubim_dark",
+      "name": "Metatron the Dark Voice",
+      "description": "The voice of god, now speaking blasphemy",
+      "level_range": [
+        52,
+        59
+      ],
+      "health_multiplier": 12.5,
+      "damage_multiplier": 5.9,
+      "special_abilities": [
+        "word_of_power",
+        "divine_silence",
+        "unholy_proclamation"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "throne_angel",
+      "name": "Uriel the Burning Throne",
+      "description": "An angel of the highest choir, fallen to darkness",
+      "level_range": [
+        54,
+        59
+      ],
+      "health_multiplier": 14.5,
+      "damage_multiplier": 5.4,
+      "special_abilities": [
+        "throne_fire",
+        "celestial_storm",
+        "divine_retribution"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 70000,
+    "gold": [
+      30000,
+      45000
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_celestial",
+    "legendary_chance": 1,
+    "mythic_chance": 0.9,
+    "first_clear_bonus": {
+      "xp": 140000,
+      "title": "angel_slayer",
+      "items": [
+        "lucifer_wings_mythic",
+        "fallen_halo"
+      ],
+      "passive_unlock": "divine_resistance"
+    }
+  }
+}

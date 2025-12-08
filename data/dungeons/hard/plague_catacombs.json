@@ -1,0 +1,195 @@
+{
+  "id": "plague_catacombs",
+  "name": "Plague Catacombs",
+  "description": "Disease-ridden tunnels filled with the infected and undead",
+  "difficulty": "hard",
+  "required_level": 29,
+  "max_level": 35,
+  "recommended_party_size": 1,
+  "location": "infected_tunnels",
+  "floors": 7,
+  "rooms_per_floor": [
+    9,
+    10,
+    10,
+    11,
+    11,
+    12,
+    13
+  ],
+  "boss_floor": 7,
+  "time_limit": 5400,
+  "respawn_time": 14400,
+  "instance_type": "solo",
+  "environmental_effects": {
+    "disease_miasma": {
+      "description": "Periodic disease damage",
+      "damage_per_tick": 50
+    }
+  },
+  "rooms": [
+    {
+      "type": "combat",
+      "description": "Plague zombies shamble forward",
+      "monsters": [
+        {
+          "id": "plague_zombie",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "id": "plague_carrier",
+          "count": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "dracolich_spawn",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "vampire_lord_ancient",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "combat",
+      "description": "New threats emerge",
+      "monsters": [
+        {
+          "id": "death_emperor",
+          "count": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "boss_pool": [
+    {
+      "id": "plague_doctor",
+      "name": "The Plague Doctor",
+      "description": "A twisted healer spreading disease instead of curing it",
+      "level_range": [
+        29,
+        35
+      ],
+      "health_multiplier": 6.5,
+      "damage_multiplier": 3.4,
+      "special_abilities": [
+        "plague_bomb",
+        "contagion",
+        "epidemic"
+      ],
+      "spawn_weight": 25
+    },
+    {
+      "id": "rot_hulk",
+      "name": "Putrescene the Rot Hulk",
+      "description": "A massive undead abomination of decay",
+      "level_range": [
+        29,
+        35
+      ],
+      "health_multiplier": 8.2,
+      "damage_multiplier": 2.9,
+      "special_abilities": [
+        "vomit_plague",
+        "death_grip",
+        "pestilence_aura"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "plague_lich",
+      "name": "Necronus the Plague Lich",
+      "description": "An undead sorcerer commanding disease",
+      "level_range": [
+        30,
+        35
+      ],
+      "health_multiplier": 6.8,
+      "damage_multiplier": 3.5,
+      "special_abilities": [
+        "death_coil",
+        "plague_storm",
+        "raise_infected"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "infection_elemental",
+      "name": "Living Plague",
+      "description": "Disease given sentient form",
+      "level_range": [
+        30,
+        35
+      ],
+      "health_multiplier": 6,
+      "damage_multiplier": 3.7,
+      "special_abilities": [
+        "infectious_touch",
+        "viral_burst",
+        "mutation"
+      ],
+      "spawn_weight": 20
+    },
+    {
+      "id": "death_knight_plague",
+      "name": "Plaguelord Mortis",
+      "description": "A death knight spreading pestilence",
+      "level_range": [
+        31,
+        35
+      ],
+      "health_multiplier": 7.5,
+      "damage_multiplier": 3.1,
+      "special_abilities": [
+        "plague_strike",
+        "unholy_blight",
+        "army_of_decay"
+      ],
+      "spawn_weight": 15
+    }
+  ],
+  "rewards": {
+    "xp": 11000,
+    "gold": [
+      3500,
+      5500
+    ],
+    "guaranteed_loot": true,
+    "loot_table": "dungeon_plague",
+    "legendary_chance": 0.75,
+    "first_clear_bonus": {
+      "xp": 22000,
+      "title": "plague_purger",
+      "items": [
+        "plague_doctor_mask_legendary"
+      ]
+    }
+  }
+}
