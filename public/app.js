@@ -139,7 +139,7 @@ function updateUI() {
 
   // Show buttons based on state
   if (!gameState.hasCharacter) {
-    show('startBtn');
+    show('startBtn', 'howToPlayBtn');
   } else if (gameState.inCombat) {
     show('attackBtn', 'skillBtn', 'useItemBtn', 'fleeBtn');
     show('statsBtn', 'inventoryBtn');
