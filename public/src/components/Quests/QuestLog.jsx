@@ -238,7 +238,10 @@ const QuestLog = () => {
                       </button>
                     )}
                     <button
-                      onClick={() => abandonQuest(selectedQuest.id)}
+                      onClick={() => {
+                        abandonQuest(selectedQuest.id);
+                        setSelectedQuest(null);
+                      }}
                       className="btn-danger w-full"
                     >
                       Abandon Quest
