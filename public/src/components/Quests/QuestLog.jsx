@@ -45,7 +45,10 @@ const QuestLog = () => {
           {/* Tabs */}
           <div className="flex space-x-2">
             <button
-              onClick={() => setSelectedTab('active')}
+              onClick={() => {
+                setSelectedTab('active');
+                setSelectedQuest(null);
+              }}
               className={`px-6 py-2 rounded-lg transition-all ${
                 selectedTab === 'active'
                   ? 'bg-primary-600 text-white'
@@ -55,7 +58,10 @@ const QuestLog = () => {
               Active ({activeQuests.length})
             </button>
             <button
-              onClick={() => setSelectedTab('available')}
+              onClick={() => {
+                setSelectedTab('available');
+                setSelectedQuest(null);
+              }}
               className={`px-6 py-2 rounded-lg transition-all ${
                 selectedTab === 'available'
                   ? 'bg-primary-600 text-white'
