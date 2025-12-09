@@ -38,6 +38,11 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'))
 app.use(session(sessionConfig));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Health check endpoint for Railway
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Initialize database (PostgreSQL or SQLite)
 (async () => {
   try {
@@ -4811,6 +4816,17 @@ const server = app.listen(PORT, () => {
   if (process.env.NODE_ENV === 'production') {
     console.log('✅ Serving React frontend from /public/dist');
   }
+});
+
+// Global error handlers
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  // Don't exit - log and continue
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit - log and continue
 });
 
 // Graceful shutdown
