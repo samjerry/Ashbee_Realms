@@ -83,7 +83,13 @@ app.get('/auth/twitch', (req, res) => {
 
 app.get('/auth/twitch/callback', async (req, res) => {
   const { code, state } = req.query;
-  if (!code || !state || state !== req.session.oauthState) return res.status(400).send('Invalid OAuth callback');
+  console.log('OAuth callback received:', { hasCode: !!code, hasState: !!state, sessionState: req.session.oauthState });
+  
+  if (!code || !state || state !== req.session.oauthState) {
+    console.error('OAuth validation failed:', { code: !!code, state: !!state, match: state === req.session.oauthState });
+    return res.status(400).send('Invalid OAuth callback');
+  }
+  
   try{
     // exchange code for token
     const tokenResp = await axios.post('https://id.twitch.tv/oauth2/token', null, {
@@ -98,11 +104,13 @@ app.get('/auth/twitch/callback', async (req, res) => {
 
     const access_token = tokenResp.data.access_token;
     const refresh_token = tokenResp.data.refresh_token;
+    console.log('✅ Token exchange successful');
 
     // get user info
     const userResp = await axios.get('https://api.twitch.tv/helix/users', { headers: { Authorization: `Bearer ${access_token}`, 'Client-Id': TWITCH_CLIENT_ID } });
     const user = userResp.data.data && userResp.data.data[0];
     if (!user) return res.status(500).send('Could not fetch user');
+    console.log('✅ User info retrieved:', user.display_name);
 
     const playerId = `twitch-${user.id}`;
     
@@ -121,10 +129,12 @@ app.get('/auth/twitch/callback', async (req, res) => {
     }
 
     req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
+    console.log('✅ User logged in:', playerId);
     res.redirect('/adventure');
   }catch(err){
-    console.error('OAuth callback error', err.response ? err.response.data : err.message);
-    res.status(500).send('OAuth failed');
+    console.error('❌ OAuth callback error:', err.response?.data || err.message);
+    console.error('Full error:', err);
+    res.status(500).send(`OAuth failed: ${err.response?.data?.message || err.message}`);
   }
 });
 
