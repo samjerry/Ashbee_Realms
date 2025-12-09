@@ -81,19 +81,32 @@ async function explore(){
     return;
   }
 
-  const res = await fetch('/api/explore', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'same-origin',
-    body: JSON.stringify({ channel })
-  });
-  const data = await res.json();
   const log = await $("#log");
-  if (res.ok){
-    log.textContent = `🗺️ ${data.result || JSON.stringify(data)}`;
-  } else {
-    log.textContent = `❌ Error: ${data.error || 'Failed to explore'}`;
-  }
+  log.textContent = `🗺️ How to Play Ashbee Realms:
+
+This is a Twitch chat-based RPG adventure game!
+
+🎮 Main Commands:
+!start - Create your character
+!explore - Venture into the wilderness
+!battle - Fight monsters
+!rest - Recover health and mana
+!stats - View your character
+!inventory - Check your items
+
+⚔️ Combat Commands:
+!attack - Basic attack
+!skill <name> - Use a skill
+!item <name> - Use an item
+!flee - Run from battle
+
+📚 More Commands:
+!quest - View available quests
+!shop - Visit the shop
+!equip <item> - Equip gear
+!passive - View skill tree
+
+Type commands in ${channel}'s Twitch chat to play!`;
 }
 
 async function rest(){
@@ -104,19 +117,32 @@ async function rest(){
     return;
   }
 
-  const res = await fetch('/api/rest', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'same-origin',
-    body: JSON.stringify({ channel })
-  });
-  const data = await res.json();
   const log = await $("#log");
-  if (res.ok){
-    log.textContent = `🏕️ ${data.result || JSON.stringify(data)}`;
-  } else {
-    log.textContent = `❌ Error: ${data.error || 'Failed to rest'}`;
-  }
+  log.textContent = `💬 Available Twitch Chat Commands:
+
+⚔️ EXPLORATION & COMBAT:
+!start - Begin your adventure
+!explore - Explore the world
+!battle - Enter combat
+!rest - Recover HP/Mana
+!attack - Attack in combat
+!skill <name> - Use skill
+!flee - Escape battle
+
+📊 CHARACTER & ITEMS:
+!stats - View character stats
+!inventory - Check items
+!equip <item> - Equip gear
+!unequip <slot> - Remove gear
+!passive - View skill tree
+
+🎯 QUESTS & SHOPS:
+!quest - View quests
+!shop - Browse items
+!buy <item> - Purchase item
+!sell <item> - Sell item
+
+Type these commands in ${channel}'s Twitch chat!`;
 }
 
 async function showInventory(){
@@ -127,20 +153,32 @@ async function showInventory(){
     return;
   }
 
-  const res = await fetch(`/api/inventory?channel=${channel}`, {
+  const res = await fetch(`/api/player/progress?channel=${channel}`, {
     method: 'GET',
     credentials: 'same-origin'
   });
   const data = await res.json();
   const log = await $("#log");
-  if (res.ok){
-    if (data.inventory && data.inventory.length > 0) {
-      log.textContent = `🎒 Inventory:\n${data.inventory.map(item => `• ${item.name} (${item.type})`).join('\n')}`;
+  
+  if (res.ok && data){
+    const char = data.character || {};
+    const inv = data.inventory || [];
+    let text = `📊 Character: ${char.name || 'Unknown'}\n`;
+    text += `❤️ HP: ${char.hp || 0}/${char.maxHp || 0} | ⚡ Mana: ${char.mana || 0}/${char.maxMana || 0}\n`;
+    text += `⭐ Level: ${char.level || 1} | 💰 Gold: ${char.gold || 0}\n`;
+    text += `📍 Location: ${data.location || 'Unknown'}\n\n`;
+    
+    if (inv.length > 0) {
+      text += `🎒 Inventory (${inv.length} items):\n`;
+      text += inv.slice(0, 10).map(item => `• ${item.name} ${item.equipped ? '(equipped)' : ''}`).join('\n');
+      if (inv.length > 10) text += `\n... and ${inv.length - 10} more`;
     } else {
-      log.textContent = '🎒 Your inventory is empty.';
+      text += '🎒 Inventory is empty.';
     }
+    
+    log.textContent = text;
   } else {
-    log.textContent = `❌ Error: ${data.error || 'Failed to load inventory'}`;
+    log.textContent = `❌ Error: ${data.error || 'Failed to load character data'}`;
   }
 }
 
