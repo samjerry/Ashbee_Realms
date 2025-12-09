@@ -127,10 +127,13 @@ const useGameStore = create((set, get) => ({
   
   acceptQuest: async (questId) => {
     try {
+      const player = get().player;
+      const channel = player?.username || player?.login;
+      
       await fetch('/api/quests/accept', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ questId })
+        body: JSON.stringify({ questId, channel })
       });
       get().fetchQuests();
     } catch (error) {

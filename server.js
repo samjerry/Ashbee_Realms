@@ -1946,9 +1946,18 @@ app.post('/api/quests/accept', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel, questId } = req.body;
-  if (!channel || !questId) {
-    return res.status(400).json({ error: 'Channel and questId required' });
+  let { channel, questId } = req.body;
+  
+  if (!channel) {
+    channel = user.login || user.displayName || user.display_name;
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'Unable to determine channel' });
+  }
+  
+  if (!questId) {
+    return res.status(400).json({ error: 'Quest ID required' });
   }
 
   try {
