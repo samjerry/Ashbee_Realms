@@ -205,14 +205,14 @@ async function showHowToPlay() {
 This is a web-based RPG adventure game!
 
 🎮 Getting Started:
-1. Log in with your Twitch account
-2. Access the game through a streamer's channel: Type !adventure in their Twitch chat
-3. The streamer will share a link to play on their channel
+1. Access the game through a streamer's channel: Type !adventure in their Twitch chat
+2. Log in with your Twitch account
+3. The Bot will share a link to play on their channel
 4. Use the action buttons on this page to explore, battle, and progress!
 
 🎯 How It Works:
 • All gameplay happens through buttons on this website
-• Your actions and progress are announced in the Twitch chat
+• Certain actions and progress are announced in the Twitch chat
 • The buttons change based on your situation (exploration, combat, shop, etc.)
 • Your progress is automatically saved
 
