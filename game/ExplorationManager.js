@@ -5,6 +5,7 @@
  */
 
 const { loadData } = require('../data/data_loader');
+const TimeEffectsCalculator = require('./TimeEffectsCalculator');
 
 class ExplorationManager {
   constructor() {
@@ -12,6 +13,7 @@ class ExplorationManager {
     this.encounters = loadData('random_encounters')?.encounters || {};
     this.events = loadData('events')?.events || {};
     this.monsters = loadData('monsters')?.monsters || {};
+    this.timeEffects = new TimeEffectsCalculator();
   }
 
   /**
@@ -229,18 +231,18 @@ class ExplorationManager {
    * @returns {Object} Monster encounter
    */
   generateMonsterEncounter(biome) {
-    const monstersInBiome = Object.values(this.monsters).filter(monster => {
-      // Match monster to biome danger level
-      const monsterLevel = monster.level_range ? monster.level_range[0] : (monster.level || 1);
-      const minLevel = biome.recommended_level[0];
-      const maxLevel = biome.recommended_level[1];
-      return monsterLevel >= minLevel - 2 && monsterLevel <= maxLevel + 2;
+    // Get current environmental context
+    const context = this.timeEffects.getCurrentContext();
+    
+    // Filter monsters by biome
+    const monstersInBiome = this.monsters.filter(monster => {
+      if (!monster.biomes || !Array.isArray(monster.biomes)) return false;
+      return monster.biomes.includes(biome.id);
     });
 
     if (monstersInBiome.length === 0) {
       // Fallback to any monster
-      const allMonsters = Object.values(this.monsters);
-      const randomMonster = allMonsters[Math.floor(Math.random() * allMonsters.length)];
+      const randomMonster = this.monsters[Math.floor(Math.random() * this.monsters.length)];
       return {
         type: 'combat',
         subType: 'monster',
@@ -249,20 +251,86 @@ class ExplorationManager {
       };
     }
 
-    const randomMonster = monstersInBiome[Math.floor(Math.random() * monstersInBiome.length)];
+    // Filter spawnable monsters based on time/season/weather
+    const spawnableCandidates = this.timeEffects.filterSpawnableMonsters(monstersInBiome, context);
+    
+    if (spawnableCandidates.length === 0) {
+      // No monsters can spawn in current conditions
+      return {
+        type: 'event',
+        subType: 'peaceful',
+        message: `The area is eerily quiet... No creatures stir in these conditions.`
+      };
+    }
+    
+    // Pick random spawnable monster
+    const selected = spawnableCandidates[Math.floor(Math.random() * spawnableCandidates.length)];
+    
+    // Apply environmental modifiers to monster
+    const modifiedMonster = this.timeEffects.applyModifiersToMonster(selected.original, selected.modifiers);
+    
+    if (!modifiedMonster) {
+      return {
+        type: 'event',
+        subType: 'peaceful',
+        message: `You sense a presence, but nothing appears...`
+      };
+    }
     
     // Check for ambush based on biome
     const isAmbush = Math.random() < (biome.environmental_effects?.ambush_chance || 0);
 
+    // Build message with environmental context
+    let message = isAmbush ? 
+      `💥 Ambush! A ${modifiedMonster.name} attacks from the shadows!` :
+      `A ${modifiedMonster.name} blocks your path!`;
+    
+    // Add time/weather context
+    const timeDesc = this.getTimeDescription(context);
+    if (timeDesc) {
+      message += ` ${timeDesc}`;
+    }
+    
+    // Add warnings if creature is empowered
+    if (selected.modifiers.warnings.length > 0) {
+      message += '\n' + selected.modifiers.warnings.join('\n');
+    }
+
     return {
       type: 'combat',
       subType: 'monster',
-      monster: randomMonster,
+      monster: modifiedMonster,
       isAmbush,
-      message: isAmbush ? 
-        `💥 Ambush! A ${randomMonster.name} attacks from the shadows!` :
-        `A ${randomMonster.name} blocks your path!`
+      environmental_context: context,
+      message
     };
+  }
+
+  /**
+   * Get time description for flavor text
+   * @param {Object} context - Environmental context
+   * @returns {string} Description
+   */
+  getTimeDescription(context) {
+    const descriptions = {
+      dawn: '(The dawn light creeps across the landscape)',
+      day: '(The sun shines brightly overhead)',
+      dusk: '(Shadows lengthen as day turns to night)',
+      night: '(Darkness surrounds you)',
+      blood_moon: '(The blood moon casts an ominous crimson glow)',
+      full_moon: '(The full moon illuminates the night)',
+      new_moon: '(The moonless night is pitch black)'
+    };
+    
+    if (context.isBloodMoon || context.moonPhase === 'blood_moon') {
+      return descriptions.blood_moon;
+    } else if (context.moonPhase === 'full_moon' && context.timePhase === 'night') {
+      return descriptions.full_moon;
+    } else if (context.moonPhase === 'new_moon' && context.timePhase === 'night') {
+      return descriptions.new_moon;
+    }
+    
+    return descriptions[context.timePhase] || '';
   }
 
   /**

@@ -128,7 +128,16 @@ Face multiple legendary bosses back-to-back.
 
 ### Creating a Lobby
 
-Players create a lobby before starting a raid. The lobby allows players to join, select roles, and prepare.
+**IMPORTANT:** Players must be physically located at the raid entrance to create a lobby. Each raid has a specific entrance location:
+
+- **Goblin Siege**: `whispering_woods`
+- **Dragon Assault**: `volcanic_peaks`
+- **Void Incursion**: `shadowmere_abyss`
+- **Trial of Legends**: `celestial_sanctum`
+
+Players must travel to these locations before they can create a raid lobby. Only the lobby leader needs to be at the entrance; other players can join from anywhere.
+
+**Creation Method:** Use the in-game UI button at the raid entrance (not via chat command)
 
 **API Endpoint:** `POST /api/raids/lobby/create`
 
@@ -143,6 +152,8 @@ Players create a lobby before starting a raid. The lobby allows players to join,
   "allowViewerVoting": true
 }
 ```
+
+**Note:** The API will validate that the player is at the correct entrance location (`volcanic_peaks` for Dragon Assault).
 
 **Response:**
 ```json
@@ -550,8 +561,10 @@ GET /api/raids/leaderboard/dragon_assault?category=fastest_clear&limit=10
 |--------|----------|-------------|
 | GET | `/api/raids` | Get all available raids |
 | GET | `/api/raids/:raidId` | Get raid details |
+| GET | `/api/raids/location/:location` | Get raids at location |
+| GET | `/api/raids/available-here` | Get raids at player's location |
 | GET | `/api/raids/lobbies/active` | Get active lobbies |
-| POST | `/api/raids/lobby/create` | Create lobby |
+| POST | `/api/raids/lobby/create` | Create lobby (requires location) |
 | POST | `/api/raids/lobby/join` | Join lobby |
 | POST | `/api/raids/lobby/leave` | Leave lobby |
 | POST | `/api/raids/lobby/change-role` | Change role |
@@ -570,19 +583,26 @@ GET /api/raids/leaderboard/dragon_assault?category=fastest_clear&limit=10
 ### For Streamers
 
 ```
-!raid create <raidId> [difficulty] - Create a raid lobby
-Example: !raid create dragon_assault hard
+!raid here - Check which raids are available at your current location
+Example: !raid here
 
-!raid start - Start the raid (must be in lobby)
+!raid list - View active raid lobbies
+Example: !raid list
 
-!raid status - View current raid status
+!raid info <raidId> - Get raid details including entrance location
+Example: !raid info dragon_assault
+
+Note: Raid lobbies must be created using the in-game UI button at the raid entrance.
 ```
 
 ### For Viewers
 
 ```
-!raid join [role] - Join the raid lobby
-Example: !raid join healer
+!raid list - View active raid lobbies
+Example: !raid list
+
+!raid join <lobbyId> [role] - Join a raid lobby
+Example: !raid join dragon_assault_1234_abc healer
 
 !raid role <newRole> - Change your role
 Example: !raid role tank

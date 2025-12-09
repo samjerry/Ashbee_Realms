@@ -333,6 +333,191 @@
           "celebration": "Winter Solstice"
         }
       }
+    },
+    "creature_time_effects": {
+      "description": "How time, seasons, weather, and moon phases affect creatures. Individual creature data in monsters.json takes precedence.",
+      "template_defaults": {
+        "undead_base": {
+          "day_weakness": true,
+          "sun_damage_per_turn": 20,
+          "night_empowerment": 1.2,
+          "full_moon_bonus": 0.5,
+          "autumn_boost": 1.2
+        },
+        "demon_base": {
+          "day_penalty": 0.7,
+          "night_boost": 1.3,
+          "blood_moon_bonus": 1.5,
+          "summer_heat_boost": 1.3
+        },
+        "celestial_base": {
+          "day_boost": 1.4,
+          "night_penalty": 0.8,
+          "full_moon_boost": 1.5,
+          "spring_renewal": 1.3
+        },
+        "elemental_fire": {
+          "summer_peak": 1.5,
+          "winter_weakness": 0.7,
+          "rain_penalty": 0.5,
+          "rain_damage": 20
+        },
+        "elemental_ice": {
+          "winter_peak": 1.5,
+          "summer_weakness": 0.4,
+          "blizzard_boost": 1.8
+        },
+        "dragon_base": {
+          "weather_mastery": true,
+          "autumn_hoarding": 1.2,
+          "loot_multiplier": 1.3
+        },
+        "aberration_base": {
+          "new_moon_boost": 1.5,
+          "fog_empowerment": 1.6,
+          "reality_weak_zones": true
+        }
+      },
+      "special_creatures": {
+        "werewolf": {
+          "day_form": "human",
+          "night_form": "wolf",
+          "full_moon_forced_transform": true,
+          "full_moon_stats": 2.0,
+          "blood_moon_stats": 2.5,
+          "blood_moon_rage": true
+        },
+        "vampire": {
+          "day_spawn": false,
+          "day_damage": 100,
+          "night_blood_frenzy": true,
+          "night_stats_boost": 1.3,
+          "blood_moon_daywalking": true
+        },
+        "ghost": {
+          "night_phase_through_walls": true,
+          "fog_spawn_boost": 1.8,
+          "day_visibility_reduced": 0.6
+        }
+      },
+      "time_spawn_modifiers": {
+        "dawn": {
+          "undead": 0.5,
+          "demon": 0.6,
+          "celestial": 1.5,
+          "nocturnal_beast": 0.3,
+          "diurnal_beast": 0.7
+        },
+        "day": {
+          "undead": 0.1,
+          "demon": 0.4,
+          "celestial": 1.8,
+          "vampire": 0.0,
+          "nocturnal_beast": 0.1,
+          "diurnal_beast": 1.0
+        },
+        "dusk": {
+          "undead": 1.2,
+          "demon": 1.3,
+          "celestial": 1.2,
+          "nocturnal_beast": 1.5,
+          "werewolf": 1.5
+        },
+        "night": {
+          "undead": 1.5,
+          "demon": 1.8,
+          "vampire": 2.0,
+          "werewolf": 2.0,
+          "ghost": 2.0,
+          "celestial": 0.5,
+          "nocturnal_beast": 2.0,
+          "diurnal_beast": 0.1
+        }
+      },
+      "moon_spawn_modifiers": {
+        "new_moon": {
+          "shadow_creature": 1.5,
+          "demon": 1.2,
+          "aberration": 1.5
+        },
+        "full_moon": {
+          "werewolf": 3.0,
+          "vampire": 1.5,
+          "undead": 2.0,
+          "lunatic": 1.0
+        },
+        "blood_moon": {
+          "all_monsters": 1.5,
+          "legendary": 5.0,
+          "werewolf": 5.0,
+          "vampire": 3.0,
+          "demon_portal_storm": true
+        }
+      },
+      "season_spawn_modifiers": {
+        "spring": {
+          "nature_elemental": 3.0,
+          "plant_creature": 3.0,
+          "fey": 2.0,
+          "celestial": 1.5,
+          "beast": 1.2
+        },
+        "summer": {
+          "fire_elemental": 3.0,
+          "sun_spirit": 3.0,
+          "demon": 1.5,
+          "desert_creature": 1.5,
+          "ice_creature": 0.2
+        },
+        "autumn": {
+          "undead": 1.3,
+          "harvest_creature": 2.0,
+          "scarecrow": 3.0,
+          "pumpkin_horror": 3.0,
+          "spirit": 1.5
+        },
+        "winter": {
+          "ice_elemental": 3.0,
+          "frost_giant": 2.0,
+          "yeti": 2.0,
+          "winter_wolf": 2.0,
+          "fire_creature": 0.5
+        }
+      },
+      "weather_spawn_modifiers": {
+        "rain": {
+          "fire_elemental": 0.3,
+          "lightning_elemental": 2.0,
+          "amphibious": 1.5,
+          "mud_creature": 1.5
+        },
+        "thunderstorm": {
+          "lightning_elemental": 3.0,
+          "storm_spirit": 3.0,
+          "fire_elemental": 0.2
+        },
+        "fog": {
+          "ghost": 1.8,
+          "shadow_creature": 1.5,
+          "ambush_predator": 1.5
+        },
+        "snow": {
+          "ice_creature": 1.5,
+          "frost_undead": 1.3,
+          "fire_creature": 0.5
+        },
+        "blizzard": {
+          "ice_elemental": 2.0,
+          "frost_giant": 1.8,
+          "all_other": 0.5
+        },
+        "heat_wave": {
+          "fire_elemental": 1.8,
+          "desert_creature": 1.5,
+          "ice_creature": 0.1
+        }
+      }
     }
   }
 }
+

@@ -85,6 +85,10 @@ class Character {
     // Dungeon tracking
     this.dungeonState = data.dungeon_state || null;
     this.completedDungeons = data.completed_dungeons || [];
+    
+    // Season tracking
+    this.seasonProgress = data.season_progress || {};
+    this.seasonalChallengesCompleted = data.seasonal_challenges_completed || [];
 
     // Initialize managers
     this.equipment = new EquipmentManager(data.equipped || {});

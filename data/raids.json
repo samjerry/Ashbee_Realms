@@ -3,6 +3,7 @@
     "goblin_siege": {
       "name": "Goblin Siege",
       "description": "Defend the village from waves of goblin attackers",
+      "entrance_location": "whispering_woods",
       "difficulty": "normal",
       "min_players": 3,
       "max_players": 10,
@@ -53,6 +54,7 @@
     "dragon_assault": {
       "name": "Dragon's Assault",
       "description": "Face the awakened dragon Infernus and his minions",
+      "entrance_location": "volcanic_peaks",
       "difficulty": "hard",
       "min_players": 5,
       "max_players": 15,
@@ -127,6 +129,7 @@
     "void_incursion": {
       "name": "Void Incursion",
       "description": "Close the dimensional rifts before void creatures consume the realm",
+      "entrance_location": "shadowmere_abyss",
       "difficulty": "nightmare",
       "min_players": 8,
       "max_players": 20,
@@ -187,6 +190,7 @@
     "trial_of_legends": {
       "name": "Trial of Legends",
       "description": "Face legendary versions of all raid bosses in succession",
+      "entrance_location": "celestial_sanctum",
       "difficulty": "mythic",
       "min_players": 10,
       "max_players": 20,

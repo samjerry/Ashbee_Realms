@@ -699,6 +699,340 @@
           "events": ["heal", "blessing", "resurrection"]
         }
       ]
+    },
+    "infernal_rift": {
+      "id": "infernal_rift",
+      "name": "Infernal Rift",
+      "description": "A tear in reality where the infernal realms bleed through. The air burns with sulfurous heat and screams echo from beyond.",
+      "danger_level": 5,
+      "recommended_level": [35, 50],
+      "environmental_effects": {
+        "visibility": "low",
+        "fire_damage_per_turn": 15,
+        "healing_penalty": 0.5,
+        "demon_buff": 1.5
+      },
+      "sub_locations": [
+        {
+          "id": "brimstone_chasm",
+          "name": "Brimstone Chasm",
+          "description": "A vast canyon filled with rivers of molten brimstone and tortured wails",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["demon_portal", "soul_trap", "infernal_contract"]
+        },
+        {
+          "id": "demon_gate",
+          "name": "Demon Gate",
+          "description": "A massive obsidian gate where demons pour through from their realm",
+          "monster_spawn_types": ["epic", "legendary", "boss"],
+          "guaranteed_encounter": true,
+          "events": ["demon_invasion", "gate_seal_attempt", "portal_storm"]
+        },
+        {
+          "id": "soul_forge",
+          "name": "Soul Forge",
+          "description": "Where captured souls are hammered into weapons and armor",
+          "monster_spawn_types": ["epic"],
+          "events": ["soul_extraction", "infernal_crafting", "prisoner_rescue"]
+        },
+        {
+          "id": "hellfire_pools",
+          "name": "Hellfire Pools",
+          "description": "Pools of liquid fire that never cool, never dim",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["fire_bath", "elemental_summoning", "burn_damage"]
+        }
+      ]
+    },
+    "tempest_spire": {
+      "id": "tempest_spire",
+      "name": "Tempest Spire",
+      "description": "A towering mountain constantly wracked by lightning storms and howling winds. Clouds spiral around its peak in an eternal vortex.",
+      "danger_level": 4,
+      "recommended_level": [25, 40],
+      "environmental_effects": {
+        "visibility": "medium",
+        "lightning_strike_chance": 0.2,
+        "wind_penalty": 0.3,
+        "flying_creatures_buff": 1.4
+      },
+      "sub_locations": [
+        {
+          "id": "thunder_peaks",
+          "name": "Thunder Peaks",
+          "description": "Jagged peaks where thunder never ceases and lightning arcs between stones",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["lightning_strike", "thunder_deafness", "storm_spirit"]
+        },
+        {
+          "id": "wind_tunnels",
+          "name": "Wind Tunnels",
+          "description": "Natural tunnels where wind screams at impossible speeds",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["wind_blast", "flight_practice", "air_current"]
+        },
+        {
+          "id": "lightning_rod",
+          "name": "Lightning Rod",
+          "description": "A massive metal spire that attracts constant lightning strikes",
+          "monster_spawn_types": ["epic"],
+          "events": ["electric_charge", "power_absorption", "overload"]
+        },
+        {
+          "id": "storm_eye",
+          "name": "Eye of the Storm",
+          "description": "A calm center surrounded by the most violent tempest",
+          "monster_spawn_types": ["legendary", "boss"],
+          "events": ["storm_lord", "weather_control", "calm_meditation"]
+        }
+      ]
+    },
+    "crystalline_caverns": {
+      "id": "crystalline_caverns",
+      "name": "Crystalline Caverns",
+      "description": "Underground caves filled with massive crystals that pulse with arcane energy. The air hums with raw magic.",
+      "danger_level": 3,
+      "recommended_level": [15, 28],
+      "environmental_effects": {
+        "visibility": "medium",
+        "magic_damage_bonus": 1.3,
+        "mana_regen_bonus": 1.5,
+        "crystal_interference": true
+      },
+      "sub_locations": [
+        {
+          "id": "prism_chamber",
+          "name": "Prism Chamber",
+          "description": "A room where light fractures through countless crystals into rainbow patterns",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["light_refraction", "crystal_harvest", "prismatic_blast"]
+        },
+        {
+          "id": "resonance_halls",
+          "name": "Resonance Halls",
+          "description": "Halls where the crystals sing in harmonic frequencies",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["sonic_damage", "harmonic_healing", "crystal_song"]
+        },
+        {
+          "id": "gem_gardens",
+          "name": "Gem Gardens",
+          "description": "Fields of gemstones growing like flowers from the cave floor",
+          "monster_spawn_types": ["rare"],
+          "events": ["gem_mining", "crystal_guardian", "ore_vein"]
+        }
+      ]
+    },
+    "clockwork_citadel": {
+      "id": "clockwork_citadel",
+      "name": "Clockwork Citadel",
+      "description": "An ancient fortress of gears and steam where mechanical constructs still guard long-abandoned halls.",
+      "danger_level": 4,
+      "recommended_level": [25, 38],
+      "environmental_effects": {
+        "visibility": "medium",
+        "mechanical_only": true,
+        "lightning_vulnerability": 1.4,
+        "repair_kits_ineffective": true
+      },
+      "sub_locations": [
+        {
+          "id": "gear_gardens",
+          "name": "Gear Gardens",
+          "description": "Massive interlocking gears that turn in perpetual motion",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["gear_crush", "timing_puzzle", "mechanical_harvest"]
+        },
+        {
+          "id": "steam_vents",
+          "name": "Steam Vents",
+          "description": "Pipes releasing pressurized steam at irregular intervals",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["steam_burn", "pressure_trap", "valve_puzzle"]
+        },
+        {
+          "id": "control_room",
+          "name": "Control Room",
+          "description": "The central hub with levers, switches, and blinking lights",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["citadel_control", "override_sequence", "self_destruct"]
+        },
+        {
+          "id": "assembly_line",
+          "name": "Assembly Line",
+          "description": "Where constructs are still being built by automated systems",
+          "monster_spawn_types": ["rare", "epic"],
+          "guaranteed_encounter": true,
+          "events": ["construct_creation", "production_sabotage", "automation_witness"]
+        }
+      ]
+    },
+    "verdant_expanse": {
+      "id": "verdant_expanse",
+      "name": "Verdant Expanse",
+      "description": "A primordial forest of massive proportions where nature magic runs wild and plants grow to enormous size.",
+      "danger_level": 2,
+      "recommended_level": [12, 22],
+      "environmental_effects": {
+        "visibility": "low",
+        "nature_damage_bonus": 1.4,
+        "healing_bonus": 1.3,
+        "plant_regen": true
+      },
+      "sub_locations": [
+        {
+          "id": "overgrowth",
+          "name": "The Overgrowth",
+          "description": "Where vines and roots have consumed everything, creating a tangled maze",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["vine_trap", "plant_navigation", "strangling_roots"]
+        },
+        {
+          "id": "ancient_grove",
+          "name": "Ancient Grove",
+          "description": "Trees so old they predate civilization, their trunks as wide as houses",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["treant_encounter", "druid_communion", "nature_blessing"]
+        },
+        {
+          "id": "fairy_circle",
+          "name": "Fairy Circle",
+          "description": "A ring of mushrooms where fey creatures dance under moonlight",
+          "monster_spawn_types": ["rare"],
+          "events": ["fey_trick", "fairy_bargain", "glamour_magic"]
+        },
+        {
+          "id": "poison_garden",
+          "name": "Poison Garden",
+          "description": "Beautiful but deadly flowers that release toxic spores",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["poison_cloud", "antidote_search", "rare_herb"]
+        }
+      ]
+    },
+    "abyssal_trench": {
+      "id": "abyssal_trench",
+      "name": "Abyssal Trench",
+      "description": "The deepest underwater chasm where reality itself seems to break down. Pressure and darkness are absolute.",
+      "danger_level": 5,
+      "recommended_level": [38, 50],
+      "environmental_effects": {
+        "visibility": "none",
+        "water_breathing_required": true,
+        "pressure_damage_per_turn": 20,
+        "void_damage_bonus": 1.5
+      },
+      "sub_locations": [
+        {
+          "id": "crushing_depths",
+          "name": "Crushing Depths",
+          "description": "Where the weight of the ocean threatens to crush all who enter",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["pressure_test", "submarine_wreck", "depth_sickness"]
+        },
+        {
+          "id": "leviathan_lair",
+          "name": "Leviathan's Lair",
+          "description": "The dwelling of an ancient sea beast of impossible size",
+          "monster_spawn_types": ["legendary", "boss"],
+          "guaranteed_encounter": true,
+          "events": ["leviathan_hunt", "titan_awakening", "ancient_hunger"]
+        },
+        {
+          "id": "dark_current",
+          "name": "Dark Current",
+          "description": "A current of water darker than night that flows against all laws",
+          "monster_spawn_types": ["epic"],
+          "events": ["void_exposure", "sanity_drain", "reality_break"]
+        },
+        {
+          "id": "pressure_chamber",
+          "name": "Pressure Chamber",
+          "description": "A natural formation where pressure reaches impossible levels",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["pressure_forge", "diamond_creation", "compression_test"]
+        }
+      ]
+    },
+    "dragons_roost": {
+      "id": "dragons_roost",
+      "name": "Dragon's Roost",
+      "description": "Ancient mountain peaks where dragons have nested for millennia. The rocks themselves are scorched by dragonfire.",
+      "danger_level": 5,
+      "recommended_level": [35, 50],
+      "environmental_effects": {
+        "visibility": "high",
+        "fire_damage_bonus": 1.5,
+        "dragon_buff": 2.0,
+        "flight_combat": true
+      },
+      "sub_locations": [
+        {
+          "id": "elder_nest",
+          "name": "Elder's Nest",
+          "description": "The nesting site of ancient dragons, lined with scales and bone",
+          "monster_spawn_types": ["legendary", "boss"],
+          "guaranteed_encounter": true,
+          "events": ["dragon_challenge", "ancient_wisdom", "territorial_rage"]
+        },
+        {
+          "id": "treasure_vault",
+          "name": "Treasure Vault",
+          "description": "Caverns filled with the accumulated hoards of generations of dragons",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["hoard_raid", "cursed_treasure", "dragon_greed"]
+        },
+        {
+          "id": "hatchery",
+          "name": "The Hatchery",
+          "description": "Where dragon eggs are kept warm by volcanic vents",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["egg_theft", "wyrmling_defense", "incubation_chamber"]
+        },
+        {
+          "id": "dragon_graveyard",
+          "name": "Dragon Graveyard",
+          "description": "Where dragons come to die, their bones forming mountains",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["bone_harvest", "dracolich_rise", "ancient_remains"]
+        }
+      ]
+    },
+    "ethereal_realm": {
+      "id": "ethereal_realm",
+      "name": "Ethereal Realm",
+      "description": "A plane between worlds where the physical and spiritual overlap. Ghosts and spirits drift through translucent landscapes.",
+      "danger_level": 4,
+      "recommended_level": [28, 42],
+      "environmental_effects": {
+        "visibility": "medium",
+        "physical_damage_reduction": 0.5,
+        "magic_damage_bonus": 1.5,
+        "random_teleport_chance": 0.15
+      },
+      "sub_locations": [
+        {
+          "id": "spirit_gate",
+          "name": "Spirit Gate",
+          "description": "A shimmering portal between the living world and the realm of the dead",
+          "monster_spawn_types": ["rare", "epic"],
+          "events": ["spirit_crossing", "resurrection_attempt", "soul_guide"]
+        },
+        {
+          "id": "memory_echo",
+          "name": "Memory Echo",
+          "description": "A place where memories of the dead replay endlessly",
+          "monster_spawn_types": ["uncommon", "rare"],
+          "events": ["past_vision", "memory_theft", "echo_loop"]
+        },
+        {
+          "id": "phase_boundary",
+          "name": "Phase Boundary",
+          "description": "The thin border where reality becomes uncertain",
+          "monster_spawn_types": ["epic", "legendary"],
+          "events": ["reality_shift", "phase_lock", "dimensional_tear"]
+        }
+      ]
     }
   }
 }

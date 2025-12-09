@@ -84,6 +84,8 @@ async function initPostgres() {
       completed_dungeons JSONB DEFAULT '[]',
       crafting_xp INTEGER DEFAULT 0,
       known_recipes JSONB DEFAULT '[]',
+      season_progress JSONB DEFAULT '{}',
+      seasonal_challenges_completed JSONB DEFAULT '[]',
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
@@ -178,7 +180,9 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     dungeon_state = null,
     completed_dungeons = [],
     crafting_xp = 0,
-    known_recipes = []
+    known_recipes = [],
+    season_progress = {},
+    seasonal_challenges_completed = []
   } = playerData;
 
   await query(`
@@ -189,7 +193,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       consumable_cooldowns, dialogue_history, reputation, unlocked_achievements,
       achievement_progress, achievement_unlock_dates, achievement_points,
       unlocked_titles, active_title, stats, dungeon_state, completed_dungeons,
-      crafting_xp, known_recipes, updated_at
+      crafting_xp, known_recipes, season_progress, seasonal_challenges_completed, updated_at
     ) VALUES (
       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
       $11, $12, $13, $14, $15, $16, $17, $18, $19,
@@ -197,7 +201,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       $26, $27, $28, $29,
       $30, $31, $32,
       $33, $34, $35, $36, $37,
-      $38, $39, NOW()
+      $38, $39, $40, $41, NOW()
     )
     ON CONFLICT(player_id, channel_name) DO UPDATE SET
       name=$3, location=$4, level=$5, xp=$6, xp_to_next=$7, max_hp=$8, hp=$9, gold=$10,
@@ -206,7 +210,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       consumable_cooldowns=$26, dialogue_history=$27, reputation=$28, unlocked_achievements=$29,
       achievement_progress=$30, achievement_unlock_dates=$31, achievement_points=$32,
       unlocked_titles=$33, active_title=$34, stats=$35, dungeon_state=$36, completed_dungeons=$37,
-      crafting_xp=$38, known_recipes=$39, updated_at=NOW()
+      crafting_xp=$38, known_recipes=$39, season_progress=$40, seasonal_challenges_completed=$41, updated_at=NOW()
   `, [
     playerId, channelName, name, location, level, xp, xp_to_next, max_hp, hp, gold,
     type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
@@ -218,7 +222,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     JSON.stringify(achievement_progress), JSON.stringify(achievement_unlock_dates), achievement_points,
     JSON.stringify(unlocked_titles), active_title, JSON.stringify(stats), JSON.stringify(dungeon_state),
     JSON.stringify(completed_dungeons),
-    crafting_xp, JSON.stringify(known_recipes)
+    crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed)
   ]);
 }
 
@@ -276,6 +280,8 @@ async function loadPlayerProgress(playerId, channelName) {
     completed_dungeons: typeof row.completed_dungeons === 'string' ? JSON.parse(row.completed_dungeons) : (row.completed_dungeons || []),
     crafting_xp: row.crafting_xp || 0,
     known_recipes: typeof row.known_recipes === 'string' ? JSON.parse(row.known_recipes) : (row.known_recipes || []),
+    season_progress: typeof row.season_progress === 'string' ? JSON.parse(row.season_progress) : (row.season_progress || {}),
+    seasonal_challenges_completed: typeof row.seasonal_challenges_completed === 'string' ? JSON.parse(row.seasonal_challenges_completed) : (row.seasonal_challenges_completed || []),
     updated_at: row.updated_at
   };
 }

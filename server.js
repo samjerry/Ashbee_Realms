@@ -3822,6 +3822,56 @@ app.get('/api/raids/:raidId', async (req, res) => {
 });
 
 /**
+ * GET /api/raids/location/:location
+ * Get raids available at a specific location
+ */
+app.get('/api/raids/location/:location', async (req, res) => {
+  try {
+    const { location } = req.params;
+    const raids = raidMgr.getRaidsAtLocation(location);
+    res.json({ location, raids, count: raids.length });
+  } catch (error) {
+    console.error('Error fetching raids at location:', error);
+    res.status(500).json({ error: 'Failed to fetch raids at location' });
+  }
+});
+
+/**
+ * GET /api/raids/available-here
+ * Get raids available at player's current location
+ * Query: { player, channel }
+ */
+app.get('/api/raids/available-here', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel parameter' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const playerLocation = character.location || 'town_square';
+    
+    const raids = raidMgr.getRaidsAtLocation(playerLocation);
+    res.json({ 
+      player: character.name,
+      location: playerLocation, 
+      raids, 
+      count: raids.length,
+      message: raids.length > 0 ? `${raids.length} raid(s) available here` : 'No raids available at this location'
+    });
+  } catch (error) {
+    console.error('Error fetching available raids:', error);
+    res.status(500).json({ error: 'Failed to fetch available raids' });
+  }
+});
+
+/**
  * GET /api/raids/lobbies/active
  * Get all active lobbies
  */
@@ -3837,7 +3887,7 @@ app.get('/api/raids/lobbies/active', async (req, res) => {
 
 /**
  * POST /api/raids/lobby/create
- * Create a new raid lobby
+ * Create a new raid lobby (requires player to be at raid entrance)
  * Body: { player, channel, raidId, difficulty, requireRoles, allowViewerVoting }
  */
 app.post('/api/raids/lobby/create', async (req, res) => {
@@ -3854,6 +3904,10 @@ app.post('/api/raids/lobby/create', async (req, res) => {
     }
 
     const character = await db.getCharacter(userId, channel);
+    
+    // Get player's current location
+    const playerLocation = character.location || 'town_square';
+    
     const leader = {
       id: userId,
       name: character.name,
@@ -3863,7 +3917,7 @@ app.post('/api/raids/lobby/create', async (req, res) => {
       maxMana: character.stats.mana || 100
     };
 
-    const lobby = raidMgr.createLobby(raidId, leader, {
+    const lobby = raidMgr.createLobby(raidId, leader, playerLocation, {
       difficulty,
       requireRoles,
       allowViewerVoting
@@ -4055,8 +4109,8 @@ app.post('/api/raids/action', async (req, res) => {
 
 /**
  * POST /api/raids/viewer/vote
- * Submit viewer vote for raid event
- * Body: { instanceId, vote: { option, viewer, bits } }
+ * Submit viewer vote for raid event (subscriber votes count 2x)
+ * Body: { instanceId, vote: { option, viewer, weight } }
  */
 app.post('/api/raids/viewer/vote', async (req, res) => {
   try {
@@ -4166,6 +4220,546 @@ app.get('/api/raids/leaderboard/:raidId', async (req, res) => {
 });
 
 // ==================== END RAID SYSTEM ENDPOINTS ====================
+
+// ==================== CHANNEL POINT REDEMPTIONS FOR SOLO GAMEPLAY ====================
+
+/**
+ * POST /api/redemptions/item
+ * Give random item to player (Channel Points: Random Item)
+ * Body: { player, channel, rarity }
+ */
+app.post('/api/redemptions/item', async (req, res) => {
+  try {
+    const { player, channel, rarity } = req.body;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const LootGenerator = require('./game/LootGenerator');
+    const lootGen = new LootGenerator();
+
+    // Generate item with specified rarity or based on level
+    const itemRarity = rarity || (character.level > 20 ? 'rare' : character.level > 10 ? 'uncommon' : 'common');
+    const loot = lootGen.generateLoot({
+      name: 'Channel Points Reward',
+      level: character.level,
+      rarity: 'common',
+      loot_table: {
+        equipment: { chance: 0.8, count: 1, rarity: itemRarity },
+        consumables: { chance: 0.2, count: 1 }
+      }
+    });
+
+    // Add to inventory
+    if (loot.items && loot.items.length > 0) {
+      const item = loot.items[0];
+      character.inventory = character.inventory || [];
+      character.inventory.push(item);
+      await db.saveCharacter(userId, channel, character);
+
+      // Announce in chat
+      rawAnnounce(`🎁 ${player} redeemed Random Item and received ${item.name} (${item.rarity})!`, channel);
+
+      res.json({
+        player,
+        item,
+        message: `Received ${item.name} (${item.rarity})`
+      });
+    } else {
+      res.status(500).json({ error: 'Failed to generate item' });
+    }
+  } catch (error) {
+    console.error('Error processing item redemption:', error);
+    res.status(500).json({ error: 'Failed to process item redemption' });
+  }
+});
+
+/**
+ * POST /api/redemptions/teleport
+ * Teleport player to location (Channel Points: Instant Travel)
+ * Body: { player, channel, destination }
+ */
+app.post('/api/redemptions/teleport', async (req, res) => {
+  try {
+    const { player, channel, destination } = req.body;
+
+    if (!player || !channel || !destination) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    
+    // Verify destination exists
+    const explorationMgr = new ExplorationManager();
+    const biomes = explorationMgr.getBiomes();
+    const targetBiome = biomes.find(b => b.id === destination || b.name.toLowerCase() === destination.toLowerCase());
+    
+    if (!targetBiome) {
+      return res.status(400).json({ error: 'Invalid destination' });
+    }
+
+    // Cancel any active travel
+    if (character.travelState) {
+      character.travelState = null;
+    }
+
+    // Set new location
+    character.location = targetBiome.name;
+    await db.saveCharacter(userId, channel, character);
+
+    // Announce in chat
+    rawAnnounce(`🌀 ${player} redeemed Instant Travel and teleported to ${targetBiome.name}!`, channel);
+
+    res.json({
+      player,
+      destination: targetBiome.name,
+      message: `Teleported to ${targetBiome.name}`
+    });
+  } catch (error) {
+    console.error('Error processing teleport redemption:', error);
+    res.status(500).json({ error: 'Failed to process teleport redemption' });
+  }
+});
+
+/**
+ * GET /api/redemptions/available
+ * Get list of available channel point redemptions
+ */
+app.get('/api/redemptions/available', (req, res) => {
+  const redemptions = [
+    {
+      id: 'buff_haste',
+      name: 'Haste',
+      description: 'Gain +50% speed for 10 turns',
+      cost: 1000,
+      endpoint: '/api/redemptions/buff',
+      params: { buffType: 'haste' }
+    },
+    {
+      id: 'item_common',
+      name: 'Random Item (Common)',
+      description: 'Receive a random common item',
+      cost: 2000,
+      endpoint: '/api/redemptions/item',
+      params: { rarity: 'common' }
+    },
+    {
+      id: 'item_uncommon',
+      name: 'Random Item (Uncommon)',
+      description: 'Receive a random uncommon item',
+      cost: 5000,
+      endpoint: '/api/redemptions/item',
+      params: { rarity: 'uncommon' }
+    },
+    {
+      id: 'item_rare',
+      name: 'Random Item (Rare)',
+      description: 'Receive a random rare item',
+      cost: 10000,
+      endpoint: '/api/redemptions/item',
+      params: { rarity: 'rare' }
+    },
+    {
+      id: 'teleport',
+      name: 'Instant Travel',
+      description: 'Teleport to any unlocked location',
+      cost: 3000,
+      endpoint: '/api/redemptions/teleport'
+    }
+  ];
+
+  res.json({ redemptions, count: redemptions.length });
+});
+
+// ==================== END CHANNEL POINT REDEMPTIONS ====================
+
+// ==================== SEASON & LEADERBOARD SYSTEM ENDPOINTS ====================
+
+const { SeasonManager, LeaderboardManager } = require('./game');
+const seasonMgr = new SeasonManager();
+const leaderboardMgr = new LeaderboardManager();
+
+/**
+ * GET /api/seasons
+ * Get all seasons
+ */
+app.get('/api/seasons', (req, res) => {
+  try {
+    const seasons = seasonMgr.getAllSeasons();
+    res.json({ seasons, count: seasons.length });
+  } catch (error) {
+    console.error('Error fetching seasons:', error);
+    res.status(500).json({ error: 'Failed to fetch seasons' });
+  }
+});
+
+/**
+ * GET /api/seasons/active
+ * Get currently active season
+ */
+app.get('/api/seasons/active', (req, res) => {
+  try {
+    const activeSeason = seasonMgr.getActiveSeason();
+    res.json(activeSeason || { message: 'No active season' });
+  } catch (error) {
+    console.error('Error fetching active season:', error);
+    res.status(500).json({ error: 'Failed to fetch active season' });
+  }
+});
+
+/**
+ * GET /api/seasons/:seasonId
+ * Get season details
+ */
+app.get('/api/seasons/:seasonId', (req, res) => {
+  try {
+    const { seasonId } = req.params;
+    const season = seasonMgr.getSeason(seasonId);
+    
+    if (!season) {
+      return res.status(404).json({ error: 'Season not found' });
+    }
+    
+    res.json(season);
+  } catch (error) {
+    console.error('Error fetching season:', error);
+    res.status(500).json({ error: 'Failed to fetch season' });
+  }
+});
+
+/**
+ * GET /api/seasons/progress/:player/:channel
+ * Get player's season progress
+ */
+app.get('/api/seasons/progress/:player/:channel', async (req, res) => {
+  try {
+    const { player, channel } = req.params;
+    const userId = await db.getUserId(player, channel);
+    
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const progress = seasonMgr.getSeasonProgress(character);
+    
+    res.json(progress);
+  } catch (error) {
+    console.error('Error fetching season progress:', error);
+    res.status(500).json({ error: 'Failed to fetch season progress' });
+  }
+});
+
+/**
+ * POST /api/seasons/xp/add
+ * Add season XP to player
+ * Body: { player, channel, xp, source }
+ */
+app.post('/api/seasons/xp/add', async (req, res) => {
+  try {
+    const { player, channel, xp, source } = req.body;
+    
+    if (!player || !channel || !xp) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = seasonMgr.addSeasonXP(character, xp, source);
+    
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+      
+      // Update season level leaderboard
+      const progress = character.seasonProgress[seasonMgr.getActiveSeason()?.id];
+      if (progress) {
+        leaderboardMgr.updateSeasonLevelLeaderboard(character, progress.seasonLevel);
+      }
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error adding season XP:', error);
+    res.status(500).json({ error: 'Failed to add season XP' });
+  }
+});
+
+/**
+ * POST /api/seasons/currency/add
+ * Add seasonal currency
+ * Body: { player, channel, amount, source }
+ */
+app.post('/api/seasons/currency/add', async (req, res) => {
+  try {
+    const { player, channel, amount, source } = req.body;
+    
+    if (!player || !channel || !amount) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = seasonMgr.addSeasonCurrency(character, amount, source);
+    
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+      
+      // Update currency leaderboard
+      const progress = character.seasonProgress[seasonMgr.getActiveSeason()?.id];
+      if (progress) {
+        leaderboardMgr.updateSeasonCurrencyLeaderboard(character, progress.seasonCurrency);
+      }
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error adding seasonal currency:', error);
+    res.status(500).json({ error: 'Failed to add seasonal currency' });
+  }
+});
+
+/**
+ * GET /api/seasons/challenges/:player/:channel
+ * Get seasonal challenges for player
+ */
+app.get('/api/seasons/challenges/:player/:channel', async (req, res) => {
+  try {
+    const { player, channel } = req.params;
+    const userId = await db.getUserId(player, channel);
+    
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const challenges = seasonMgr.getSeasonalChallenges(character);
+    
+    res.json(challenges);
+  } catch (error) {
+    console.error('Error fetching challenges:', error);
+    res.status(500).json({ error: 'Failed to fetch challenges' });
+  }
+});
+
+/**
+ * POST /api/seasons/challenges/complete
+ * Complete a seasonal challenge
+ * Body: { player, channel, challengeName, type }
+ */
+app.post('/api/seasons/challenges/complete', async (req, res) => {
+  try {
+    const { player, channel, challengeName, type } = req.body;
+    
+    if (!player || !channel || !challengeName) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = seasonMgr.completeChallenge(character, challengeName, type);
+    
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error completing challenge:', error);
+    res.status(500).json({ error: 'Failed to complete challenge' });
+  }
+});
+
+/**
+ * GET /api/seasons/events
+ * Get all seasonal events
+ */
+app.get('/api/seasons/events', (req, res) => {
+  try {
+    const events = seasonMgr.getSeasonalEvents();
+    res.json({ events, count: events.length });
+  } catch (error) {
+    console.error('Error fetching seasonal events:', error);
+    res.status(500).json({ error: 'Failed to fetch seasonal events' });
+  }
+});
+
+/**
+ * GET /api/seasons/events/:eventId
+ * Get seasonal event details
+ */
+app.get('/api/seasons/events/:eventId', (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const event = seasonMgr.getSeasonalEvent(eventId);
+    
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+    
+    res.json(event);
+  } catch (error) {
+    console.error('Error fetching event:', error);
+    res.status(500).json({ error: 'Failed to fetch event' });
+  }
+});
+
+/**
+ * GET /api/seasons/stats/:player/:channel
+ * Get season statistics for player
+ */
+app.get('/api/seasons/stats/:player/:channel', async (req, res) => {
+  try {
+    const { player, channel } = req.params;
+    const userId = await db.getUserId(player, channel);
+    
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const stats = seasonMgr.getSeasonStatistics(character);
+    
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching season stats:', error);
+    res.status(500).json({ error: 'Failed to fetch season stats' });
+  }
+});
+
+// ==================== LEADERBOARD ENDPOINTS ====================
+
+/**
+ * GET /api/leaderboards
+ * Get all available leaderboard types
+ */
+app.get('/api/leaderboards', (req, res) => {
+  try {
+    const leaderboards = leaderboardMgr.getAvailableLeaderboards();
+    res.json({ leaderboards, count: leaderboards.length });
+  } catch (error) {
+    console.error('Error fetching leaderboards:', error);
+    res.status(500).json({ error: 'Failed to fetch leaderboards' });
+  }
+});
+
+/**
+ * GET /api/leaderboards/:type
+ * Get leaderboard rankings
+ * Query params: ?limit=100&offset=0
+ */
+app.get('/api/leaderboards/:type', (req, res) => {
+  try {
+    const { type } = req.params;
+    const limit = parseInt(req.query.limit) || 100;
+    const offset = parseInt(req.query.offset) || 0;
+    
+    const leaderboard = leaderboardMgr.getLeaderboard(type, limit, offset);
+    res.json(leaderboard);
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    res.status(500).json({ error: 'Failed to fetch leaderboard' });
+  }
+});
+
+/**
+ * GET /api/leaderboards/:type/player/:player/:channel
+ * Get player's rank in leaderboard
+ */
+app.get('/api/leaderboards/:type/player/:player/:channel', async (req, res) => {
+  try {
+    const { type, player, channel } = req.params;
+    const userId = await db.getUserId(player, channel);
+    
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const rank = leaderboardMgr.getPlayerRank(type, `${userId}_${channel}`);
+    res.json(rank);
+  } catch (error) {
+    console.error('Error fetching player rank:', error);
+    res.status(500).json({ error: 'Failed to fetch player rank' });
+  }
+});
+
+/**
+ * GET /api/leaderboards/:type/top/:count
+ * Get top N players
+ */
+app.get('/api/leaderboards/:type/top/:count', (req, res) => {
+  try {
+    const { type, count } = req.params;
+    const topPlayers = leaderboardMgr.getTopPlayers(type, parseInt(count) || 10);
+    res.json(topPlayers);
+  } catch (error) {
+    console.error('Error fetching top players:', error);
+    res.status(500).json({ error: 'Failed to fetch top players' });
+  }
+});
+
+/**
+ * GET /api/leaderboards/:type/nearby/:player/:channel
+ * Get nearby players on leaderboard
+ * Query params: ?range=5
+ */
+app.get('/api/leaderboards/:type/nearby/:player/:channel', async (req, res) => {
+  try {
+    const { type, player, channel } = req.params;
+    const range = parseInt(req.query.range) || 5;
+    const userId = await db.getUserId(player, channel);
+    
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const nearby = leaderboardMgr.getNearbyPlayers(type, `${userId}_${channel}`, range);
+    res.json(nearby);
+  } catch (error) {
+    console.error('Error fetching nearby players:', error);
+    res.status(500).json({ error: 'Failed to fetch nearby players' });
+  }
+});
+
+/**
+ * GET /api/leaderboards/:type/stats
+ * Get leaderboard statistics
+ */
+app.get('/api/leaderboards/:type/stats', (req, res) => {
+  try {
+    const { type } = req.params;
+    const stats = leaderboardMgr.getLeaderboardStats(type);
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching leaderboard stats:', error);
+    res.status(500).json({ error: 'Failed to fetch leaderboard stats' });
+  }
+});
+
+// ==================== END SEASON & LEADERBOARD ENDPOINTS ====================
 
 app.get('/adventure', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

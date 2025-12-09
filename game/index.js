@@ -26,6 +26,8 @@ const EnchantingManager = require('./EnchantingManager');
 const CraftingManager = require('./CraftingManager');
 const PassiveManager = require('./PassiveManager');
 const RaidManager = require('./RaidManager');
+const SeasonManager = require('./SeasonManager');
+const LeaderboardManager = require('./LeaderboardManager');
 
 module.exports = {
   Character,
@@ -50,5 +52,7 @@ module.exports = {
   EnchantingManager,
   CraftingManager,
   RaidManager,
-  PassiveManager
+  PassiveManager,
+  SeasonManager,
+  LeaderboardManager
 };

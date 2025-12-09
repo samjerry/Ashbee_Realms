@@ -84,16 +84,52 @@ class RaidManager {
   }
 
   /**
+   * Get raids available at a specific location
+   * @param {string} location - Biome/location identifier
+   * @returns {Array} Raids with entrances at this location
+   */
+  getRaidsAtLocation(location) {
+    this.loadRaids();
+    
+    const raidsAtLocation = Object.entries(this.raids)
+      .filter(([id, raid]) => raid.entrance_location === location)
+      .map(([id, raid]) => ({
+        id,
+        name: raid.name,
+        description: raid.description,
+        difficulty: raid.difficulty,
+        min_players: raid.min_players,
+        max_players: raid.max_players,
+        duration_minutes: raid.duration_minutes,
+        entrance_location: raid.entrance_location,
+        currentLobbies: this.getLobbyCountForRaid(id),
+        activeInstances: this.getActiveInstanceCountForRaid(id)
+      }));
+    
+    return raidsAtLocation;
+  }
+
+  /**
    * Create a new raid lobby
    * @param {string} raidId - Raid to create lobby for
    * @param {Object} leader - Player creating the lobby
+   * @param {string} leaderLocation - Current location of the leader
    * @param {Object} options - Lobby options { difficulty, requireRoles, allowViewerVoting }
    * @returns {Object} Lobby instance
    */
-  createLobby(raidId, leader, options = {}) {
+  createLobby(raidId, leader, leaderLocation, options = {}) {
     this.loadRaids();
     const raid = this.raids[raidId];
     if (!raid) throw new Error(`Raid ${raidId} not found`);
+    
+    // Validate leader is at raid entrance
+    if (!raid.entrance_location) {
+      throw new Error(`Raid ${raidId} does not have an entrance location defined`);
+    }
+    
+    if (leaderLocation !== raid.entrance_location) {
+      throw new Error(`You must be at ${raid.entrance_location} to start this raid. Current location: ${leaderLocation}`);
+    }
     
     const lobbyId = `${raidId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
