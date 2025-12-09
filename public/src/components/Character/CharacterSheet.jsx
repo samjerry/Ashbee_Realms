@@ -2,6 +2,7 @@ import React from 'react';
 import { Sword, Shield, Zap, Wind, Heart, Star } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
+// Force rebuild - fixed null safety issues
 const CharacterSheet = () => {
   const { player } = useGameStore();
   
