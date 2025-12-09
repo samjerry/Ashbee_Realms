@@ -6,8 +6,11 @@ const TokenManager = require('./TokenManager');
 const BOT_USERNAME = process.env.BOT_USERNAME;
 const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
 const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
+const ENABLE_BOT = process.env.ENABLE_BOT !== 'false'; // Default true, set to 'false' to disable
 
-if (CHANNELS.length === 0) {
+if (!ENABLE_BOT) {
+  console.log('🚫 Twitch bot disabled via ENABLE_BOT=false');
+} else if (CHANNELS.length === 0) {
   console.warn('⚠️ No channels configured. Twitch bot will not connect. Set CHANNELS in .env if needed.');
   // Don't exit - allow server to run without bot
 } else {
@@ -15,9 +18,9 @@ if (CHANNELS.length === 0) {
 }
 
 async function initializeBot() {
-  // Skip bot initialization if no channels configured
-  if (CHANNELS.length === 0) {
-    console.log('⏭️ Skipping Twitch bot initialization (no channels configured)');
+  // Skip bot initialization if disabled or no channels
+  if (!ENABLE_BOT || CHANNELS.length === 0) {
+    console.log('⏭️ Skipping Twitch bot initialization');
     return null;
   }
 
@@ -46,27 +49,32 @@ async function initializeBot() {
   client.on('message', (channel, tags, message, self) => {
     if (self) return;
     
-    const msg = message.trim().toLowerCase();
-    const args = message.trim().split(' ');
-    const command = args[0].toLowerCase();
-    const channelName = channel.replace('#', '').toLowerCase();
-    const username = tags.username;
+    try {
+      const msg = message.trim().toLowerCase();
+      const args = message.trim().split(' ');
+      const command = args[0].toLowerCase();
+      const channelName = channel.replace('#', '').toLowerCase();
+      const username = tags.username;
 
-    // Basic adventure command
-    if (msg === '!adventure') {
-      client.say(channel, `🗡️ Join the adventure: ${BASE_URL}/adventure?channel=${channelName}`);
-      return;
-    }
+      // Basic adventure command
+      if (msg === '!adventure') {
+        client.say(channel, `🗡️ Join the adventure: ${BASE_URL}/adventure?channel=${channelName}`);
+        return;
+      }
 
-    // Raid commands
-    if (command === '!raid') {
-      handleRaidCommand(channel, channelName, username, args.slice(1), client);
-      return;
-    }
+      // Raid commands
+      if (command === '!raid') {
+        handleRaidCommand(channel, channelName, username, args.slice(1), client);
+        return;
+      }
 
-    if (command === '!vote') {
-      handleVoteCommand(channel, channelName, username, args.slice(1), tags, client);
-      return;
+      if (command === '!vote') {
+        handleVoteCommand(channel, channelName, username, args.slice(1), tags, client);
+        return;
+      }
+    } catch (error) {
+      console.error('Error in message handler:', error);
+      // Don't crash - just log and continue
     }
   });
 
@@ -285,8 +293,8 @@ initializeBot().catch(err => {
 });
 
 function rawAnnounce(message, channelName = null) {
-  // If no channels configured, skip announcement
-  if (CHANNELS.length === 0) {
+  // If bot disabled or no channels configured, skip announcement
+  if (!ENABLE_BOT || CHANNELS.length === 0) {
     console.log('📢 [Bot disabled] Would announce:', message);
     return Promise.resolve();
   }
