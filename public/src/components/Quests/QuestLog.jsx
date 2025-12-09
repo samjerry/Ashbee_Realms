@@ -3,7 +3,7 @@ import { Scroll, CheckCircle, Clock, Star } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const QuestLog = () => {
-  const { activeQuests, availableQuests, fetchQuests, acceptQuest } = useGameStore();
+  const { activeQuests, availableQuests, fetchQuests, acceptQuest, abandonQuest } = useGameStore();
   const [selectedTab, setSelectedTab] = useState('active');
   const [selectedQuest, setSelectedQuest] = useState(null);
   
@@ -224,10 +224,20 @@ const QuestLog = () => {
                   </button>
                 )}
                 
-                {selectedTab === 'active' && getProgressPercent(selectedQuest) === 100 && (
-                  <button className="btn-success w-full mt-4">
-                    Complete Quest
-                  </button>
+                {selectedTab === 'active' && (
+                  <div className="space-y-2 mt-4">
+                    {getProgressPercent(selectedQuest) === 100 && (
+                      <button className="btn-success w-full">
+                        Complete Quest
+                      </button>
+                    )}
+                    <button
+                      onClick={() => abandonQuest(selectedQuest.id)}
+                      className="btn-danger w-full"
+                    >
+                      Abandon Quest
+                    </button>
+                  </div>
                 )}
               </div>
             ) : (

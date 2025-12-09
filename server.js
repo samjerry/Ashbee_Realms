@@ -2000,6 +2000,57 @@ app.post('/api/quests/accept', async (req, res) => {
 });
 
 /**
+ * POST /api/quests/abandon
+ * Abandon an active quest
+ */
+app.post('/api/quests/abandon', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  let { channel, questId } = req.body;
+  
+  if (!channel) {
+    channel = user.login || user.displayName || user.display_name;
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'Unable to determine channel' });
+  }
+  
+  if (!questId) {
+    return res.status(400).json({ error: 'Quest ID required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const activeQuests = character.activeQuests || [];
+    
+    // Find and remove the quest
+    const questIndex = activeQuests.findIndex(q => q.questId === questId);
+    if (questIndex === -1) {
+      return res.status(400).json({ error: 'Quest not active' });
+    }
+    
+    activeQuests.splice(questIndex, 1);
+    character.activeQuests = activeQuests;
+
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      message: 'Quest abandoned'
+    });
+  } catch (error) {
+    console.error('Error abandoning quest:', error);
+    res.status(500).json({ error: 'Failed to abandon quest' });
+  }
+});
+
+/**
  * GET /api/quests/active
  * Get all active quests
  */

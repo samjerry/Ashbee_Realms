@@ -141,6 +141,22 @@ const useGameStore = create((set, get) => ({
     }
   },
   
+  abandonQuest: async (questId) => {
+    try {
+      const player = get().player;
+      const channel = player?.username || player?.login;
+      
+      await fetch('/api/quests/abandon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questId, channel })
+      });
+      get().fetchQuests();
+    } catch (error) {
+      console.error('Failed to abandon quest:', error);
+    }
+  },
+  
   // Inventory actions
   fetchInventory: async () => {
     try {
