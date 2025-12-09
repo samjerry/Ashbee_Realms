@@ -86,7 +86,7 @@ const Header = () => {
         {/* Gold */}
         <div className="flex items-center space-x-2 bg-dark-800 px-4 py-2 rounded-lg border border-dark-700">
           <Coins size={20} className="text-yellow-500" />
-          <span className="text-lg font-bold text-yellow-500">{player.gold.toLocaleString()}</span>
+          <span className="text-lg font-bold text-yellow-500">{(player.gold || 0).toLocaleString()}</span>
         </div>
       </div>
     </header>
