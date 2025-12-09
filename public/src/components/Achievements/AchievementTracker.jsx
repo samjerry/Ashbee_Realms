@@ -109,12 +109,23 @@ const AchievementTracker = () => {
                     <div>
                       <div className="flex justify-between text-xs text-gray-500 mb-1">
                         <span>Progress</span>
-                        <span>{achievement.progress} / {achievement.required}</span>
+                        <span>
+                          {typeof achievement.progress === 'object' 
+                            ? `${achievement.progress.current || 0} / ${achievement.progress.required || achievement.required || 0}`
+                            : `${achievement.progress || 0} / ${achievement.required || 0}`
+                          }
+                        </span>
                       </div>
                       <div className="h-2 bg-dark-800 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-primary-600 to-primary-500"
-                          style={{ width: `${(achievement.progress / achievement.required) * 100}%` }}
+                          style={{ 
+                            width: `${
+                              typeof achievement.progress === 'object'
+                                ? (achievement.progress.percentage || 0)
+                                : ((achievement.progress / (achievement.required || 1)) * 100)
+                            }%` 
+                          }}
                         />
                       </div>
                     </div>
