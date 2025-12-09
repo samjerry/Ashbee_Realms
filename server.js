@@ -8,6 +8,7 @@ const db = require('./db');
 const Combat = require('./game/Combat');
 const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager } = require('./game');
 const { loadData } = require('./data/data_loader');
+const socketHandler = require('./websocket/socketHandler');
 
 const app = express();
 app.use(express.json());
@@ -599,6 +600,17 @@ app.post('/api/combat/start', async (req, res) => {
       });
     });
 
+    // Emit real-time combat started notification
+    socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
+      type: 'combat_started',
+      state: combat.getState(),
+      monster: {
+        name: monster.name,
+        level: monster.level,
+        hp: monster.hp
+      }
+    });
+
     res.json({
       success: true,
       message: `Combat started with ${monster.name}!`,
@@ -652,9 +664,23 @@ app.post('/api/combat/attack', async (req, res) => {
     const combat = req.session.combat.combatInstance;
     const result = combat.playerAttack();
 
+    // Emit real-time combat action
+    const channel = req.session.combat.channelName;
+    socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
+      type: 'combat_action',
+      action: 'attack',
+      result: result
+    });
+
     // If combat ended, save results and clean up
     if (result.victory || result.defeat) {
       await handleCombatEnd(req.session, result);
+      
+      // Emit combat ended
+      socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
+        type: result.victory ? 'combat_victory' : 'combat_defeat',
+        result: result
+      });
     } else {
       // Save session with updated combat state
       await new Promise((resolve, reject) => {
@@ -1991,6 +2017,15 @@ app.post('/api/quests/accept', async (req, res) => {
 
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+    // Emit real-time quest update
+    socketHandler.emitQuestUpdate(user.login || user.displayName, channel.toLowerCase());
+    socketHandler.emitNotification(user.login || user.displayName, channel.toLowerCase(), {
+      type: 'quest_accepted',
+      title: 'Quest Accepted',
+      message: `You have accepted: ${result.quest.name}`,
+      quest: result.quest
+    });
+
     res.json({
       success: true,
       quest: result.quest,
@@ -2043,6 +2078,9 @@ app.post('/api/quests/abandon', async (req, res) => {
     character.activeQuests = activeQuests;
 
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit real-time quest update
+    socketHandler.emitQuestUpdate(user.login || user.displayName, channel.toLowerCase());
 
     res.json({
       success: true,
@@ -4902,6 +4940,10 @@ const server = app.listen(PORT, () => {
     console.log('✅ Serving React frontend from /public/dist');
   }
 });
+
+// Initialize WebSocket server
+const io = socketHandler.initializeWebSocket(server);
+console.log('🔌 WebSocket server initialized');
 
 // Global error handlers
 process.on('uncaughtException', (error) => {

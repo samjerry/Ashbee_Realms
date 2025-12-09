@@ -266,9 +266,19 @@ const useGameStore = create((set, get) => ({
   
   // WebSocket handlers
   setupSocketListeners: () => {
+    const player = get().player;
+    const channel = player?.username || player?.login || 'default';
+    
+    // Join player-specific room
+    socket.emit('join', { player: player?.username || player?.login, channel });
+    
     socket.on('connect', () => {
       set({ connected: true });
       console.log('Connected to game server');
+      // Rejoin room on reconnect
+      if (player) {
+        socket.emit('join', { player: player.username || player.login, channel });
+      }
     });
     
     socket.on('disconnect', () => {
@@ -276,24 +286,132 @@ const useGameStore = create((set, get) => ({
       console.log('Disconnected from game server');
     });
     
+    // Player updates
     socket.on('player:update', (data) => {
       set((state) => ({ player: { ...state.player, ...data } }));
     });
     
+    socket.on('player:levelup', (data) => {
+      console.log('🎉 Level up!', data);
+      set((state) => ({ 
+        player: { ...state.player, level: data.newLevel, xp: data.xp }
+      }));
+      // Show level up animation
+    });
+    
+    // Combat updates
     socket.on('combat:update', (data) => {
-      if (data.log) {
-        data.log.forEach(msg => get().addCombatLog(msg));
+      if (data.type === 'combat_started') {
+        set({ showCombat: true, combat: data.state });
+      } else if (data.type === 'combat_action') {
+        if (data.result.log) {
+          data.result.log.forEach(msg => get().addCombatLog(msg));
+        }
+        set((state) => ({ 
+          combat: { ...state.combat, ...data.result.state }
+        }));
+      } else if (data.type === 'combat_victory' || data.type === 'combat_defeat') {
+        if (data.result.log) {
+          data.result.log.forEach(msg => get().addCombatLog(msg));
+        }
+        // Combat will end via API response
       }
     });
     
+    // Quest updates
     socket.on('quest:update', () => {
       get().fetchQuests();
     });
     
+    // Achievement notifications
     socket.on('achievement:unlocked', (achievement) => {
-      // Show notification
-      console.log('Achievement unlocked:', achievement);
+      console.log('🏆 Achievement unlocked:', achievement);
+      // TODO: Show notification toast
       get().fetchAchievements();
+    });
+    
+    // Inventory updates
+    socket.on('inventory:update', () => {
+      get().fetchInventory();
+    });
+    
+    // General notifications
+    socket.on('notification', (notification) => {
+      console.log('📬 Notification:', notification);
+      // TODO: Show toast notification
+    });
+    
+    // Location updates
+    socket.on('location:change', (location) => {
+      set({ currentLocation: location });
+    });
+    
+    // Dungeon progress
+    socket.on('dungeon:progress', (progress) => {
+      console.log('🏰 Dungeon progress:', progress);
+      // TODO: Update dungeon state
+    });
+    
+    // Shop updates
+    socket.on('shop:update', (data) => {
+      console.log('🏪 Shop updated:', data);
+      // TODO: Refresh shop if open
+    });
+    
+    // Faction updates
+    socket.on('faction:update', (data) => {
+      console.log('⚔️ Faction update:', data);
+      // TODO: Show reputation change
+    });
+    
+    // Status effects
+    socket.on('status:effect', (effect) => {
+      console.log('✨ Status effect:', effect);
+      // TODO: Show effect notification
+    });
+    
+    // Party updates
+    socket.on('party:update', (data) => {
+      console.log('👥 Party update:', data);
+      // TODO: Update party UI
+    });
+    
+    // Raid updates
+    socket.on('raid:update', (data) => {
+      console.log('⚔️ Raid update:', data);
+      // TODO: Update raid UI
+    });
+    
+    socket.on('raid:combat:action', (action) => {
+      console.log('⚔️ Raid combat action:', action);
+      // TODO: Show raid combat log
+    });
+    
+    socket.on('raid:boss:phase', (phase) => {
+      console.log('👹 Boss phase change:', phase);
+      // TODO: Show phase transition
+    });
+    
+    socket.on('raid:voting:started', (voteData) => {
+      console.log('🗳️ Raid voting started:', voteData);
+      // TODO: Show voting UI
+    });
+    
+    socket.on('raid:voting:result', (result) => {
+      console.log('🗳️ Voting result:', result);
+      // TODO: Show voting result
+    });
+    
+    // Chat events
+    socket.on('chat:event', (event) => {
+      console.log('💬 Chat event:', event);
+      // TODO: Show chat event in UI
+    });
+    
+    // Seasonal events
+    socket.on('season:event', (event) => {
+      console.log('🎃 Seasonal event:', event);
+      // TODO: Show seasonal event notification
     });
   }
 }));
