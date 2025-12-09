@@ -62,7 +62,6 @@ async function updateUser(){
   const data = await fetchMe();
   const userEl = await $("#user");
   const loginSection = await $('#loginSection');
-  const infoSection = await $('#infoSection');
   
   if (data && data.user){
     gameState.user = data.user;
@@ -76,7 +75,6 @@ async function updateUser(){
     gameState.user = null;
     userEl.textContent = 'Not logged in';
     loginSection.style.display = 'block';
-    infoSection.style.display = 'block';
   }
 }
 
@@ -126,15 +124,12 @@ function updateCharacterStatus() {
 
 function updateUI() {
   const actionButtons = document.getElementById('actionButtons');
-  const infoSection = document.getElementById('infoSection');
   
   if (!gameState.user) {
     actionButtons.style.display = 'none';
-    infoSection.style.display = 'block';
     return;
   }
 
-  infoSection.style.display = 'none';
   actionButtons.style.display = 'block';
 
   // Hide all buttons first
@@ -144,7 +139,7 @@ function updateUI() {
 
   // Show buttons based on state
   if (!gameState.hasCharacter) {
-    show('howToPlayBtn', 'startBtn');
+    show('startBtn');
   } else if (gameState.inCombat) {
     show('attackBtn', 'skillBtn', 'useItemBtn', 'fleeBtn');
     show('statsBtn', 'inventoryBtn');
@@ -207,48 +202,30 @@ async function gameAction(endpoint, body = {}) {
 async function showHowToPlay() {
   updateLog(`🗺️ Welcome to Ashbee Realms!
 
-This is a web-based RPG adventure game. Use the buttons above to play!
+This is a web-based RPG adventure game!
 
 🎮 Getting Started:
 1. Log in with your Twitch account
-2. Click "Start Adventure" to create your character
-3. Use the action buttons to explore, battle, and progress
+2. Access the game through a streamer's channel: Type !adventure in their Twitch chat
+3. The streamer will share a link to play on their channel
+4. Use the action buttons on this page to explore, battle, and progress!
 
-The buttons change based on your current situation:
-• In town: Explore, rest, visit shop, manage equipment
-• In combat: Attack, use skills, use items, or flee
-• In shop: Buy and sell items
-• Anytime: Check stats, inventory, and passive skills
+🎯 How It Works:
+• All gameplay happens through buttons on this website
+• Your actions and progress are announced in the Twitch chat
+• The buttons change based on your situation (exploration, combat, shop, etc.)
+• Your progress is automatically saved
 
-Your progress is automatically saved!`);
+📺 Twitch Integration:
+• Type !adventure in a participating streamer's chat to get started
+• Game announcements appear in the streamer's chat
+• Play alongside other viewers!
+
+Your adventure awaits!`);
 }
 
 async function showCommands() {
-  updateLog(`💬 Game Controls:
-
-All actions are performed using the buttons above!
-The available buttons change based on your current state.
-
-⚔️ EXPLORATION & COMBAT:
-Start Adventure - Create your character
-Explore - Venture into the wilderness
-Battle - Fight monsters for XP and loot
-Rest - Recover HP and Mana
-Attack / Skill / Item - Combat actions
-Flee - Escape from battle
-
-📊 CHARACTER & ITEMS:
-Stats - View detailed character information
-Inventory - Check your items
-Equip/Unequip - Manage your gear
-Passive Skills - View and upgrade skill tree
-
-🎯 QUESTS & SHOPS:
-Quests - View and track active quests
-Shop - Buy and sell items (when in town)
-Buy/Sell - Purchase or sell items in shop
-
-Buttons appear only when you can use them!`);
+  updateLog(`💬 Game is fully playable through website buttons - no chat commands needed!`);
 }
 
 // Action button handlers
@@ -392,7 +369,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Attach event listeners
   document.getElementById('loginBtn')?.addEventListener('click', loginWithTwitch);
   document.getElementById('howToPlayBtn')?.addEventListener('click', showHowToPlay);
-  document.getElementById('commandsBtn')?.addEventListener('click', showCommands);
   document.getElementById('startBtn')?.addEventListener('click', startAdventure);
   document.getElementById('exploreBtn')?.addEventListener('click', exploreWorld);
   document.getElementById('battleBtn')?.addEventListener('click', enterBattle);
