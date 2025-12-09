@@ -8,16 +8,19 @@ const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch =
 const BASE_URL = process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
 
 if (CHANNELS.length === 0) {
-  console.error('❌ No channels configured! Set CHANNELS in .env (comma-separated)');
-  process.exit(1);
+  console.warn('⚠️ No channels configured. Twitch bot will not connect. Set CHANNELS in .env if needed.');
+  // Don't exit - allow server to run without bot
+} else {
+  console.log(`🎮 Bot will connect to channels: ${CHANNELS.join(', ')}`);
 }
 
-console.log(`🎮 Bot will connect to channels: ${CHANNELS.join(', ')}`);
-
-// Initialize TokenManager and bot
-let client;
-
 async function initializeBot() {
+  // Skip bot initialization if no channels configured
+  if (CHANNELS.length === 0) {
+    console.log('⏭️ Skipping Twitch bot initialization (no channels configured)');
+    return null;
+  }
+
   const tokenManager = new TokenManager();
   
   // Start automatic token refresh (checks every hour)
@@ -282,6 +285,12 @@ initializeBot().catch(err => {
 });
 
 function rawAnnounce(message, channelName = null) {
+  // If no channels configured, skip announcement
+  if (CHANNELS.length === 0) {
+    console.log('📢 [Bot disabled] Would announce:', message);
+    return Promise.resolve();
+  }
+
   // Wait for client to be initialized
   if (!client) {
     console.warn('⚠️ Client not yet initialized, delaying announce');
