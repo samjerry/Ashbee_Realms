@@ -111,12 +111,17 @@ const useGameStore = create((set, get) => ({
         fetch('/api/quests/available')
       ]);
       
-      const activeQuests = await activeRes.json();
-      const availableQuests = await availableRes.json();
+      const activeData = await activeRes.json();
+      const availableData = await availableRes.json();
+      
+      // Handle both array and object responses
+      const activeQuests = Array.isArray(activeData) ? activeData : (activeData.quests || []);
+      const availableQuests = Array.isArray(availableData) ? availableData : (availableData.quests || []);
       
       set({ activeQuests, availableQuests });
     } catch (error) {
       console.error('Failed to fetch quests:', error);
+      set({ activeQuests: [], availableQuests: [] });
     }
   },
   
@@ -138,9 +143,13 @@ const useGameStore = create((set, get) => ({
     try {
       const response = await fetch('/api/inventory');
       const data = await response.json();
-      set({ inventory: data.items, equipment: data.equipment });
+      set({ 
+        inventory: data.items || data.inventory || [],
+        equipment: data.equipment || {}
+      });
     } catch (error) {
       console.error('Failed to fetch inventory:', error);
+      set({ inventory: [], equipment: {} });
     }
   },
   
@@ -163,9 +172,12 @@ const useGameStore = create((set, get) => ({
     try {
       const response = await fetch('/api/exploration/biomes');
       const data = await response.json();
-      set({ availableLocations: data.biomes });
+      set({ 
+        availableLocations: Array.isArray(data) ? data : (data.biomes || [])
+      });
     } catch (error) {
       console.error('Failed to fetch locations:', error);
+      set({ availableLocations: [] });
     }
   },
   
@@ -187,9 +199,12 @@ const useGameStore = create((set, get) => ({
     try {
       const response = await fetch('/api/achievements');
       const data = await response.json();
-      set({ achievements: data });
+      set({ 
+        achievements: Array.isArray(data) ? data : (data.achievements || [])
+      });
     } catch (error) {
       console.error('Failed to fetch achievements:', error);
+      set({ achievements: [] });
     }
   },
   

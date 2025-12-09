@@ -1906,13 +1906,20 @@ app.get('/api/quests/available', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel } = req.query;
-  if (!channel) return res.status(400).json({ error: 'Channel required' });
+  let { channel } = req.query;
+  
+  if (!channel) {
+    channel = user.login || user.displayName || user.display_name;
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'Unable to determine channel' });
+  }
 
   try {
     const character = await db.getCharacter(user.id, channel.toLowerCase());
     if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+      return res.json({ success: true, quests: [] });
     }
 
     const activeQuests = character.activeQuests || [];
@@ -1923,7 +1930,7 @@ app.get('/api/quests/available', async (req, res) => {
 
     res.json({
       success: true,
-      quests: available
+      quests: available || []
     });
   } catch (error) {
     console.error('Error getting available quests:', error);
@@ -1991,13 +1998,20 @@ app.get('/api/quests/active', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel } = req.query;
-  if (!channel) return res.status(400).json({ error: 'Channel required' });
+  let { channel } = req.query;
+  
+  if (!channel) {
+    channel = user.login || user.displayName || user.display_name;
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'Unable to determine channel' });
+  }
 
   try {
     const character = await db.getCharacter(user.id, channel.toLowerCase());
     if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+      return res.json({ success: true, quests: [] });
     }
 
     const activeQuests = character.activeQuests || [];
@@ -2723,22 +2737,29 @@ const achievementMgr = new AchievementManager();
  * Query: player, channel, includeHidden (optional)
  */
 app.get('/api/achievements', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
   try {
-    const { player, channel, includeHidden } = req.query;
-
-    if (!player || !channel) {
-      return res.status(400).json({ error: 'Missing player or channel' });
+    let { channel, includeHidden } = req.query;
+    
+    // Use authenticated user's channel if not specified
+    if (!channel) {
+      channel = user.login || user.displayName || user.display_name;
+    }
+    
+    if (!channel) {
+      return res.status(400).json({ error: 'Unable to determine channel' });
     }
 
-    const userId = await db.getUserId(player, channel);
-    if (!userId) {
-      return res.status(404).json({ error: 'Player not found' });
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      // Return empty array for new players
+      return res.json([]);
     }
-
-    const character = await db.getCharacter(userId, channel);
+    
     const achievements = achievementMgr.getAllAchievements(character, includeHidden === 'true');
-
-    res.json({ achievements });
+    res.json(achievements || []);
   } catch (error) {
     console.error('Error fetching achievements:', error);
     res.status(500).json({ error: 'Failed to fetch achievements' });
