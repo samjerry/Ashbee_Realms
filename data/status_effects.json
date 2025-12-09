@@ -424,6 +424,71 @@
           "defense_multiplier": 0.1,
           "cannot_be_removed": true
         }
+      },
+      "wet": {
+        "id": "wet",
+        "name": "Wet",
+        "description": "Soaked with water, vulnerable to electricity",
+        "type": "debuff",
+        "icon": "💧",
+        "duration": 5,
+        "stacks": false,
+        "effects": {
+          "fire_resistance": 0.50,
+          "shock_vulnerability": 2.0
+        }
+      },
+      "shock": {
+        "id": "shock",
+        "name": "Shocked",
+        "description": "Electrified, dealing damage",
+        "type": "debuff",
+        "icon": "⚡",
+        "duration": 3,
+        "stacks": false,
+        "effects": {
+          "damage_per_turn": 15
+        }
+      },
+      "oil": {
+        "id": "oil",
+        "name": "Oiled",
+        "description": "Covered in oil, highly flammable",
+        "type": "debuff",
+        "icon": "🛢️",
+        "duration": 10,
+        "stacks": false,
+        "effects": {
+          "fire_vulnerability": 3.0,
+          "movement_speed": -0.30
+        }
+      },
+      "paralyzed": {
+        "id": "paralyzed",
+        "name": "Paralyzed",
+        "description": "Unable to move or act",
+        "type": "debuff",
+        "icon": "⚡💀",
+        "duration": 2,
+        "stacks": false,
+        "effects": {
+          "stunned": true,
+          "cannot_act": true,
+          "defense_multiplier": 0.5
+        }
+      },
+      "explosion": {
+        "id": "explosion",
+        "name": "Explosion",
+        "description": "Massive explosion damage",
+        "type": "special",
+        "icon": "💥",
+        "duration": 1,
+        "stacks": false,
+        "effects": {
+          "instant_damage": 100,
+          "aoe_damage": true
+        }
       }
     }
   },

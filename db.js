@@ -82,6 +82,8 @@ async function initPostgres() {
       stats JSONB DEFAULT '{"totalKills":0,"bossKills":0,"criticalHits":0,"highestDamage":0,"deaths":0,"locationsVisited":[],"biomesVisited":[],"totalGoldEarned":0,"totalGoldSpent":0,"mysteriesSolved":0}',
       dungeon_state JSONB DEFAULT NULL,
       completed_dungeons JSONB DEFAULT '[]',
+      crafting_xp INTEGER DEFAULT 0,
+      known_recipes JSONB DEFAULT '[]',
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
@@ -89,7 +91,9 @@ async function initPostgres() {
 
     CREATE TABLE IF NOT EXISTS permanent_stats (
       player_id TEXT PRIMARY KEY,
-      unlocked_passives JSONB DEFAULT '[]',
+      passive_levels JSONB DEFAULT '{}',
+      souls INTEGER DEFAULT 5,
+      legacy_points INTEGER DEFAULT 0,
       account_stats JSONB DEFAULT '{}',
       total_deaths INTEGER DEFAULT 0,
       total_kills INTEGER DEFAULT 0,
@@ -154,21 +158,67 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       hands: null, cape: null, off_hand: null, amulet: null,
       ring1: null, ring2: null, belt: null, main_hand: null,
       relic1: null, relic2: null, relic3: null
-    }
+    },
+    base_stats = {},
+    skills = { skills: {}, globalCooldown: 0 },
+    skill_points = 0,
+    travel_state = null,
+    active_quests = [],
+    completed_quests = [],
+    consumable_cooldowns = {},
+    dialogue_history = {},
+    reputation = { general: 0 },
+    unlocked_achievements = [],
+    achievement_progress = {},
+    achievement_unlock_dates = {},
+    achievement_points = 0,
+    unlocked_titles = [],
+    active_title = null,
+    stats = {},
+    dungeon_state = null,
+    completed_dungeons = [],
+    crafting_xp = 0,
+    known_recipes = []
   } = playerData;
 
   await query(`
     INSERT INTO player_progress (
       player_id, channel_name, name, location, level, xp, xp_to_next, max_hp, hp, gold,
-      type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped, updated_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, NOW())
+      type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped,
+      base_stats, skills, skill_points, travel_state, active_quests, completed_quests,
+      consumable_cooldowns, dialogue_history, reputation, unlocked_achievements,
+      achievement_progress, achievement_unlock_dates, achievement_points,
+      unlocked_titles, active_title, stats, dungeon_state, completed_dungeons,
+      crafting_xp, known_recipes, updated_at
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+      $11, $12, $13, $14, $15, $16, $17, $18, $19,
+      $20, $21, $22, $23, $24, $25,
+      $26, $27, $28, $29,
+      $30, $31, $32,
+      $33, $34, $35, $36, $37,
+      $38, $39, NOW()
+    )
     ON CONFLICT(player_id, channel_name) DO UPDATE SET
       name=$3, location=$4, level=$5, xp=$6, xp_to_next=$7, max_hp=$8, hp=$9, gold=$10,
-      type=$11, inventory=$12, pending=$13, combat=$14, skill_cd=$15, step=$16, is_player=$17, in_combat=$18, equipped=$19, updated_at=NOW()
+      type=$11, inventory=$12, pending=$13, combat=$14, skill_cd=$15, step=$16, is_player=$17, in_combat=$18, equipped=$19,
+      base_stats=$20, skills=$21, skill_points=$22, travel_state=$23, active_quests=$24, completed_quests=$25,
+      consumable_cooldowns=$26, dialogue_history=$27, reputation=$28, unlocked_achievements=$29,
+      achievement_progress=$30, achievement_unlock_dates=$31, achievement_points=$32,
+      unlocked_titles=$33, active_title=$34, stats=$35, dungeon_state=$36, completed_dungeons=$37,
+      crafting_xp=$38, known_recipes=$39, updated_at=NOW()
   `, [
     playerId, channelName, name, location, level, xp, xp_to_next, max_hp, hp, gold,
     type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
-    skill_cd, step, is_player, in_combat, JSON.stringify(equipped)
+    skill_cd, step, is_player, in_combat, JSON.stringify(equipped),
+    JSON.stringify(base_stats), JSON.stringify(skills), skill_points, JSON.stringify(travel_state),
+    JSON.stringify(active_quests), JSON.stringify(completed_quests),
+    JSON.stringify(consumable_cooldowns), JSON.stringify(dialogue_history), JSON.stringify(reputation),
+    JSON.stringify(unlocked_achievements),
+    JSON.stringify(achievement_progress), JSON.stringify(achievement_unlock_dates), achievement_points,
+    JSON.stringify(unlocked_titles), active_title, JSON.stringify(stats), JSON.stringify(dungeon_state),
+    JSON.stringify(completed_dungeons),
+    crafting_xp, JSON.stringify(known_recipes)
   ]);
 }
 
@@ -187,7 +237,7 @@ async function loadPlayerProgress(playerId, channelName) {
 
   const row = result.rows[0];
 
-  // Parse JSON fields
+  // Parse JSON fields and return complete character data
   return {
     name: row.name,
     location: row.location,
@@ -206,6 +256,26 @@ async function loadPlayerProgress(playerId, channelName) {
     is_player: row.is_player,
     in_combat: row.in_combat,
     equipped: typeof row.equipped === 'string' ? JSON.parse(row.equipped) : row.equipped,
+    base_stats: typeof row.base_stats === 'string' ? JSON.parse(row.base_stats) : (row.base_stats || {}),
+    skills: typeof row.skills === 'string' ? JSON.parse(row.skills) : (row.skills || { skills: {}, globalCooldown: 0 }),
+    skill_points: row.skill_points || 0,
+    travel_state: row.travel_state ? (typeof row.travel_state === 'string' ? JSON.parse(row.travel_state) : row.travel_state) : null,
+    active_quests: typeof row.active_quests === 'string' ? JSON.parse(row.active_quests) : (row.active_quests || []),
+    completed_quests: typeof row.completed_quests === 'string' ? JSON.parse(row.completed_quests) : (row.completed_quests || []),
+    consumable_cooldowns: typeof row.consumable_cooldowns === 'string' ? JSON.parse(row.consumable_cooldowns) : (row.consumable_cooldowns || {}),
+    dialogue_history: typeof row.dialogue_history === 'string' ? JSON.parse(row.dialogue_history) : (row.dialogue_history || {}),
+    reputation: typeof row.reputation === 'string' ? JSON.parse(row.reputation) : (row.reputation || { general: 0 }),
+    unlocked_achievements: typeof row.unlocked_achievements === 'string' ? JSON.parse(row.unlocked_achievements) : (row.unlocked_achievements || []),
+    achievement_progress: typeof row.achievement_progress === 'string' ? JSON.parse(row.achievement_progress) : (row.achievement_progress || {}),
+    achievement_unlock_dates: typeof row.achievement_unlock_dates === 'string' ? JSON.parse(row.achievement_unlock_dates) : (row.achievement_unlock_dates || {}),
+    achievement_points: row.achievement_points || 0,
+    unlocked_titles: typeof row.unlocked_titles === 'string' ? JSON.parse(row.unlocked_titles) : (row.unlocked_titles || []),
+    active_title: row.active_title || null,
+    stats: typeof row.stats === 'string' ? JSON.parse(row.stats) : (row.stats || {}),
+    dungeon_state: row.dungeon_state ? (typeof row.dungeon_state === 'string' ? JSON.parse(row.dungeon_state) : row.dungeon_state) : null,
+    completed_dungeons: typeof row.completed_dungeons === 'string' ? JSON.parse(row.completed_dungeons) : (row.completed_dungeons || []),
+    crafting_xp: row.crafting_xp || 0,
+    known_recipes: typeof row.known_recipes === 'string' ? JSON.parse(row.known_recipes) : (row.known_recipes || []),
     updated_at: row.updated_at
   };
 }
@@ -326,7 +396,9 @@ async function getPermanentStats(playerId) {
 
   const row = result.rows[0];
   return {
-    unlockedPassives: row.unlocked_passives || [],
+    passiveLevels: row.passive_levels || {},
+    souls: row.souls || 0,
+    legacyPoints: row.legacy_points || 0,
     accountStats: row.account_stats || {},
     totalDeaths: row.total_deaths || 0,
     totalKills: row.total_kills || 0,
@@ -345,22 +417,26 @@ async function getPermanentStats(playerId) {
 async function savePermanentStats(playerId, stats) {
   await query(
     `INSERT INTO permanent_stats (
-      player_id, unlocked_passives, account_stats, total_deaths, total_kills,
+      player_id, passive_levels, souls, legacy_points, account_stats, total_deaths, total_kills,
       total_gold_earned, total_xp_earned, highest_level_reached, total_crits, updated_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW())
     ON CONFLICT (player_id) DO UPDATE SET
-      unlocked_passives = $2,
-      account_stats = $3,
-      total_deaths = $4,
-      total_kills = $5,
-      total_gold_earned = $6,
-      total_xp_earned = $7,
-      highest_level_reached = $8,
-      total_crits = $9,
+      passive_levels = $2,
+      souls = $3,
+      legacy_points = $4,
+      account_stats = $5,
+      total_deaths = $6,
+      total_kills = $7,
+      total_gold_earned = $8,
+      total_xp_earned = $9,
+      highest_level_reached = $10,
+      total_crits = $11,
       updated_at = NOW()`,
     [
       playerId,
-      JSON.stringify(stats.unlockedPassives || []),
+      JSON.stringify(stats.passiveLevels || {}),
+      stats.souls || 0,
+      stats.legacyPoints || 0,
       JSON.stringify(stats.accountStats || {}),
       stats.totalDeaths || 0,
       stats.totalKills || 0,
@@ -486,6 +562,22 @@ async function addCompletedDungeon(playerId, channelName, dungeonId) {
   }
 }
 
+/**
+ * Update faction reputation for a character
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {Object} reputation - Reputation object (faction_id: value pairs)
+ */
+async function updateReputation(playerId, channelName, reputation) {
+  await query(
+    `UPDATE player_progress SET 
+      reputation = $3,
+      updated_at = NOW()
+    WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase(), JSON.stringify(reputation)]
+  );
+}
+
 module.exports = {
   initDB,
   query,
@@ -506,5 +598,6 @@ module.exports = {
   updateAchievementData,
   updateCharacterStats,
   updateDungeonState,
-  addCompletedDungeon
+  addCompletedDungeon,
+  updateReputation
 };

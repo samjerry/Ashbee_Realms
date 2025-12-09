@@ -712,68 +712,241 @@ node Testing/test_dungeon_system.js
 
 ---
 
-#### 3.2 Faction & Reputation System
+#### 3.2 Faction & Reputation System ✅ **COMPLETE**
 **Goal:** Player standing with different factions affects gameplay.
 
-**Tasks:**
-- [ ] Load factions from factions.json
-- [ ] Implement reputation tracking (Hostile → Exalted)
-- [ ] Add reputation gain/loss from actions
-- [ ] Create faction-specific rewards and vendors
-- [ ] Implement faction quests
-- [ ] Add faction abilities/bonuses
+**Status:** ✅ Implemented December 2025
+- 6 factions with reputation tiers (Hostile → Exalted)
+- Allied/enemy faction propagation (25% gain, 50% loss)
+- Action-based reputation system (kill_goblin, complete_quest, etc.)
+- Merchant price multipliers (70% to 150% based on standing)
+- Faction abilities, mounts, and unique gear unlocks
+- 8 API endpoints for faction management
+- Database integration with JSONB reputation column
+- 100% test coverage (18/18 tests passing)
 
-**Files to create:**
-- `game/factions.js` - Faction manager
+**Tasks:**
+- [x] Load factions from factions.json
+- [x] Implement reputation tracking (Hostile → Exalted)
+- [x] Add reputation gain/loss from actions
+- [x] Create faction-specific rewards and vendors
+- [x] Implement faction quests integration
+- [x] Add faction abilities/bonuses
+- [x] Create API endpoints
+- [x] Add database schema support
+- [x] Write comprehensive documentation
+
+**Files created:**
+- `game/FactionManager.js` - Complete faction management system (514 lines)
+- `Testing/test_faction_system.js` - 18 comprehensive tests
+- `game/FACTION_README.md` - Full documentation with API guide
 
 ---
 
-#### 3.3 Enchanting & Crafting System
+#### 3.3 Enchanting & Crafting System ✅ **COMPLETED**
 **Goal:** Improve gear with enchantments.
 
-**Tasks:**
-- [ ] Load enchantments from enchantments.json
-- [ ] Implement enchanting mechanics (success rates, materials)
-- [ ] Add enchantment application to items
-- [ ] Create material gathering system
-- [ ] Implement crafting recipes
-- [ ] Add enchanting UI/API
+**Completion Date:** December 9, 2025  
+**Test Coverage:** 18/18 tests created  
+**API Endpoints:** 11 endpoints (5 enchanting, 6 crafting)
 
-**Files to create:**
-- `game/enchanting.js` - Enchanting system
-- `game/crafting.js` - Crafting system
+**Tasks:**
+- ✅ Load enchantments from enchantments.json
+- ✅ Implement enchanting mechanics (success rates, materials, failure consequences)
+- ✅ Add enchantment application to items (enchant, remove, disenchant)
+- ✅ Create crafting recipe system from consumables_extended.json + hardcoded equipment
+- ✅ Implement crafting with skill progression (XP and levels)
+- ✅ Add salvaging system for material recovery
+- ✅ Add recipe discovery system
+- ✅ Implement crafting API endpoints
+
+**Files Created/Modified:**
+- ✅ `game/EnchantingManager.js` - Complete enchanting system (550+ lines)
+- ✅ `game/CraftingManager.js` - Complete crafting system (500+ lines)
+- ✅ `game/Character.js` - Added craftingXP and knownRecipes properties
+- ✅ `game/index.js` - Exported EnchantingManager and CraftingManager
+- ✅ `server.js` - Added 11 API endpoints (5 enchanting, 6 crafting)
+- ✅ `db.js` - Added crafting_xp and known_recipes columns, updated save/load functions
+- ✅ `Testing/test_enchanting_crafting.js` - 18 comprehensive tests
+- ✅ `game/ENCHANTING_CRAFTING_README.md` - Full documentation with API guide
+
+**Features Implemented:**
+- ✅ 35+ enchantments (weapon, armor, utility)
+- ✅ Success rate system: 95% (common) → 30% (legendary)
+- ✅ Failure consequences: 60% nothing, 30% lose enchantment, 10% destroy item
+- ✅ Max enchantments per item: 1-6 based on rarity
+- ✅ Material requirements: enchanting_dust → celestial_fragment
+- ✅ Enchantment removal and disenchanting (50% material recovery)
+- ✅ Crafting recipes: potions, consumables, equipment, materials
+- ✅ Skill progression: 100 XP per level, 10-250 XP per craft
+- ✅ Recipe discovery and tracking
+- ✅ Salvaging: 25-60% material recovery (higher for enchanted items)
+- ✅ Crafting summary endpoint for stats display
+
+**API Endpoints:**
+- ✅ GET `/api/enchanting/enchantments` - List enchantments (optional ?slot filter)
+- ✅ GET `/api/enchanting/enchantment/:id` - Get enchantment details
+- ✅ POST `/api/enchanting/enchant` - Apply enchantment to item
+- ✅ POST `/api/enchanting/remove` - Remove enchantment from item
+- ✅ POST `/api/enchanting/disenchant` - Disenchant for materials
+- ✅ GET `/api/crafting/recipes` - List recipes (optional filters)
+- ✅ GET `/api/crafting/recipe/:id` - Get recipe details
+- ✅ POST `/api/crafting/craft` - Craft item from recipe
+- ✅ POST `/api/crafting/salvage` - Salvage item for materials
+- ✅ GET `/api/crafting/summary` - Get crafting statistics
+- ✅ POST `/api/crafting/discover` - Discover new recipe
 
 ---
 
-#### 3.4 Passive Progression System ⭐
-**Goal:** Account-wide permanent progression (survives character death).
+#### 3.4 Passive Progression System ✅ **COMPLETED**
+**Goal:** Account-wide permanent progression with currency-based incremental upgrades (survives character death).
 
 **Tasks:**
-- [ ] Load passives from passives.json
-- [ ] Implement passive unlock system (cost, requirements)
-- [ ] Add passive effects to gameplay
-- [ ] Create passive skill tree UI
-- [ ] Implement passive currency (souls, legacy points)
-- [ ] Add death experience (gain progression from dying)
+- ✅ Load passives from passive_tree.json (19 passives across 4 categories)
+- ✅ Implement passive upgrade system with level-based progression
+- ✅ Add passive currency system (Souls earned on death, Legacy Points on milestones)
+- ✅ Implement cost scaling formula (base + level/10*2 souls, 1 LP per 5 levels)
+- ✅ Add passive effects to character stats (19 different effect types)
+- ✅ Create respec system (50% soul refund, full LP refund)
+- ✅ Integrate currency earning into ProgressionManager
+- ✅ Create 6 API endpoints for passive management
 
-**Files to create:**
-- `game/passives.js` - Passive manager
+**Files created:**
+- ✅ `data/passive_tree.json` - 19 passives with metadata and scaling formulas
+- ✅ `game/PassiveManager.js` - Complete passive management system (450+ lines)
+- ✅ `Testing/test_passive_system.js` - Comprehensive test suite (87 tests passing)
+
+**Files modified:**
+- ✅ `db.js` - Updated schema: passive_levels JSONB, souls INTEGER, legacy_points INTEGER
+- ✅ `game/ProgressionManager.js` - Integrated currency earning (death/milestones), delegated bonus calculation
+- ✅ `game/index.js` - Exported PassiveManager
+- ✅ `server.js` - Added 6 new API endpoints + 2 legacy compatibility endpoints
+
+**Features Implemented:**
+- ✅ **19 Passives** across 4 categories:
+  - **Combat (8)**: Strength, Defense, Magic, Agility, Crit Chance, Crit Damage, Damage Boost, Damage Reduction
+  - **Survival (3)**: Max HP, HP on Kill, Potion Effectiveness
+  - **Progression (4)**: XP Gain, Gold Gain, Reputation Gain, Quest Rewards
+  - **Utility (4)**: Movement Speed, Loot Luck, Inventory Space, Merchant Prices
+- ✅ **Currency System**:
+  - Souls: Earned on death (1 + level/5, doubled for hardcore)
+  - Legacy Points: Earned on milestones (levels 10, 20, 30, 40, 50)
+  - Starting currency: 5 souls, 0 LP
+- ✅ **Cost Scaling**: Base cost + Math.floor(level/10)*2 souls, 1 LP every 5 levels
+- ✅ **Max Levels**: Stat passives (50), Percentage passives (20-25), HP passive (100)
+- ✅ **Respec Economics**: 50% soul refund (rounded down), 100% LP refund
+- ✅ **Bonus Calculation**: All 19 passive types correctly apply bonuses to character stats
+
+**API Endpoints:**
+```javascript
+GET /api/passives/tree // Full passive tree with currency and summary
+GET /api/passives/category/:category // Filter by category
+POST /api/passives/upgrade { passiveId } // Upgrade by 1 level
+POST /api/passives/respec // Reset all passives with partial refund
+GET /api/passives/currency // View souls/LP balance and spending
+GET /api/passives/bonuses // Get current passive bonuses
+```
+
+**Testing:**
+```bash
+node Testing/test_passive_system.js
+# 87/87 tests passing ✅
+# 100% success rate
+```
+
+**System Design:**
+- Level-based progression (not boolean unlocks)
+- Incremental stackable bonuses (e.g., Strength +1 per level, XP +2% per level)
+- Cost increases with level to maintain progression curve
+- Legacy Points gate major upgrades (every 5 levels)
+- Respec allows experimentation with 50% cost recovery
+- Currency persists across character deaths (hardcore-friendly)
 
 ---
 
-#### 3.5 Status Effects & Combat Depth
-**Goal:** Buffs, debuffs, and tactical combat.
+#### 3.5 Status Effects & Combat Depth ✅ **COMPLETED**
+**Goal:** Enhanced buffs, debuffs, and tactical combat with combos, cleansing, and auras.
 
 **Tasks:**
-- [ ] Load status effects from status_effects.json
-- [ ] Implement effect application and stacking
-- [ ] Add effect duration tracking and tick damage
-- [ ] Create effect combos (wet+shock=paralyzed)
-- [ ] Add cleanse/dispel mechanics
-- [ ] Implement aura effects
+- [x] ✅ Load status effects from status_effects.json (30+ effects across buff/debuff/special categories)
+- [x] ✅ Implement effect application with full stacking support
+- [x] ✅ Add duration tracking and tick damage/healing processing
+- [x] ✅ Create effect combos (wet+shock=paralyzed, burning+oil=explosion)
+- [x] ✅ Add cleanse/dispel mechanics with priority system
+- [x] ✅ Implement aura effects (permanent modifiers)
+- [x] ✅ Add immunity and resistance systems
+- [x] ✅ Create 7 API endpoints
+- [x] ✅ Write comprehensive test suite (99 tests passing)
 
-**Files to modify:**
-- `game/combat.js` - Integrate status effects
+**Files created:**
+- ✅ `Testing/test_status_effects.js` - Comprehensive test suite (99 tests, 100% pass rate)
+
+**Files modified:**
+- ✅ `game/StatusEffectManager.js` - Complete rewrite with advanced features (580+ lines)
+- ✅ `data/status_effects.json` - Added combo effects (wet, shock, oil, paralyzed, explosion)
+- ✅ `server.js` - Added 7 status effect API endpoints
+
+**Features Implemented:**
+- ✅ **30+ Status Effects**:
+  - **Buffs (13)**: Strength, Defense, Haste, Regeneration, Divine Blessing, Shrine Blessing, Invisibility, Berserk, Focus, Mana Surge
+  - **Debuffs (11)**: Poison, Bleeding, Burning, Frozen, Stunned, Slowed, Weakened, Cursed, Diseased, Wet, Shock, Oil
+  - **Special (6)**: Stealth, Reflect, Ethereal, Enraged, Paralyzed, Explosion
+- ✅ **Effect Stacking**: Configurable max stacks (1-10), stack-based damage/healing scaling
+- ✅ **Duration System**: Turn-based tick down, automatic expiry, duration refresh on reapplication
+- ✅ **Damage Over Time (DOT)**: Poison, Bleeding, Burning with per-turn damage
+- ✅ **Healing Over Time (HOT)**: Regeneration with flat + percentage healing
+- ✅ **Effect Combos**: 
+  - Wet + Shock → Paralyzed (50 bonus damage)
+  - Burning + Oil → Explosion (100 bonus damage)
+  - Frozen + Shatter Attack → Instant Kill (below 30% HP)
+- ✅ **Cleanse System**: Priority-based debuff removal, configurable count, specific targeting
+- ✅ **Dispel System**: Remove enemy buffs in combat
+- ✅ **Aura Effects**: Permanent modifier effects (no duration, persist until removed)
+- ✅ **Immunity System**: Divine Blessing grants curse immunity, effects can grant immunities
+- ✅ **Resistance/Counters**: Wet counters Burning, Burning counters Frozen
+- ✅ **Cannot Be Removed**: Special effects (Enraged) cannot be cleansed or dispelled
+- ✅ **Modifier Calculation**: 20+ modifier types (attack, defense, crit, dodge, lifesteal, XP, gold, loot)
+- ✅ **Special Flags**: Untargetable, Stunned, Physical Immunity, Breaks on Attack
+- ✅ **Source Tracking**: Track which ability/item applied each effect
+
+**API Endpoints:**
+```javascript
+GET  /api/status-effects/all          // Get all available effects + combos
+GET  /api/status-effects/active       // Get character's active effects + auras + modifiers
+POST /api/status-effects/apply        // Apply effect to character (admin/testing)
+POST /api/status-effects/cleanse      // Cleanse debuffs from character
+POST /api/status-effects/dispel       // Dispel enemy buffs in combat
+POST /api/status-effects/aura/add     // Add permanent aura effect
+POST /api/status-effects/aura/remove  // Remove permanent aura
+```
+
+**Testing:**
+```bash
+node Testing/test_status_effects.js
+# 99/99 tests passing ✅
+# 100% success rate
+```
+
+**Test Coverage:**
+- Effect loading and templates
+- Adding, stacking, and refreshing effects
+- Modifier calculation (all 20+ types)
+- Duration and tick processing
+- Effect combos (wet+shock, burning+oil)
+- Cleansing with priority system
+- Dispelling buffs
+- Aura effects (permanent modifiers)
+- Immunity and resistance checks
+- Cannot be removed effects
+- Complex modifier interactions
+- Special flags and source tracking
+
+**Combat Integration:**
+- Status effects automatically integrated with existing Combat.js
+- Effects apply modifiers to attack, defense, damage, crit, dodge
+- DOT/HOT processed each turn
+- Effects can break on attack (invisibility)
+- Cleanse usable via consumables or abilities
 
 ---
 
@@ -890,10 +1063,8 @@ Make the game accessible and enjoyable.
 **Tasks:**
 - [ ] Create tutorial quest (guided first experience)
 - [ ] Add tooltips and help text
-- [ ] Implement character creation flow (from CHARACTER_CREATION_GUIDE.md)
+- [ ] Implement character creation flow
 - [ ] Create gameplay tips system
-- [ ] Add command cheat sheet in-game
-- [ ] Create video/GIF demonstrations
 
 ---
 

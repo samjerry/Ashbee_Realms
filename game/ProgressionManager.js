@@ -4,12 +4,14 @@
  */
 
 const { loadData } = require('../data/data_loader');
+const PassiveManager = require('./PassiveManager');
 
 class ProgressionManager {
   constructor() {
     this.constants = loadData('constants')?.constants || {};
     this.classes = loadData('classes')?.classes || {};
     this.passives = loadData('passives')?.passives || {};
+    this.passiveManager = new PassiveManager();
   }
 
   /**
@@ -82,12 +84,19 @@ class ProgressionManager {
       character.maxHp = finalStats.maxHp;
       character.hp = character.maxHp;
 
+      // Award legacy points on level milestones (10, 20, 30, 40, 50)
+      let legacyPointsAwarded = 0;
+      if (character.level % 10 === 0 && permanentStats) {
+        legacyPointsAwarded = this.passiveManager.awardLegacyPoints(permanentStats, 1);
+      }
+
       result.levelUpRewards.push({
         level: character.level,
         statsGained,
         skillPoints: skillPointsGained,
         healedToFull: true,
-        newMaxHp: character.maxHp
+        newMaxHp: character.maxHp,
+        legacyPointsAwarded
       });
     }
 
@@ -142,23 +151,32 @@ class ProgressionManager {
       characterDeleted: false,
       goldLost: 0,
       xpLost: 0,
+      soulsAwarded: 0,
       respawnLocation: 'Town Square',
       permanentStatsRetained: permanentStats
     };
 
+    // Award souls for death
+    const soulsAwarded = this.passiveManager.awardSouls(permanentStats, character.level, isHardcore);
+    result.soulsAwarded = soulsAwarded;
+
     if (isHardcore) {
       // Hardcore mode: Character is deleted, keep only permanent progression
       result.characterDeleted = true;
-      result.message = `${character.name} has fallen in hardcore mode. All progress lost except permanent unlocks.`;
+      result.message = `${character.name} has fallen in hardcore mode. All progress lost except permanent unlocks. You gained ${soulsAwarded} souls.`;
       
       // Return permanent stats for new character
       result.permanentStatsToRetain = {
-        unlockedPassives: permanentStats.unlockedPassives || [],
+        passiveLevels: permanentStats.passiveLevels || {},
+        souls: permanentStats.souls || 0,
+        legacyPoints: permanentStats.legacyPoints || 0,
         accountStats: permanentStats.accountStats || {},
         totalDeaths: (permanentStats.totalDeaths || 0) + 1,
         totalKills: permanentStats.totalKills || 0,
         totalGoldEarned: permanentStats.totalGoldEarned || 0,
-        highestLevelReached: Math.max(character.level, permanentStats.highestLevelReached || 1)
+        totalXPEarned: permanentStats.totalXPEarned || 0,
+        highestLevelReached: Math.max(character.level, permanentStats.highestLevelReached || 1),
+        totalCrits: permanentStats.totalCrits || 0
       };
     } else {
       // Normal mode: Lose some gold and XP, respawn in town
@@ -180,7 +198,7 @@ class ProgressionManager {
         gold: character.gold,
         xp: character.xp
       };
-      result.message = `You died and lost ${goldLoss} gold and ${xpLoss} XP. You respawn in Town Square with 50% HP.`;
+      result.message = `You died and lost ${goldLoss} gold and ${xpLoss} XP. You gained ${soulsAwarded} souls. You respawn in Town Square with 50% HP.`;
     }
 
     return result;
@@ -239,153 +257,22 @@ class ProgressionManager {
    * @param {Object} accountStats - Account-wide statistics
    * @returns {Object} Bonus stats from passives
    */
-  calculatePassiveBonuses(unlockedPassives = [], accountStats = {}) {
-    const bonuses = {
-      strength: 0,
-      defense: 0,
-      magic: 0,
-      agility: 0,
-      maxHp: 0,
-      damageMultiplier: 1.0,
-      xpMultiplier: 1.0,
-      goldMultiplier: 1.0,
-      critChance: 0,
-      critDamage: 0,
-      damageReduction: 0
-    };
-
-    // Flatten all passive arrays
-    const allPassives = [
-      ...(this.passives.combat_passives || []),
-      ...(this.passives.survival_passives || []),
-      ...(this.passives.progression_passives || []),
-      ...(this.passives.resource_passives || [])
-    ];
-
-    unlockedPassives.forEach(passiveId => {
-      const passive = allPassives.find(p => p.id === passiveId);
-      if (!passive || !passive.effect) return;
-
-      const effect = passive.effect;
-
-      switch (effect.type) {
-        case 'damage_bonus':
-          // Calculate stacks based on account stats
-          const stacks = Math.min(
-            Math.floor((accountStats.monster_kills || 0) / effect.stack_requirement),
-            effect.max_stacks || 1
-          );
-          bonuses.damageMultiplier += (effect.value_per_stack || 0) * stacks;
-          break;
-
-        case 'combat_stats':
-          bonuses.critChance += effect.crit_chance || 0;
-          bonuses.critDamage += effect.crit_damage || 0;
-          break;
-
-        case 'damage_reduction':
-          bonuses.damageReduction += effect.value || 0;
-          break;
-
-        case 'xp_bonus':
-          bonuses.xpMultiplier += effect.value || 0;
-          break;
-
-        case 'gold_bonus':
-          bonuses.goldMultiplier += effect.value || 0;
-          break;
-
-        case 'stat_bonus':
-          bonuses.strength += effect.strength || 0;
-          bonuses.defense += effect.defense || 0;
-          bonuses.magic += effect.magic || 0;
-          bonuses.agility += effect.agility || 0;
-          bonuses.maxHp += effect.max_hp || 0;
-          break;
-      }
-    });
-
-    return bonuses;
+  /**
+   * Calculate passive bonuses (delegates to PassiveManager)
+   * @param {Object} passiveLevels - Passive levels object { passive_id: level }
+   * @returns {Object} Bonus multipliers and flat bonuses
+   */
+  calculatePassiveBonuses(passiveLevels = {}) {
+    return this.passiveManager.calculatePassiveBonuses(passiveLevels);
   }
 
   /**
-   * Check if character can unlock a specific passive
-   * @param {Object} passive - Passive data
-   * @param {Object} character - Character object
-   * @param {Object} accountStats - Account-wide stats
-   * @returns {Object} Unlock status
+   * Get all available passives (delegates to PassiveManager)
+   * @param {Object} passiveLevels - Current passive levels
+   * @returns {Array} All passives with metadata
    */
-  canUnlockPassive(passive, character, accountStats) {
-    if (!passive.unlock_requirement) {
-      return { canUnlock: true };
-    }
-
-    const req = passive.unlock_requirement;
-
-    switch (req.type) {
-      case 'level_reached':
-        return {
-          canUnlock: accountStats.highestLevelReached >= req.level,
-          message: `Requires highest level: ${req.level}`
-        };
-
-      case 'monster_kills':
-        return {
-          canUnlock: (accountStats.totalKills || 0) >= req.count,
-          message: `Requires ${req.count} monster kills`
-        };
-
-      case 'critical_hits':
-        return {
-          canUnlock: (accountStats.totalCrits || 0) >= req.count,
-          message: `Requires ${req.count} critical hits`
-        };
-
-      case 'gold_earned':
-        return {
-          canUnlock: (accountStats.totalGoldEarned || 0) >= req.amount,
-          message: `Requires ${req.amount} total gold earned`
-        };
-
-      case 'deaths':
-        return {
-          canUnlock: (accountStats.totalDeaths || 0) >= req.count,
-          message: `Requires ${req.count} deaths`
-        };
-
-      default:
-        return { canUnlock: false, message: 'Unknown requirement' };
-    }
-  }
-
-  /**
-   * Get all available passives with unlock status
-   * @param {Object} character - Character object
-   * @param {Object} accountStats - Account-wide stats
-   * @param {Array} unlockedPassives - Already unlocked passive IDs
-   * @returns {Array} Passives with unlock status
-   */
-  getAvailablePassives(character, accountStats, unlockedPassives = []) {
-    const allPassives = [
-      ...(this.passives.combat_passives || []),
-      ...(this.passives.survival_passives || []),
-      ...(this.passives.progression_passives || []),
-      ...(this.passives.resource_passives || [])
-    ];
-
-    return allPassives.map(passive => {
-      const isUnlocked = unlockedPassives.includes(passive.id);
-      const unlockStatus = isUnlocked ? 
-        { canUnlock: true, message: 'Already unlocked' } :
-        this.canUnlockPassive(passive, character, accountStats);
-
-      return {
-        ...passive,
-        isUnlocked,
-        canUnlock: unlockStatus.canUnlock,
-        unlockMessage: unlockStatus.message
-      };
-    });
+  getAvailablePassives(passiveLevels = {}) {
+    return this.passiveManager.getAllPassives(passiveLevels);
   }
 }
 

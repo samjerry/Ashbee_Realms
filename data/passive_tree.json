@@ -1,0 +1,340 @@
+{
+  "passives": {
+    "combat": [
+      {
+        "id": "strength_boost",
+        "name": "Brute Force",
+        "description": "Increase your raw strength",
+        "effect_per_level": "+1 Strength",
+        "effect_type": "stat_bonus",
+        "stat": "strength",
+        "bonus_per_level": 1,
+        "max_level": 50,
+        "base_cost": {
+          "souls": 2,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      },
+      {
+        "id": "defense_boost",
+        "name": "Iron Skin",
+        "description": "Harden your body against attacks",
+        "effect_per_level": "+1 Defense",
+        "effect_type": "stat_bonus",
+        "stat": "defense",
+        "bonus_per_level": 1,
+        "max_level": 50,
+        "base_cost": {
+          "souls": 2,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      },
+      {
+        "id": "magic_boost",
+        "name": "Arcane Power",
+        "description": "Channel greater magical energy",
+        "effect_per_level": "+1 Magic",
+        "effect_type": "stat_bonus",
+        "stat": "magic",
+        "bonus_per_level": 1,
+        "max_level": 50,
+        "base_cost": {
+          "souls": 2,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      },
+      {
+        "id": "agility_boost",
+        "name": "Swift Reflexes",
+        "description": "Move with lightning speed",
+        "effect_per_level": "+1 Agility",
+        "effect_type": "stat_bonus",
+        "stat": "agility",
+        "bonus_per_level": 1,
+        "max_level": 50,
+        "base_cost": {
+          "souls": 2,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      },
+      {
+        "id": "crit_chance",
+        "name": "Precision",
+        "description": "Strike at vulnerable points more often",
+        "effect_per_level": "+0.5% Critical Hit Chance",
+        "effect_type": "crit_chance",
+        "bonus_per_level": 0.005,
+        "max_level": 20,
+        "base_cost": {
+          "souls": 3,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      },
+      {
+        "id": "crit_damage",
+        "name": "Brutal Strikes",
+        "description": "Make your critical hits devastating",
+        "effect_per_level": "+2% Critical Damage",
+        "effect_type": "crit_damage",
+        "bonus_per_level": 0.02,
+        "max_level": 25,
+        "base_cost": {
+          "souls": 3,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      },
+      {
+        "id": "damage_boost",
+        "name": "Warrior's Might",
+        "description": "All your attacks deal more damage",
+        "effect_per_level": "+1% All Damage",
+        "effect_type": "damage_multiplier",
+        "bonus_per_level": 0.01,
+        "max_level": 25,
+        "base_cost": {
+          "souls": 3,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      },
+      {
+        "id": "damage_reduction",
+        "name": "Toughness",
+        "description": "Shrug off enemy attacks",
+        "effect_per_level": "+0.5% Damage Reduction",
+        "effect_type": "damage_reduction",
+        "bonus_per_level": 0.005,
+        "max_level": 25,
+        "base_cost": {
+          "souls": 3,
+          "legacy_points": 0
+        },
+        "category": "combat"
+      }
+    ],
+    "survival": [
+      {
+        "id": "max_hp",
+        "name": "Vitality",
+        "description": "Increase your maximum health pool",
+        "effect_per_level": "+5 Maximum HP",
+        "effect_type": "max_hp",
+        "bonus_per_level": 5,
+        "max_level": 100,
+        "base_cost": {
+          "souls": 2,
+          "legacy_points": 0
+        },
+        "category": "survival"
+      },
+      {
+        "id": "hp_on_kill",
+        "name": "Bloodthirst",
+        "description": "Recover health when slaying enemies",
+        "effect_per_level": "+1% HP Restored on Kill",
+        "effect_type": "hp_on_kill",
+        "bonus_per_level": 0.01,
+        "max_level": 10,
+        "base_cost": {
+          "souls": 4,
+          "legacy_points": 0
+        },
+        "category": "survival"
+      },
+      {
+        "id": "potion_effectiveness",
+        "name": "Alchemy Master",
+        "description": "Potions heal for more",
+        "effect_per_level": "+2% Potion Effectiveness",
+        "effect_type": "potion_bonus",
+        "bonus_per_level": 0.02,
+        "max_level": 20,
+        "base_cost": {
+          "souls": 3,
+          "legacy_points": 0
+        },
+        "category": "survival"
+      }
+    ],
+    "progression": [
+      {
+        "id": "exp_gain",
+        "name": "Fast Learner",
+        "description": "Gain experience faster from all sources",
+        "effect_per_level": "+2% Experience Gain",
+        "effect_type": "xp_multiplier",
+        "bonus_per_level": 0.02,
+        "max_level": 25,
+        "base_cost": {
+          "souls": 5,
+          "legacy_points": 0
+        },
+        "category": "progression"
+      },
+      {
+        "id": "gold_gain",
+        "name": "Treasure Hunter",
+        "description": "Find more gold from all sources",
+        "effect_per_level": "+2% Gold Gain",
+        "effect_type": "gold_multiplier",
+        "bonus_per_level": 0.02,
+        "max_level": 25,
+        "base_cost": {
+          "souls": 5,
+          "legacy_points": 0
+        },
+        "category": "progression"
+      },
+      {
+        "id": "reputation_gain",
+        "name": "Diplomat",
+        "description": "Build faction reputation faster",
+        "effect_per_level": "+2% Reputation Gain",
+        "effect_type": "reputation_multiplier",
+        "bonus_per_level": 0.02,
+        "max_level": 20,
+        "base_cost": {
+          "souls": 5,
+          "legacy_points": 0
+        },
+        "category": "progression"
+      },
+      {
+        "id": "quest_rewards",
+        "name": "Quest Master",
+        "description": "Receive better quest rewards",
+        "effect_per_level": "+2% Quest Reward Bonus",
+        "effect_type": "quest_reward_bonus",
+        "bonus_per_level": 0.02,
+        "max_level": 15,
+        "base_cost": {
+          "souls": 6,
+          "legacy_points": 0
+        },
+        "category": "progression"
+      }
+    ],
+    "utility": [
+      {
+        "id": "movement_speed",
+        "name": "Fleet Footed",
+        "description": "Move faster through the world",
+        "effect_per_level": "+1% Movement Speed",
+        "effect_type": "movement_speed",
+        "bonus_per_level": 0.01,
+        "max_level": 20,
+        "base_cost": {
+          "souls": 3,
+          "legacy_points": 0
+        },
+        "category": "utility"
+      },
+      {
+        "id": "loot_luck",
+        "name": "Fortune's Favor",
+        "description": "Find better loot from enemies",
+        "effect_per_level": "+1% Better Loot Quality",
+        "effect_type": "loot_luck",
+        "bonus_per_level": 0.01,
+        "max_level": 15,
+        "base_cost": {
+          "souls": 6,
+          "legacy_points": 0
+        },
+        "category": "utility"
+      },
+      {
+        "id": "inventory_space",
+        "name": "Pack Rat",
+        "description": "Carry more items in your inventory",
+        "effect_per_level": "+1 Inventory Slot",
+        "effect_type": "inventory_space",
+        "bonus_per_level": 1,
+        "max_level": 20,
+        "base_cost": {
+          "souls": 4,
+          "legacy_points": 0
+        },
+        "category": "utility"
+      },
+      {
+        "id": "merchant_prices",
+        "name": "Silver Tongue",
+        "description": "Get better prices from merchants",
+        "effect_per_level": "+1% Better Merchant Prices",
+        "effect_type": "merchant_discount",
+        "bonus_per_level": 0.01,
+        "max_level": 15,
+        "base_cost": {
+          "souls": 5,
+          "legacy_points": 0
+        },
+        "category": "utility"
+      }
+    ]
+  },
+  "categories": {
+    "combat": {
+      "name": "Combat Mastery",
+      "description": "Enhance your combat prowess and destructive power",
+      "color": "#FF4444"
+    },
+    "survival": {
+      "name": "Survival Instincts",
+      "description": "Improve your ability to survive and recover",
+      "color": "#44FF44"
+    },
+    "progression": {
+      "name": "Efficient Growth",
+      "description": "Accelerate your character's development",
+      "color": "#FFD700"
+    },
+    "utility": {
+      "name": "Practical Skills",
+      "description": "Quality of life improvements for your adventure",
+      "color": "#4444FF"
+    }
+  },
+  "cost_scaling": {
+    "description": "Passive costs scale with current level",
+    "formula": "base_cost + Math.floor(current_level / 10) * 2",
+    "examples": {
+      "level_1": "2 souls",
+      "level_10": "4 souls",
+      "level_20": "6 souls",
+      "level_30": "8 souls",
+      "level_40": "10 souls",
+      "level_50": "12 souls"
+    }
+  },
+  "legacy_point_requirement": {
+    "description": "Legacy Points required every 5 levels",
+    "threshold": 5,
+    "cost_per_threshold": 1,
+    "examples": {
+      "levels_1_4": "0 LP",
+      "level_5": "1 LP",
+      "level_10": "1 LP",
+      "level_15": "1 LP",
+      "level_20": "1 LP",
+      "level_25": "1 LP"
+    }
+  },
+  "respec": {
+    "enabled": true,
+    "refund_percentage": 0.5,
+    "description": "Reset all passive levels and refund 50% of souls spent (rounded down)",
+    "legacy_points_refund": "Full refund of all Legacy Points spent"
+  },
+  "starting_currency": {
+    "souls": 5,
+    "legacy_points": 0,
+    "description": "New players start with 5 souls to invest in their first passive upgrades"
+  }
+}

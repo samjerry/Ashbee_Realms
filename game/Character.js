@@ -44,7 +44,14 @@ class Character {
     this.completedQuests = data.completed_quests || [];
     this.consumableCooldowns = data.consumable_cooldowns || {};
     this.dialogueHistory = data.dialogue_history || {};
-    this.reputation = data.reputation || { general: 0 };
+    
+    // Faction reputation tracking
+    // Initialize with empty object, FactionManager will handle proper initialization
+    this.reputation = data.reputation || {};
+    
+    // Crafting & Enchanting
+    this.craftingXP = data.crafting_xp || 0;
+    this.knownRecipes = data.known_recipes || [];
     
     // Achievement tracking
     this.unlockedAchievements = data.unlocked_achievements || [];
@@ -458,6 +465,8 @@ class Character {
       consumable_cooldowns: this.consumableCooldowns,
       dialogue_history: this.dialogueHistory,
       reputation: this.reputation,
+      crafting_xp: this.craftingXP,
+      known_recipes: this.knownRecipes,
       in_combat: this.inCombat,
       combat: this.combat,
       skill_cd: this.skillCd,

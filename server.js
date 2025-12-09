@@ -967,33 +967,277 @@ app.post('/api/progression/respawn', async (req, res) => {
 });
 
 /**
- * GET /api/progression/passives
+ * GET /api/passives/tree
+ * Get complete passive tree with current levels and currency
+ */
+app.get('/api/passives/tree', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  try {
+    const permanentStats = await db.getPermanentStats(user.id) || {
+      passiveLevels: {},
+      souls: 5,
+      legacyPoints: 0
+    };
+
+    const { PassiveManager } = require('./game');
+    const passiveMgr = new PassiveManager();
+
+    const tree = passiveMgr.getPassiveTreeSummary(
+      permanentStats.passiveLevels || {},
+      permanentStats.souls || 0,
+      permanentStats.legacyPoints || 0
+    );
+
+    const allPassives = passiveMgr.getAllPassives(permanentStats.passiveLevels || {});
+
+    res.json({
+      success: true,
+      tree,
+      passives: allPassives
+    });
+  } catch (error) {
+    console.error('Error fetching passive tree:', error);
+    res.status(500).json({ error: 'Failed to fetch passive tree' });
+  }
+});
+
+/**
+ * GET /api/passives/category/:category
+ * Get passives by category
+ */
+app.get('/api/passives/category/:category', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { category } = req.params;
+
+  try {
+    const permanentStats = await db.getPermanentStats(user.id) || {
+      passiveLevels: {},
+      souls: 5,
+      legacyPoints: 0
+    };
+
+    const { PassiveManager } = require('./game');
+    const passiveMgr = new PassiveManager();
+
+    const passives = passiveMgr.getPassivesByCategory(
+      category,
+      permanentStats.passiveLevels || {}
+    );
+
+    res.json({
+      success: true,
+      category,
+      passives
+    });
+  } catch (error) {
+    console.error('Error fetching passives by category:', error);
+    res.status(500).json({ error: 'Failed to fetch passives' });
+  }
+});
+
+/**
+ * POST /api/passives/upgrade
+ * Upgrade a passive by one level
+ */
+app.post('/api/passives/upgrade', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { passiveId } = req.body;
+  if (!passiveId) {
+    return res.status(400).json({ error: 'passiveId required' });
+  }
+
+  try {
+    const permanentStats = await db.getPermanentStats(user.id) || {
+      passiveLevels: {},
+      souls: 5,
+      legacyPoints: 0,
+      totalDeaths: 0,
+      totalKills: 0,
+      totalGoldEarned: 0,
+      totalXPEarned: 0,
+      highestLevelReached: 1,
+      totalCrits: 0
+    };
+
+    const { PassiveManager } = require('./game');
+    const passiveMgr = new PassiveManager();
+
+    const upgradeResult = passiveMgr.upgradePassive(passiveId, permanentStats);
+
+    if (!upgradeResult.success) {
+      return res.status(400).json({
+        success: false,
+        error: upgradeResult.message
+      });
+    }
+
+    // Save to database
+    await db.savePermanentStats(user.id, permanentStats);
+
+    const passive = passiveMgr.getPassive(passiveId, permanentStats.passiveLevels || {});
+
+    res.json({
+      success: true,
+      message: upgradeResult.message,
+      passive,
+      cost: upgradeResult.cost,
+      newLevel: upgradeResult.newLevel,
+      currency: {
+        souls: permanentStats.souls,
+        legacy_points: permanentStats.legacyPoints
+      }
+    });
+  } catch (error) {
+    console.error('Error upgrading passive:', error);
+    res.status(500).json({ error: 'Failed to upgrade passive' });
+  }
+});
+
+/**
+ * POST /api/passives/respec
+ * Reset all passives and refund 50% of souls
+ */
+app.post('/api/passives/respec', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  try {
+    const permanentStats = await db.getPermanentStats(user.id) || {
+      passiveLevels: {},
+      souls: 5,
+      legacyPoints: 0
+    };
+
+    const { PassiveManager } = require('./game');
+    const passiveMgr = new PassiveManager();
+
+    const respecResult = passiveMgr.respecPassives(permanentStats);
+
+    if (!respecResult.success) {
+      return res.status(400).json({
+        success: false,
+        error: respecResult.message
+      });
+    }
+
+    // Save to database
+    await db.savePermanentStats(user.id, permanentStats);
+
+    res.json({
+      success: true,
+      message: 'All passives reset!',
+      refund: respecResult.refund,
+      currency: {
+        souls: permanentStats.souls,
+        legacy_points: permanentStats.legacyPoints
+      }
+    });
+  } catch (error) {
+    console.error('Error respecing passives:', error);
+    res.status(500).json({ error: 'Failed to respec passives' });
+  }
+});
+
+/**
+ * GET /api/passives/currency
+ * Get current souls and legacy points
+ */
+app.get('/api/passives/currency', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  try {
+    const permanentStats = await db.getPermanentStats(user.id) || {
+      passiveLevels: {},
+      souls: 5,
+      legacyPoints: 0
+    };
+
+    const { PassiveManager } = require('./game');
+    const passiveMgr = new PassiveManager();
+
+    const soulsSpent = passiveMgr.calculateTotalSoulsSpent(permanentStats.passiveLevels || {});
+    const lpSpent = passiveMgr.calculateTotalLegacyPointsSpent(permanentStats.passiveLevels || {});
+
+    res.json({
+      success: true,
+      currency: {
+        souls: permanentStats.souls || 0,
+        legacy_points: permanentStats.legacyPoints || 0,
+        souls_spent: soulsSpent,
+        legacy_points_spent: lpSpent
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching currency:', error);
+    res.status(500).json({ error: 'Failed to fetch currency' });
+  }
+});
+
+/**
+ * GET /api/passives/bonuses
+ * Get current passive bonuses applied
+ */
+app.get('/api/passives/bonuses', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  try {
+    const permanentStats = await db.getPermanentStats(user.id) || {
+      passiveLevels: {},
+      souls: 5,
+      legacyPoints: 0
+    };
+
+    const { PassiveManager } = require('./game');
+    const passiveMgr = new PassiveManager();
+
+    const bonuses = passiveMgr.calculatePassiveBonuses(permanentStats.passiveLevels || {});
+
+    res.json({
+      success: true,
+      bonuses
+    });
+  } catch (error) {
+    console.error('Error calculating bonuses:', error);
+    res.status(500).json({ error: 'Failed to calculate bonuses' });
+  }
+});
+
+/**
+ * GET /api/progression/passives (LEGACY - redirects to new endpoint)
  * Get all passives with unlock status
  */
 app.get('/api/progression/passives', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel } = req.query;
-  if (!channel) return res.status(400).json({ error: 'Channel required' });
-
   try {
-    const character = await db.getCharacter(user.id, channel.toLowerCase());
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
-    }
+    const permanentStats = await db.getPermanentStats(user.id) || {
+      passiveLevels: {},
+      souls: 5,
+      legacyPoints: 0
+    };
 
-    const permanentStats = await db.getPermanentStats(user.id) || {};
-    const unlockedPassives = permanentStats.unlockedPassives || [];
-    const accountStats = permanentStats.accountStats || {};
+    const { PassiveManager } = require('./game');
+    const passiveMgr = new PassiveManager();
 
-    const progressionMgr = new ProgressionManager();
-    const passives = progressionMgr.getAvailablePassives(character, accountStats, unlockedPassives);
+    const allPassives = passiveMgr.getAllPassives(permanentStats.passiveLevels || {});
 
     res.json({
       success: true,
-      passives,
-      accountStats
+      passives: allPassives,
+      currency: {
+        souls: permanentStats.souls || 0,
+        legacy_points: permanentStats.legacyPoints || 0
+      },
+      message: 'This endpoint is deprecated. Use /api/passives/tree instead.'
     });
   } catch (error) {
     console.error('Error fetching passives:', error);
@@ -1002,71 +1246,17 @@ app.get('/api/progression/passives', async (req, res) => {
 });
 
 /**
- * POST /api/progression/unlock-passive
+ * POST /api/progression/unlock-passive (LEGACY - redirects to new endpoint)
  * Unlock a permanent passive
  */
 app.post('/api/progression/unlock-passive', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel, passiveId } = req.body;
-  if (!channel || !passiveId) {
-    return res.status(400).json({ error: 'Channel and passiveId required' });
-  }
-
-  try {
-    const character = await db.getCharacter(user.id, channel.toLowerCase());
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
-    }
-
-    const permanentStats = await db.getPermanentStats(user.id) || {};
-    const unlockedPassives = permanentStats.unlockedPassives || [];
-    const accountStats = permanentStats.accountStats || {};
-
-    // Check if already unlocked
-    if (unlockedPassives.includes(passiveId)) {
-      return res.status(400).json({ error: 'Passive already unlocked' });
-    }
-
-    const progressionMgr = new ProgressionManager();
-    const allPassives = [
-      ...(progressionMgr.passives.combat_passives || []),
-      ...(progressionMgr.passives.survival_passives || []),
-      ...(progressionMgr.passives.progression_passives || []),
-      ...(progressionMgr.passives.resource_passives || [])
-    ];
-
-    const passive = allPassives.find(p => p.id === passiveId);
-    if (!passive) {
-      return res.status(404).json({ error: 'Passive not found' });
-    }
-
-    // Check unlock requirements
-    const unlockStatus = progressionMgr.canUnlockPassive(passive, character, accountStats);
-    if (!unlockStatus.canUnlock) {
-      return res.status(400).json({ 
-        error: 'Cannot unlock passive',
-        message: unlockStatus.message
-      });
-    }
-
-    // Unlock passive
-    unlockedPassives.push(passiveId);
-    permanentStats.unlockedPassives = unlockedPassives;
-
-    await db.savePermanentStats(user.id, permanentStats);
-
-    res.json({
-      success: true,
-      message: `Unlocked ${passive.name}!`,
-      passive,
-      unlockedPassives
-    });
-  } catch (error) {
-    console.error('Error unlocking passive:', error);
-    res.status(500).json({ error: 'Failed to unlock passive' });
-  }
+  res.status(400).json({
+    error: 'This endpoint is deprecated',
+    message: 'Use /api/passives/upgrade instead. The passive system now uses incremental upgrades instead of one-time unlocks.'
+  });
 });
 
 /**
@@ -1102,6 +1292,253 @@ app.get('/api/progression/skills', async (req, res) => {
 });
 
 // ==================== END PROGRESSION ENDPOINTS ====================
+
+// ==================== STATUS EFFECTS ENDPOINTS ====================
+
+/**
+ * GET /api/status-effects/all
+ * Get all available status effects from data
+ */
+app.get('/api/status-effects/all', async (req, res) => {
+  try {
+    const StatusEffectManager = require('./game/StatusEffectManager');
+    const effectMgr = new StatusEffectManager();
+    
+    res.json({
+      success: true,
+      statusEffects: effectMgr.getAllStatusEffects(),
+      combos: effectMgr.getEffectCombos()
+    });
+  } catch (error) {
+    console.error('Error fetching status effects:', error);
+    res.status(500).json({ error: 'Failed to fetch status effects' });
+  }
+});
+
+/**
+ * GET /api/status-effects/active
+ * Get currently active status effects on character
+ */
+app.get('/api/status-effects/active', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    res.json({
+      success: true,
+      effects: character.statusEffects.getActiveEffects(),
+      auras: character.statusEffects.getActiveAuras(),
+      modifiers: character.statusEffects.getModifiers()
+    });
+  } catch (error) {
+    console.error('Error fetching active effects:', error);
+    res.status(500).json({ error: 'Failed to fetch active effects' });
+  }
+});
+
+/**
+ * POST /api/status-effects/apply
+ * Apply a status effect to character (for testing/admin)
+ */
+app.post('/api/status-effects/apply', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, effectId, duration, stacks } = req.body;
+  if (!channel || !effectId) {
+    return res.status(400).json({ error: 'Channel and effectId required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const result = character.statusEffects.addEffect(effectId, {
+      duration: duration,
+      initialStacks: stacks
+    });
+
+    if (!result.success) {
+      return res.status(400).json({ 
+        success: false, 
+        reason: result.reason 
+      });
+    }
+
+    // Save character state
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      result,
+      activeEffects: character.statusEffects.getActiveEffects()
+    });
+  } catch (error) {
+    console.error('Error applying status effect:', error);
+    res.status(500).json({ error: 'Failed to apply status effect' });
+  }
+});
+
+/**
+ * POST /api/status-effects/cleanse
+ * Cleanse debuffs from character
+ */
+app.post('/api/status-effects/cleanse', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, count, specific } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const result = character.statusEffects.cleanse({
+      count: count || 1,
+      specific: specific
+    });
+
+    // Save character state
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      removed: result.removed,
+      count: result.count,
+      remainingEffects: character.statusEffects.getActiveEffects()
+    });
+  } catch (error) {
+    console.error('Error cleansing effects:', error);
+    res.status(500).json({ error: 'Failed to cleanse effects' });
+  }
+});
+
+/**
+ * POST /api/status-effects/dispel
+ * Dispel buffs from enemy (use in combat)
+ */
+app.post('/api/status-effects/dispel', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, count } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    // Check if in combat
+    if (!character.inCombat || !character.combat) {
+      return res.status(400).json({ error: 'Not in combat' });
+    }
+
+    // Dispel enemy buffs
+    const result = character.combat.monster.statusEffects.dispel({
+      count: count || 1
+    });
+
+    // Save character state
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      removed: result.removed,
+      count: result.count,
+      enemyEffects: character.combat.monster.statusEffects.getActiveEffects()
+    });
+  } catch (error) {
+    console.error('Error dispelling effects:', error);
+    res.status(500).json({ error: 'Failed to dispel effects' });
+  }
+});
+
+/**
+ * POST /api/status-effects/aura/add
+ * Add permanent aura effect
+ */
+app.post('/api/status-effects/aura/add', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, auraId, auraData } = req.body;
+  if (!channel || !auraId || !auraData) {
+    return res.status(400).json({ error: 'Channel, auraId, and auraData required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const result = character.statusEffects.addAura(auraId, auraData);
+
+    // Save character state
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: true,
+      auraId: result.auraId,
+      activeAuras: character.statusEffects.getActiveAuras()
+    });
+  } catch (error) {
+    console.error('Error adding aura:', error);
+    res.status(500).json({ error: 'Failed to add aura' });
+  }
+});
+
+/**
+ * POST /api/status-effects/aura/remove
+ * Remove permanent aura effect
+ */
+app.post('/api/status-effects/aura/remove', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const { channel, auraId } = req.body;
+  if (!channel || !auraId) {
+    return res.status(400).json({ error: 'Channel and auraId required' });
+  }
+
+  try {
+    const character = await db.getCharacter(user.id, channel.toLowerCase());
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+
+    const result = character.statusEffects.removeAura(auraId);
+
+    // Save character state
+    await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    res.json({
+      success: result.success,
+      auraId: result.auraId,
+      activeAuras: character.statusEffects.getActiveAuras()
+    });
+  } catch (error) {
+    console.error('Error removing aura:', error);
+    res.status(500).json({ error: 'Failed to remove aura' });
+  }
+});
+
+// ==================== END STATUS EFFECTS ENDPOINTS ====================
 
 // ==================== EXPLORATION ENDPOINTS ====================
 
@@ -2789,6 +3226,557 @@ app.post('/api/dungeons/solve-puzzle', async (req, res) => {
 // ==================== END DUNGEON ENDPOINTS ====================
 
 // ==================== END COMBAT ENDPOINTS ====================
+
+// ==================== FACTION ENDPOINTS ====================
+
+const { FactionManager } = require('./game');
+const factionMgr = new FactionManager();
+
+/**
+ * GET /api/factions
+ * Get all factions with basic info
+ */
+app.get('/api/factions', async (req, res) => {
+  try {
+    await factionMgr.loadFactions();
+    const factions = Object.values(factionMgr.factions).map(faction => ({
+      id: faction.id,
+      name: faction.name,
+      description: faction.description,
+      alignment: faction.alignment,
+      leader: faction.leader
+    }));
+
+    res.json({ factions });
+  } catch (error) {
+    console.error('Error fetching factions:', error);
+    res.status(500).json({ error: 'Failed to fetch factions' });
+  }
+});
+
+/**
+ * GET /api/factions/:factionId
+ * Get detailed faction information
+ */
+app.get('/api/factions/:factionId', async (req, res) => {
+  try {
+    const { factionId } = req.params;
+    const faction = await factionMgr.getFaction(factionId);
+
+    if (!faction) {
+      return res.status(404).json({ error: 'Faction not found' });
+    }
+
+    res.json({ faction });
+  } catch (error) {
+    console.error('Error fetching faction:', error);
+    res.status(500).json({ error: 'Failed to fetch faction' });
+  }
+});
+
+/**
+ * GET /api/factions/standings
+ * Get all faction standings for a character
+ * Query: player, channel
+ */
+app.get('/api/factions/standings', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const standings = await factionMgr.getAllStandings(character);
+
+    res.json({ standings });
+  } catch (error) {
+    console.error('Error fetching standings:', error);
+    res.status(500).json({ error: 'Failed to fetch standings' });
+  }
+});
+
+/**
+ * GET /api/factions/:factionId/standing
+ * Get character's standing with specific faction
+ * Query: player, channel
+ */
+app.get('/api/factions/:factionId/standing', async (req, res) => {
+  try {
+    const { factionId } = req.params;
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const standing = await factionMgr.getFactionStanding(character, factionId);
+
+    res.json({ standing });
+  } catch (error) {
+    console.error('Error fetching faction standing:', error);
+    res.status(500).json({ error: 'Failed to fetch standing' });
+  }
+});
+
+/**
+ * POST /api/factions/:factionId/reputation
+ * Add reputation to a faction (admin/quest rewards)
+ * Body: { player, channel, amount, reason }
+ */
+app.post('/api/factions/:factionId/reputation', async (req, res) => {
+  try {
+    const { factionId } = req.params;
+    const { player, channel, amount, reason } = req.body;
+
+    if (!player || !channel || amount === undefined) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = await factionMgr.addReputation(character, factionId, amount, reason || 'manual');
+
+    // Save updated reputation
+    await db.updateReputation(userId, channel, character.reputation);
+
+    res.json({ result });
+  } catch (error) {
+    console.error('Error adding reputation:', error);
+    res.status(500).json({ error: 'Failed to add reputation' });
+  }
+});
+
+/**
+ * GET /api/factions/abilities
+ * Get all unlocked faction abilities for a character
+ * Query: player, channel
+ */
+app.get('/api/factions/abilities', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const abilities = await factionMgr.getFactionAbilities(character);
+
+    res.json({ abilities });
+  } catch (error) {
+    console.error('Error fetching faction abilities:', error);
+    res.status(500).json({ error: 'Failed to fetch abilities' });
+  }
+});
+
+/**
+ * GET /api/factions/mounts
+ * Get all unlocked faction mounts for a character
+ * Query: player, channel
+ */
+app.get('/api/factions/mounts', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const mounts = await factionMgr.getFactionMounts(character);
+
+    res.json({ mounts });
+  } catch (error) {
+    console.error('Error fetching faction mounts:', error);
+    res.status(500).json({ error: 'Failed to fetch mounts' });
+  }
+});
+
+/**
+ * GET /api/factions/summary
+ * Get faction summary/statistics for a character
+ * Query: player, channel
+ */
+app.get('/api/factions/summary', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const summary = await factionMgr.getFactionSummary(character);
+
+    res.json({ summary });
+  } catch (error) {
+    console.error('Error fetching faction summary:', error);
+    res.status(500).json({ error: 'Failed to fetch summary' });
+  }
+});
+
+// ==================== END FACTION ENDPOINTS ====================
+
+// ==================== ENCHANTING & CRAFTING ENDPOINTS ====================
+
+const { EnchantingManager, CraftingManager } = require('./game');
+const enchantingMgr = new EnchantingManager();
+const craftingMgr = new CraftingManager();
+
+/**
+ * GET /api/enchanting/enchantments
+ * Get all enchantments available for a slot
+ * Query: slot (optional)
+ */
+app.get('/api/enchanting/enchantments', async (req, res) => {
+  try {
+    const { slot } = req.query;
+
+    let enchantments;
+    if (slot) {
+      enchantments = await enchantingMgr.getEnchantmentsForSlot(slot);
+    } else {
+      await enchantingMgr.loadEnchantments();
+      enchantments = [];
+      for (const category in enchantingMgr.enchantments) {
+        for (const rarity in enchantingMgr.enchantments[category]) {
+          enchantments.push(...enchantingMgr.enchantments[category][rarity]);
+        }
+      }
+    }
+
+    res.json({ enchantments });
+  } catch (error) {
+    console.error('Error fetching enchantments:', error);
+    res.status(500).json({ error: 'Failed to fetch enchantments' });
+  }
+});
+
+/**
+ * GET /api/enchanting/enchantment/:enchantmentId
+ * Get specific enchantment details
+ */
+app.get('/api/enchanting/enchantment/:enchantmentId', async (req, res) => {
+  try {
+    const { enchantmentId } = req.params;
+    const enchantment = await enchantingMgr.getEnchantment(enchantmentId);
+
+    if (!enchantment) {
+      return res.status(404).json({ error: 'Enchantment not found' });
+    }
+
+    res.json({ enchantment });
+  } catch (error) {
+    console.error('Error fetching enchantment:', error);
+    res.status(500).json({ error: 'Failed to fetch enchantment' });
+  }
+});
+
+/**
+ * POST /api/enchanting/enchant
+ * Enchant an item
+ * Body: { player, channel, itemId, enchantmentId }
+ */
+app.post('/api/enchanting/enchant', async (req, res) => {
+  try {
+    const { player, channel, itemId, enchantmentId } = req.body;
+
+    if (!player || !channel || !itemId || !enchantmentId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = await enchantingMgr.enchantItem(character, itemId, enchantmentId);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error enchanting item:', error);
+    res.status(500).json({ error: 'Failed to enchant item' });
+  }
+});
+
+/**
+ * POST /api/enchanting/remove
+ * Remove an enchantment from an item
+ * Body: { player, channel, itemId, enchantmentIndex }
+ */
+app.post('/api/enchanting/remove', async (req, res) => {
+  try {
+    const { player, channel, itemId, enchantmentIndex } = req.body;
+
+    if (!player || !channel || !itemId || enchantmentIndex === undefined) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = await enchantingMgr.removeEnchantment(character, itemId, enchantmentIndex);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error removing enchantment:', error);
+    res.status(500).json({ error: 'Failed to remove enchantment' });
+  }
+});
+
+/**
+ * POST /api/enchanting/disenchant
+ * Disenchant an item to recover materials
+ * Body: { player, channel, itemId }
+ */
+app.post('/api/enchanting/disenchant', async (req, res) => {
+  try {
+    const { player, channel, itemId } = req.body;
+
+    if (!player || !channel || !itemId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = await enchantingMgr.disenchantItem(character, itemId);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error disenchanting item:', error);
+    res.status(500).json({ error: 'Failed to disenchant item' });
+  }
+});
+
+/**
+ * GET /api/crafting/recipes
+ * Get all crafting recipes
+ * Query: category (optional), player, channel (for filtering craftable)
+ */
+app.get('/api/crafting/recipes', async (req, res) => {
+  try {
+    const { category, player, channel } = req.query;
+
+    let recipes;
+    if (category) {
+      recipes = await craftingMgr.getRecipesByCategory(category);
+    } else {
+      recipes = await craftingMgr.getAllRecipes();
+    }
+
+    // If player provided, filter by craftable
+    if (player && channel) {
+      const userId = await db.getUserId(player, channel);
+      if (userId) {
+        const character = await db.getCharacter(userId, channel);
+        recipes = await craftingMgr.getCraftableRecipes(character);
+      }
+    }
+
+    res.json({ recipes });
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    res.status(500).json({ error: 'Failed to fetch recipes' });
+  }
+});
+
+/**
+ * GET /api/crafting/recipe/:recipeId
+ * Get specific recipe details
+ */
+app.get('/api/crafting/recipe/:recipeId', async (req, res) => {
+  try {
+    const { recipeId } = req.params;
+    const recipe = await craftingMgr.getRecipe(recipeId);
+
+    if (!recipe) {
+      return res.status(404).json({ error: 'Recipe not found' });
+    }
+
+    res.json({ recipe });
+  } catch (error) {
+    console.error('Error fetching recipe:', error);
+    res.status(500).json({ error: 'Failed to fetch recipe' });
+  }
+});
+
+/**
+ * POST /api/crafting/craft
+ * Craft an item
+ * Body: { player, channel, recipeId }
+ */
+app.post('/api/crafting/craft', async (req, res) => {
+  try {
+    const { player, channel, recipeId } = req.body;
+
+    if (!player || !channel || !recipeId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = await craftingMgr.craftItem(character, recipeId);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error crafting item:', error);
+    res.status(500).json({ error: 'Failed to craft item' });
+  }
+});
+
+/**
+ * POST /api/crafting/salvage
+ * Salvage an item for materials
+ * Body: { player, channel, itemId }
+ */
+app.post('/api/crafting/salvage', async (req, res) => {
+  try {
+    const { player, channel, itemId } = req.body;
+
+    if (!player || !channel || !itemId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = await craftingMgr.salvageItem(character, itemId);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error salvaging item:', error);
+    res.status(500).json({ error: 'Failed to salvage item' });
+  }
+});
+
+/**
+ * GET /api/crafting/summary
+ * Get crafting summary for character
+ * Query: player, channel
+ */
+app.get('/api/crafting/summary', async (req, res) => {
+  try {
+    const { player, channel } = req.query;
+
+    if (!player || !channel) {
+      return res.status(400).json({ error: 'Missing player or channel' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const summary = await craftingMgr.getCraftingSummary(character);
+
+    res.json({ summary });
+  } catch (error) {
+    console.error('Error fetching crafting summary:', error);
+    res.status(500).json({ error: 'Failed to fetch summary' });
+  }
+});
+
+/**
+ * POST /api/crafting/discover
+ * Discover a new recipe
+ * Body: { player, channel, recipeId }
+ */
+app.post('/api/crafting/discover', async (req, res) => {
+  try {
+    const { player, channel, recipeId } = req.body;
+
+    if (!player || !channel || !recipeId) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const userId = await db.getUserId(player, channel);
+    if (!userId) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const character = await db.getCharacter(userId, channel);
+    const result = await craftingMgr.discoverRecipe(character, recipeId);
+
+    if (result.success) {
+      await db.saveCharacter(userId, channel, character);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error discovering recipe:', error);
+    res.status(500).json({ error: 'Failed to discover recipe' });
+  }
+});
+
+// ==================== END ENCHANTING & CRAFTING ENDPOINTS ====================
 
 app.get('/adventure', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

@@ -21,6 +21,10 @@ const NPCManager = require('./NPCManager');
 const DialogueManager = require('./DialogueManager');
 const AchievementManager = require('./AchievementManager');
 const DungeonManager = require('./DungeonManager');
+const FactionManager = require('./FactionManager');
+const EnchantingManager = require('./EnchantingManager');
+const CraftingManager = require('./CraftingManager');
+const PassiveManager = require('./PassiveManager');
 
 module.exports = {
   Character,
@@ -40,5 +44,9 @@ module.exports = {
   NPCManager,
   DialogueManager,
   AchievementManager,
-  DungeonManager
+  DungeonManager,
+  FactionManager,
+  EnchantingManager,
+  CraftingManager,
+  PassiveManager
 };
