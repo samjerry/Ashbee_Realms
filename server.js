@@ -277,7 +277,12 @@ app.get('/api/player/stats', async (req, res) => {
   
   // If no channel specified, use the user's Twitch username as default
   if (!channel) {
-    channel = user.login; // Twitch username from OAuth
+    channel = user.login || user.displayName || user.display_name;
+  }
+  
+  // Still no channel? Return error
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required and no user login found' });
   }
   
   const channelName = channel.toLowerCase();
@@ -309,7 +314,12 @@ app.get('/api/player/inventory', async (req, res) => {
   
   // If no channel specified, use the user's Twitch username as default
   if (!channel) {
-    channel = user.login;
+    channel = user.login || user.displayName || user.display_name;
+  }
+  
+  // Still no channel? Return error
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required and no user login found' });
   }
   
   const channelName = channel.toLowerCase();
@@ -341,7 +351,12 @@ app.get('/api/player/equipment', async (req, res) => {
   
   // If no channel specified, use the user's Twitch username as default
   if (!channel) {
-    channel = user.login;
+    channel = user.login || user.displayName || user.display_name;
+  }
+  
+  // Still no channel? Return error
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required and no user login found' });
   }
   
   const channelName = channel.toLowerCase();
