@@ -1925,8 +1925,12 @@ app.get('/api/quests/available', async (req, res) => {
     const activeQuests = character.activeQuests || [];
     const completedQuests = character.completedQuests || [];
 
+    // Extract quest IDs from quest state objects
+    const activeQuestIds = activeQuests.map(q => q.questId);
+    const completedQuestIds = completedQuests.map(q => q.questId || q.id);
+
     const questMgr = new QuestManager();
-    const available = questMgr.getAvailableQuests(character, activeQuests, completedQuests);
+    const available = questMgr.getAvailableQuests(character, activeQuestIds, completedQuestIds);
 
     res.json({
       success: true,
