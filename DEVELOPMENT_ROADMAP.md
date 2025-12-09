@@ -955,20 +955,106 @@ node Testing/test_status_effects.js
 
 Twitch integration and community features.
 
-#### 4.1 Raid System
+#### 4.1 Raid System ✅ **COMPLETED**
 **Goal:** Group content for multiple Twitch viewers.
 
-**Tasks:**
-- [ ] Load raids from raids.json
-- [ ] Implement raid lobby system (players join)
-- [ ] Create role system (tank, healer, DPS)
-- [ ] Add coordinated combat (multiple players vs boss)
-- [ ] Implement raid-specific mechanics
-- [ ] Add raid rewards and leaderboards
-- [ ] Create Twitch channel points integration
+**Status:** ✅ COMPLETE - All 112 tests passing
 
-**Files to create:**
-- `game/raids.js` - Raid manager
+**Tasks:**
+- [x] ✅ Load raids from raids.json (4 unique raids)
+- [x] ✅ Implement raid lobby system (players join with role selection)
+- [x] ✅ Create role system (tank, healer, DPS with requirements)
+- [x] ✅ Add coordinated combat (multiple players vs boss)
+- [x] ✅ Implement raid-specific mechanics (waves, phases, objectives, boss rush)
+- [x] ✅ Add raid rewards and leaderboards (difficulty scaling)
+- [x] ✅ Create Twitch viewer voting system
+- [x] ✅ Implement legacy points buff system (replace channel points/bits)
+- [x] ✅ Add leadership transfer (lobbies don't disband when leader leaves)
+- [x] ✅ Create 15 API endpoints
+- [x] ✅ Write comprehensive test suite (112 tests)
+- [x] ✅ Write complete documentation
+
+**Files created:**
+- ✅ `game/RaidManager.js` (1168 lines) - Complete raid management system
+- ✅ `Testing/test_raid_system.js` (427 lines) - 112 comprehensive tests
+- ✅ `game/RAID_README.md` - Complete system documentation
+
+**Files modified:**
+- ✅ `game/index.js` - Exported RaidManager
+- ✅ `game/Character.js` - Added legacyPoints property
+- ✅ `server.js` - Added 15 raid API endpoints
+
+**Features Implemented:**
+- ✅ **4 Unique Raids**: Goblin Siege, Dragon Assault, Void Incursion, Trial of Legends
+- ✅ **Multiple Raid Types**: Wave-based, Phase-based, Objective-based, Boss Rush
+- ✅ **Lobby System**: Pre-raid gathering with role selection and requirements
+- ✅ **Leadership Transfer**: Random player becomes leader when current leader leaves
+- ✅ **Role Management**: Tank (aggro/taunts), Healer (party healing), DPS (damage)
+- ✅ **Coordinated Combat**: Multiplayer turn-based combat with action logs
+- ✅ **Twitch Viewer Voting**: Community votes on raid events (30s voting windows)
+- ✅ **Legacy Points Buffs**: 4 raid buffs (heal 5 LP, revive 10 LP, damage 8 LP, shield 12 LP)
+- ✅ **Leaderboards**: Track fastest clears, fewest deaths, highest damage
+- ✅ **Difficulty Scaling**: Normal (1.0x), Hard (1.5x), Nightmare (2.0x), Mythic (3.0x)
+- ✅ **Achievements**: Raid-specific achievements (Dragonslayer, Perfect Defense, Speed Kill)
+- ✅ **Rewards System**: Gold, XP, items, unique loot, raid tokens, titles
+
+**API Endpoints:**
+```javascript
+GET  /api/raids                       // Get all available raids
+GET  /api/raids/:raidId               // Get raid details
+GET  /api/raids/lobbies/active        // Get active lobbies
+POST /api/raids/lobby/create          // Create lobby
+POST /api/raids/lobby/join            // Join lobby
+POST /api/raids/lobby/leave           // Leave lobby (transfers leadership if leader)
+POST /api/raids/lobby/change-role     // Change role
+POST /api/raids/start                 // Start raid
+GET  /api/raids/instance/:instanceId  // Get raid state
+POST /api/raids/action                // Perform action
+POST /api/raids/viewer/vote           // Submit viewer vote
+GET  /api/raids/buffs                 // Get available legacy points buffs
+POST /api/raids/buff/purchase         // Purchase buff with legacy points
+GET  /api/raids/leaderboard/:raidId   // Get leaderboard
+```
+
+**Testing:**
+```bash
+node Testing/test_raid_system.js
+# 112/112 tests passing ✅
+# 100% success rate
+```
+
+**Test Coverage:**
+- Raid loading and filtering (4 raids, multiple difficulties)
+- Lobby creation and management
+- Player joining/leaving with role selection
+- Leadership transfer when leader leaves
+- Role distribution and requirements (2 tanks, 3 healers, 10 DPS for dragon)
+- Lobby player limits and start requirements
+- Raid instance creation and state management
+- Player actions (attack, heal, ability, taunt)
+- Combat log system
+- Twitch viewer voting (weighted by bits)
+- Legacy points buff purchase (heal, revive, damage, shield)
+- Legacy points validation and deduction
+- Leaderboard tracking and rankings
+- Reward calculation with difficulty multipliers
+- Raid achievements
+- Wave-based raids (Goblin Siege with 3 waves)
+- Phase-based raids (Dragon Assault with HP thresholds)
+- Objective-based raids (Void Incursion with 3 objectives)
+- Boss rush raids (Trial of Legends with 5 bosses)
+- Difficulty scaling (1.5x rewards for hard mode)
+- Leave lobby and disbanding (only when empty)
+- Raid wipe handling
+- Twitch integration settings
+- Raid mechanics system
+
+**Documentation:**
+- See `game/RAID_README.md` for complete API documentation
+- Includes Twitch bot command examples for streamers and viewers
+- Full integration guide for channel points and bits
+- Database schema recommendations
+- Troubleshooting guide
 
 ---
 

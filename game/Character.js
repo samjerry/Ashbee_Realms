@@ -53,6 +53,9 @@ class Character {
     this.craftingXP = data.crafting_xp || 0;
     this.knownRecipes = data.known_recipes || [];
     
+    // Legacy Points (premium currency for raid buffs and special features)
+    this.legacyPoints = data.legacy_points || 0;
+    
     // Achievement tracking
     this.unlockedAchievements = data.unlocked_achievements || [];
     this.achievementProgress = data.achievement_progress || {};

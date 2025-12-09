@@ -25,6 +25,7 @@ const FactionManager = require('./FactionManager');
 const EnchantingManager = require('./EnchantingManager');
 const CraftingManager = require('./CraftingManager');
 const PassiveManager = require('./PassiveManager');
+const RaidManager = require('./RaidManager');
 
 module.exports = {
   Character,
@@ -48,5 +49,6 @@ module.exports = {
   FactionManager,
   EnchantingManager,
   CraftingManager,
+  RaidManager,
   PassiveManager
 };
