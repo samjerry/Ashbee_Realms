@@ -33,12 +33,12 @@ const CharacterSheet = () => {
       <div className="card p-6">
         <div className="flex items-start space-x-6">
           <div className="w-32 h-32 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center text-white font-bold text-5xl shadow-lg">
-            {player.level}
+            {player.level || 1}
           </div>
           
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-white mb-2">{player.username}</h1>
-            <p className="text-lg text-gray-400 mb-4">{player.class} • Level {player.level}</p>
+            <h1 className="text-3xl font-bold text-white mb-2">{player.username || 'Unknown'}</h1>
+            <p className="text-lg text-gray-400 mb-4">{player.class || 'Adventurer'} • Level {player.level || 1}</p>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -66,7 +66,7 @@ const CharacterSheet = () => {
       <div className="card p-6">
         <h2 className="text-2xl font-bold text-white mb-4">Stats</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {stats.map((stat) => {
+          {statList.map((stat) => {
             const Icon = stat.icon;
             return (
               <div key={stat.label} className="bg-dark-900 rounded-lg p-4 border border-dark-700">
