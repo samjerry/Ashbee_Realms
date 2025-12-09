@@ -4,6 +4,38 @@ This guide explains how to deploy both the backend and frontend to Railway on a 
 
 ---
 
+## ⚠️ IMPORTANT: Database Migration Required
+
+**If you get errors about missing columns (e.g., "column 'base_stats' does not exist"):**
+
+Your Railway database schema needs to be updated. Run the migration script:
+
+```powershell
+# 1. Get your Railway DATABASE_URL
+#    Railway dashboard → PostgreSQL service → Variables → Copy DATABASE_URL
+
+# 2. Add to .env file temporarily:
+DATABASE_URL=postgresql://postgres:...@...railway.app:5432/railway
+
+# 3. Run migration (includes comprehensive checks):
+npm run migrate
+
+# 4. Remove DATABASE_URL from .env when done
+```
+
+**The migration script will:**
+- ✅ Validate all environment variables
+- ✅ Test PostgreSQL connection
+- ✅ Verify database permissions
+- ✅ Check if tables exist and are properly linked
+- ✅ Add missing columns with default values
+- ✅ Update existing player records
+- ✅ Verify the migration succeeded
+
+You only need to run this once, or whenever new database columns are added to the code.
+
+---
+
 ## 🎯 Overview
 
 **Development vs Production:**
@@ -168,6 +200,62 @@ railway up
 # Add CLIENT_URL environment variable
 # Update websocket/socketHandler.js CORS config
 # Ensure Socket.io server is initialized in server.js
+```
+
+**5. Database errors (column does not exist):**
+```bash
+# Your database schema is outdated
+# Run migration script locally:
+#   1. Get DATABASE_URL from Railway dashboard
+#   2. Add to your local .env file temporarily
+#   3. Run: node migrate-database.js
+#   4. Remove DATABASE_URL from .env when done
+```
+
+---
+
+## 🔄 Database Migrations
+
+When you add new columns or tables to `db.js`, your Railway database needs to be updated:
+
+### Migration Process (Comprehensive Validation):
+
+1. **Get DATABASE_URL** from Railway dashboard (PostgreSQL service → Variables)
+2. **Add to local `.env`** file temporarily:
+   ```
+   DATABASE_URL=postgresql://postgres:...@...railway.app:5432/railway
+   ```
+3. **Run migration**: `npm run migrate`
+4. **Remove DATABASE_URL** from `.env` when complete
+
+### What the Enhanced Migration Does:
+
+**Pre-Flight Checks:**
+- ✅ Validates all environment variables (format, length, required fields)
+- ✅ Tests PostgreSQL connection (hostname, port, credentials)
+- ✅ Verifies database permissions (CREATE, CONNECT, USAGE)
+- ✅ Checks if required tables exist (players, player_progress, permanent_stats)
+- ✅ Ensures database is properly linked to your project
+
+**Migration Execution:**
+- ✅ Analyzes current column structure
+- ✅ Adds any missing columns with proper defaults
+- ✅ Updates existing player records with default values
+- ✅ Safe to run multiple times (idempotent)
+
+**Post-Migration Verification:**
+- ✅ Confirms column count is correct
+- ✅ Tests sample queries to ensure accessibility
+- ✅ Provides helpful error messages if issues occur
+
+### Helpful Commands:
+
+```powershell
+# Check environment variables only (no database changes)
+npm run check-env
+
+# Full migration with validation
+npm run migrate
 ```
 
 ---

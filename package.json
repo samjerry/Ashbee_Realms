@@ -10,7 +10,9 @@
     "start": "node server.js",
     "build": "cd public && npm install && npm run build",
     "dev": "nodemon server.js",
-    "get-bot-token": "node get-bot-token.js"
+    "get-bot-token": "node get-bot-token.js",
+    "migrate": "node migrate-database.js",
+    "check-env": "node check-env.js"
   },
   "dependencies": {
     "axios": "^1.4.0",
