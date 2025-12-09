@@ -114,19 +114,11 @@ app.get('/auth/twitch/callback', async (req, res) => {
 
     const playerId = `twitch-${user.id}`;
     
-    // Insert or update player
-    const dbType = db.getType();
-    if (dbType === 'sqlite') {
-      await db.query(
-        'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET twitch_id=?, display_name=?, access_token=?, refresh_token=?',
-        [playerId, user.id, user.display_name, access_token, refresh_token, user.id, user.display_name, access_token, refresh_token]
-      );
-    } else {
-      await db.query(
-        'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO UPDATE SET twitch_id=$2, display_name=$3, access_token=$4, refresh_token=$5',
-        [playerId, user.id, user.display_name, access_token, refresh_token]
-      );
-    }
+    // Insert or update player (PostgreSQL only)
+    await db.query(
+      'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO UPDATE SET twitch_id=$2, display_name=$3, access_token=$4, refresh_token=$5',
+      [playerId, user.id, user.display_name, access_token, refresh_token]
+    );
 
     req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
     console.log('✅ User logged in:', playerId);
