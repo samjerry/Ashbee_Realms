@@ -73,26 +73,74 @@ async function logout(){
   window.location.href = '/adventure';
 }
 
-async function fightBoss(){
+async function explore(){
   const channel = getChannel();
   if (!channel) {
     const log = await $("#log");
-    log.textContent = 'Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
+    log.textContent = '⚠️ Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
     return;
   }
 
-  const res = await fetch('/api/action', {
+  const res = await fetch('/api/explore', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'same-origin',
-    body: JSON.stringify({ actionId: 'fightBoss', channel })
+    body: JSON.stringify({ channel })
   });
   const data = await res.json();
   const log = await $("#log");
   if (res.ok){
-    log.textContent = `Result: ${JSON.stringify(data.newState)}\nEvents: ${JSON.stringify(data.eventsToBroadcast)}`;
+    log.textContent = `🗺️ ${data.result || JSON.stringify(data)}`;
   } else {
-    log.textContent = `Error: ${JSON.stringify(data)}`;
+    log.textContent = `❌ Error: ${data.error || 'Failed to explore'}`;
+  }
+}
+
+async function rest(){
+  const channel = getChannel();
+  if (!channel) {
+    const log = await $("#log");
+    log.textContent = '⚠️ Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
+    return;
+  }
+
+  const res = await fetch('/api/rest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    body: JSON.stringify({ channel })
+  });
+  const data = await res.json();
+  const log = await $("#log");
+  if (res.ok){
+    log.textContent = `🏕️ ${data.result || JSON.stringify(data)}`;
+  } else {
+    log.textContent = `❌ Error: ${data.error || 'Failed to rest'}`;
+  }
+}
+
+async function showInventory(){
+  const channel = getChannel();
+  if (!channel) {
+    const log = await $("#log");
+    log.textContent = '⚠️ Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
+    return;
+  }
+
+  const res = await fetch(`/api/inventory?channel=${channel}`, {
+    method: 'GET',
+    credentials: 'same-origin'
+  });
+  const data = await res.json();
+  const log = await $("#log");
+  if (res.ok){
+    if (data.inventory && data.inventory.length > 0) {
+      log.textContent = `🎒 Inventory:\n${data.inventory.map(item => `• ${item.name} (${item.type})`).join('\n')}`;
+    } else {
+      log.textContent = '🎒 Your inventory is empty.';
+    }
+  } else {
+    log.textContent = `❌ Error: ${data.error || 'Failed to load inventory'}`;
   }
 }
 
@@ -150,5 +198,7 @@ document.addEventListener('DOMContentLoaded', async () =>{
   }
   
   (await $('#loginBtn')).addEventListener('click', loginWithTwitch);
-  (await $('#fightBtn')).addEventListener('click', fightBoss);
+  (await $('#exploreBtn')).addEventListener('click', explore);
+  (await $('#restBtn')).addEventListener('click', rest);
+  (await $('#inventoryBtn')).addEventListener('click', showInventory);
 });
