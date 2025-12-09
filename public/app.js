@@ -1,5 +1,15 @@
 async function $(sel){ return document.querySelector(sel); }
 
+// Game state management
+let gameState = {
+  user: null,
+  character: null,
+  location: null,
+  inCombat: false,
+  inShop: false,
+  hasCharacter: false
+};
+
 // Get channel from URL parameter
 function getChannelFromURL() {
   const params = new URLSearchParams(window.location.search);
@@ -51,181 +61,325 @@ async function fetchMe(){
 async function updateUser(){
   const data = await fetchMe();
   const userEl = await $("#user");
-  const loginBtn = await $('#loginBtn');
+  const loginSection = await $('#loginSection');
+  const infoSection = await $('#infoSection');
   
   if (data && data.user){
+    gameState.user = data.user;
     userEl.textContent = `Logged in as ${data.user.displayName}`;
-    loginBtn.style.display = 'none'; // hide login button when logged in
+    loginSection.style.display = 'none';
+    
+    // Load character progress
+    await loadCharacterProgress();
+    updateUI();
   } else {
+    gameState.user = null;
     userEl.textContent = 'Not logged in';
-    loginBtn.style.display = 'inline-block'; // show login button
+    loginSection.style.display = 'block';
+    infoSection.style.display = 'block';
   }
 }
 
 async function loginWithTwitch(){
-  // Redirect to the Twitch OAuth flow
   window.location.href = '/auth/twitch';
 }
 
-async function logout(){
-  // Clear session by redirecting to a logout endpoint (we'll add this to server)
-  // For now, just redirect to home
-  window.location.href = '/adventure';
-}
-
-async function explore(){
+async function loadCharacterProgress() {
   const channel = getChannel();
-  if (!channel) {
-    const log = await $("#log");
-    log.textContent = '⚠️ Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
-    return;
-  }
+  if (!channel || !gameState.user) return;
 
-  const log = await $("#log");
-  log.textContent = `🗺️ How to Play Ashbee Realms:
-
-This is a Twitch chat-based RPG adventure game!
-
-🎮 Main Commands:
-!start - Create your character
-!explore - Venture into the wilderness
-!battle - Fight monsters
-!rest - Recover health and mana
-!stats - View your character
-!inventory - Check your items
-
-⚔️ Combat Commands:
-!attack - Basic attack
-!skill <name> - Use a skill
-!item <name> - Use an item
-!flee - Run from battle
-
-📚 More Commands:
-!quest - View available quests
-!shop - Visit the shop
-!equip <item> - Equip gear
-!passive - View skill tree
-
-Type commands in ${channel}'s Twitch chat to play!`;
-}
-
-async function rest(){
-  const channel = getChannel();
-  if (!channel) {
-    const log = await $("#log");
-    log.textContent = '⚠️ Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
-    return;
-  }
-
-  const log = await $("#log");
-  log.textContent = `💬 Available Twitch Chat Commands:
-
-⚔️ EXPLORATION & COMBAT:
-!start - Begin your adventure
-!explore - Explore the world
-!battle - Enter combat
-!rest - Recover HP/Mana
-!attack - Attack in combat
-!skill <name> - Use skill
-!flee - Escape battle
-
-📊 CHARACTER & ITEMS:
-!stats - View character stats
-!inventory - Check items
-!equip <item> - Equip gear
-!unequip <slot> - Remove gear
-!passive - View skill tree
-
-🎯 QUESTS & SHOPS:
-!quest - View quests
-!shop - Browse items
-!buy <item> - Purchase item
-!sell <item> - Sell item
-
-Type these commands in ${channel}'s Twitch chat!`;
-}
-
-async function showInventory(){
-  const channel = getChannel();
-  if (!channel) {
-    const log = await $("#log");
-    log.textContent = '⚠️ Error: No channel specified. Please access the game through a streamer\'s !adventure command.';
-    return;
-  }
-
-  const res = await fetch(`/api/player/progress?channel=${channel}`, {
-    method: 'GET',
-    credentials: 'same-origin'
-  });
-  const data = await res.json();
-  const log = await $("#log");
-  
-  if (res.ok && data){
-    const char = data.character || {};
-    const inv = data.inventory || [];
-    let text = `📊 Character: ${char.name || 'Unknown'}\n`;
-    text += `❤️ HP: ${char.hp || 0}/${char.maxHp || 0} | ⚡ Mana: ${char.mana || 0}/${char.maxMana || 0}\n`;
-    text += `⭐ Level: ${char.level || 1} | 💰 Gold: ${char.gold || 0}\n`;
-    text += `📍 Location: ${data.location || 'Unknown'}\n\n`;
+  try {
+    const res = await fetch(`/api/player/progress?channel=${channel}`, {
+      credentials: 'same-origin'
+    });
     
-    if (inv.length > 0) {
-      text += `🎒 Inventory (${inv.length} items):\n`;
-      text += inv.slice(0, 10).map(item => `• ${item.name} ${item.equipped ? '(equipped)' : ''}`).join('\n');
-      if (inv.length > 10) text += `\n... and ${inv.length - 10} more`;
-    } else {
-      text += '🎒 Inventory is empty.';
+    if (res.ok) {
+      const data = await res.json();
+      gameState.character = data.character;
+      gameState.location = data.location;
+      gameState.hasCharacter = !!data.character;
+      gameState.inCombat = data.inCombat || false;
+      gameState.inShop = data.location === 'Shop' || false;
+      
+      updateCharacterStatus();
     }
-    
-    log.textContent = text;
-  } else {
-    log.textContent = `❌ Error: ${data.error || 'Failed to load character data'}`;
+  } catch (err) {
+    console.error('Failed to load character:', err);
   }
 }
 
-async function loadPlayerProgress() {
+function updateCharacterStatus() {
+  const statusEl = document.getElementById('characterStatus');
+  if (!gameState.character) {
+    statusEl.style.display = 'none';
+    return;
+  }
+
+  const char = gameState.character;
+  statusEl.style.display = 'block';
+  statusEl.innerHTML = `
+    <strong>${char.name}</strong> - Level ${char.level || 1} ${char.class || 'Adventurer'}<br>
+    ❤️ HP: ${char.hp || 0}/${char.maxHp || 100} | ⚡ Mana: ${char.mana || 0}/${char.maxMana || 50} | 💰 Gold: ${char.gold || 0}<br>
+    📍 ${gameState.location || 'Unknown Location'}
+  `;
+}
+
+function updateUI() {
+  const actionButtons = document.getElementById('actionButtons');
+  const infoSection = document.getElementById('infoSection');
+  
+  if (!gameState.user) {
+    actionButtons.style.display = 'none';
+    infoSection.style.display = 'block';
+    return;
+  }
+
+  infoSection.style.display = 'none';
+  actionButtons.style.display = 'block';
+
+  // Hide all buttons first
+  document.querySelectorAll('#actionButtons button').forEach(btn => {
+    btn.style.display = 'none';
+  });
+
+  // Show buttons based on state
+  if (!gameState.hasCharacter) {
+    show('startBtn');
+  } else if (gameState.inCombat) {
+    show('attackBtn', 'skillBtn', 'useItemBtn', 'fleeBtn');
+    show('statsBtn', 'inventoryBtn');
+  } else if (gameState.inShop) {
+    show('buyBtn', 'sellBtn', 'inventoryBtn');
+    show('statsBtn', 'equipBtn', 'unequipBtn');
+    show('exploreBtn');
+  } else {
+    show('exploreBtn', 'battleBtn', 'restBtn');
+    show('statsBtn', 'inventoryBtn', 'passiveBtn');
+    show('questBtn', 'shopBtn');
+    show('equipBtn', 'unequipBtn');
+  }
+}
+
+function show(...buttonIds) {
+  buttonIds.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.style.display = 'inline-block';
+  });
+}
+
+function updateLog(message) {
+  const log = document.getElementById('log');
+  if (log) log.textContent = message;
+}
+
+async function gameAction(endpoint, body = {}) {
   const channel = getChannel();
   if (!channel) {
-    console.warn('No channel specified for loading progress');
+    updateLog('⚠️ Error: No channel specified.');
     return null;
   }
 
   try {
-    const response = await fetch(`/api/player/progress?channel=${encodeURIComponent(channel)}`);
-    if (response.ok) {
-      const data = await response.json();
-      return data.progress;
-    }
-  } catch (err) {
-    console.error('Failed to load progress:', err);
-  }
-  return null;
-}
-
-async function savePlayerProgress(playerData) {
-  const channel = getChannel();
-  if (!channel) {
-    console.warn('No channel specified for saving progress');
-    return false;
-  }
-
-  try {
-    const response = await fetch(`/api/player/progress?channel=${encodeURIComponent(channel)}`, {
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ progress: playerData, channel })
+      credentials: 'same-origin',
+      body: JSON.stringify({ channel, ...body })
     });
-    return response.ok;
+
+    const data = await res.json();
+    
+    if (res.ok) {
+      await loadCharacterProgress();
+      updateUI();
+      return data;
+    } else {
+      updateLog(`❌ Error: ${data.error || 'Action failed'}`);
+      return null;
+    }
   } catch (err) {
-    console.error('Failed to save progress:', err);
-    return false;
+    updateLog(`❌ Error: ${err.message}`);
+    return null;
   }
 }
 
-document.addEventListener('DOMContentLoaded', async () =>{
+// Info Functions
+async function showHowToPlay() {
+  updateLog(`🗺️ Welcome to Ashbee Realms!
+
+This is a web-based RPG adventure game. Use the buttons above to play!
+
+🎮 Getting Started:
+1. Log in with your Twitch account
+2. Click "Start Adventure" to create your character
+3. Use the action buttons to explore, battle, and progress
+
+The buttons change based on your current situation:
+• In town: Explore, rest, visit shop, manage equipment
+• In combat: Attack, use skills, use items, or flee
+• In shop: Buy and sell items
+• Anytime: Check stats, inventory, and passive skills
+
+Your progress is automatically saved!`);
+}
+
+async function showCommands() {
+  updateLog(`💬 Game Controls:
+
+All actions are performed using the buttons above!
+The available buttons change based on your current state.
+
+⚔️ EXPLORATION & COMBAT:
+Start Adventure - Create your character
+Explore - Venture into the wilderness
+Battle - Fight monsters for XP and loot
+Rest - Recover HP and Mana
+Attack / Skill / Item - Combat actions
+Flee - Escape from battle
+
+📊 CHARACTER & ITEMS:
+Stats - View detailed character information
+Inventory - Check your items
+Equip/Unequip - Manage your gear
+Passive Skills - View and upgrade skill tree
+
+🎯 QUESTS & SHOPS:
+Quests - View and track active quests
+Shop - Buy and sell items (when in town)
+Buy/Sell - Purchase or sell items in shop
+
+Buttons appear only when you can use them!`);
+}
+
+// Action button handlers
+async function startAdventure() {
+  updateLog('🎮 Creating character... (Use Twitch chat: !start to create your character)');
+}
+
+async function exploreWorld() {
+  updateLog('🗺️ Exploring...');
+  const data = await gameAction('/api/action', { actionId: 'explore' });
+  if (data) updateLog(`🗺️ ${data.result || 'You venture forth...'}`);
+}
+
+async function enterBattle() {
+  updateLog('⚔️ Seeking battle...');
+  const data = await gameAction('/api/action', { actionId: 'battle' });
+  if (data) updateLog(`⚔️ ${data.result || 'A monster appears!'}`);
+}
+
+async function restCharacter() {
+  updateLog('🏕️ Resting...');
+  const data = await gameAction('/api/action', { actionId: 'rest' });
+  if (data) updateLog(`🏕️ ${data.result || 'You recover your strength.'}`);
+}
+
+async function viewStats() {
+  if (!gameState.character) {
+    updateLog('⚠️ No character data. Create a character first!');
+    return;
+  }
+
+  const char = gameState.character;
+  updateLog(`📊 Character Stats:
+
+Name: ${char.name || 'Unknown'}
+Class: ${char.class || 'Adventurer'}
+Level: ${char.level || 1}
+
+❤️ HP: ${char.hp || 0}/${char.maxHp || 100}
+⚡ Mana: ${char.mana || 0}/${char.maxMana || 50}
+💰 Gold: ${char.gold || 0}
+
+⚔️ Attack: ${char.attack || 0}
+🛡️ Defense: ${char.defense || 0}
+✨ Magic: ${char.magic || 0}
+
+📍 Location: ${gameState.location || 'Unknown'}`);
+}
+
+async function viewInventory() {
+  const channel = getChannel();
+  if (!channel) {
+    updateLog('⚠️ Error: No channel specified.');
+    return;
+  }
+
+  const res = await fetch(`/api/player/progress?channel=${channel}`, {
+    credentials: 'same-origin'
+  });
+  
+  if (res.ok) {
+    const data = await res.json();
+    const inv = data.inventory || [];
+    
+    if (inv.length > 0) {
+      let text = `🎒 Inventory (${inv.length} items):\n\n`;
+      inv.forEach(item => {
+        text += `• ${item.name}${item.equipped ? ' ✓ (equipped)' : ''}\n`;
+      });
+      updateLog(text);
+    } else {
+      updateLog('🎒 Your inventory is empty.');
+    }
+  }
+}
+
+async function viewPassives() {
+  updateLog('🌟 Passive skill tree interface coming soon!');
+}
+
+async function combatAttack() {
+  updateLog('⚔️ Attacking...');
+  const data = await gameAction('/api/combat/attack', {});
+  if (data) updateLog(`⚔️ ${data.result || 'You strike!'}`);
+}
+
+async function combatSkill() {
+  updateLog('✨ Skill selection interface coming soon!');
+}
+
+async function combatItem() {
+  updateLog('🧪 Item selection interface coming soon!');
+}
+
+async function combatFlee() {
+  updateLog('🏃 Attempting to flee...');
+  const data = await gameAction('/api/combat/flee', {});
+  if (data) updateLog(`🏃 ${data.result || 'You escape!'}`);
+}
+
+async function viewQuests() {
+  updateLog('📜 Quest interface coming soon!');
+}
+
+async function enterShop() {
+  updateLog('🏪 Shop interface coming soon!');
+  gameState.inShop = true;
+  updateUI();
+}
+
+async function buyItem() {
+  updateLog('💰 Buy interface coming soon!');
+}
+
+async function sellItem() {
+  updateLog('💵 Sell interface coming soon!');
+}
+
+async function equipItem() {
+  updateLog('⚔️ Equipment interface coming soon!');
+}
+
+async function unequipItem() {
+  updateLog('🔓 Unequip interface coming soon!');
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', async () => {
   initThemes();
   await updateUser();
-  
-  // Display channel info if available
+
   const channel = getChannel();
   if (channel) {
     const channelInfoEl = document.getElementById('channelInfo');
@@ -235,8 +389,25 @@ document.addEventListener('DOMContentLoaded', async () =>{
     }
   }
   
-  (await $('#loginBtn')).addEventListener('click', loginWithTwitch);
-  (await $('#exploreBtn')).addEventListener('click', explore);
-  (await $('#restBtn')).addEventListener('click', rest);
-  (await $('#inventoryBtn')).addEventListener('click', showInventory);
+  // Attach event listeners
+  document.getElementById('loginBtn')?.addEventListener('click', loginWithTwitch);
+  document.getElementById('howToPlayBtn')?.addEventListener('click', showHowToPlay);
+  document.getElementById('commandsBtn')?.addEventListener('click', showCommands);
+  document.getElementById('startBtn')?.addEventListener('click', startAdventure);
+  document.getElementById('exploreBtn')?.addEventListener('click', exploreWorld);
+  document.getElementById('battleBtn')?.addEventListener('click', enterBattle);
+  document.getElementById('restBtn')?.addEventListener('click', restCharacter);
+  document.getElementById('statsBtn')?.addEventListener('click', viewStats);
+  document.getElementById('inventoryBtn')?.addEventListener('click', viewInventory);
+  document.getElementById('passiveBtn')?.addEventListener('click', viewPassives);
+  document.getElementById('attackBtn')?.addEventListener('click', combatAttack);
+  document.getElementById('skillBtn')?.addEventListener('click', combatSkill);
+  document.getElementById('useItemBtn')?.addEventListener('click', combatItem);
+  document.getElementById('fleeBtn')?.addEventListener('click', combatFlee);
+  document.getElementById('questBtn')?.addEventListener('click', viewQuests);
+  document.getElementById('shopBtn')?.addEventListener('click', enterShop);
+  document.getElementById('buyBtn')?.addEventListener('click', buyItem);
+  document.getElementById('sellBtn')?.addEventListener('click', sellItem);
+  document.getElementById('equipBtn')?.addEventListener('click', equipItem);
+  document.getElementById('unequipBtn')?.addEventListener('click', unequipItem);
 });

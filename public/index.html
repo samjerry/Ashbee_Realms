@@ -306,14 +306,53 @@
     <div id="user">Checking login...</div>
     <div id="channelInfo" style="display: none; margin-top: 0.5rem; font-style: italic; opacity: 0.8;"></div>
     
-    <div style="margin: 1.5rem 0;">
+    <!-- Login Section -->
+    <div id="loginSection" style="margin: 1.5rem 0;">
       <button id="loginBtn">Log in with Twitch</button>
-      <button id="exploreBtn">🗺️ How to Play</button>
-      <button id="restBtn">💬 Chat Commands</button>
-      <button id="inventoryBtn">📊 View Character</button>
+    </div>
+
+    <!-- Game Info Section (visible when not playing) -->
+    <div id="infoSection" style="margin: 1.5rem 0; display: none;">
+      <button id="howToPlayBtn">🗺️ How to Play</button>
+      <button id="commandsBtn">💬 Game Commands</button>
+    </div>
+
+    <!-- Character Status -->
+    <div id="characterStatus" style="margin: 1rem 0; padding: 1rem; border-radius: 8px; display: none;"></div>
+
+    <!-- Main Action Buttons (context-sensitive) -->
+    <div id="actionButtons" style="margin: 1.5rem 0; display: none;">
+      <!-- Exploration Actions -->
+      <button id="startBtn" style="display: none;">🎮 Start Adventure</button>
+      <button id="exploreBtn" style="display: none;">🗺️ Explore</button>
+      <button id="battleBtn" style="display: none;">⚔️ Battle</button>
+      <button id="restBtn" style="display: none;">🏕️ Rest</button>
+      
+      <!-- Character Management (always available) -->
+      <button id="statsBtn" style="display: none;">📊 Stats</button>
+      <button id="inventoryBtn" style="display: none;">🎒 Inventory</button>
+      <button id="passiveBtn" style="display: none;">🌟 Passive Skills</button>
+      
+      <!-- Combat Actions -->
+      <button id="attackBtn" style="display: none;">⚔️ Attack</button>
+      <button id="skillBtn" style="display: none;">✨ Use Skill</button>
+      <button id="useItemBtn" style="display: none;">🧪 Use Item</button>
+      <button id="fleeBtn" style="display: none;">🏃 Flee</button>
+      
+      <!-- Shop Actions -->
+      <button id="shopBtn" style="display: none;">🏪 Shop</button>
+      <button id="buyBtn" style="display: none;">💰 Buy</button>
+      <button id="sellBtn" style="display: none;">💵 Sell</button>
+      
+      <!-- Quest Actions -->
+      <button id="questBtn" style="display: none;">📜 Quests</button>
+      
+      <!-- Equipment (available outside combat) -->
+      <button id="equipBtn" style="display: none;">⚔️ Equip</button>
+      <button id="unequipBtn" style="display: none;">🔓 Unequip</button>
     </div>
     
-    <div id="log">Ready.</div>
+    <div id="log">Ready. Log in and start your adventure!</div>
   </div>
 
   <script src="/app.js"></script>
