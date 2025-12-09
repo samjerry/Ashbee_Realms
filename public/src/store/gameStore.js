@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:3000');
+// Use window.location.origin to connect to current host (works on both localhost and Railway)
+const socket = io(window.location.origin);
 
 const useGameStore = create((set, get) => ({
   // Player state

@@ -5,15 +5,23 @@ import useGameStore from '../../store/gameStore';
 const CharacterSheet = () => {
   const { player } = useGameStore();
   
-  if (!player) return null;
+  if (!player) {
+    return (
+      <div className="card p-6 text-center">
+        <p className="text-gray-400">No character data available. Please log in via Twitch.</p>
+      </div>
+    );
+  }
   
-  const stats = [
-    { label: 'Attack', value: player.stats.attack, icon: Sword, color: 'text-red-500' },
-    { label: 'Defense', value: player.stats.defense, icon: Shield, color: 'text-blue-500' },
-    { label: 'Magic', value: player.stats.magic, icon: Zap, color: 'text-purple-500' },
-    { label: 'Agility', value: player.stats.agility, icon: Wind, color: 'text-green-500' },
-    { label: 'Max HP', value: player.maxHp, icon: Heart, color: 'text-pink-500' },
-    { label: 'Crit Chance', value: `${player.stats.critChance}%`, icon: Star, color: 'text-yellow-500' },
+  // Provide default values if stats don't exist
+  const stats = player.stats || {};
+  const statList = [
+    { label: 'Attack', value: stats.attack || 0, icon: Sword, color: 'text-red-500' },
+    { label: 'Defense', value: stats.defense || 0, icon: Shield, color: 'text-blue-500' },
+    { label: 'Magic', value: stats.magic || 0, icon: Zap, color: 'text-purple-500' },
+    { label: 'Agility', value: stats.agility || 0, icon: Wind, color: 'text-green-500' },
+    { label: 'Max HP', value: player.maxHp || 100, icon: Heart, color: 'text-pink-500' },
+    { label: 'Crit Chance', value: `${stats.critChance || 5}%`, icon: Star, color: 'text-yellow-500' },
   ];
   
   const equipment = player.equipment || {};
@@ -35,11 +43,11 @@ const CharacterSheet = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-400">Total XP</p>
-                <p className="text-xl font-bold text-white">{player.totalXp.toLocaleString()}</p>
+                <p className="text-xl font-bold text-white">{(player.totalXp || 0).toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-400">Gold</p>
-                <p className="text-xl font-bold text-yellow-500">{player.gold.toLocaleString()}</p>
+                <p className="text-xl font-bold text-yellow-500">{(player.gold || 0).toLocaleString()}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-400">Deaths</p>
