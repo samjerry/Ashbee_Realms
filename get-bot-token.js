@@ -23,10 +23,12 @@ const open = require('open');
 const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const TWITCH_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
 const BOT_USERNAME = process.env.BOT_USERNAME;
+
+// Use localhost for local development, Railway URL for production token generation
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const REDIRECT_URI = `${BASE_URL.replace(/\/$/, '')}/auth/twitch/callback`;
 
-const SCOPES = 'chat:read chat:edit';
+const SCOPES = 'chat:read chat:edit user:read:chat channel:read:subscriptions channel:read:vips';
 const LISTEN_PORT = 3000; // callback server port
 
 if (!TWITCH_CLIENT_ID || !TWITCH_CLIENT_SECRET) {
@@ -170,7 +172,7 @@ async function validateToken(token) {
   }
 }
 
-function updateEnvFile(accessToken) {
+function updateEnvFile(accessToken, refreshToken) {
   const envPath = path.join(__dirname, '.env');
   let envContent = fs.readFileSync(envPath, 'utf-8');
 
@@ -181,8 +183,29 @@ function updateEnvFile(accessToken) {
     `BOT_OAUTH_TOKEN=${newToken}`
   );
 
+  // Add or replace BOT_REFRESH_TOKEN line
+  if (envContent.includes('BOT_REFRESH_TOKEN=')) {
+    envContent = envContent.replace(
+      /^BOT_REFRESH_TOKEN=.*/m,
+      `BOT_REFRESH_TOKEN=${refreshToken}`
+    );
+  } else {
+    envContent += `\nBOT_REFRESH_TOKEN=${refreshToken}`;
+  }
+
   fs.writeFileSync(envPath, envContent, 'utf-8');
-  console.log('✅ .env updated with new BOT_OAUTH_TOKEN');
+  console.log('✅ .env updated with BOT_OAUTH_TOKEN and BOT_REFRESH_TOKEN');
+
+  // Save tokens to JSON file for TokenManager
+  const tokenData = {
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    expires_at: Date.now() + (4 * 60 * 60 * 1000) // 4 hours from now
+  };
+
+  const tokensPath = path.join(__dirname, '.bot-tokens.json');
+  fs.writeFileSync(tokensPath, JSON.stringify(tokenData, null, 2), 'utf-8');
+  console.log('✅ .bot-tokens.json created for automatic refresh');
 }
 
 async function main() {
@@ -226,8 +249,8 @@ async function main() {
     // Validate token
     await validateToken(access_token);
 
-    // Update .env
-    updateEnvFile(access_token);
+    // Update .env with both tokens
+    updateEnvFile(access_token, refresh_token);
 
     console.log('\n✨ All done! Your bot token is ready.\n');
     console.log('📝 Next steps:');
