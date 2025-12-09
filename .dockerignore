@@ -1,0 +1,11 @@
+# Ignore built files - let Railway build them fresh
+public/dist/
+public/node_modules/
+
+# Ignore development files
+node_modules/
+.git/
+.env
+*.log
+npm-debug.log*
+.DS_Store
