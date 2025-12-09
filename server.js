@@ -273,8 +273,12 @@ app.get('/api/player/stats', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
   
-  const { channel } = req.query;
-  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+  let { channel } = req.query;
+  
+  // If no channel specified, use the user's Twitch username as default
+  if (!channel) {
+    channel = user.login; // Twitch username from OAuth
+  }
   
   const channelName = channel.toLowerCase();
   
@@ -301,8 +305,12 @@ app.get('/api/player/inventory', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
   
-  const { channel } = req.query;
-  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+  let { channel } = req.query;
+  
+  // If no channel specified, use the user's Twitch username as default
+  if (!channel) {
+    channel = user.login;
+  }
   
   const channelName = channel.toLowerCase();
   
@@ -329,8 +337,12 @@ app.get('/api/player/equipment', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
   
-  const { channel } = req.query;
-  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+  let { channel } = req.query;
+  
+  // If no channel specified, use the user's Twitch username as default
+  if (!channel) {
+    channel = user.login;
+  }
   
   const channelName = channel.toLowerCase();
   

@@ -11,6 +11,9 @@ const Inventory = () => {
     fetchInventory();
   }, []);
   
+  // Default to empty array if inventory is undefined
+  const safeInventory = inventory || [];
+  
   const getRarityColor = (rarity) => {
     const colors = {
       common: 'border-gray-500 bg-gray-900/50',
@@ -23,7 +26,7 @@ const Inventory = () => {
     return colors[rarity] || colors.common;
   };
   
-  const filteredInventory = inventory.filter(item => {
+  const filteredInventory = safeInventory.filter(item => {
     if (filter === 'all') return true;
     return item.type === filter;
   });
@@ -39,7 +42,7 @@ const Inventory = () => {
             <Package size={32} className="text-primary-500" />
             <div>
               <h1 className="text-3xl font-bold text-white">Inventory</h1>
-              <p className="text-gray-400">{inventory.length} / 100 items</p>
+              <p className="text-gray-400">{safeInventory.length} / 100 items</p>
             </div>
           </div>
           

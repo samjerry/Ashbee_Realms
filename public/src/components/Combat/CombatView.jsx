@@ -9,8 +9,9 @@ const CombatView = () => {
   if (!combat || !player) return null;
   
   const { monster, playerHp } = combat;
-  const playerHpPercent = (playerHp / player.maxHp) * 100;
-  const monsterHpPercent = (monster.hp / monster.maxHp) * 100;
+  const safeCombatLog = combatLog || [];
+  const playerHpPercent = (playerHp / (player.maxHp || 100)) * 100;
+  const monsterHpPercent = ((monster.hp || 0) / (monster.maxHp || 1)) * 100;
   
   const actions = [
     { id: 'attack', icon: Sword, label: 'Attack', color: 'bg-red-600 hover:bg-red-700' },
