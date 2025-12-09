@@ -4761,12 +4761,30 @@ app.get('/api/leaderboards/:type/stats', (req, res) => {
 
 // ==================== END SEASON & LEADERBOARD ENDPOINTS ====================
 
-app.get('/adventure', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// Serve React frontend (production only)
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from public/dist
+  app.use(express.static(path.join(__dirname, 'public/dist')));
+  
+  // Serve index.html for all non-API routes (React Router)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/dist/index.html'));
+  });
+} else {
+  // Development: serve old test page
+  app.get('/adventure', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log('✅ Serving React frontend from /public/dist');
+  }
+});
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
