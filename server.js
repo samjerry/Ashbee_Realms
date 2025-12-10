@@ -6,7 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const db = require('./db');
 const Combat = require('./game/Combat');
-const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager } = require('./game');
+const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager, OperatorManager } = require('./game');
 const { loadData } = require('./data/data_loader');
 const socketHandler = require('./websocket/socketHandler');
 
@@ -4539,6 +4539,273 @@ app.get('/api/redemptions/available', (req, res) => {
 });
 
 // ==================== END CHANNEL POINT REDEMPTIONS ====================
+
+// ==================== OPERATOR MENU ENDPOINTS ====================
+
+// Initialize OperatorManager
+const operatorMgr = new OperatorManager();
+
+/**
+ * Middleware to check operator permissions
+ */
+async function checkOperatorAccess(req, res, next) {
+  const user = req.session.user;
+  if (!user) {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  const { channel } = req.body || req.query;
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required' });
+  }
+
+  try {
+    // Get user's role from database
+    const userRole = await db.getUserRole(user.id, channel.toLowerCase());
+    
+    // Get permission level
+    const permissionLevel = operatorMgr.getPermissionLevel(
+      user.displayName,
+      channel.toLowerCase(),
+      userRole
+    );
+
+    // Check if user has any operator permissions
+    if (permissionLevel === operatorMgr.PERMISSION_LEVELS.NONE) {
+      return res.status(403).json({ error: 'Access denied: Operator permissions required' });
+    }
+
+    // Attach permission info to request
+    req.operatorLevel = permissionLevel;
+    req.operatorRole = userRole;
+    req.channelName = channel.toLowerCase();
+    
+    next();
+  } catch (error) {
+    console.error('Operator access check error:', error);
+    res.status(500).json({ error: 'Failed to verify permissions' });
+  }
+}
+
+/**
+ * GET /api/operator/status
+ * Check if user has operator access and get their permission level
+ */
+app.get('/api/operator/status', async (req, res) => {
+  const user = req.session.user;
+  if (!user) {
+    return res.json({ hasAccess: false, level: 'NONE' });
+  }
+
+  const { channel } = req.query;
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required' });
+  }
+
+  try {
+    const userRole = await db.getUserRole(user.id, channel.toLowerCase());
+    const permissionLevel = operatorMgr.getPermissionLevel(
+      user.displayName,
+      channel.toLowerCase(),
+      userRole
+    );
+
+    const hasAccess = permissionLevel > operatorMgr.PERMISSION_LEVELS.NONE;
+    const availableCommands = operatorMgr.getAvailableCommands(permissionLevel);
+    
+    let levelName = 'NONE';
+    if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) levelName = 'CREATOR';
+    else if (permissionLevel === operatorMgr.PERMISSION_LEVELS.STREAMER) levelName = 'STREAMER';
+    else if (permissionLevel === operatorMgr.PERMISSION_LEVELS.MODERATOR) levelName = 'MODERATOR';
+
+    res.json({
+      hasAccess,
+      level: levelName,
+      role: userRole,
+      availableCommands,
+      username: user.displayName
+    });
+  } catch (error) {
+    console.error('Operator status check error:', error);
+    res.status(500).json({ error: 'Failed to check operator status' });
+  }
+});
+
+/**
+ * GET /api/operator/commands
+ * Get available operator commands with metadata
+ */
+app.get('/api/operator/commands', checkOperatorAccess, (req, res) => {
+  try {
+    const metadata = operatorMgr.getCommandMetadata();
+    const availableCommands = operatorMgr.getAvailableCommands(req.operatorLevel);
+    
+    // Filter metadata to only include available commands
+    const filtered = {};
+    for (const cmd of availableCommands) {
+      if (metadata[cmd]) {
+        filtered[cmd] = metadata[cmd];
+      }
+    }
+
+    res.json({ commands: filtered, level: req.operatorLevel });
+  } catch (error) {
+    console.error('Error fetching commands:', error);
+    res.status(500).json({ error: 'Failed to fetch commands' });
+  }
+});
+
+/**
+ * POST /api/operator/execute
+ * Execute an operator command
+ * Body: { channel, command, params }
+ */
+app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
+  try {
+    const { command, params } = req.body;
+
+    if (!command) {
+      return res.status(400).json({ error: 'Command is required' });
+    }
+
+    // Check if user can execute this command
+    if (!operatorMgr.canExecuteCommand(command, req.operatorLevel)) {
+      return res.status(403).json({ 
+        error: 'Insufficient permissions for this command',
+        required: 'Higher operator level required'
+      });
+    }
+
+    // Execute the command
+    let result;
+    switch (command) {
+      case 'giveItem':
+        result = await operatorMgr.giveItem(
+          params.playerId,
+          req.channelName,
+          params.itemId,
+          params.quantity || 1,
+          db
+        );
+        break;
+
+      case 'giveGold':
+        result = await operatorMgr.giveGold(
+          params.playerId,
+          req.channelName,
+          params.amount,
+          db
+        );
+        break;
+
+      case 'giveExp':
+        result = await operatorMgr.giveExp(
+          params.playerId,
+          req.channelName,
+          params.amount,
+          db
+        );
+        break;
+
+      case 'healPlayer':
+        result = await operatorMgr.healPlayer(
+          params.playerId,
+          req.channelName,
+          db
+        );
+        break;
+
+      case 'removeItem':
+        result = await operatorMgr.removeItem(
+          params.playerId,
+          req.channelName,
+          params.itemId,
+          params.quantity || 1,
+          db
+        );
+        break;
+
+      case 'removeGold':
+        result = await operatorMgr.removeGold(
+          params.playerId,
+          req.channelName,
+          params.amount,
+          db
+        );
+        break;
+
+      case 'removeLevel':
+        result = await operatorMgr.removeLevel(
+          params.playerId,
+          req.channelName,
+          params.levels,
+          db
+        );
+        break;
+
+      case 'setPlayerLevel':
+        result = await operatorMgr.setPlayerLevel(
+          params.playerId,
+          req.channelName,
+          params.level,
+          db
+        );
+        break;
+
+      case 'teleportPlayer':
+        result = await operatorMgr.teleportPlayer(
+          params.playerId,
+          req.channelName,
+          params.location,
+          db
+        );
+        break;
+
+      case 'clearInventory':
+        result = await operatorMgr.clearInventory(
+          params.playerId,
+          req.channelName,
+          db
+        );
+        break;
+
+      default:
+        return res.status(400).json({ error: `Unknown command: ${command}` });
+    }
+
+    // Log the action
+    console.log(`[OPERATOR] ${req.session.user.displayName} executed ${command} in ${req.channelName}`);
+
+    res.json(result);
+  } catch (error) {
+    console.error('Operator command execution error:', error);
+    res.status(500).json({ error: error.message || 'Command execution failed' });
+  }
+});
+
+/**
+ * GET /api/operator/players
+ * Get list of players in a channel for operator commands
+ */
+app.get('/api/operator/players', checkOperatorAccess, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT player_id, name, level, gold, location, hp, max_hp 
+       FROM player_progress 
+       WHERE channel_name = $1 
+       ORDER BY level DESC, name ASC 
+       LIMIT 100`,
+      [req.channelName]
+    );
+
+    res.json({ players: result.rows });
+  } catch (error) {
+    console.error('Error fetching players:', error);
+    res.status(500).json({ error: 'Failed to fetch players' });
+  }
+});
+
+// ==================== END OPERATOR MENU ENDPOINTS ====================
 
 // ==================== SEASON & LEADERBOARD SYSTEM ENDPOINTS ====================
 

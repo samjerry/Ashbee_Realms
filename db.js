@@ -109,6 +109,19 @@ async function initPostgres() {
 
     CREATE INDEX IF NOT EXISTS idx_player_progress_player_id ON player_progress(player_id);
     CREATE INDEX IF NOT EXISTS idx_player_progress_channel ON player_progress(channel_name);
+
+    CREATE TABLE IF NOT EXISTS user_roles (
+      player_id TEXT NOT NULL,
+      channel_name TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'viewer',
+      last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (player_id, channel_name),
+      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE,
+      CHECK (role IN ('viewer', 'vip', 'moderator', 'streamer'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_user_roles_channel ON user_roles(channel_name);
+    CREATE INDEX IF NOT EXISTS idx_user_roles_role ON user_roles(role);
   `);
 
   db = pool;
@@ -584,6 +597,97 @@ async function updateReputation(playerId, channelName, reputation) {
   );
 }
 
+// ===== USER ROLE FUNCTIONS =====
+
+/**
+ * Update or insert user role in a channel
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {string} role - User role: 'viewer', 'vip', 'moderator', 'streamer'
+ */
+async function updateUserRole(playerId, channelName, role) {
+  const validRoles = ['viewer', 'vip', 'moderator', 'streamer'];
+  if (!validRoles.includes(role)) {
+    throw new Error(`Invalid role: ${role}. Must be one of: ${validRoles.join(', ')}`);
+  }
+
+  await query(
+    `INSERT INTO user_roles (player_id, channel_name, role, last_updated)
+     VALUES ($1, $2, $3, NOW())
+     ON CONFLICT (player_id, channel_name) 
+     DO UPDATE SET role = $3, last_updated = NOW()`,
+    [playerId, channelName.toLowerCase(), role]
+  );
+}
+
+/**
+ * Get user role in a channel
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @returns {Promise<string>} User role or 'viewer' if not found
+ */
+async function getUserRole(playerId, channelName) {
+  const result = await query(
+    `SELECT role FROM user_roles WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
+  );
+
+  return result.rows.length > 0 ? result.rows[0].role : 'viewer';
+}
+
+/**
+ * Get all users with a specific role in a channel
+ * @param {string} channelName - Channel name
+ * @param {string} role - Role to filter by (optional)
+ * @returns {Promise<Array>} List of users with their roles
+ */
+async function getChannelUsers(channelName, role = null) {
+  let sql = `
+    SELECT ur.player_id, ur.role, ur.last_updated, p.display_name
+    FROM user_roles ur
+    LEFT JOIN players p ON ur.player_id = p.id
+    WHERE ur.channel_name = $1
+  `;
+  const params = [channelName.toLowerCase()];
+
+  if (role) {
+    sql += ` AND ur.role = $2`;
+    params.push(role);
+  }
+
+  sql += ` ORDER BY ur.role DESC, ur.last_updated DESC`;
+
+  const result = await query(sql, params);
+  return result.rows;
+}
+
+/**
+ * Determine user role from Twitch tags/badges
+ * @param {string} username - Twitch username
+ * @param {string} channelName - Channel name
+ * @param {object} tags - Twitch message tags
+ * @returns {string} User role: 'streamer', 'moderator', 'vip', or 'viewer'
+ */
+function determineRoleFromTags(username, channelName, tags = {}) {
+  // Check if user is the broadcaster/streamer
+  if (tags.badges?.broadcaster || username.toLowerCase() === channelName.toLowerCase()) {
+    return 'streamer';
+  }
+
+  // Check if user is a moderator
+  if (tags.mod || tags.badges?.moderator) {
+    return 'moderator';
+  }
+
+  // Check if user is a VIP
+  if (tags.badges?.vip) {
+    return 'vip';
+  }
+
+  // Default to viewer
+  return 'viewer';
+}
+
 module.exports = {
   initDB,
   query,
@@ -605,5 +709,9 @@ module.exports = {
   updateCharacterStats,
   updateDungeonState,
   addCompletedDungeon,
-  updateReputation
+  updateReputation,
+  updateUserRole,
+  getUserRole,
+  getChannelUsers,
+  determineRoleFromTags
 };

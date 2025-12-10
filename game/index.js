@@ -28,6 +28,7 @@ const PassiveManager = require('./PassiveManager');
 const RaidManager = require('./RaidManager');
 const SeasonManager = require('./SeasonManager');
 const LeaderboardManager = require('./LeaderboardManager');
+const OperatorManager = require('./OperatorManager');
 
 module.exports = {
   Character,
@@ -54,5 +55,6 @@ module.exports = {
   RaidManager,
   PassiveManager,
   SeasonManager,
-  LeaderboardManager
+  LeaderboardManager,
+  OperatorManager
 };

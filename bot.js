@@ -2,6 +2,7 @@ const tmi = require('tmi.js');
 const fetch = require('node-fetch');
 require('dotenv').config();
 const TokenManager = require('./TokenManager');
+const db = require('./db');
 
 const BOT_USERNAME = process.env.BOT_USERNAME;
 const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
@@ -15,6 +16,34 @@ if (!ENABLE_BOT) {
   // Don't exit - allow server to run without bot
 } else {
   console.log(`🎮 Bot will connect to channels: ${CHANNELS.join(', ')}`);
+}
+
+/**
+ * Update user role in database based on Twitch tags
+ * @param {string} username - Twitch username
+ * @param {string} channelName - Channel name
+ * @param {object} tags - Twitch message tags
+ */
+async function updateUserRoleFromTags(username, channelName, tags) {
+  try {
+    // Determine role from tags
+    const role = db.determineRoleFromTags(username, channelName, tags);
+    
+    // Get or create player ID
+    const playerId = `twitch-${tags['user-id']}`;
+    
+    // Ensure player exists in database
+    await db.query(
+      'INSERT INTO players(id, twitch_id, display_name) VALUES ($1, $2, $3) ON CONFLICT (id) DO UPDATE SET display_name = $3',
+      [playerId, tags['user-id'], username]
+    );
+    
+    // Update user role
+    await db.updateUserRole(playerId, channelName, role);
+  } catch (error) {
+    console.error('Error updating user role:', error);
+    // Don't throw - this shouldn't block the bot
+  }
 }
 
 async function initializeBot() {
@@ -55,6 +84,11 @@ async function initializeBot() {
       const command = args[0].toLowerCase();
       const channelName = channel.replace('#', '').toLowerCase();
       const username = tags.username;
+
+      // Update user role asynchronously (don't wait for it)
+      updateUserRoleFromTags(username, channelName, tags).catch(err => {
+        console.error('Failed to update user role:', err);
+      });
 
       // Basic adventure command
       if (msg === '!adventure') {
