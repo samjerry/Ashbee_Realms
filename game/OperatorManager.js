@@ -348,6 +348,241 @@ class OperatorManager {
   }
 
   /**
+   * Execute: Change weather (global for channel)
+   * This is stored in a global game state (would need a game_state table)
+   */
+  async changeWeather(channelName, weather, db) {
+    const validWeather = ['Clear', 'Rain', 'Storm', 'Snow', 'Fog'];
+    if (!validWeather.includes(weather)) {
+      throw new Error(`Invalid weather. Must be one of: ${validWeather.join(', ')}`);
+    }
+
+    // Store global game state
+    await db.query(
+      `INSERT INTO game_state (channel_name, weather, last_updated)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (channel_name) 
+       DO UPDATE SET weather = $2, last_updated = NOW()`,
+      [channelName.toLowerCase(), weather]
+    );
+
+    return {
+      success: true,
+      message: `Changed weather to ${weather} for ${channelName}`
+    };
+  }
+
+  /**
+   * Execute: Change time of day (global for channel)
+   */
+  async changeTime(channelName, time, db) {
+    const validTimes = ['Dawn', 'Day', 'Dusk', 'Night'];
+    if (!validTimes.includes(time)) {
+      throw new Error(`Invalid time. Must be one of: ${validTimes.join(', ')}`);
+    }
+
+    await db.query(
+      `INSERT INTO game_state (channel_name, time_of_day, last_updated)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (channel_name) 
+       DO UPDATE SET time_of_day = $2, last_updated = NOW()`,
+      [channelName.toLowerCase(), time]
+    );
+
+    return {
+      success: true,
+      message: `Changed time to ${time} for ${channelName}`
+    };
+  }
+
+  /**
+   * Execute: Change season (global for channel)
+   */
+  async changeSeason(channelName, season, db) {
+    const validSeasons = ['Spring', 'Summer', 'Fall', 'Winter'];
+    if (!validSeasons.includes(season)) {
+      throw new Error(`Invalid season. Must be one of: ${validSeasons.join(', ')}`);
+    }
+
+    await db.query(
+      `INSERT INTO game_state (channel_name, season, last_updated)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (channel_name) 
+       DO UPDATE SET season = $2, last_updated = NOW()`,
+      [channelName.toLowerCase(), season]
+    );
+
+    return {
+      success: true,
+      message: `Changed season to ${season} for ${channelName}`
+    };
+  }
+
+  /**
+   * Execute: Spawn encounter for player
+   */
+  async spawnEncounter(targetPlayerId, channelName, encounterId, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    // Mark player as having a pending encounter
+    const pending = {
+      type: 'forced_encounter',
+      encounterId: encounterId,
+      timestamp: Date.now()
+    };
+
+    await db.query(
+      'UPDATE player_progress SET pending = $1 WHERE player_id = $2 AND channel_name = $3',
+      [JSON.stringify(pending), targetPlayerId, channelName]
+    );
+
+    return {
+      success: true,
+      message: `Spawned encounter ${encounterId} for ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: Reset quest for player
+   */
+  async resetQuest(targetPlayerId, channelName, questId, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    let activeQuests = JSON.parse(progress.active_quests || '[]');
+    let completedQuests = JSON.parse(progress.completed_quests || '[]');
+
+    // Remove from completed quests
+    completedQuests = completedQuests.filter(q => q !== questId && q.id !== questId);
+    
+    // Remove from active quests
+    activeQuests = activeQuests.filter(q => q.id !== questId);
+
+    await db.query(
+      'UPDATE player_progress SET active_quests = $1, completed_quests = $2 WHERE player_id = $3 AND channel_name = $4',
+      [JSON.stringify(activeQuests), JSON.stringify(completedQuests), targetPlayerId, channelName]
+    );
+
+    return {
+      success: true,
+      message: `Reset quest ${questId} for ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: Force event (global for channel)
+   */
+  async forceEvent(channelName, eventId, db) {
+    await db.query(
+      `INSERT INTO game_state (channel_name, active_event, last_updated)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (channel_name) 
+       DO UPDATE SET active_event = $2, last_updated = NOW()`,
+      [channelName.toLowerCase(), eventId]
+    );
+
+    return {
+      success: true,
+      message: `Triggered event ${eventId} for ${channelName}`
+    };
+  }
+
+  /**
+   * Execute: Set player stats
+   */
+  async setPlayerStats(targetPlayerId, channelName, stats, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    const updates = [];
+    const params = [];
+    let paramIndex = 1;
+
+    if (stats.hp !== undefined) {
+      updates.push(`hp = $${paramIndex++}`);
+      params.push(Math.max(1, stats.hp));
+    }
+    if (stats.max_hp !== undefined) {
+      updates.push(`max_hp = $${paramIndex++}`);
+      params.push(Math.max(10, stats.max_hp));
+    }
+    if (stats.gold !== undefined) {
+      updates.push(`gold = $${paramIndex++}`);
+      params.push(Math.max(0, stats.gold));
+    }
+
+    if (updates.length === 0) {
+      throw new Error('No valid stats provided');
+    }
+
+    params.push(targetPlayerId, channelName);
+    
+    await db.query(
+      `UPDATE player_progress SET ${updates.join(', ')} WHERE player_id = $${paramIndex++} AND channel_name = $${paramIndex++}`,
+      params
+    );
+
+    return {
+      success: true,
+      message: `Updated stats for ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: Give all items (debug command)
+   */
+  async giveAllItems(targetPlayerId, channelName, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    // This would require loading all items from data files
+    // For now, just give some common items
+    const commonItems = ['Health Potion', 'Mana Potion', 'Elixir', 'Phoenix Feather', 'Bread', 'Cheese'];
+    const inventory = JSON.parse(progress.inventory || '[]');
+    inventory.push(...commonItems);
+
+    await db.query(
+      'UPDATE player_progress SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
+      [JSON.stringify(inventory), targetPlayerId, channelName]
+    );
+
+    return {
+      success: true,
+      message: `Gave ${commonItems.length} items to ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: Unlock achievement
+   */
+  async unlockAchievement(targetPlayerId, channelName, achievementId, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    let unlockedAchievements = JSON.parse(progress.unlocked_achievements || '[]');
+    
+    if (!unlockedAchievements.includes(achievementId)) {
+      unlockedAchievements.push(achievementId);
+      
+      await db.query(
+        'UPDATE player_progress SET unlocked_achievements = $1 WHERE player_id = $2 AND channel_name = $3',
+        [JSON.stringify(unlockedAchievements), targetPlayerId, channelName]
+      );
+      
+      return {
+        success: true,
+        message: `Unlocked achievement ${achievementId} for ${progress.name}`
+      };
+    } else {
+      return {
+        success: true,
+        message: `${progress.name} already has achievement ${achievementId}`
+      };
+    }
+  }
+
+  /**
    * Get command metadata for UI
    */
   getCommandMetadata() {
@@ -492,6 +727,32 @@ class OperatorManager {
         description: 'Trigger a specific game event',
         params: [
           { name: 'eventId', type: 'string', required: true }
+        ],
+        level: 'STREAMER'
+      },
+      setPlayerStats: {
+        name: 'Set Player Stats',
+        description: 'Set specific stats for a player',
+        params: [
+          { name: 'playerId', type: 'string', required: true },
+          { name: 'stats', type: 'object', required: true }
+        ],
+        level: 'STREAMER'
+      },
+      giveAllItems: {
+        name: 'Give All Items',
+        description: 'Give player common items (debug)',
+        params: [
+          { name: 'playerId', type: 'string', required: true }
+        ],
+        level: 'STREAMER'
+      },
+      unlockAchievement: {
+        name: 'Unlock Achievement',
+        description: 'Unlock an achievement for a player',
+        params: [
+          { name: 'playerId', type: 'string', required: true },
+          { name: 'achievementId', type: 'string', required: true }
         ],
         level: 'STREAMER'
       }

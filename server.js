@@ -4769,6 +4769,82 @@ app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
         );
         break;
 
+      case 'changeWeather':
+        result = await operatorMgr.changeWeather(
+          req.channelName,
+          params.weather,
+          db
+        );
+        break;
+
+      case 'changeTime':
+        result = await operatorMgr.changeTime(
+          req.channelName,
+          params.time,
+          db
+        );
+        break;
+
+      case 'changeSeason':
+        result = await operatorMgr.changeSeason(
+          req.channelName,
+          params.season,
+          db
+        );
+        break;
+
+      case 'spawnEncounter':
+        result = await operatorMgr.spawnEncounter(
+          params.playerId,
+          req.channelName,
+          params.encounterId,
+          db
+        );
+        break;
+
+      case 'resetQuest':
+        result = await operatorMgr.resetQuest(
+          params.playerId,
+          req.channelName,
+          params.questId,
+          db
+        );
+        break;
+
+      case 'forceEvent':
+        result = await operatorMgr.forceEvent(
+          req.channelName,
+          params.eventId,
+          db
+        );
+        break;
+
+      case 'setPlayerStats':
+        result = await operatorMgr.setPlayerStats(
+          params.playerId,
+          req.channelName,
+          params.stats,
+          db
+        );
+        break;
+
+      case 'giveAllItems':
+        result = await operatorMgr.giveAllItems(
+          params.playerId,
+          req.channelName,
+          db
+        );
+        break;
+
+      case 'unlockAchievement':
+        result = await operatorMgr.unlockAchievement(
+          params.playerId,
+          req.channelName,
+          params.achievementId,
+          db
+        );
+        break;
+
       default:
         return res.status(400).json({ error: `Unknown command: ${command}` });
     }

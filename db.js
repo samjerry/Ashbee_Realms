@@ -122,6 +122,15 @@ async function initPostgres() {
 
     CREATE INDEX IF NOT EXISTS idx_user_roles_channel ON user_roles(channel_name);
     CREATE INDEX IF NOT EXISTS idx_user_roles_role ON user_roles(role);
+
+    CREATE TABLE IF NOT EXISTS game_state (
+      channel_name TEXT PRIMARY KEY,
+      weather TEXT DEFAULT 'Clear',
+      time_of_day TEXT DEFAULT 'Day',
+      season TEXT DEFAULT 'Spring',
+      active_event TEXT DEFAULT NULL,
+      last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
   `);
 
   db = pool;
