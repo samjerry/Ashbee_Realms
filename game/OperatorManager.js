@@ -3,6 +3,15 @@
  * Manages operator commands and permissions for streamers and moderators
  */
 
+// Game constants (should match main game configuration)
+const GAME_CONSTANTS = {
+  MAX_LEVEL: 100,
+  MIN_LEVEL: 1,
+  BASE_XP_TO_NEXT: 100,
+  XP_MULTIPLIER: 1.5,
+  COMMON_ITEMS: ['Health Potion', 'Mana Potion', 'Elixir', 'Phoenix Feather', 'Bread', 'Cheese']
+};
+
 class OperatorManager {
   constructor() {
     // Permission levels
@@ -182,12 +191,12 @@ class OperatorManager {
 
     const newXp = (progress.xp || 0) + amount;
     let newLevel = progress.level || 1;
-    let xpToNext = progress.xp_to_next || 100;
+    let xpToNext = progress.xp_to_next || GAME_CONSTANTS.BASE_XP_TO_NEXT;
 
     // Simple level up logic (would use ProgressionManager in real implementation)
-    while (newXp >= xpToNext && newLevel < 100) {
+    while (newXp >= xpToNext && newLevel < GAME_CONSTANTS.MAX_LEVEL) {
       newLevel++;
-      xpToNext = Math.floor(xpToNext * 1.5);
+      xpToNext = Math.floor(xpToNext * GAME_CONSTANTS.XP_MULTIPLIER);
     }
 
     await db.query(
@@ -276,8 +285,8 @@ class OperatorManager {
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
-    const newLevel = Math.max(1, (progress.level || 1) - levels);
-    const xpToNext = Math.floor(100 * Math.pow(1.5, newLevel - 1));
+    const newLevel = Math.max(GAME_CONSTANTS.MIN_LEVEL, (progress.level || 1) - levels);
+    const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
 
     await db.query(
       'UPDATE player_progress SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3 AND channel_name = $4',
@@ -297,8 +306,8 @@ class OperatorManager {
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
-    const newLevel = Math.max(1, Math.min(100, level));
-    const xpToNext = Math.floor(100 * Math.pow(1.5, newLevel - 1));
+    const newLevel = Math.max(GAME_CONSTANTS.MIN_LEVEL, Math.min(GAME_CONSTANTS.MAX_LEVEL, level));
+    const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
 
     await db.query(
       'UPDATE player_progress SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3 AND channel_name = $4',
@@ -536,11 +545,9 @@ class OperatorManager {
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
-    // This would require loading all items from data files
-    // For now, just give some common items
-    const commonItems = ['Health Potion', 'Mana Potion', 'Elixir', 'Phoenix Feather', 'Bread', 'Cheese'];
+    // Use common items from constants
     const inventory = JSON.parse(progress.inventory || '[]');
-    inventory.push(...commonItems);
+    inventory.push(...GAME_CONSTANTS.COMMON_ITEMS);
 
     await db.query(
       'UPDATE player_progress SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
@@ -549,7 +556,7 @@ class OperatorManager {
 
     return {
       success: true,
-      message: `Gave ${commonItems.length} items to ${progress.name}`
+      message: `Gave ${GAME_CONSTANTS.COMMON_ITEMS.length} items to ${progress.name}`
     };
   }
 

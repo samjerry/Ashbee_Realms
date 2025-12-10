@@ -4899,12 +4899,16 @@ app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
     res.json(result);
   } catch (error) {
     // Log failed action to audit log
+    const channelName = req.channelName || req.body?.channel || 'unknown';
+    const userId = req.session?.user?.id || 'unknown';
+    const userName = req.session?.user?.displayName || 'unknown';
+    
     await db.logOperatorAction(
-      req.session.user.id,
-      req.session.user.displayName,
-      req.channelName || req.body.channel,
-      req.body.command,
-      req.body.params,
+      userId,
+      userName,
+      channelName,
+      req.body?.command || 'unknown',
+      req.body?.params || {},
       false,
       error.message
     ).catch(err => console.error('Failed to log error:', err));

@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Heart, Droplet, TrendingUp, Coins, Shield } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import axios from 'axios';
+
+// Lazy load OperatorMenu for code splitting
+const OperatorMenu = lazy(() => import('../Operator/OperatorMenu'));
 
 const Header = () => {
   const { player } = useGameStore();
@@ -125,20 +128,15 @@ const Header = () => {
         </div>
       </header>
       
-      {/* Dynamically import and render OperatorMenu */}
+      {/* Operator Menu Modal */}
       {showOperatorMenu && hasOperatorAccess && (
-        <React.Suspense fallback={null}>
-          {(() => {
-            const OperatorMenu = require('../Operator/OperatorMenu').default;
-            return (
-              <OperatorMenu
-                isOpen={showOperatorMenu}
-                onClose={() => setShowOperatorMenu(false)}
-                channelName={player.channel}
-              />
-            );
-          })()}
-        </React.Suspense>
+        <Suspense fallback={null}>
+          <OperatorMenu
+            isOpen={showOperatorMenu}
+            onClose={() => setShowOperatorMenu(false)}
+            channelName={player.channel}
+          />
+        </Suspense>
       )}
     </>
   );
