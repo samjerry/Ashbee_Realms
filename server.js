@@ -4545,6 +4545,32 @@ app.get('/api/redemptions/available', (req, res) => {
 // Initialize OperatorManager
 const operatorMgr = new OperatorManager();
 
+// Rate limiting for operator commands
+const operatorRateLimits = new Map(); // userId -> { count, resetTime }
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX = 20; // 20 commands per minute
+
+/**
+ * Check rate limit for operator commands
+ */
+function checkOperatorRateLimit(userId) {
+  const now = Date.now();
+  const userLimit = operatorRateLimits.get(userId);
+
+  if (!userLimit || now > userLimit.resetTime) {
+    // Reset or initialize
+    operatorRateLimits.set(userId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+
+  if (userLimit.count >= RATE_LIMIT_MAX) {
+    return false; // Rate limit exceeded
+  }
+
+  userLimit.count++;
+  return true;
+}
+
 /**
  * Middleware to check operator permissions
  */
@@ -4666,6 +4692,14 @@ app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
 
     if (!command) {
       return res.status(400).json({ error: 'Command is required' });
+    }
+
+    // Check rate limit
+    if (!checkOperatorRateLimit(req.session.user.id)) {
+      return res.status(429).json({ 
+        error: 'Rate limit exceeded. Please wait before executing more commands.',
+        retryAfter: 60 
+      });
     }
 
     // Check if user can execute this command
@@ -4849,11 +4883,32 @@ app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
         return res.status(400).json({ error: `Unknown command: ${command}` });
     }
 
-    // Log the action
+    // Log the action to audit log
+    await db.logOperatorAction(
+      req.session.user.id,
+      req.session.user.displayName,
+      req.channelName,
+      command,
+      params,
+      true,
+      null
+    );
+
     console.log(`[OPERATOR] ${req.session.user.displayName} executed ${command} in ${req.channelName}`);
 
     res.json(result);
   } catch (error) {
+    // Log failed action to audit log
+    await db.logOperatorAction(
+      req.session.user.id,
+      req.session.user.displayName,
+      req.channelName || req.body.channel,
+      req.body.command,
+      req.body.params,
+      false,
+      error.message
+    ).catch(err => console.error('Failed to log error:', err));
+
     console.error('Operator command execution error:', error);
     res.status(500).json({ error: error.message || 'Command execution failed' });
   }
@@ -4878,6 +4933,22 @@ app.get('/api/operator/players', checkOperatorAccess, async (req, res) => {
   } catch (error) {
     console.error('Error fetching players:', error);
     res.status(500).json({ error: 'Failed to fetch players' });
+  }
+});
+
+/**
+ * GET /api/operator/audit-log
+ * Get operator audit log for a channel
+ */
+app.get('/api/operator/audit-log', checkOperatorAccess, async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    const logs = await db.getOperatorAuditLog(req.channelName, limit);
+    
+    res.json({ logs });
+  } catch (error) {
+    console.error('Error fetching audit log:', error);
+    res.status(500).json({ error: 'Failed to fetch audit log' });
   }
 });
 

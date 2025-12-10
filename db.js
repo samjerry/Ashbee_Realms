@@ -131,6 +131,23 @@ async function initPostgres() {
       active_event TEXT DEFAULT NULL,
       last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS operator_audit_log (
+      id SERIAL PRIMARY KEY,
+      operator_id TEXT NOT NULL,
+      operator_name TEXT NOT NULL,
+      channel_name TEXT NOT NULL,
+      command TEXT NOT NULL,
+      params JSONB,
+      success BOOLEAN DEFAULT true,
+      error_message TEXT,
+      executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(operator_id) REFERENCES players(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_audit_log_channel ON operator_audit_log(channel_name);
+    CREATE INDEX IF NOT EXISTS idx_audit_log_operator ON operator_audit_log(operator_id);
+    CREATE INDEX IF NOT EXISTS idx_audit_log_executed ON operator_audit_log(executed_at DESC);
   `);
 
   db = pool;
@@ -697,6 +714,55 @@ function determineRoleFromTags(username, channelName, tags = {}) {
   return 'viewer';
 }
 
+/**
+ * Log operator action to audit log
+ * @param {string} operatorId - Operator's player ID
+ * @param {string} operatorName - Operator's display name
+ * @param {string} channelName - Channel name
+ * @param {string} command - Command executed
+ * @param {object} params - Command parameters
+ * @param {boolean} success - Whether command succeeded
+ * @param {string} errorMessage - Error message if failed
+ */
+async function logOperatorAction(operatorId, operatorName, channelName, command, params, success = true, errorMessage = null) {
+  try {
+    await query(
+      `INSERT INTO operator_audit_log (operator_id, operator_name, channel_name, command, params, success, error_message, executed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+      [operatorId, operatorName, channelName.toLowerCase(), command, JSON.stringify(params), success, errorMessage]
+    );
+  } catch (error) {
+    console.error('Failed to log operator action:', error);
+    // Don't throw - logging failure shouldn't break the operator command
+  }
+}
+
+/**
+ * Get operator audit log
+ * @param {string} channelName - Channel name (optional)
+ * @param {number} limit - Number of records to return
+ * @returns {Promise<Array>} Audit log entries
+ */
+async function getOperatorAuditLog(channelName = null, limit = 100) {
+  let sql = `
+    SELECT * FROM operator_audit_log
+  `;
+  const params = [];
+
+  if (channelName) {
+    sql += ` WHERE channel_name = $1`;
+    params.push(channelName.toLowerCase());
+    sql += ` ORDER BY executed_at DESC LIMIT $2`;
+    params.push(limit);
+  } else {
+    sql += ` ORDER BY executed_at DESC LIMIT $1`;
+    params.push(limit);
+  }
+
+  const result = await query(sql, params);
+  return result.rows;
+}
+
 module.exports = {
   initDB,
   query,
@@ -722,5 +788,7 @@ module.exports = {
   updateUserRole,
   getUserRole,
   getChannelUsers,
-  determineRoleFromTags
+  determineRoleFromTags,
+  logOperatorAction,
+  getOperatorAuditLog
 };
