@@ -4925,10 +4925,19 @@ app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
 app.get('/api/operator/players', checkOperatorAccess, async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT player_id, name, level, gold, location, hp, max_hp 
-       FROM player_progress 
-       WHERE channel_name = $1 
-       ORDER BY level DESC, name ASC 
+      `SELECT 
+        pp.player_id, 
+        pp.name, 
+        pp.level, 
+        pp.gold, 
+        pp.location, 
+        pp.hp, 
+        pp.max_hp,
+        COALESCE(ur.role, 'viewer') as role
+       FROM player_progress pp
+       LEFT JOIN user_roles ur ON pp.player_id = ur.player_id AND pp.channel_name = ur.channel_name
+       WHERE pp.channel_name = $1 
+       ORDER BY pp.level DESC, pp.name ASC 
        LIMIT 100`,
       [req.channelName]
     );
