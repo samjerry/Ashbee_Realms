@@ -20,12 +20,27 @@ class QuestManager {
   }
 
   /**
+   * Check if quest is a tutorial quest
+   * @param {string} questId - Quest identifier
+   * @returns {boolean} True if tutorial quest
+   */
+  isTutorialQuest(questId) {
+    // "The Awakening" is the tutorial quest
+    return questId === 'awakening';
+  }
+
+  /**
    * Get quest by ID
    * @param {string} questId - Quest identifier
    * @returns {Object|null} Quest data
    */
   getQuest(questId) {
-    return this.questsById[questId] || null;
+    const quest = this.questsById[questId] || null;
+    if (quest) {
+      // Add tutorial flag to quest data
+      quest.is_tutorial = this.isTutorialQuest(quest.id);
+    }
+    return quest;
   }
 
   /**
@@ -63,6 +78,7 @@ class QuestManager {
       chapter: quest.chapter,
       is_main: this.mainQuests.some(q => q.id === quest.id),
       is_daily: this.dailyQuests.some(q => q.id === quest.id),
+      is_tutorial: this.isTutorialQuest(quest.id),
       rewards: quest.rewards,
       objectives: (quest.objectives || []).map(obj => ({
         type: obj.type,
