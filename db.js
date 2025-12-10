@@ -117,7 +117,7 @@ async function initPostgres() {
       last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY (player_id, channel_name),
       FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE,
-      CHECK (role IN ('viewer', 'vip', 'moderator', 'streamer'))
+      CHECK (role IN ('viewer', 'subscriber', 'vip', 'moderator', 'streamer'))
     );
 
     CREATE INDEX IF NOT EXISTS idx_user_roles_channel ON user_roles(channel_name);
@@ -629,10 +629,10 @@ async function updateReputation(playerId, channelName, reputation) {
  * Update or insert user role in a channel
  * @param {string} playerId - Player ID
  * @param {string} channelName - Channel name
- * @param {string} role - User role: 'viewer', 'vip', 'moderator', 'streamer'
+ * @param {string} role - User role: 'viewer', 'subscriber', 'vip', 'moderator', 'streamer'
  */
 async function updateUserRole(playerId, channelName, role) {
-  const validRoles = ['viewer', 'vip', 'moderator', 'streamer'];
+  const validRoles = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer'];
   if (!validRoles.includes(role)) {
     throw new Error(`Invalid role: ${role}. Must be one of: ${validRoles.join(', ')}`);
   }
@@ -692,7 +692,7 @@ async function getChannelUsers(channelName, role = null) {
  * @param {string} username - Twitch username
  * @param {string} channelName - Channel name
  * @param {object} tags - Twitch message tags
- * @returns {string} User role: 'streamer', 'moderator', 'vip', or 'viewer'
+ * @returns {string} User role: 'streamer', 'moderator', 'vip', 'subscriber', or 'viewer'
  */
 function determineRoleFromTags(username, channelName, tags = {}) {
   // Check if user is the broadcaster/streamer
@@ -708,6 +708,11 @@ function determineRoleFromTags(username, channelName, tags = {}) {
   // Check if user is a VIP
   if (tags.badges?.vip) {
     return 'vip';
+  }
+
+  // Check if user is a subscriber
+  if (tags.subscriber || tags.badges?.subscriber || tags.badges?.founder) {
+    return 'subscriber';
   }
 
   // Default to viewer

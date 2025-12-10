@@ -125,7 +125,7 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
 
   /**
    * Get color for player name based on their Twitch role
-   * @param {string} role - User's role (viewer, vip, moderator, streamer)
+   * @param {string} role - User's role (viewer, subscriber, vip, moderator, streamer)
    * @param {string} playerName - Player's name to check if they're the creator
    * @returns {string} Tailwind CSS color class
    */
@@ -142,6 +142,8 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
         return 'text-green-400'; // Green for moderators
       case 'vip':
         return 'text-pink-400'; // Pink for VIPs
+      case 'subscriber':
+        return 'text-cyan-400'; // Cyan/blue for subscribers
       case 'viewer':
       default:
         return 'text-white'; // White for viewers
