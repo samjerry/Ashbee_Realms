@@ -6,7 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const db = require('./db');
 const Combat = require('./game/Combat');
-const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager } = require('./game');
+const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager, OperatorManager } = require('./game');
 const { loadData } = require('./data/data_loader');
 const socketHandler = require('./websocket/socketHandler');
 
@@ -4539,6 +4539,433 @@ app.get('/api/redemptions/available', (req, res) => {
 });
 
 // ==================== END CHANNEL POINT REDEMPTIONS ====================
+
+// ==================== OPERATOR MENU ENDPOINTS ====================
+
+// Initialize OperatorManager
+const operatorMgr = new OperatorManager();
+
+// Rate limiting for operator commands
+const operatorRateLimits = new Map(); // userId -> { count, resetTime }
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX = 20; // 20 commands per minute
+
+/**
+ * Check rate limit for operator commands
+ */
+function checkOperatorRateLimit(userId) {
+  const now = Date.now();
+  const userLimit = operatorRateLimits.get(userId);
+
+  if (!userLimit || now > userLimit.resetTime) {
+    // Reset or initialize
+    operatorRateLimits.set(userId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+
+  if (userLimit.count >= RATE_LIMIT_MAX) {
+    return false; // Rate limit exceeded
+  }
+
+  userLimit.count++;
+  return true;
+}
+
+/**
+ * Middleware to check operator permissions
+ */
+async function checkOperatorAccess(req, res, next) {
+  const user = req.session.user;
+  if (!user) {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  const { channel } = req.body || req.query;
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required' });
+  }
+
+  try {
+    // Get user's role from database
+    const userRole = await db.getUserRole(user.id, channel.toLowerCase());
+    
+    // Get permission level
+    const permissionLevel = operatorMgr.getPermissionLevel(
+      user.displayName,
+      channel.toLowerCase(),
+      userRole
+    );
+
+    // Check if user has any operator permissions
+    if (permissionLevel === operatorMgr.PERMISSION_LEVELS.NONE) {
+      return res.status(403).json({ error: 'Access denied: Operator permissions required' });
+    }
+
+    // Attach permission info to request
+    req.operatorLevel = permissionLevel;
+    req.operatorRole = userRole;
+    req.channelName = channel.toLowerCase();
+    
+    next();
+  } catch (error) {
+    console.error('Operator access check error:', error);
+    res.status(500).json({ error: 'Failed to verify permissions' });
+  }
+}
+
+/**
+ * GET /api/operator/status
+ * Check if user has operator access and get their permission level
+ */
+app.get('/api/operator/status', async (req, res) => {
+  const user = req.session.user;
+  if (!user) {
+    return res.json({ hasAccess: false, level: 'NONE' });
+  }
+
+  const { channel } = req.query;
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required' });
+  }
+
+  try {
+    const userRole = await db.getUserRole(user.id, channel.toLowerCase());
+    const permissionLevel = operatorMgr.getPermissionLevel(
+      user.displayName,
+      channel.toLowerCase(),
+      userRole
+    );
+
+    const hasAccess = permissionLevel > operatorMgr.PERMISSION_LEVELS.NONE;
+    const availableCommands = operatorMgr.getAvailableCommands(permissionLevel);
+    
+    let levelName = 'NONE';
+    if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) levelName = 'CREATOR';
+    else if (permissionLevel === operatorMgr.PERMISSION_LEVELS.STREAMER) levelName = 'STREAMER';
+    else if (permissionLevel === operatorMgr.PERMISSION_LEVELS.MODERATOR) levelName = 'MODERATOR';
+
+    res.json({
+      hasAccess,
+      level: levelName,
+      role: userRole,
+      availableCommands,
+      username: user.displayName
+    });
+  } catch (error) {
+    console.error('Operator status check error:', error);
+    res.status(500).json({ error: 'Failed to check operator status' });
+  }
+});
+
+/**
+ * GET /api/operator/commands
+ * Get available operator commands with metadata
+ */
+app.get('/api/operator/commands', checkOperatorAccess, (req, res) => {
+  try {
+    const metadata = operatorMgr.getCommandMetadata();
+    const availableCommands = operatorMgr.getAvailableCommands(req.operatorLevel);
+    
+    // Filter metadata to only include available commands
+    const filtered = {};
+    for (const cmd of availableCommands) {
+      if (metadata[cmd]) {
+        filtered[cmd] = metadata[cmd];
+      }
+    }
+
+    res.json({ commands: filtered, level: req.operatorLevel });
+  } catch (error) {
+    console.error('Error fetching commands:', error);
+    res.status(500).json({ error: 'Failed to fetch commands' });
+  }
+});
+
+/**
+ * POST /api/operator/execute
+ * Execute an operator command
+ * Body: { channel, command, params }
+ */
+app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
+  try {
+    const { command, params } = req.body;
+
+    if (!command) {
+      return res.status(400).json({ error: 'Command is required' });
+    }
+
+    // Check rate limit
+    if (!checkOperatorRateLimit(req.session.user.id)) {
+      return res.status(429).json({ 
+        error: 'Rate limit exceeded. Please wait before executing more commands.',
+        retryAfter: 60 
+      });
+    }
+
+    // Check if user can execute this command
+    if (!operatorMgr.canExecuteCommand(command, req.operatorLevel)) {
+      return res.status(403).json({ 
+        error: 'Insufficient permissions for this command',
+        required: 'Higher operator level required'
+      });
+    }
+
+    // Execute the command
+    let result;
+    switch (command) {
+      case 'giveItem':
+        result = await operatorMgr.giveItem(
+          params.playerId,
+          req.channelName,
+          params.itemId,
+          params.quantity || 1,
+          db
+        );
+        break;
+
+      case 'giveGold':
+        result = await operatorMgr.giveGold(
+          params.playerId,
+          req.channelName,
+          params.amount,
+          db
+        );
+        break;
+
+      case 'giveExp':
+        result = await operatorMgr.giveExp(
+          params.playerId,
+          req.channelName,
+          params.amount,
+          db
+        );
+        break;
+
+      case 'healPlayer':
+        result = await operatorMgr.healPlayer(
+          params.playerId,
+          req.channelName,
+          db
+        );
+        break;
+
+      case 'removeItem':
+        result = await operatorMgr.removeItem(
+          params.playerId,
+          req.channelName,
+          params.itemId,
+          params.quantity || 1,
+          db
+        );
+        break;
+
+      case 'removeGold':
+        result = await operatorMgr.removeGold(
+          params.playerId,
+          req.channelName,
+          params.amount,
+          db
+        );
+        break;
+
+      case 'removeLevel':
+        result = await operatorMgr.removeLevel(
+          params.playerId,
+          req.channelName,
+          params.levels,
+          db
+        );
+        break;
+
+      case 'setPlayerLevel':
+        result = await operatorMgr.setPlayerLevel(
+          params.playerId,
+          req.channelName,
+          params.level,
+          db
+        );
+        break;
+
+      case 'teleportPlayer':
+        result = await operatorMgr.teleportPlayer(
+          params.playerId,
+          req.channelName,
+          params.location,
+          db
+        );
+        break;
+
+      case 'clearInventory':
+        result = await operatorMgr.clearInventory(
+          params.playerId,
+          req.channelName,
+          db
+        );
+        break;
+
+      case 'changeWeather':
+        result = await operatorMgr.changeWeather(
+          req.channelName,
+          params.weather,
+          db
+        );
+        break;
+
+      case 'changeTime':
+        result = await operatorMgr.changeTime(
+          req.channelName,
+          params.time,
+          db
+        );
+        break;
+
+      case 'changeSeason':
+        result = await operatorMgr.changeSeason(
+          req.channelName,
+          params.season,
+          db
+        );
+        break;
+
+      case 'spawnEncounter':
+        result = await operatorMgr.spawnEncounter(
+          params.playerId,
+          req.channelName,
+          params.encounterId,
+          db
+        );
+        break;
+
+      case 'resetQuest':
+        result = await operatorMgr.resetQuest(
+          params.playerId,
+          req.channelName,
+          params.questId,
+          db
+        );
+        break;
+
+      case 'forceEvent':
+        result = await operatorMgr.forceEvent(
+          req.channelName,
+          params.eventId,
+          db
+        );
+        break;
+
+      case 'setPlayerStats':
+        result = await operatorMgr.setPlayerStats(
+          params.playerId,
+          req.channelName,
+          params.stats,
+          db
+        );
+        break;
+
+      case 'giveAllItems':
+        result = await operatorMgr.giveAllItems(
+          params.playerId,
+          req.channelName,
+          db
+        );
+        break;
+
+      case 'unlockAchievement':
+        result = await operatorMgr.unlockAchievement(
+          params.playerId,
+          req.channelName,
+          params.achievementId,
+          db
+        );
+        break;
+
+      default:
+        return res.status(400).json({ error: `Unknown command: ${command}` });
+    }
+
+    // Log the action to audit log
+    await db.logOperatorAction(
+      req.session.user.id,
+      req.session.user.displayName,
+      req.channelName,
+      command,
+      params,
+      true,
+      null
+    );
+
+    console.log(`[OPERATOR] ${req.session.user.displayName} executed ${command} in ${req.channelName}`);
+
+    res.json(result);
+  } catch (error) {
+    // Log failed action to audit log
+    const channelName = req.channelName || req.body?.channel || 'unknown';
+    const userId = req.session?.user?.id || 'unknown';
+    const userName = req.session?.user?.displayName || 'unknown';
+    
+    await db.logOperatorAction(
+      userId,
+      userName,
+      channelName,
+      req.body?.command || 'unknown',
+      req.body?.params || {},
+      false,
+      error.message
+    ).catch(err => console.error('Failed to log error:', err));
+
+    console.error('Operator command execution error:', error);
+    res.status(500).json({ error: error.message || 'Command execution failed' });
+  }
+});
+
+/**
+ * GET /api/operator/players
+ * Get list of players in a channel for operator commands
+ */
+app.get('/api/operator/players', checkOperatorAccess, async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+        pp.player_id, 
+        pp.name, 
+        pp.level, 
+        pp.gold, 
+        pp.location, 
+        pp.hp, 
+        pp.max_hp,
+        COALESCE(ur.role, 'viewer') as role
+       FROM player_progress pp
+       LEFT JOIN user_roles ur ON pp.player_id = ur.player_id AND pp.channel_name = ur.channel_name
+       WHERE pp.channel_name = $1 
+       ORDER BY pp.level DESC, pp.name ASC 
+       LIMIT 100`,
+      [req.channelName]
+    );
+
+    res.json({ players: result.rows });
+  } catch (error) {
+    console.error('Error fetching players:', error);
+    res.status(500).json({ error: 'Failed to fetch players' });
+  }
+});
+
+/**
+ * GET /api/operator/audit-log
+ * Get operator audit log for a channel
+ */
+app.get('/api/operator/audit-log', checkOperatorAccess, async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    const logs = await db.getOperatorAuditLog(req.channelName, limit);
+    
+    res.json({ logs });
+  } catch (error) {
+    console.error('Error fetching audit log:', error);
+    res.status(500).json({ error: 'Failed to fetch audit log' });
+  }
+});
+
+// ==================== END OPERATOR MENU ENDPOINTS ====================
 
 // ==================== SEASON & LEADERBOARD SYSTEM ENDPOINTS ====================
 
