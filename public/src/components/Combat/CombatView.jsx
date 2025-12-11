@@ -145,7 +145,7 @@ const CombatView = () => {
                 'active:scale-95',
                 'disabled:opacity-50',
                 'disabled:cursor-not-allowed',
-                'touch-manipulation',
+                '[touch-action:manipulation]',
                 'min-h-[60px] sm:min-h-0'
               ].join(' ');
               

@@ -57,15 +57,28 @@ const Sidebar = () => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             
+            const baseClasses = [
+              'relative',
+              'w-full lg:w-14',
+              'h-12 lg:h-14',
+              'rounded-lg',
+              'flex items-center lg:justify-center',
+              'px-4 lg:px-0',
+              'transition-all duration-200',
+              'group'
+            ];
+            
+            const stateClasses = isActive
+              ? ['bg-primary-600', 'text-white', 'shadow-lg']
+              : ['text-gray-400', 'hover:bg-dark-800', 'hover:text-gray-200'];
+            
+            const buttonClasses = [...baseClasses, ...stateClasses].join(' ');
+            
             return (
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`relative w-full lg:w-14 h-12 lg:h-14 rounded-lg flex items-center lg:justify-center px-4 lg:px-0 transition-all duration-200 group ${
-                  isActive 
-                    ? 'bg-primary-600 text-white shadow-lg' 
-                    : 'text-gray-400 hover:bg-dark-800 hover:text-gray-200'
-                }`}
+                className={buttonClasses}
                 title={tab.label}
               >
                 <Icon size={24} className="lg:mx-auto" />
@@ -84,7 +97,17 @@ const Sidebar = () => {
         <div className="px-4 lg:px-0">
           <button
             onClick={openSettings}
-            className="w-full lg:w-14 h-12 lg:h-14 rounded-lg flex items-center lg:justify-center px-4 lg:px-0 text-gray-400 hover:bg-dark-800 hover:text-gray-200 transition-all duration-200"
+            className={[
+              'w-full lg:w-14',
+              'h-12 lg:h-14',
+              'rounded-lg',
+              'flex items-center lg:justify-center',
+              'px-4 lg:px-0',
+              'text-gray-400',
+              'hover:bg-dark-800',
+              'hover:text-gray-200',
+              'transition-all duration-200'
+            ].join(' ')}
             title="Settings"
           >
             <Settings size={24} className="lg:mx-auto" />
