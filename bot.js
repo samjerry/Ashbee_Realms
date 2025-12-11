@@ -80,8 +80,6 @@ async function initializeBot() {
     
     try {
       const msg = message.trim().toLowerCase();
-      const args = message.trim().split(' ');
-      const command = args[0].toLowerCase();
       const channelName = channel.replace('#', '').toLowerCase();
       const username = tags.username;
 
@@ -90,22 +88,14 @@ async function initializeBot() {
         console.error('Failed to update user role:', err);
       });
 
-      // Basic adventure command
+      // Only command: !adventure - all other features through in-game UI
       if (msg === '!adventure') {
         client.say(channel, `🗡️ Join the adventure: ${BASE_URL}/adventure?channel=${channelName}`);
         return;
       }
 
-      // Raid commands
-      if (command === '!raid') {
-        handleRaidCommand(channel, channelName, username, args.slice(1), client);
-        return;
-      }
-
-      if (command === '!vote') {
-        handleVoteCommand(channel, channelName, username, args.slice(1), tags, client);
-        return;
-      }
+      // All other game features (raids, voting, stats, inventory, etc.) are accessed through the in-game UI
+      // No additional chat commands needed
     } catch (error) {
       console.error('Error in message handler:', error);
       // Don't crash - just log and continue
@@ -124,6 +114,14 @@ async function initializeBot() {
   return client;
 }
 
+/*
+ * REMOVED: !raid and !vote commands - all interactions through in-game UI
+ * 
+ * The following functions are commented out as the game now uses in-game UI buttons
+ * for all features. Only !adventure command is active to join the game.
+ */
+
+/*
 /**
  * Handle !raid command
  * !raid - Show available raids
@@ -133,7 +131,7 @@ async function initializeBot() {
  * !raid role <role> - Change role in lobby
  * !raid info <raidId> - Get raid details
  * !raid here - Check raids available at current location
- */
+ *//*
 async function handleRaidCommand(channel, channelName, username, args, client) {
   const subcommand = args[0] || 'help';
 
@@ -275,11 +273,13 @@ async function handleRaidCommand(channel, channelName, username, args, client) {
     client.say(channel, `❌ Command failed. Try again later.`);
   }
 }
+*/
 
+/*
 /**
  * Handle !vote command for raids
  * !vote <option> - Vote on current raid event (subscriber votes count 2x)
- */
+ *//*
 async function handleVoteCommand(channel, channelName, username, args, tags, client) {
   const option = args[0];
   
@@ -319,6 +319,7 @@ async function handleVoteCommand(channel, channelName, username, args, tags, cli
     console.error('Vote command error:', error);
   }
 }
+*/
 
 // Initialize the bot
 initializeBot().catch(err => {
