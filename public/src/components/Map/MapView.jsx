@@ -27,34 +27,34 @@ const MapView = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="card p-6">
-        <div className="flex items-center justify-between">
+      <div className="card p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <Map size={32} className="text-primary-500" />
+            <Map size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
             <div>
-              <h1 className="text-3xl font-bold text-white">World Map</h1>
-              <p className="text-gray-400">Explore the world of Ashbee Realms</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">World Map</h1>
+              <p className="text-sm sm:text-base text-gray-400">Explore the world of Ashbee Realms</p>
             </div>
           </div>
           
           {currentLocation && (
-            <div className="flex items-center space-x-2 bg-dark-800 px-4 py-2 rounded-lg border border-dark-700">
-              <MapPin size={20} className="text-primary-500" />
+            <div className="flex items-center space-x-2 bg-dark-800 px-3 sm:px-4 py-2 rounded-lg border border-dark-700">
+              <MapPin size={16} className="sm:w-5 sm:h-5 text-primary-500 flex-shrink-0" />
               <div>
                 <p className="text-xs text-gray-400">Current Location</p>
-                <p className="text-sm font-bold text-white">{currentLocation.name}</p>
+                <p className="text-xs sm:text-sm font-bold text-white">{currentLocation.name}</p>
               </div>
             </div>
           )}
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Location Grid */}
         <div className="lg:col-span-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {availableLocations.map(location => {
               const accessible = canTravel(location);
               return (
@@ -62,21 +62,21 @@ const MapView = () => {
                   key={location.id}
                   onClick={() => accessible && setSelectedLocation(location)}
                   disabled={!accessible}
-                  className={`card p-6 text-left transition-all ${
+                  className={`card p-4 sm:p-6 text-left transition-all ${
                     accessible 
-                      ? 'hover:border-primary-500 cursor-pointer' 
+                      ? 'hover:border-primary-500 cursor-pointer active:scale-95' 
                       : 'opacity-50 cursor-not-allowed'
                   } ${
                     selectedLocation?.id === location.id ? 'border-primary-500 ring-2 ring-primary-500/20' : ''
                   }`}
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-1">{location.name}</h3>
-                      <p className="text-sm text-gray-400 line-clamp-2">{location.description}</p>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-1 truncate">{location.name}</h3>
+                      <p className="text-xs sm:text-sm text-gray-400 line-clamp-2">{location.description}</p>
                     </div>
                     {currentLocation?.id === location.id && (
-                      <MapPin size={20} className="text-primary-500" />
+                      <MapPin size={16} className="sm:w-5 sm:h-5 text-primary-500 flex-shrink-0 ml-2" />
                     )}
                   </div>
                   

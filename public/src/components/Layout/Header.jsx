@@ -1,9 +1,9 @@
 import React from 'react';
-import { Heart, Droplet, TrendingUp, Coins } from 'lucide-react';
+import { Heart, Droplet, TrendingUp, Coins, Menu } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const Header = () => {
-  const { player } = useGameStore();
+  const { player, toggleMobileMenu } = useGameStore();
   
   if (!player) return null;
   
@@ -12,27 +12,36 @@ const Header = () => {
   const xpPercent = (player.xp / player.xpToNextLevel) * 100;
 
   return (
-    <header className="bg-dark-900 border-b border-dark-700 px-6 py-4">
-      <div className="flex items-center justify-between">
+    <header className="bg-dark-900 border-b border-dark-700 px-3 sm:px-6 py-3 sm:py-4">
+      <div className="flex items-center justify-between gap-3">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={toggleMobileMenu}
+          className="lg:hidden p-2 text-gray-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors"
+          aria-label="Toggle menu"
+        >
+          <Menu size={24} />
+        </button>
+
         {/* Player info */}
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center text-white font-bold text-lg">
+        <div className="flex items-center space-x-3 sm:space-x-6 min-w-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0">
               {player.level}
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-white">{player.username}</h2>
-              <p className="text-sm text-gray-400">{player.class} • Level {player.level}</p>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-lg font-bold text-white truncate">{player.username}</h2>
+              <p className="text-xs sm:text-sm text-gray-400 truncate">{player.class} • Level {player.level}</p>
             </div>
           </div>
         </div>
         
         {/* Stats bars */}
-        <div className="flex-1 max-w-2xl mx-6 space-y-2">
+        <div className="hidden md:flex flex-1 max-w-2xl mx-6 space-y-2">
           {/* HP Bar */}
           <div className="flex items-center space-x-3">
-            <Heart size={20} className="text-red-500" />
-            <div className="flex-1">
+            <Heart size={20} className="text-red-500 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
               <div className="flex justify-between text-xs text-gray-400 mb-1">
                 <span>HP</span>
                 <span>{player.hp} / {player.maxHp}</span>
@@ -49,8 +58,8 @@ const Header = () => {
           {/* Mana Bar */}
           {player.mana !== undefined && (
             <div className="flex items-center space-x-3">
-              <Droplet size={20} className="text-blue-500" />
-              <div className="flex-1">
+              <Droplet size={20} className="text-blue-500 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
                 <div className="flex justify-between text-xs text-gray-400 mb-1">
                   <span>Mana</span>
                   <span>{player.mana} / {player.maxMana}</span>
@@ -67,8 +76,8 @@ const Header = () => {
           
           {/* XP Bar */}
           <div className="flex items-center space-x-3">
-            <TrendingUp size={20} className="text-green-500" />
-            <div className="flex-1">
+            <TrendingUp size={20} className="text-green-500 flex-shrink-0" />
+            <div className="flex-1 min-w-0">
               <div className="flex justify-between text-xs text-gray-400 mb-1">
                 <span>XP</span>
                 <span>{player.xp} / {player.xpToNextLevel}</span>
@@ -84,9 +93,9 @@ const Header = () => {
         </div>
         
         {/* Gold */}
-        <div className="flex items-center space-x-2 bg-dark-800 px-4 py-2 rounded-lg border border-dark-700">
-          <Coins size={20} className="text-yellow-500" />
-          <span className="text-lg font-bold text-yellow-500">{(player.gold || 0).toLocaleString()}</span>
+        <div className="flex items-center space-x-2 bg-dark-800 px-3 sm:px-4 py-2 rounded-lg border border-dark-700 flex-shrink-0">
+          <Coins size={16} className="sm:w-5 sm:h-5 text-yellow-500" />
+          <span className="text-sm sm:text-lg font-bold text-yellow-500">{(player.gold || 0).toLocaleString()}</span>
         </div>
       </div>
     </header>

@@ -30,26 +30,26 @@ const QuestLog = () => {
   const currentQuests = selectedTab === 'active' ? activeQuests : availableQuests;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="card p-6">
-        <div className="flex items-center justify-between">
+      <div className="card p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <Scroll size={32} className="text-primary-500" />
+            <Scroll size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
             <div>
-              <h1 className="text-3xl font-bold text-white">Quest Log</h1>
-              <p className="text-gray-400">{activeQuests.length} active quests</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Quest Log</h1>
+              <p className="text-sm sm:text-base text-gray-400">{activeQuests.length} active quests</p>
             </div>
           </div>
           
           {/* Tabs */}
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 w-full sm:w-auto">
             <button
               onClick={() => {
                 setSelectedTab('active');
                 setSelectedQuest(null);
               }}
-              className={`px-6 py-2 rounded-lg transition-all ${
+              className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-lg transition-all text-sm ${
                 selectedTab === 'active'
                   ? 'bg-primary-600 text-white'
                   : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
@@ -62,7 +62,7 @@ const QuestLog = () => {
                 setSelectedTab('available');
                 setSelectedQuest(null);
               }}
-              className={`px-6 py-2 rounded-lg transition-all ${
+              className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-lg transition-all text-sm ${
                 selectedTab === 'available'
                   ? 'bg-primary-600 text-white'
                   : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
@@ -74,7 +74,7 @@ const QuestLog = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Quest List */}
         <div className="lg:col-span-2 space-y-3">
           {currentQuests.length === 0 ? (
