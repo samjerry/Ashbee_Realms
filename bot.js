@@ -119,19 +119,14 @@ async function initializeBot() {
  * 
  * The following functions are commented out as the game now uses in-game UI buttons
  * for all features. Only !adventure command is active to join the game.
+ *
+ * handleRaidCommand() - Previously handled !raid commands
+ * handleVoteCommand() - Previously handled !vote commands
+ * 
+ * These functions are preserved for reference but are not called.
  */
 
 /*
-/**
- * Handle !raid command
- * !raid - Show available raids
- * !raid list - List active lobbies
- * !raid join <lobbyId> [role] - Join a raid lobby
- * !raid leave - Leave current lobby
- * !raid role <role> - Change role in lobby
- * !raid info <raidId> - Get raid details
- * !raid here - Check raids available at current location
- *//*
 async function handleRaidCommand(channel, channelName, username, args, client) {
   const subcommand = args[0] || 'help';
 
@@ -271,15 +266,10 @@ async function handleRaidCommand(channel, channelName, username, args, client) {
   } catch (error) {
     console.error('Raid command error:', error);
     client.say(channel, `❌ Command failed. Try again later.`);
-  }
 }
 */
 
 /*
-/**
- * Handle !vote command for raids
- * !vote <option> - Vote on current raid event (subscriber votes count 2x)
- *//*
 async function handleVoteCommand(channel, channelName, username, args, tags, client) {
   const option = args[0];
   
