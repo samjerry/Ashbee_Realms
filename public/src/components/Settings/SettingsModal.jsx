@@ -3,7 +3,7 @@ import { X, Volume2, Bell, Eye, Palette } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const SettingsModal = () => {
-  const { showSettings } = useGameStore();
+  const { showSettings, closeSettings } = useGameStore();
   const [settings, setSettings] = useState({
     volume: 70,
     sfxVolume: 80,
@@ -17,7 +17,7 @@ const SettingsModal = () => {
   if (!showSettings) return null;
   
   const handleClose = () => {
-    useGameStore.setState({ showSettings: false });
+    closeSettings();
   };
   
   const handleSettingChange = (key, value) => {

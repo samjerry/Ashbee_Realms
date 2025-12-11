@@ -135,12 +135,26 @@ const CombatView = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
             {actions.map(action => {
               const Icon = action.icon;
+              const buttonClasses = [
+                action.color,
+                'text-white',
+                'p-4 sm:p-5 md:p-6',
+                'rounded-lg',
+                'transition-all',
+                'hover:scale-105',
+                'active:scale-95',
+                'disabled:opacity-50',
+                'disabled:cursor-not-allowed',
+                'touch-manipulation',
+                'min-h-[60px] sm:min-h-0'
+              ].join(' ');
+              
               return (
                 <button
                   key={action.id}
                   onClick={() => handleAction(action.id)}
                   disabled={selectedAction !== null}
-                  className={`${action.color} text-white p-4 sm:p-5 md:p-6 rounded-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[60px] sm:min-h-0`}
+                  className={buttonClasses}
                 >
                   <Icon size={24} className="sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-1 sm:mb-2" />
                   <p className="font-bold text-xs sm:text-sm md:text-base">{action.label}</p>

@@ -115,13 +115,7 @@
     @apply text-red-400;
   }
   
-  /* Mobile-friendly utilities */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-    touch-action: manipulation;
-  }
-  
+  /* Safe area insets for notched devices */
   .safe-top {
     padding-top: env(safe-area-inset-top);
   }

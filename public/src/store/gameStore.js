@@ -51,6 +51,10 @@ const useGameStore = create((set, get) => ({
   
   setMobileMenuOpen: (isOpen) => set({ isMobileMenuOpen: isOpen }),
   
+  openSettings: () => set({ showSettings: true, isMobileMenuOpen: false }),
+  
+  closeSettings: () => set({ showSettings: false }),
+  
   setPlayer: (player) => set({ player, isLoading: false }),
   
   setError: (error) => set({ error, isLoading: false }),

@@ -3,7 +3,7 @@ import { User, Backpack, Scroll, Map, Trophy, Settings, X } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const Sidebar = () => {
-  const { activeTab, setActiveTab, isMobileMenuOpen, setMobileMenuOpen } = useGameStore();
+  const { activeTab, setActiveTab, isMobileMenuOpen, setMobileMenuOpen, openSettings } = useGameStore();
   
   const tabs = [
     { id: 'character', icon: User, label: 'Character' },
@@ -83,10 +83,7 @@ const Sidebar = () => {
         {/* Settings button */}
         <div className="px-4 lg:px-0">
           <button
-            onClick={() => {
-              useGameStore.setState({ showSettings: true });
-              setMobileMenuOpen(false);
-            }}
+            onClick={openSettings}
             className="w-full lg:w-14 h-12 lg:h-14 rounded-lg flex items-center lg:justify-center px-4 lg:px-0 text-gray-400 hover:bg-dark-800 hover:text-gray-200 transition-all duration-200"
             title="Settings"
           >
