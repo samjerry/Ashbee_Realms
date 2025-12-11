@@ -16,7 +16,7 @@ class CraftingManager {
    */
   loadRecipes() {
     if (this.recipes) {
-      return this.getAllRecipes();
+      return; // Already loaded
     }
 
     this.recipes = {
@@ -81,15 +81,6 @@ class CraftingManager {
 
     // Add material conversion recipes
     this.addMaterialRecipes();
-
-    // Return all recipes as a flat array
-    const allRecipes = [];
-    for (const category in this.recipes) {
-      for (const recipeId in this.recipes[category]) {
-        allRecipes.push(this.recipes[category][recipeId]);
-      }
-    }
-    return allRecipes;
   }
 
   /**

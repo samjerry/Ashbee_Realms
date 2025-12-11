@@ -168,6 +168,7 @@ class ProgressionManager {
       // Return permanent stats for new character
       result.permanentStatsToRetain = {
         passiveLevels: permanentStats.passiveLevels || {},
+        unlockedPassives: permanentStats.unlockedPassives || [],
         souls: permanentStats.souls || 0,
         legacyPoints: permanentStats.legacyPoints || 0,
         accountStats: permanentStats.accountStats || {},
@@ -259,11 +260,105 @@ class ProgressionManager {
    */
   /**
    * Calculate passive bonuses (delegates to PassiveManager)
-   * @param {Object} passiveLevels - Passive levels object { passive_id: level }
+   * @param {Object|Array} passiveLevelsOrArray - Passive levels object { passive_id: level } or array of IDs
+   * @param {Object} accountStats - Account-wide stats for stack-based passives
    * @returns {Object} Bonus multipliers and flat bonuses
    */
-  calculatePassiveBonuses(passiveLevels = {}) {
-    return this.passiveManager.calculatePassiveBonuses(passiveLevels);
+  calculatePassiveBonuses(passiveLevelsOrArray = {}, accountStats = {}) {
+    // Handle array input (convert to object with level 1)
+    let passiveLevels = passiveLevelsOrArray;
+    if (Array.isArray(passiveLevelsOrArray)) {
+      passiveLevels = {};
+      passiveLevelsOrArray.forEach(passiveId => {
+        passiveLevels[passiveId] = 1; // Default level 1
+      });
+    }
+    
+    // Get base bonuses from PassiveManager
+    const bonuses = this.passiveManager.calculatePassiveBonuses(passiveLevels);
+    
+    // Apply stack-based bonuses for passives that require accountStats
+    for (const passiveId in passiveLevels) {
+      if (passiveLevels[passiveId] === 0) continue;
+      
+      // Find passive definition
+      let passive = null;
+      for (const category in this.passives) {
+        if (Array.isArray(this.passives[category])) {
+          const found = this.passives[category].find(p => p.id === passiveId);
+          if (found) {
+            passive = found;
+            break;
+          }
+        }
+      }
+      
+      if (!passive || !passive.effect) continue;
+      
+      // Handle stack-based bonuses (like efficient_killer)
+      if (passive.effect.type === 'damage_bonus' && passive.effect.stack_requirement) {
+        const stacks = Math.floor((accountStats.monster_kills || 0) / passive.effect.stack_requirement);
+        const cappedStacks = Math.min(stacks, passive.effect.max_stacks || 10);
+        const bonus = cappedStacks * passive.effect.value_per_stack;
+        bonuses.damageMultiplier += bonus;
+      }
+      
+      // Handle combat stats bonuses (like improved_crits)
+      if (passive.effect.type === 'combat_stats') {
+        bonuses.critChance += passive.effect.crit_chance || 0;
+        bonuses.critDamage += passive.effect.crit_damage || 0;
+      }
+    }
+    
+    return bonuses;
+  }
+
+  /**
+   * Check if passive can be unlocked (delegates to PassiveManager)
+   * @param {Object} passive - Passive object
+   * @param {Object} character - Character object
+   * @param {Object} accountStats - Account stats
+   * @returns {Object} Can unlock status and message
+   */
+  canUnlockPassive(passive, character, accountStats) {
+    // PassiveManager doesn't have this method, so we'll implement it here
+    if (!passive.unlock_requirement) {
+      return { canUnlock: true, message: 'No requirements' };
+    }
+
+    const req = passive.unlock_requirement;
+    
+    switch (req.type) {
+      case 'level_reached':
+        const canUnlock = accountStats.highestLevelReached >= req.value;
+        return {
+          canUnlock,
+          message: canUnlock 
+            ? `Unlocked (Level ${req.value} reached)` 
+            : `Requires Level ${req.value} (currently ${accountStats.highestLevelReached})`
+        };
+      
+      case 'total_kills':
+        const killsCanUnlock = accountStats.totalKills >= req.value;
+        return {
+          canUnlock: killsCanUnlock,
+          message: killsCanUnlock
+            ? `Unlocked (${req.value} kills reached)`
+            : `Requires ${req.value} kills (currently ${accountStats.totalKills || 0})`
+        };
+      
+      case 'total_crits':
+        const critsCanUnlock = accountStats.totalCrits >= req.value;
+        return {
+          canUnlock: critsCanUnlock,
+          message: critsCanUnlock
+            ? `Unlocked (${req.value} crits reached)`
+            : `Requires ${req.value} crits (currently ${accountStats.totalCrits || 0})`
+        };
+      
+      default:
+        return { canUnlock: false, message: 'Unknown requirement type' };
+    }
   }
 
   /**
