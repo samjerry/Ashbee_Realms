@@ -25,31 +25,31 @@ const AchievementTracker = () => {
   const totalUnlocked = achievements.filter(a => a.unlocked).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="card p-6">
-        <div className="flex items-center justify-between">
+      <div className="card p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <Trophy size={32} className="text-primary-500" />
+            <Trophy size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
             <div>
-              <h1 className="text-3xl font-bold text-white">Achievements</h1>
-              <p className="text-gray-400">{totalUnlocked} / {achievements.length} unlocked</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Achievements</h1>
+              <p className="text-sm sm:text-base text-gray-400">{totalUnlocked} / {achievements.length} unlocked</p>
             </div>
           </div>
           
-          <div className="text-right">
-            <p className="text-sm text-gray-400">Achievement Points</p>
-            <p className="text-3xl font-bold text-yellow-500">{totalPoints}</p>
+          <div className="text-left sm:text-right">
+            <p className="text-xs sm:text-sm text-gray-400">Achievement Points</p>
+            <p className="text-2xl sm:text-3xl font-bold text-yellow-500">{totalPoints}</p>
           </div>
         </div>
         
         {/* Progress Bar */}
-        <div className="mt-6">
-          <div className="flex justify-between text-sm text-gray-400 mb-2">
+        <div className="mt-4 sm:mt-6">
+          <div className="flex justify-between text-xs sm:text-sm text-gray-400 mb-2">
             <span>Overall Progress</span>
             <span>{Math.floor((totalUnlocked / achievements.length) * 100)}%</span>
           </div>
-          <div className="h-4 bg-dark-900 rounded-full overflow-hidden">
+          <div className="h-3 sm:h-4 bg-dark-900 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-yellow-600 to-yellow-500 transition-all duration-300"
               style={{ width: `${(totalUnlocked / achievements.length) * 100}%` }}
@@ -64,17 +64,17 @@ const AchievementTracker = () => {
         const unlockedCount = categoryAchievements.filter(a => a.unlocked).length;
         
         return (
-          <div key={category} className="card p-6">
+          <div key={category} className="card p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-white capitalize">{category}</h2>
-              <span className="text-gray-400">{unlockedCount} / {categoryAchievements.length}</span>
+              <h2 className="text-xl sm:text-2xl font-bold text-white capitalize">{category}</h2>
+              <span className="text-sm sm:text-base text-gray-400">{unlockedCount} / {categoryAchievements.length}</span>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {categoryAchievements.map(achievement => (
                 <div
                   key={achievement.id}
-                  className={`bg-dark-900 rounded-lg p-4 border-2 ${
+                  className={`bg-dark-900 rounded-lg p-3 sm:p-4 border-2 ${
                     achievement.unlocked 
                       ? getRarityColor(achievement.rarity)
                       : 'border-dark-700 opacity-60'

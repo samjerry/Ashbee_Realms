@@ -15,6 +15,7 @@ const useGameStore = create((set, get) => ({
   showCombat: false,
   showDialogue: false,
   showSettings: false,
+  isMobileMenuOpen: false,
   
   // Combat state
   combat: null,
@@ -44,7 +45,15 @@ const useGameStore = create((set, get) => ({
   connected: false,
   
   // Actions
-  setActiveTab: (tab) => set({ activeTab: tab }),
+  setActiveTab: (tab) => set({ activeTab: tab, isMobileMenuOpen: false }),
+  
+  toggleMobileMenu: () => set((state) => ({ isMobileMenuOpen: !state.isMobileMenuOpen })),
+  
+  setMobileMenuOpen: (isOpen) => set({ isMobileMenuOpen: isOpen }),
+  
+  openSettings: () => set({ showSettings: true, isMobileMenuOpen: false }),
+  
+  closeSettings: () => set({ showSettings: false }),
   
   setPlayer: (player) => set({ player, isLoading: false }),
   

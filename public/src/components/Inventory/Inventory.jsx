@@ -34,25 +34,25 @@ const Inventory = () => {
   const itemTypes = ['all', 'weapon', 'armor', 'consumable', 'material', 'quest'];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="card p-6">
-        <div className="flex items-center justify-between">
+      <div className="card p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <Package size={32} className="text-primary-500" />
+            <Package size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
             <div>
-              <h1 className="text-3xl font-bold text-white">Inventory</h1>
-              <p className="text-gray-400">{safeInventory.length} / 100 items</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Inventory</h1>
+              <p className="text-sm sm:text-base text-gray-400">{safeInventory.length} / 100 items</p>
             </div>
           </div>
           
           {/* Filters */}
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
             {itemTypes.map(type => (
               <button
                 key={type}
                 onClick={() => setFilter(type)}
-                className={`px-4 py-2 rounded-lg capitalize transition-all ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg capitalize transition-all text-sm ${
                   filter === type 
                     ? 'bg-primary-600 text-white' 
                     : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
@@ -65,15 +65,15 @@ const Inventory = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Item Grid */}
         <div className="lg:col-span-2">
-          <div className="card p-6">
-            <h2 className="text-xl font-bold text-white mb-4">Items</h2>
+          <div className="card p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-white mb-4">Items</h2>
             {filteredInventory.length === 0 ? (
-              <p className="text-gray-500 text-center py-12">No items found</p>
+              <p className="text-gray-500 text-center py-8 sm:py-12 text-sm sm:text-base">No items found</p>
             ) : (
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-4 gap-2 sm:gap-3">
                 {filteredInventory.map((item, index) => (
                   <button
                     key={index}

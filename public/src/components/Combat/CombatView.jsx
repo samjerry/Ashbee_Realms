@@ -27,41 +27,41 @@ const CombatView = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-6xl">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className="w-full max-w-6xl my-auto">
         {/* Close button */}
         <button
           onClick={endCombat}
-          className="absolute top-6 right-6 p-2 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors"
+          className="absolute top-3 right-3 sm:top-6 sm:right-6 p-2 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors z-10"
         >
-          <X size={24} />
+          <X size={20} className="sm:w-6 sm:h-6" />
         </button>
         
-        <div className="card p-8 space-y-6">
+        <div className="card p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
           {/* Combat Title */}
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-white mb-2">Combat</h1>
-            <p className="text-xl text-gray-400">vs {monster.name}</p>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">Combat</h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-400">vs {monster.name}</p>
           </div>
           
           {/* Combatants */}
-          <div className="grid grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
             {/* Player */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="text-center">
-                <div className="w-32 h-32 mx-auto bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center text-white font-bold text-5xl mb-4">
+                <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center text-white font-bold text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4">
                   {player.level}
                 </div>
-                <h3 className="text-2xl font-bold text-white">{player.username}</h3>
-                <p className="text-gray-400">{player.class} • Level {player.level}</p>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white">{player.username}</h3>
+                <p className="text-sm sm:text-base text-gray-400">{player.class} • Level {player.level}</p>
               </div>
               
-              <div className="bg-dark-900 rounded-lg p-4 border border-dark-700">
-                <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <div className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-400 mb-2">
                   <span>HP</span>
                   <span>{playerHp} / {player.maxHp}</span>
                 </div>
-                <div className="hp-bar h-8">
+                <div className="hp-bar h-6 sm:h-8">
                   <div 
                     className={`hp-fill ${selectedAction ? 'combat-hit' : ''}`}
                     style={{ width: `${playerHpPercent}%` }}
@@ -69,7 +69,7 @@ const CombatView = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
                 <div className="bg-dark-900 rounded p-2 border border-dark-700">
                   <p className="text-gray-400">Attack</p>
                   <p className="text-white font-bold">{player.stats.attack}</p>
@@ -82,19 +82,19 @@ const CombatView = () => {
             </div>
             
             {/* Monster */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="text-center">
-                <div className="text-8xl mb-4">{monster.icon || '👹'}</div>
-                <h3 className="text-2xl font-bold text-white">{monster.name}</h3>
-                <p className="text-gray-400">Level {monster.level}</p>
+                <div className="text-5xl sm:text-6xl md:text-8xl mb-3 sm:mb-4">{monster.icon || '👹'}</div>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white">{monster.name}</h3>
+                <p className="text-sm sm:text-base text-gray-400">Level {monster.level}</p>
               </div>
               
-              <div className="bg-dark-900 rounded-lg p-4 border border-dark-700">
-                <div className="flex justify-between text-sm text-gray-400 mb-2">
+              <div className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700">
+                <div className="flex justify-between text-xs sm:text-sm text-gray-400 mb-2">
                   <span>HP</span>
                   <span>{monster.hp} / {monster.maxHp}</span>
                 </div>
-                <div className="hp-bar h-8">
+                <div className="hp-bar h-6 sm:h-8">
                   <div 
                     className="hp-fill"
                     style={{ width: `${monsterHpPercent}%` }}
@@ -102,7 +102,7 @@ const CombatView = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-2 text-sm">
+              <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
                 <div className="bg-dark-900 rounded p-2 border border-dark-700">
                   <p className="text-gray-400">Attack</p>
                   <p className="text-white font-bold">{monster.attack}</p>
@@ -116,14 +116,14 @@ const CombatView = () => {
           </div>
           
           {/* Combat Log */}
-          <div className="bg-dark-900 rounded-lg p-4 border border-dark-700 h-48 overflow-y-auto">
-            <h3 className="text-lg font-bold text-white mb-3">Combat Log</h3>
+          <div className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700 h-32 sm:h-40 md:h-48 overflow-y-auto">
+            <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3">Combat Log</h3>
             {combatLog.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">Waiting for action...</p>
+              <p className="text-gray-500 text-center py-4 sm:py-8 text-sm sm:text-base">Waiting for action...</p>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1 sm:space-y-2">
                 {combatLog.map((log, index) => (
-                  <p key={index} className="text-gray-300 text-sm">
+                  <p key={index} className="text-gray-300 text-xs sm:text-sm">
                     <span className="text-gray-500">[{new Date(log.timestamp).toLocaleTimeString()}]</span> {log.message}
                   </p>
                 ))}
@@ -132,18 +132,32 @@ const CombatView = () => {
           </div>
           
           {/* Actions */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
             {actions.map(action => {
               const Icon = action.icon;
+              const buttonClasses = [
+                action.color,
+                'text-white',
+                'p-4 sm:p-5 md:p-6',
+                'rounded-lg',
+                'transition-all',
+                'hover:scale-105',
+                'active:scale-95',
+                'disabled:opacity-50',
+                'disabled:cursor-not-allowed',
+                '[touch-action:manipulation]',
+                'min-h-[60px] sm:min-h-0'
+              ].join(' ');
+              
               return (
                 <button
                   key={action.id}
                   onClick={() => handleAction(action.id)}
                   disabled={selectedAction !== null}
-                  className={`${action.color} text-white p-6 rounded-lg transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className={buttonClasses}
                 >
-                  <Icon size={32} className="mx-auto mb-2" />
-                  <p className="font-bold">{action.label}</p>
+                  <Icon size={24} className="sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-1 sm:mb-2" />
+                  <p className="font-bold text-xs sm:text-sm md:text-base">{action.label}</p>
                 </button>
               );
             })}

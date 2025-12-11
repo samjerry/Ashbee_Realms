@@ -3,7 +3,7 @@ import { X, Volume2, Bell, Eye, Palette } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const SettingsModal = () => {
-  const { showSettings } = useGameStore();
+  const { showSettings, closeSettings } = useGameStore();
   const [settings, setSettings] = useState({
     volume: 70,
     sfxVolume: 80,
@@ -17,7 +17,7 @@ const SettingsModal = () => {
   if (!showSettings) return null;
   
   const handleClose = () => {
-    useGameStore.setState({ showSettings: false });
+    closeSettings();
   };
   
   const handleSettingChange = (key, value) => {
@@ -27,31 +27,31 @@ const SettingsModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-3xl">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className="w-full max-w-3xl my-auto">
         <button
           onClick={handleClose}
-          className="absolute top-6 right-6 p-2 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors"
+          className="absolute top-3 right-3 sm:top-6 sm:right-6 p-2 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors z-10"
         >
-          <X size={24} />
+          <X size={20} className="sm:w-6 sm:h-6" />
         </button>
         
-        <div className="card p-8 space-y-6 max-h-[80vh] overflow-y-auto">
+        <div className="card p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 max-h-[85vh] overflow-y-auto">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-            <p className="text-gray-400">Customize your game experience</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Settings</h1>
+            <p className="text-sm sm:text-base text-gray-400">Customize your game experience</p>
           </div>
           
           {/* Audio Settings */}
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center space-x-2">
-              <Volume2 size={24} className="text-primary-500" />
-              <h2 className="text-xl font-bold text-white">Audio</h2>
+              <Volume2 size={20} className="sm:w-6 sm:h-6 text-primary-500" />
+              <h2 className="text-lg sm:text-xl font-bold text-white">Audio</h2>
             </div>
             
-            <div className="space-y-4 pl-8">
+            <div className="space-y-3 sm:space-y-4 pl-6 sm:pl-8">
               <div>
-                <div className="flex justify-between text-sm mb-2">
+                <div className="flex justify-between text-xs sm:text-sm mb-2">
                   <span className="text-gray-400">Music Volume</span>
                   <span className="text-white">{settings.volume}%</span>
                 </div>
