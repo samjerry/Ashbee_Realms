@@ -109,6 +109,45 @@ async function initPostgres() {
 
     CREATE INDEX IF NOT EXISTS idx_player_progress_player_id ON player_progress(player_id);
     CREATE INDEX IF NOT EXISTS idx_player_progress_channel ON player_progress(channel_name);
+
+    CREATE TABLE IF NOT EXISTS user_roles (
+      player_id TEXT NOT NULL,
+      channel_name TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'viewer',
+      last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (player_id, channel_name),
+      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE,
+      CHECK (role IN ('viewer', 'subscriber', 'vip', 'moderator', 'streamer'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_user_roles_channel ON user_roles(channel_name);
+    CREATE INDEX IF NOT EXISTS idx_user_roles_role ON user_roles(role);
+
+    CREATE TABLE IF NOT EXISTS game_state (
+      channel_name TEXT PRIMARY KEY,
+      weather TEXT DEFAULT 'Clear',
+      time_of_day TEXT DEFAULT 'Day',
+      season TEXT DEFAULT 'Spring',
+      active_event TEXT DEFAULT NULL,
+      last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS operator_audit_log (
+      id SERIAL PRIMARY KEY,
+      operator_id TEXT NOT NULL,
+      operator_name TEXT NOT NULL,
+      channel_name TEXT NOT NULL,
+      command TEXT NOT NULL,
+      params JSONB,
+      success BOOLEAN DEFAULT true,
+      error_message TEXT,
+      executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(operator_id) REFERENCES players(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_audit_log_channel ON operator_audit_log(channel_name);
+    CREATE INDEX IF NOT EXISTS idx_audit_log_operator ON operator_audit_log(operator_id);
+    CREATE INDEX IF NOT EXISTS idx_audit_log_executed ON operator_audit_log(executed_at DESC);
   `);
 
   db = pool;
@@ -584,6 +623,151 @@ async function updateReputation(playerId, channelName, reputation) {
   );
 }
 
+// ===== USER ROLE FUNCTIONS =====
+
+/**
+ * Update or insert user role in a channel
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {string} role - User role: 'viewer', 'subscriber', 'vip', 'moderator', 'streamer'
+ */
+async function updateUserRole(playerId, channelName, role) {
+  const validRoles = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer'];
+  if (!validRoles.includes(role)) {
+    throw new Error(`Invalid role: ${role}. Must be one of: ${validRoles.join(', ')}`);
+  }
+
+  await query(
+    `INSERT INTO user_roles (player_id, channel_name, role, last_updated)
+     VALUES ($1, $2, $3, NOW())
+     ON CONFLICT (player_id, channel_name) 
+     DO UPDATE SET role = $3, last_updated = NOW()`,
+    [playerId, channelName.toLowerCase(), role]
+  );
+}
+
+/**
+ * Get user role in a channel
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @returns {Promise<string>} User role or 'viewer' if not found
+ */
+async function getUserRole(playerId, channelName) {
+  const result = await query(
+    `SELECT role FROM user_roles WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
+  );
+
+  return result.rows.length > 0 ? result.rows[0].role : 'viewer';
+}
+
+/**
+ * Get all users with a specific role in a channel
+ * @param {string} channelName - Channel name
+ * @param {string} role - Role to filter by (optional)
+ * @returns {Promise<Array>} List of users with their roles
+ */
+async function getChannelUsers(channelName, role = null) {
+  let sql = `
+    SELECT ur.player_id, ur.role, ur.last_updated, p.display_name
+    FROM user_roles ur
+    LEFT JOIN players p ON ur.player_id = p.id
+    WHERE ur.channel_name = $1
+  `;
+  const params = [channelName.toLowerCase()];
+
+  if (role) {
+    sql += ` AND ur.role = $2`;
+    params.push(role);
+  }
+
+  sql += ` ORDER BY ur.role DESC, ur.last_updated DESC`;
+
+  const result = await query(sql, params);
+  return result.rows;
+}
+
+/**
+ * Determine user role from Twitch tags/badges
+ * @param {string} username - Twitch username
+ * @param {string} channelName - Channel name
+ * @param {object} tags - Twitch message tags
+ * @returns {string} User role: 'streamer', 'moderator', 'vip', 'subscriber', or 'viewer'
+ */
+function determineRoleFromTags(username, channelName, tags = {}) {
+  // Check if user is the broadcaster/streamer
+  if (tags.badges?.broadcaster || username.toLowerCase() === channelName.toLowerCase()) {
+    return 'streamer';
+  }
+
+  // Check if user is a moderator
+  if (tags.mod || tags.badges?.moderator) {
+    return 'moderator';
+  }
+
+  // Check if user is a VIP
+  if (tags.badges?.vip) {
+    return 'vip';
+  }
+
+  // Check if user is a subscriber
+  if (tags.subscriber || tags.badges?.subscriber || tags.badges?.founder) {
+    return 'subscriber';
+  }
+
+  // Default to viewer
+  return 'viewer';
+}
+
+/**
+ * Log operator action to audit log
+ * @param {string} operatorId - Operator's player ID
+ * @param {string} operatorName - Operator's display name
+ * @param {string} channelName - Channel name
+ * @param {string} command - Command executed
+ * @param {object} params - Command parameters
+ * @param {boolean} success - Whether command succeeded
+ * @param {string} errorMessage - Error message if failed
+ */
+async function logOperatorAction(operatorId, operatorName, channelName, command, params, success = true, errorMessage = null) {
+  try {
+    await query(
+      `INSERT INTO operator_audit_log (operator_id, operator_name, channel_name, command, params, success, error_message, executed_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())`,
+      [operatorId, operatorName, channelName.toLowerCase(), command, JSON.stringify(params), success, errorMessage]
+    );
+  } catch (error) {
+    console.error('Failed to log operator action:', error);
+    // Don't throw - logging failure shouldn't break the operator command
+  }
+}
+
+/**
+ * Get operator audit log
+ * @param {string} channelName - Channel name (optional)
+ * @param {number} limit - Number of records to return
+ * @returns {Promise<Array>} Audit log entries
+ */
+async function getOperatorAuditLog(channelName = null, limit = 100) {
+  let sql = `
+    SELECT * FROM operator_audit_log
+  `;
+  const params = [];
+
+  if (channelName) {
+    sql += ` WHERE channel_name = $1`;
+    params.push(channelName.toLowerCase());
+    sql += ` ORDER BY executed_at DESC LIMIT $2`;
+    params.push(limit);
+  } else {
+    sql += ` ORDER BY executed_at DESC LIMIT $1`;
+    params.push(limit);
+  }
+
+  const result = await query(sql, params);
+  return result.rows;
+}
+
 module.exports = {
   initDB,
   query,
@@ -605,5 +789,11 @@ module.exports = {
   updateCharacterStats,
   updateDungeonState,
   addCompletedDungeon,
-  updateReputation
+  updateReputation,
+  updateUserRole,
+  getUserRole,
+  getChannelUsers,
+  determineRoleFromTags,
+  logOperatorAction,
+  getOperatorAuditLog
 };
