@@ -127,7 +127,8 @@ async function initializeBot() {
 // Initialize the bot
 initializeBot().catch(err => {
   console.error('❌ Bot initialization failed:', err.message);
-  process.exit(1);
+  console.log('⚠️ Server will continue without bot functionality');
+  // Don't exit - allow server to run without bot
 });
 
 function rawAnnounce(message, channelName = null) {

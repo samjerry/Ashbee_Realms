@@ -39,19 +39,42 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'))
 app.use(session(sessionConfig));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Track initialization state
+let isReady = false;
+let dbError = null;
+
 // Health check endpoint for Railway
 app.get('/health', (req, res) => {
+  if (!isReady) {
+    return res.status(503).json({ 
+      status: 'initializing', 
+      message: 'Database is still initializing',
+      timestamp: new Date().toISOString() 
+    });
+  }
+  if (dbError) {
+    return res.status(503).json({ 
+      status: 'error', 
+      message: 'Database initialization failed',
+      error: dbError.message,
+      timestamp: new Date().toISOString() 
+    });
+  }
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Initialize database (PostgreSQL or SQLite)
 (async () => {
   try {
+    console.log('🔄 Initializing database...');
     await db.initDB();
     console.log('✅ Database initialized');
+    isReady = true;
   } catch (err) {
     console.error('❌ Database initialization failed:', err);
-    process.exit(1);
+    dbError = err;
+    // Don't exit immediately - give Railway time to see the health check failure
+    setTimeout(() => process.exit(1), 5000);
   }
 })();
 
