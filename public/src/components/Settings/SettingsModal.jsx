@@ -159,7 +159,7 @@ const SettingsModal = () => {
               <p>Ashbee Realms v1.0.0</p>
               <p>A Twitch-integrated RPG adventure</p>
               <p className="pt-3 border-t border-dark-800">
-                Made with ❤️ by the Ashbee Realms team
+                Made with ❤️ by MarrowOfAlbion
               </p>
             </div>
           </div>
