@@ -151,20 +151,17 @@
         ],
         "tier_1": [
           "Sub title: 'Supporter'",
-          "Monthly reward box (rare)",
-          "1 free channel point redemption per stream"
+          "Monthly reward box (rare)"
         ],
         "tier_2": [
           "Sub title: 'Patron'",
           "Monthly reward box (epic)",
-          "2 free channel point redemptions per stream",
           "Exclusive mount"
         ],
         "tier_3": [
           "Sub title: 'Champion'",
           "Monthly reward box (legendary)",
-          "5 free channel point redemptions per stream",
-          "Exclusive mount & pet",
+          "Exclusive mount",
           "Custom title option"
         ]
       },
