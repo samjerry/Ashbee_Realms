@@ -19,21 +19,34 @@ async function initDB() {
 async function initPostgres() {
   const { Pool } = require('pg');
   
+  console.log('🔌 Creating PostgreSQL connection pool...');
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false } // Railway requires this
+    ssl: { rejectUnauthorized: false }, // Railway requires this
+    connectionTimeoutMillis: 30000, // 30 second timeout
+    idleTimeoutMillis: 30000,
+    max: 20 // Maximum pool size
   });
 
-  // Test connection
+  // Test connection with timeout
   try {
+    console.log('🧪 Testing database connection...');
+    const startTime = Date.now();
     const res = await pool.query('SELECT NOW()');
-    console.log('✅ Connected to PostgreSQL:', res.rows[0].now);
+    const connectTime = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log(`✅ Connected to PostgreSQL in ${connectTime}s:`, res.rows[0].now);
   } catch (err) {
     console.error('❌ PostgreSQL connection failed:', err.message);
+    console.error('Connection details:', {
+      hasUrl: !!process.env.DATABASE_URL,
+      urlPrefix: process.env.DATABASE_URL?.substring(0, 20) + '...'
+    });
     throw err;
   }
 
   // Create tables
+  console.log('📋 Creating/verifying database tables...');
+  const tableStart = Date.now();
   await pool.query(`
     CREATE TABLE IF NOT EXISTS players (
       id TEXT PRIMARY KEY,
@@ -149,6 +162,9 @@ async function initPostgres() {
     CREATE INDEX IF NOT EXISTS idx_audit_log_operator ON operator_audit_log(operator_id);
     CREATE INDEX IF NOT EXISTS idx_audit_log_executed ON operator_audit_log(executed_at DESC);
   `);
+  
+  const tableTime = ((Date.now() - tableStart) / 1000).toFixed(2);
+  console.log(`✅ Database schema verified/created in ${tableTime}s`);
 
   db = pool;
 }

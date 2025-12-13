@@ -42,39 +42,58 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Track initialization state
 let isReady = false;
 let dbError = null;
+let initStartTime = Date.now();
 
 // Health check endpoint for Railway
 app.get('/health', (req, res) => {
+  const elapsed = ((Date.now() - initStartTime) / 1000).toFixed(1);
+  
   if (!isReady) {
+    console.log(`⏳ Health check: Still initializing... (${elapsed}s elapsed)`);
     return res.status(503).json({ 
       status: 'initializing', 
       message: 'Database is still initializing',
+      elapsedSeconds: parseFloat(elapsed),
       timestamp: new Date().toISOString() 
     });
   }
   if (dbError) {
+    console.log(`❌ Health check: Failed - ${dbError.message}`);
     return res.status(503).json({ 
       status: 'error', 
       message: 'Database initialization failed',
       error: dbError.message,
+      elapsedSeconds: parseFloat(elapsed),
       timestamp: new Date().toISOString() 
     });
   }
+  
+  console.log(`✅ Health check: OK (${elapsed}s since start)`);
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Initialize database (PostgreSQL or SQLite)
 (async () => {
   try {
-    console.log('🔄 Initializing database...');
+    console.log('🔄 Starting database initialization...');
+    console.log('📊 DATABASE_URL present:', !!process.env.DATABASE_URL);
+    
+    const dbInitStart = Date.now();
     await db.initDB();
-    console.log('✅ Database initialized');
+    const dbInitTime = ((Date.now() - dbInitStart) / 1000).toFixed(2);
+    
+    console.log(`✅ Database initialized successfully in ${dbInitTime}s`);
     isReady = true;
   } catch (err) {
-    console.error('❌ Database initialization failed:', err);
+    console.error('❌ Database initialization failed:', err.message);
+    console.error('Stack:', err.stack);
     dbError = err;
     // Don't exit immediately - give Railway time to see the health check failure
-    setTimeout(() => process.exit(1), 5000);
+    console.log('⏳ Will exit in 5 seconds...');
+    setTimeout(() => {
+      console.log('💀 Exiting due to database failure');
+      process.exit(1);
+    }, 5000);
   }
 })();
 
