@@ -74,17 +74,32 @@ app.get('/health', (req, res) => {
 
 // Initialize database (PostgreSQL or SQLite)
 (async () => {
+  // Set a hard timeout for initialization
+  const INIT_TIMEOUT_MS = 60000; // 60 seconds max
+  const initTimeout = setTimeout(() => {
+    console.error('💥 Database initialization timeout after 60 seconds!');
+    console.error('This usually means:');
+    console.error('  1. DATABASE_URL is incorrect or database is unreachable');
+    console.error('  2. Database is not provisioned in Railway');
+    console.error('  3. Network/firewall blocking connection');
+    dbError = new Error('Database initialization timeout');
+    isReady = false;
+  }, INIT_TIMEOUT_MS);
+
   try {
     console.log('🔄 Starting database initialization...');
     console.log('📊 DATABASE_URL present:', !!process.env.DATABASE_URL);
+    console.log('📊 DATABASE_URL prefix:', process.env.DATABASE_URL?.substring(0, 30) + '...');
     
     const dbInitStart = Date.now();
     await db.initDB();
     const dbInitTime = ((Date.now() - dbInitStart) / 1000).toFixed(2);
     
+    clearTimeout(initTimeout); // Clear timeout on success
     console.log(`✅ Database initialized successfully in ${dbInitTime}s`);
     isReady = true;
   } catch (err) {
+    clearTimeout(initTimeout); // Clear timeout on error
     console.error('❌ Database initialization failed:', err.message);
     console.error('Stack:', err.stack);
     dbError = err;
