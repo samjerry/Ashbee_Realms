@@ -37,7 +37,6 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'))
 }
 
 app.use(session(sessionConfig));
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Track initialization state
 let isReady = false;
@@ -5422,9 +5421,30 @@ app.get('/adventure', (req, res) => {
   }
 });
 
-// Serve React frontend static files (production only)
+// Serve static assets ONLY for authenticated routes
+// This middleware only serves assets (JS/CSS) not HTML files
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'public/dist')));
+  app.use('/assets', (req, res, next) => {
+    if (!req.session.user) {
+      return res.status(401).send('Unauthorized');
+    }
+    next();
+  }, express.static(path.join(__dirname, 'public/dist/assets')));
+} else {
+  // Development: serve src and node_modules for HMR
+  app.use('/src', (req, res, next) => {
+    if (!req.session.user) {
+      return res.status(401).send('Unauthorized');
+    }
+    next();
+  }, express.static(path.join(__dirname, 'public/src')));
+  
+  app.use('/node_modules', (req, res, next) => {
+    if (!req.session.user) {
+      return res.status(401).send('Unauthorized');
+    }
+    next();
+  }, express.static(path.join(__dirname, 'public/node_modules')));
 }
 
 const PORT = process.env.PORT || 3000;
