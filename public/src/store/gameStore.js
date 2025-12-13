@@ -63,10 +63,24 @@ const useGameStore = create((set, get) => ({
   fetchPlayer: async () => {
     try {
       set({ isLoading: true });
+      
+      // First check if user is authenticated
+      const authResponse = await fetch('/api/me');
+      if (!authResponse.ok) {
+        // Not authenticated - redirect to Twitch login
+        window.location.href = '/auth/twitch';
+        return;
+      }
+      
+      const authData = await authResponse.json();
+      console.log('✅ User authenticated:', authData.user);
+      
+      // Now fetch player stats
       const response = await fetch('/api/player/stats');
       const data = await response.json();
       set({ player: data, isLoading: false });
     } catch (error) {
+      console.error('Failed to fetch player:', error);
       set({ error: error.message, isLoading: false });
     }
   },

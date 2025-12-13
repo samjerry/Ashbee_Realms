@@ -5405,13 +5405,41 @@ if (process.env.NODE_ENV === 'production') {
   // Serve static files from public/dist
   app.use(express.static(path.join(__dirname, 'public/dist')));
   
+  // Root route - show login page or redirect to adventure if already logged in
+  app.get('/', (req, res) => {
+    if (req.session.user) {
+      return res.redirect('/adventure');
+    }
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  });
+  
+  // Main game route - require authentication
+  app.get('/adventure', (req, res, next) => {
+    if (!req.session.user) {
+      // Redirect to Twitch OAuth
+      return res.redirect('/auth/twitch');
+    }
+    next();
+  });
+  
   // Serve index.html for all non-API routes (React Router)
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/dist/index.html'));
   });
 } else {
-  // Development: serve old test page
+  // Development: show login page at root
+  app.get('/', (req, res) => {
+    if (req.session.user) {
+      return res.redirect('/adventure');
+    }
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  });
+  
+  // Development: require auth for adventure page
   app.get('/adventure', (req, res) => {
+    if (!req.session.user) {
+      return res.redirect('/auth/twitch');
+    }
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
   });
 }
