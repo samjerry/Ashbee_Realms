@@ -1,0 +1,186 @@
+{
+  "tips": [
+    {
+      "id": "tip_combat_1",
+      "context": "combat",
+      "title": "Use Potions Wisely",
+      "description": "Don't wait until you're almost dead to use a health potion. Use them when you're at 50% HP or lower to avoid defeat.",
+      "icon": "heart"
+    },
+    {
+      "id": "tip_combat_2",
+      "context": "combat",
+      "title": "Status Effects Matter",
+      "description": "Apply Poison or Bleeding to monsters for damage over time. These debuffs can turn the tide of difficult battles!",
+      "icon": "droplet"
+    },
+    {
+      "id": "tip_combat_3",
+      "context": "combat",
+      "title": "Target Weaknesses",
+      "description": "Fire spells deal extra damage to ice creatures. Lightning hurts mechanical enemies. Learn monster weaknesses for easier victories!",
+      "icon": "zap"
+    },
+    {
+      "id": "tip_exploration_1",
+      "context": "exploration",
+      "title": "Match Your Level",
+      "description": "Fight monsters near your level for optimal XP and loot. Too easy = little reward. Too hard = likely defeat!",
+      "icon": "map"
+    },
+    {
+      "id": "tip_exploration_2",
+      "context": "exploration",
+      "title": "Time of Day Matters",
+      "description": "Undead creatures are weaker during the day but stronger at night. Plan your adventures around the clock!",
+      "icon": "sun"
+    },
+    {
+      "id": "tip_exploration_3",
+      "context": "exploration",
+      "title": "Explore Thoroughly",
+      "description": "Visit all sub-locations within a biome to discover hidden merchants, rare monsters, and special events.",
+      "icon": "compass"
+    },
+    {
+      "id": "tip_equipment_1",
+      "context": "equipment",
+      "title": "Upgrade Regularly",
+      "description": "Replace your gear every 5-10 levels. Better equipment dramatically increases your combat effectiveness!",
+      "icon": "shield"
+    },
+    {
+      "id": "tip_equipment_2",
+      "context": "equipment",
+      "title": "Balance Your Stats",
+      "description": "Don't focus only on damage. Defense, HP, and utility stats keep you alive longer. A dead hero deals no damage!",
+      "icon": "activity"
+    },
+    {
+      "id": "tip_equipment_3",
+      "context": "equipment",
+      "title": "Enchant Your Best Gear",
+      "description": "Save your enchanting materials for rare or epic items. Enchanting low-quality gear is a waste of resources!",
+      "icon": "sparkles"
+    },
+    {
+      "id": "tip_economy_1",
+      "context": "economy",
+      "title": "Sell Excess Items",
+      "description": "Don't hoard low-quality loot. Sell common and uncommon items to merchants for gold. Keep rare+ items!",
+      "icon": "coins"
+    },
+    {
+      "id": "tip_economy_2",
+      "context": "economy",
+      "title": "Invest in Passives",
+      "description": "Spend Souls on passive bonuses early. Account-wide bonuses help all your characters, even after death!",
+      "icon": "trending-up"
+    },
+    {
+      "id": "tip_economy_3",
+      "context": "economy",
+      "title": "Complete Dailies",
+      "description": "Daily quests and seasonal challenges provide consistent gold and XP income. Complete them every day!",
+      "icon": "calendar"
+    },
+    {
+      "id": "tip_progression_1",
+      "context": "progression",
+      "title": "Complete Achievements",
+      "description": "Achievements grant XP, gold, and sometimes unique items or titles. Aim for 100% completion!",
+      "icon": "trophy"
+    },
+    {
+      "id": "tip_progression_2",
+      "context": "progression",
+      "title": "Join Raids",
+      "description": "Raid bosses drop the best loot in the game. Team up with other players for epic rewards!",
+      "icon": "users"
+    },
+    {
+      "id": "tip_progression_3",
+      "context": "progression",
+      "title": "Dungeon Modifiers",
+      "description": "Enable hard mode, ironman, or speed run modifiers for increased difficulty and 1.5-3x rewards!",
+      "icon": "flame"
+    },
+    {
+      "id": "tip_social_1",
+      "context": "social",
+      "title": "Build Faction Reputation",
+      "description": "High reputation unlocks exclusive merchants, abilities, and mounts. Focus on one faction at a time!",
+      "icon": "flag"
+    },
+    {
+      "id": "tip_social_2",
+      "context": "social",
+      "title": "Form a Party",
+      "description": "Party up with friends for shared loot and coordinated combat. Tanks, healers, and DPS work together!",
+      "icon": "users"
+    },
+    {
+      "id": "tip_social_3",
+      "context": "social",
+      "title": "Use Twitch Chat",
+      "description": "Viewers can vote on raid events! Engage your community for interactive gameplay and bonus rewards.",
+      "icon": "message-square"
+    },
+    {
+      "id": "tip_crafting_1",
+      "context": "crafting",
+      "title": "Gather Materials",
+      "description": "Salvage unwanted items for crafting materials. Materials are used for crafting and enchanting!",
+      "icon": "package"
+    },
+    {
+      "id": "tip_crafting_2",
+      "context": "crafting",
+      "title": "Discover Recipes",
+      "description": "Find recipe books and scrolls to unlock new crafting options. Rare recipes create powerful items!",
+      "icon": "book-open"
+    },
+    {
+      "id": "tip_crafting_3",
+      "context": "crafting",
+      "title": "Level Crafting Skills",
+      "description": "Gain crafting XP by creating items. Higher crafting levels unlock better recipes and improve success rates!",
+      "icon": "trending-up"
+    },
+    {
+      "id": "tip_general_1",
+      "context": "general",
+      "title": "Save Often",
+      "description": "Your progress is automatically saved after major actions. Check your last save time in settings!",
+      "icon": "save"
+    },
+    {
+      "id": "tip_general_2",
+      "context": "general",
+      "title": "Read Quest Text",
+      "description": "Quest descriptions contain hints about objectives and rewards. Pay attention to the story!",
+      "icon": "scroll"
+    },
+    {
+      "id": "tip_general_3",
+      "context": "general",
+      "title": "Experiment with Classes",
+      "description": "Each class has unique strengths. Try different classes to find your favorite playstyle!",
+      "icon": "user"
+    },
+    {
+      "id": "tip_general_4",
+      "context": "general",
+      "title": "Check the Map",
+      "description": "The world map shows danger levels and recommended levels. Plan your route before traveling!",
+      "icon": "map-pin"
+    },
+    {
+      "id": "tip_general_5",
+      "context": "general",
+      "title": "Join Events",
+      "description": "Seasonal events offer limited-time rewards and challenges. Don't miss out on exclusive content!",
+      "icon": "star"
+    }
+  ]
+}

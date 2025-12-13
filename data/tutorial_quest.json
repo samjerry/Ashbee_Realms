@@ -1,0 +1,173 @@
+{
+  "id": "tutorial_first_steps",
+  "name": "First Steps in Ashbee Realms",
+  "description": "Learn the basics of adventuring in Ashbee Realms. Your journey begins here!",
+  "type": "tutorial",
+  "level_required": 1,
+  "is_tutorial": true,
+  "auto_accept": true,
+  "steps": [
+    {
+      "id": "step_1_welcome",
+      "order": 1,
+      "title": "Welcome, Adventurer!",
+      "description": "Welcome to Ashbee Realms! Let's get you started on your adventure.",
+      "instruction": "Click on your Character Sheet to view your stats and equipment.",
+      "type": "ui_interaction",
+      "target": "character_sheet",
+      "reward": {
+        "xp": 10,
+        "gold": 5
+      },
+      "tip": "Your character sheet shows your stats, equipment, and active effects. Check it often!"
+    },
+    {
+      "id": "step_2_inventory",
+      "order": 2,
+      "title": "Managing Your Inventory",
+      "description": "Learn how to manage items and equipment.",
+      "instruction": "Open your Inventory and view your starting gear.",
+      "type": "ui_interaction",
+      "target": "inventory",
+      "reward": {
+        "xp": 10,
+        "gold": 5
+      },
+      "tip": "You can equip, use, or sell items from your inventory. Rarity determines item quality!"
+    },
+    {
+      "id": "step_3_equip_item",
+      "order": 3,
+      "title": "Equipping Gear",
+      "description": "Equip your starting weapon to increase your combat power.",
+      "instruction": "Equip your starting weapon from the inventory.",
+      "type": "equip_item",
+      "target": "weapon",
+      "reward": {
+        "xp": 15,
+        "gold": 10
+      },
+      "tip": "Better gear makes you stronger! Equipment affects your stats directly."
+    },
+    {
+      "id": "step_4_explore",
+      "order": 4,
+      "title": "Exploring the World",
+      "description": "Time to venture out and explore Ashbee Realms!",
+      "instruction": "Open the Map and travel to Whispering Woods.",
+      "type": "travel",
+      "target": "whispering_woods",
+      "reward": {
+        "xp": 20,
+        "gold": 10
+      },
+      "tip": "Each location has different monsters, dangers, and rewards. Choose wisely!"
+    },
+    {
+      "id": "step_5_first_combat",
+      "order": 5,
+      "title": "Your First Battle",
+      "description": "Encounter and defeat your first monster.",
+      "instruction": "Defeat a Forest Slime in combat.",
+      "type": "defeat_monster",
+      "target": "forest_slime",
+      "reward": {
+        "xp": 50,
+        "gold": 25,
+        "item": "minor_health_potion"
+      },
+      "tip": "Use Attack to deal damage. Watch your HP and use potions when needed!"
+    },
+    {
+      "id": "step_6_loot",
+      "order": 6,
+      "title": "Collecting Loot",
+      "description": "Defeated monsters drop valuable items and gold.",
+      "instruction": "Collect loot from your defeated enemy.",
+      "type": "collect_loot",
+      "reward": {
+        "xp": 15,
+        "gold": 10
+      },
+      "tip": "Loot includes gold, items, and crafting materials. Don't leave treasure behind!"
+    },
+    {
+      "id": "step_7_level_up",
+      "order": 7,
+      "title": "Growing Stronger",
+      "description": "You've gained enough experience to level up!",
+      "instruction": "Reach Level 2 by gaining experience from combat.",
+      "type": "reach_level",
+      "target": 2,
+      "reward": {
+        "xp": 0,
+        "gold": 50,
+        "item": "apprentice_health_potion"
+      },
+      "tip": "Each level increases your stats and unlocks new abilities. Keep fighting to grow stronger!"
+    },
+    {
+      "id": "step_8_quest_system",
+      "order": 8,
+      "title": "Accepting Quests",
+      "description": "Quests provide goals, rewards, and story progression.",
+      "instruction": "Open the Quest Log to see available quests.",
+      "type": "ui_interaction",
+      "target": "quest_log",
+      "reward": {
+        "xp": 20,
+        "gold": 15
+      },
+      "tip": "Complete quests for extra XP, gold, and unique rewards!"
+    },
+    {
+      "id": "step_9_merchant",
+      "order": 9,
+      "title": "Trading with Merchants",
+      "description": "NPCs can buy your items or sell you new gear.",
+      "instruction": "Find and interact with a merchant NPC.",
+      "type": "interact_npc",
+      "target": "merchant",
+      "reward": {
+        "xp": 25,
+        "gold": 20
+      },
+      "tip": "Merchants have different inventories. Some sell potions, others sell weapons or armor!"
+    },
+    {
+      "id": "step_10_complete",
+      "order": 10,
+      "title": "Tutorial Complete!",
+      "description": "You've learned the basics! Your adventure truly begins now.",
+      "instruction": "Continue exploring, fighting monsters, and completing quests!",
+      "type": "complete",
+      "reward": {
+        "xp": 100,
+        "gold": 100,
+        "item": "adventurer_starter_pack",
+        "title": "Novice Adventurer"
+      },
+      "tip": "You're ready to explore dungeons, join raids, and become a legend. Good luck!"
+    }
+  ],
+  "rewards": {
+    "xp": 265,
+    "gold": 250,
+    "items": [
+      {
+        "id": "adventurer_starter_pack",
+        "quantity": 1
+      },
+      {
+        "id": "minor_health_potion",
+        "quantity": 3
+      },
+      {
+        "id": "apprentice_health_potion",
+        "quantity": 2
+      }
+    ],
+    "title": "Novice Adventurer"
+  },
+  "completion_message": "Congratulations! You've completed the tutorial and earned the title 'Novice Adventurer'. The world of Ashbee Realms awaits your exploration!"
+}

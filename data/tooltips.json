@@ -1,0 +1,149 @@
+{
+  "tooltips": [
+    {
+      "id": "character_sheet",
+      "category": "ui",
+      "title": "Character Sheet",
+      "description": "View your character's stats, equipment, and active effects. Your stats determine your combat effectiveness.",
+      "hotkey": "C",
+      "relatedTips": ["stats_explanation", "equipment_slots"]
+    },
+    {
+      "id": "inventory",
+      "category": "ui",
+      "title": "Inventory",
+      "description": "Manage your items, equipment, and consumables. You have 30 slots available.",
+      "hotkey": "I",
+      "relatedTips": ["item_rarity", "stacking"]
+    },
+    {
+      "id": "quest_log",
+      "category": "ui",
+      "title": "Quest Log",
+      "description": "Track active quests and view available objectives. Complete quests for rewards!",
+      "hotkey": "Q",
+      "relatedTips": ["quest_types", "quest_rewards"]
+    },
+    {
+      "id": "map",
+      "category": "ui",
+      "title": "World Map",
+      "description": "Travel between locations and explore new areas. Each location has different monsters and danger levels.",
+      "hotkey": "M",
+      "relatedTips": ["danger_levels", "biomes"]
+    },
+    {
+      "id": "achievements",
+      "category": "ui",
+      "title": "Achievements",
+      "description": "Track your accomplishments and unlock rewards. Some achievements grant passive bonuses!",
+      "hotkey": "A",
+      "relatedTips": ["achievement_points", "titles"]
+    },
+    {
+      "id": "stats_explanation",
+      "category": "gameplay",
+      "title": "Character Stats",
+      "description": "Strength increases physical damage. Defense reduces incoming damage. Agility affects dodge and speed. Magic boosts spell damage. Crit Chance increases critical hit likelihood.",
+      "relatedTips": ["equipment_bonuses", "stat_scaling"]
+    },
+    {
+      "id": "equipment_slots",
+      "category": "gameplay",
+      "title": "Equipment Slots",
+      "description": "You have 15 equipment slots: Weapon, Off-hand, Head, Chest, Legs, Feet, Hands, Back, Neck, Ring (x2), Trinket (x2), Belt, Shoulders. Each slot provides stat bonuses.",
+      "relatedTips": ["item_rarity", "enchantments"]
+    },
+    {
+      "id": "item_rarity",
+      "category": "gameplay",
+      "title": "Item Rarity",
+      "description": "Items come in rarities: Common (gray), Uncommon (green), Rare (blue), Epic (purple), Legendary (orange), Mythic (red). Higher rarity = better stats!",
+      "relatedTips": ["loot_drops", "enchanting"]
+    },
+    {
+      "id": "combat_basics",
+      "category": "combat",
+      "title": "Combat System",
+      "description": "Combat is turn-based. Use Attack, Abilities, or Items. Watch your HP and use potions when needed. Defeat monsters for XP and loot!",
+      "relatedTips": ["status_effects", "critical_hits"]
+    },
+    {
+      "id": "status_effects",
+      "category": "combat",
+      "title": "Status Effects",
+      "description": "Buffs (green) help you. Debuffs (red) harm you. Effects like Poison, Bleeding, and Burning deal damage over time. Buffs like Strength and Haste improve combat.",
+      "relatedTips": ["cleansing", "effect_combos"]
+    },
+    {
+      "id": "critical_hits",
+      "category": "combat",
+      "title": "Critical Hits",
+      "description": "Critical hits deal 2x damage! Increase your Crit Chance stat to land more crits. Some abilities guarantee critical hits.",
+      "relatedTips": ["crit_damage", "passives"]
+    },
+    {
+      "id": "danger_levels",
+      "category": "exploration",
+      "title": "Location Danger",
+      "description": "Locations have danger levels 1-5. Higher danger = stronger monsters and better loot. Match your level to the location danger for best results.",
+      "relatedTips": ["recommended_level", "monster_scaling"]
+    },
+    {
+      "id": "biomes",
+      "category": "exploration",
+      "title": "Biome Types",
+      "description": "Each biome has unique monsters and environmental effects. Fire elementals thrive in volcanic areas. Undead haunt graveyards. Choose locations strategically!",
+      "relatedTips": ["environmental_effects", "time_of_day"]
+    },
+    {
+      "id": "quest_types",
+      "category": "quests",
+      "title": "Quest Categories",
+      "description": "Main quests advance the story. Side quests offer optional content. Bounty quests target specific monsters. Delivery quests require item transport.",
+      "relatedTips": ["quest_rewards", "reputation"]
+    },
+    {
+      "id": "enchanting",
+      "category": "crafting",
+      "title": "Enchanting System",
+      "description": "Enchant items to add bonuses! Higher rarity enchantments have lower success rates. Failed enchants may destroy items. Use enchanting dust wisely!",
+      "relatedTips": ["enchantment_slots", "disenchanting"]
+    },
+    {
+      "id": "passives",
+      "category": "progression",
+      "title": "Passive Progression",
+      "description": "Spend Souls and Legacy Points to unlock permanent account-wide bonuses. Passives survive character death! Invest in strength, defense, XP gain, and more.",
+      "relatedTips": ["souls", "legacy_points"]
+    },
+    {
+      "id": "factions",
+      "category": "social",
+      "title": "Faction Reputation",
+      "description": "Build reputation with factions to unlock unique rewards, merchants, and abilities. Some factions are hostile to each other!",
+      "relatedTips": ["reputation_tiers", "faction_quests"]
+    },
+    {
+      "id": "raids",
+      "category": "multiplayer",
+      "title": "Raid System",
+      "description": "Team up with other players to defeat powerful bosses! Choose your role: Tank, Healer, or DPS. Coordinate with your team for victory!",
+      "relatedTips": ["raid_roles", "raid_mechanics"]
+    },
+    {
+      "id": "dungeons",
+      "category": "pve",
+      "title": "Dungeon Runs",
+      "description": "Dungeons are multi-floor challenges with escalating difficulty. Defeat all monsters and bosses to complete the dungeon. Choose modifiers for extra challenge and rewards!",
+      "relatedTips": ["dungeon_modifiers", "boss_mechanics"]
+    },
+    {
+      "id": "seasons",
+      "category": "competitive",
+      "title": "Seasonal Content",
+      "description": "Complete seasonal challenges to earn currency and rewards. Climb the leaderboards! Seasons reset periodically with new content.",
+      "relatedTips": ["season_currency", "leaderboards"]
+    }
+  ]
+}
