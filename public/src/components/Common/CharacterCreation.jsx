@@ -24,7 +24,12 @@ export default function CharacterCreation({ onComplete }) {
       .then(data => {
         console.log('Roles API response:', data); // Debug log
         setUserRoles(data);
-        setDisplayName(data.displayName || 'Adventurer');
+        
+        // Use displayName from API or fallback
+        const name = data.displayName || 'Adventurer';
+        console.log('Setting displayName to:', name);
+        setDisplayName(name);
+        
         // Set default color to primary role color
         if (data.availableColors && data.availableColors.length > 0) {
           setSelectedColor(data.availableColors[0].color);
@@ -38,6 +43,7 @@ export default function CharacterCreation({ onComplete }) {
         // Set fallback values so character creation can still work
         setDisplayName('Adventurer');
         setSelectedColor('#FFFFFF');
+        setUserRoles({ roles: ['viewer'], availableColors: [{ role: 'viewer', color: '#FFFFFF', name: 'Viewer' }] });
       })
       .finally(() => {
         setIsLoading(false);

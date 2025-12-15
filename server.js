@@ -419,10 +419,14 @@ app.get('/api/player/roles', async (req, res) => {
       name: r.charAt(0).toUpperCase() + r.slice(1)
     }));
     
+    console.log(`🎭 Roles API for ${displayName}:`, { roles, primaryRole }); // Debug log
+    
     res.json({ 
       primaryRole,
       roles,
       availableColors,
+      displayName: displayName
+    });
       displayName: displayName
     });
   } catch (error) {
