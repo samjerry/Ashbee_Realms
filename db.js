@@ -47,94 +47,17 @@ async function initPostgres() {
   // Create tables
   console.log('📋 Creating/verifying database tables...');
   const tableStart = Date.now();
+  
+  // Global tables (shared across all channels)
   await pool.query(`
     CREATE TABLE IF NOT EXISTS players (
       id TEXT PRIMARY KEY,
-      twitch_id TEXT,
+      twitch_id TEXT UNIQUE,
       display_name TEXT,
       access_token TEXT,
       refresh_token TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-
-    CREATE TABLE IF NOT EXISTS player_progress (
-      player_id TEXT NOT NULL,
-      channel_name TEXT NOT NULL,
-      name TEXT NOT NULL,
-      location TEXT NOT NULL,
-      level INTEGER DEFAULT 1,
-      xp INTEGER DEFAULT 0,
-      xp_to_next INTEGER DEFAULT 10,
-      max_hp INTEGER DEFAULT 100,
-      hp INTEGER DEFAULT 100,
-      gold INTEGER DEFAULT 0,
-      type TEXT,
-      inventory JSONB DEFAULT '["Potion"]',
-      pending JSONB,
-      combat JSONB,
-      skill_cd INTEGER DEFAULT 0,
-      step INTEGER DEFAULT 0,
-      is_player BOOLEAN DEFAULT true,
-      in_combat BOOLEAN DEFAULT false,
-      equipped JSONB DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"relic1":null,"relic2":null,"relic3":null}',
-      base_stats JSONB DEFAULT '{}',
-      skills JSONB DEFAULT '{"skills":{},"globalCooldown":0}',
-      skill_points INTEGER DEFAULT 0,
-      travel_state JSONB DEFAULT NULL,
-      active_quests JSONB DEFAULT '[]',
-      completed_quests JSONB DEFAULT '[]',
-      consumable_cooldowns JSONB DEFAULT '{}',
-      dialogue_history JSONB DEFAULT '{}',
-      reputation JSONB DEFAULT '{"general":0}',
-      unlocked_achievements JSONB DEFAULT '[]',
-      achievement_progress JSONB DEFAULT '{}',
-      achievement_unlock_dates JSONB DEFAULT '{}',
-      achievement_points INTEGER DEFAULT 0,
-      unlocked_titles JSONB DEFAULT '[]',
-      active_title TEXT DEFAULT NULL,
-      stats JSONB DEFAULT '{"totalKills":0,"bossKills":0,"criticalHits":0,"highestDamage":0,"deaths":0,"locationsVisited":[],"biomesVisited":[],"totalGoldEarned":0,"totalGoldSpent":0,"mysteriesSolved":0}',
-      dungeon_state JSONB DEFAULT NULL,
-      completed_dungeons JSONB DEFAULT '[]',
-      crafting_xp INTEGER DEFAULT 0,
-      known_recipes JSONB DEFAULT '[]',
-      season_progress JSONB DEFAULT '{}',
-      seasonal_challenges_completed JSONB DEFAULT '[]',
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (player_id, channel_name),
-      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS permanent_stats (
-      player_id TEXT PRIMARY KEY,
-      passive_levels JSONB DEFAULT '{}',
-      souls INTEGER DEFAULT 5,
-      legacy_points INTEGER DEFAULT 0,
-      account_stats JSONB DEFAULT '{}',
-      total_deaths INTEGER DEFAULT 0,
-      total_kills INTEGER DEFAULT 0,
-      total_gold_earned BIGINT DEFAULT 0,
-      total_xp_earned BIGINT DEFAULT 0,
-      highest_level_reached INTEGER DEFAULT 1,
-      total_crits INTEGER DEFAULT 0,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_player_progress_player_id ON player_progress(player_id);
-    CREATE INDEX IF NOT EXISTS idx_player_progress_channel ON player_progress(channel_name);
-
-    CREATE TABLE IF NOT EXISTS user_roles (
-      player_id TEXT NOT NULL,
-      channel_name TEXT NOT NULL,
-      role TEXT NOT NULL DEFAULT 'viewer',
-      last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY (player_id, channel_name),
-      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE,
-      CHECK (role IN ('viewer', 'subscriber', 'vip', 'moderator', 'streamer'))
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_user_roles_channel ON user_roles(channel_name);
-    CREATE INDEX IF NOT EXISTS idx_user_roles_role ON user_roles(role);
 
     CREATE TABLE IF NOT EXISTS game_state (
       channel_name TEXT PRIMARY KEY,
@@ -163,10 +86,100 @@ async function initPostgres() {
     CREATE INDEX IF NOT EXISTS idx_audit_log_executed ON operator_audit_log(executed_at DESC);
   `);
   
+  // Get list of channels from environment
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
+  
+  // Create per-channel player tables
+  for (const channel of CHANNELS) {
+    const tableName = `players_${channel.replace(/[^a-z0-9_]/g, '_')}`;
+    console.log(`📋 Creating table for channel: ${channel} (${tableName})`);
+    
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS ${tableName} (
+        player_id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        location TEXT NOT NULL DEFAULT 'Silverbrook',
+        level INTEGER DEFAULT 1,
+        xp INTEGER DEFAULT 0,
+        xp_to_next INTEGER DEFAULT 10,
+        max_hp INTEGER DEFAULT 100,
+        hp INTEGER DEFAULT 100,
+        gold INTEGER DEFAULT 0,
+        type TEXT,
+        inventory JSONB DEFAULT '["Potion"]',
+        pending JSONB,
+        combat JSONB,
+        skill_cd INTEGER DEFAULT 0,
+        step INTEGER DEFAULT 0,
+        is_player BOOLEAN DEFAULT true,
+        in_combat BOOLEAN DEFAULT false,
+        equipped JSONB DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"relic1":null,"relic2":null,"relic3":null}',
+        base_stats JSONB DEFAULT '{}',
+        skills JSONB DEFAULT '{"skills":{},"globalCooldown":0}',
+        skill_points INTEGER DEFAULT 0,
+        travel_state JSONB DEFAULT NULL,
+        active_quests JSONB DEFAULT '[]',
+        completed_quests JSONB DEFAULT '[]',
+        consumable_cooldowns JSONB DEFAULT '{}',
+        dialogue_history JSONB DEFAULT '{}',
+        reputation JSONB DEFAULT '{"general":0}',
+        unlocked_achievements JSONB DEFAULT '[]',
+        achievement_progress JSONB DEFAULT '{}',
+        achievement_unlock_dates JSONB DEFAULT '{}',
+        achievement_points INTEGER DEFAULT 0,
+        unlocked_titles JSONB DEFAULT '[]',
+        active_title TEXT DEFAULT NULL,
+        stats JSONB DEFAULT '{"totalKills":0,"bossKills":0,"criticalHits":0,"highestDamage":0,"deaths":0,"locationsVisited":[],"biomesVisited":[],"totalGoldEarned":0,"totalGoldSpent":0,"mysteriesSolved":0}',
+        dungeon_state JSONB DEFAULT NULL,
+        completed_dungeons JSONB DEFAULT '[]',
+        crafting_xp INTEGER DEFAULT 0,
+        known_recipes JSONB DEFAULT '[]',
+        season_progress JSONB DEFAULT '{}',
+        seasonal_challenges_completed JSONB DEFAULT '[]',
+        
+        -- Permanent stats (account-wide for this channel)
+        passive_levels JSONB DEFAULT '{}',
+        souls INTEGER DEFAULT 5,
+        legacy_points INTEGER DEFAULT 0,
+        account_stats JSONB DEFAULT '{}',
+        total_deaths INTEGER DEFAULT 0,
+        total_kills INTEGER DEFAULT 0,
+        total_gold_earned BIGINT DEFAULT 0,
+        total_xp_earned BIGINT DEFAULT 0,
+        highest_level_reached INTEGER DEFAULT 1,
+        total_crits INTEGER DEFAULT 0,
+        
+        -- User role (channel-specific permissions)
+        role TEXT NOT NULL DEFAULT 'viewer',
+        
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        
+        FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE,
+        CHECK (role IN ('viewer', 'subscriber', 'vip', 'moderator', 'streamer'))
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_${tableName}_level ON ${tableName}(level DESC);
+      CREATE INDEX IF NOT EXISTS idx_${tableName}_gold ON ${tableName}(gold DESC);
+      CREATE INDEX IF NOT EXISTS idx_${tableName}_role ON ${tableName}(role);
+    `);
+  }
+  
+  console.log(`✅ Tables created/verified in ${Date.now() - tableStart}ms`);
+  
   const tableTime = ((Date.now() - tableStart) / 1000).toFixed(2);
   console.log(`✅ Database schema verified/created in ${tableTime}s`);
 
   db = pool;
+}
+
+// Helper function to get channel-specific player table name
+function getPlayerTable(channelName) {
+  if (!channelName) {
+    throw new Error('Channel name is required');
+  }
+  const sanitized = channelName.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  return `players_${sanitized}`;
 }
 
 // Query interface (PostgreSQL only)
@@ -193,9 +206,10 @@ async function all(sql, params = []) {
  * @param {object} playerData - Player data object with all fields
  */
 async function savePlayerProgress(playerId, channelName, playerData) {
+  const table = getPlayerTable(channelName);
   const {
     name,
-    location,
+    location = 'Silverbrook',
     level = 1,
     xp = 0,
     xp_to_next = 10,
@@ -237,37 +251,56 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     crafting_xp = 0,
     known_recipes = [],
     season_progress = {},
-    seasonal_challenges_completed = []
+    seasonal_challenges_completed = [],
+    // Permanent stats
+    passive_levels = {},
+    souls = 5,
+    legacy_points = 0,
+    account_stats = {},
+    total_deaths = 0,
+    total_kills = 0,
+    total_gold_earned = 0,
+    total_xp_earned = 0,
+    highest_level_reached = 1,
+    total_crits = 0,
+    // Role
+    role = 'viewer'
   } = playerData;
 
   await query(`
-    INSERT INTO player_progress (
-      player_id, channel_name, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+    INSERT INTO ${table} (
+      player_id, name, location, level, xp, xp_to_next, max_hp, hp, gold,
       type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped,
       base_stats, skills, skill_points, travel_state, active_quests, completed_quests,
       consumable_cooldowns, dialogue_history, reputation, unlocked_achievements,
       achievement_progress, achievement_unlock_dates, achievement_points,
       unlocked_titles, active_title, stats, dungeon_state, completed_dungeons,
-      crafting_xp, known_recipes, season_progress, seasonal_challenges_completed, updated_at
+      crafting_xp, known_recipes, season_progress, seasonal_challenges_completed,
+      passive_levels, souls, legacy_points, account_stats, total_deaths, total_kills,
+      total_gold_earned, total_xp_earned, highest_level_reached, total_crits, role, updated_at
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-      $11, $12, $13, $14, $15, $16, $17, $18, $19,
-      $20, $21, $22, $23, $24, $25,
-      $26, $27, $28, $29,
-      $30, $31, $32,
-      $33, $34, $35, $36, $37,
-      $38, $39, $40, $41, NOW()
+      $1, $2, $3, $4, $5, $6, $7, $8, $9,
+      $10, $11, $12, $13, $14, $15, $16, $17, $18,
+      $19, $20, $21, $22, $23, $24,
+      $25, $26, $27, $28,
+      $29, $30, $31,
+      $32, $33, $34, $35, $36,
+      $37, $38, $39, $40,
+      $41, $42, $43, $44, $45, $46,
+      $47, $48, $49, $50, $51, NOW()
     )
-    ON CONFLICT(player_id, channel_name) DO UPDATE SET
-      name=$3, location=$4, level=$5, xp=$6, xp_to_next=$7, max_hp=$8, hp=$9, gold=$10,
-      type=$11, inventory=$12, pending=$13, combat=$14, skill_cd=$15, step=$16, is_player=$17, in_combat=$18, equipped=$19,
-      base_stats=$20, skills=$21, skill_points=$22, travel_state=$23, active_quests=$24, completed_quests=$25,
-      consumable_cooldowns=$26, dialogue_history=$27, reputation=$28, unlocked_achievements=$29,
-      achievement_progress=$30, achievement_unlock_dates=$31, achievement_points=$32,
-      unlocked_titles=$33, active_title=$34, stats=$35, dungeon_state=$36, completed_dungeons=$37,
-      crafting_xp=$38, known_recipes=$39, season_progress=$40, seasonal_challenges_completed=$41, updated_at=NOW()
+    ON CONFLICT(player_id) DO UPDATE SET
+      name=$2, location=$3, level=$4, xp=$5, xp_to_next=$6, max_hp=$7, hp=$8, gold=$9,
+      type=$10, inventory=$11, pending=$12, combat=$13, skill_cd=$14, step=$15, is_player=$16, in_combat=$17, equipped=$18,
+      base_stats=$19, skills=$20, skill_points=$21, travel_state=$22, active_quests=$23, completed_quests=$24,
+      consumable_cooldowns=$25, dialogue_history=$26, reputation=$27, unlocked_achievements=$28,
+      achievement_progress=$29, achievement_unlock_dates=$30, achievement_points=$31,
+      unlocked_titles=$32, active_title=$33, stats=$34, dungeon_state=$35, completed_dungeons=$36,
+      crafting_xp=$37, known_recipes=$38, season_progress=$39, seasonal_challenges_completed=$40,
+      passive_levels=$41, souls=$42, legacy_points=$43, account_stats=$44, total_deaths=$45, total_kills=$46,
+      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, role=$51, updated_at=NOW()
   `, [
-    playerId, channelName, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+    playerId, name, location, level, xp, xp_to_next, max_hp, hp, gold,
     type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
     skill_cd, step, is_player, in_combat, JSON.stringify(equipped),
     JSON.stringify(base_stats), JSON.stringify(skills), skill_points, JSON.stringify(travel_state),
@@ -277,7 +310,9 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     JSON.stringify(achievement_progress), JSON.stringify(achievement_unlock_dates), achievement_points,
     JSON.stringify(unlocked_titles), active_title, JSON.stringify(stats), JSON.stringify(dungeon_state),
     JSON.stringify(completed_dungeons),
-    crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed)
+    crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed),
+    JSON.stringify(passive_levels), souls, legacy_points, JSON.stringify(account_stats), total_deaths, total_kills,
+    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, role
   ]);
 }
 
@@ -288,7 +323,8 @@ async function savePlayerProgress(playerId, channelName, playerData) {
  * @returns {object|null} Player data or null if not found
  */
 async function loadPlayerProgress(playerId, channelName) {
-  const result = await query('SELECT * FROM player_progress WHERE player_id = $1 AND channel_name = $2', [playerId, channelName]);
+  const table = getPlayerTable(channelName);
+  const result = await query(`SELECT * FROM ${table} WHERE player_id = $1`, [playerId]);
 
   if (!result.rows || result.rows.length === 0) {
     return null;
@@ -337,6 +373,19 @@ async function loadPlayerProgress(playerId, channelName) {
     known_recipes: typeof row.known_recipes === 'string' ? JSON.parse(row.known_recipes) : (row.known_recipes || []),
     season_progress: typeof row.season_progress === 'string' ? JSON.parse(row.season_progress) : (row.season_progress || {}),
     seasonal_challenges_completed: typeof row.seasonal_challenges_completed === 'string' ? JSON.parse(row.seasonal_challenges_completed) : (row.seasonal_challenges_completed || []),
+    // Permanent stats
+    passive_levels: typeof row.passive_levels === 'string' ? JSON.parse(row.passive_levels) : (row.passive_levels || {}),
+    souls: row.souls || 5,
+    legacy_points: row.legacy_points || 0,
+    account_stats: typeof row.account_stats === 'string' ? JSON.parse(row.account_stats) : (row.account_stats || {}),
+    total_deaths: row.total_deaths || 0,
+    total_kills: row.total_kills || 0,
+    total_gold_earned: row.total_gold_earned || 0,
+    total_xp_earned: row.total_xp_earned || 0,
+    highest_level_reached: row.highest_level_reached || 1,
+    total_crits: row.total_crits || 0,
+    // Role
+    role: row.role || 'viewer',
     updated_at: row.updated_at
   };
 }
@@ -669,9 +718,10 @@ async function updateUserRole(playerId, channelName, role) {
  * @returns {Promise<string>} User role or 'viewer' if not found
  */
 async function getUserRole(playerId, channelName) {
+  const table = getPlayerTable(channelName);
   const result = await query(
-    `SELECT role FROM user_roles WHERE player_id = $1 AND channel_name = $2`,
-    [playerId, channelName.toLowerCase()]
+    `SELECT role FROM ${table} WHERE player_id = $1`,
+    [playerId]
   );
 
   return result.rows.length > 0 ? result.rows[0].role : 'viewer';
@@ -684,20 +734,38 @@ async function getUserRole(playerId, channelName) {
  * @returns {Promise<Array>} List of users with their roles
  */
 async function getChannelUsers(channelName, role = null) {
+  const table = getPlayerTable(channelName);
   let sql = `
-    SELECT ur.player_id, ur.role, ur.last_updated, p.display_name
-    FROM user_roles ur
-    LEFT JOIN players p ON ur.player_id = p.id
-    WHERE ur.channel_name = $1
+    SELECT t.player_id, t.role, t.updated_at as last_updated, p.display_name, t.level, t.gold
+    FROM ${table} t
+    LEFT JOIN players p ON t.player_id = p.id
   `;
-  const params = [channelName.toLowerCase()];
+  const params = [];
 
   if (role) {
-    sql += ` AND ur.role = $2`;
+    sql += ` WHERE t.role = $1`;
     params.push(role);
   }
 
-  sql += ` ORDER BY ur.role DESC, ur.last_updated DESC`;
+  sql += ` ORDER BY t.role DESC, t.level DESC`;
+
+  const result = await query(sql, params);
+  return result.rows;
+}
+
+/**
+ * Set user role in a channel
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {string} role - Role to set
+ */
+async function setUserRole(playerId, channelName, role) {
+  const table = getPlayerTable(channelName);
+  await query(
+    `UPDATE ${table} SET role = $1, updated_at = NOW() WHERE player_id = $2`,
+    [role, playerId]
+  );
+}
 
   const result = await query(sql, params);
   return result.rows;
@@ -791,6 +859,7 @@ module.exports = {
   all,
   close,
   getDB: () => db,
+  getPlayerTable,
   savePlayerProgress,
   loadPlayerProgress,
   initializeNewPlayer,
@@ -798,15 +867,12 @@ module.exports = {
   saveCharacter,
   createCharacter,
   deleteCharacter,
-  getPermanentStats,
-  savePermanentStats,
-  incrementPermanentStat,
   updateAchievementData,
   updateCharacterStats,
   updateDungeonState,
   addCompletedDungeon,
   updateReputation,
-  updateUserRole,
+  setUserRole,
   getUserRole,
   getChannelUsers,
   determineRoleFromTags,
