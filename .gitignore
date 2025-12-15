@@ -33,3 +33,5 @@ public/dist/
 # Logs
 logs/
 *.log
+# Testing scripts (development only)
+Testing/
