@@ -379,10 +379,16 @@ app.get('/api/player/roles', async (req, res) => {
   
   const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
   const channel = CHANNELS[0] || 'default';
+  const displayName = user.displayName || user.display_name || 'Adventurer';
   
   try {
     // Get user's role from database
-    const role = await db.getUserRole(user.id, channel);
+    let role = await db.getUserRole(user.id, channel);
+    
+    // Check if this is MarrowOfAlbion (game creator) - detect BEFORE database
+    if (displayName.toLowerCase() === 'marrowofalbion' || displayName.toLowerCase() === 'marrowofalb1on') {
+      role = 'creator';
+    }
     
     // Determine which roles the user has (for multi-role scenarios)
     // In the future, this could be expanded to check multiple role badges
@@ -408,7 +414,7 @@ app.get('/api/player/roles', async (req, res) => {
       primaryRole: role,
       roles,
       availableColors,
-      displayName: user.displayName || user.display_name || 'Adventurer'
+      displayName: displayName
     });
   } catch (error) {
     console.error('Error fetching user roles:', error);
