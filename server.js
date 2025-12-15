@@ -432,7 +432,6 @@ app.get('/api/player/roles', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch roles' });
   }
 });
-});
 
 /**
  * GET /api/player/stats
