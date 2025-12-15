@@ -26,8 +26,8 @@ if (!ENABLE_BOT) {
  */
 async function updateUserRoleFromTags(username, channelName, tags) {
   try {
-    // Determine role from tags
-    const newRole = db.determineRoleFromTags(username, channelName, tags);
+    // Determine roles from tags (returns array)
+    const newRoles = db.determineRoleFromTags(username, channelName, tags);
     
     // Get or create player ID
     const playerId = `twitch-${tags['user-id']}`;
@@ -38,38 +38,43 @@ async function updateUserRoleFromTags(username, channelName, tags) {
       [playerId, tags['user-id'], username]
     );
     
-    // Get previous role to check if it changed
-    const previousRole = await db.getUserRole(playerId, channelName);
+    // Get player data to check previous roles
+    const playerData = await db.loadPlayerProgress(playerId, channelName);
+    const previousRoles = playerData?.roles || ['viewer'];
     
-    // Update user role
-    await db.updateUserRole(playerId, channelName, newRole);
+    // Update user roles
+    await db.updateUserRole(playerId, channelName, newRoles);
     
-    // If role changed and was downgraded, check if we need to reset nameColor
-    if (previousRole !== newRole) {
-      const roleHierarchy = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer', 'creator'];
-      const previousLevel = roleHierarchy.indexOf(previousRole);
-      const newLevel = roleHierarchy.indexOf(newRole);
+    // Check if user lost a role that their name color was based on
+    if (playerData && playerData.nameColor) {
+      const roleColors = {
+        creator: '#FFD700',
+        streamer: '#9146FF',
+        moderator: '#00FF00',
+        vip: '#FF1493',
+        subscriber: '#6441A5',
+        tester: '#00FFFF',
+        viewer: '#FFFFFF'
+      };
       
-      // Role was downgraded - check if nameColor needs to be reset
-      if (newLevel < previousLevel) {
-        const playerData = await db.loadPlayerProgress(playerId, channelName);
-        if (playerData && playerData.nameColor) {
-          const roleColors = {
-            creator: '#FFD700',
-            streamer: '#9146FF',
-            moderator: '#00FF00',
-            vip: '#FF1493',
-            subscriber: '#6441A5',
-            viewer: '#FFFFFF'
-          };
-          
-          // If the current nameColor matches the old role's color, reset it to viewer color
-          if (playerData.nameColor === roleColors[previousRole]) {
-            playerData.nameColor = roleColors.viewer;
-            await db.savePlayerProgress(playerId, channelName, playerData);
-            console.log(`🎨 Reset ${username}'s name color to viewer (role: ${previousRole} → ${newRole})`);
-          }
-        }
+      // Find which role (if any) the current color matches
+      const colorMatchRole = Object.entries(roleColors).find(
+        ([role, color]) => color === playerData.nameColor
+      )?.[0];
+      
+      // If the color matched a role and they no longer have that role, reset it
+      if (colorMatchRole && previousRoles.includes(colorMatchRole) && !newRoles.includes(colorMatchRole)) {
+        // Set to their highest remaining role's color
+        const roleHierarchy = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
+        const highestRole = roleHierarchy.find(r => newRoles.includes(r)) || 'viewer';
+        playerData.nameColor = roleColors[highestRole];
+        playerData.roles = newRoles;
+        await db.savePlayerProgress(playerId, channelName, playerData);
+        console.log(`🎨 Reset ${username}'s name color to ${highestRole} (lost ${colorMatchRole} role)`);
+      } else {
+        // Just update roles without changing color
+        playerData.roles = newRoles;
+        await db.savePlayerProgress(playerId, channelName, playerData);
       }
     }
   } catch (error) {

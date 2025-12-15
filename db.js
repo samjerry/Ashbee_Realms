@@ -3,6 +3,35 @@
  * PostgreSQL only - requires DATABASE_URL environment variable
  */
 
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * Load beta tester usernames from Testers.txt
+ * @returns {Array<string>} Array of tester usernames (lowercase)
+ */
+function loadTestersFromFile() {
+  try {
+    const testersPath = path.join(__dirname, 'Testers.txt');
+    if (fs.existsSync(testersPath)) {
+      const content = fs.readFileSync(testersPath, 'utf8');
+      const testers = content
+        .split('\n')
+        .map(line => line.trim().toLowerCase())
+        .filter(line => line && !line.startsWith('#'));
+      console.log(`📋 Loaded ${testers.length} beta testers from Testers.txt`);
+      return testers;
+    }
+    console.log('⚠️ Testers.txt not found - no beta testers loaded');
+    return [];
+  } catch (error) {
+    console.error('Error loading Testers.txt:', error);
+    return [];
+  }
+}
+
+const BETA_TESTERS = loadTestersFromFile();
+
 let db;
 
 async function initDB() {
@@ -158,8 +187,8 @@ async function initPostgres() {
         highest_level_reached INTEGER DEFAULT 1,
         total_crits INTEGER DEFAULT 0,
         
-        -- User role (channel-specific permissions)
-        role TEXT NOT NULL DEFAULT 'viewer',
+        -- User roles (channel-specific permissions) - array for multiple roles
+        roles JSONB DEFAULT '["viewer"]',
         
         -- Selected name color (for users with multiple roles)
         name_color TEXT DEFAULT NULL,
@@ -167,13 +196,55 @@ async function initPostgres() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         
-        FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE,
-        CHECK (role IN ('viewer', 'subscriber', 'vip', 'moderator', 'streamer'))
+        FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
       );
 
       CREATE INDEX IF NOT EXISTS idx_${tableName}_level ON ${tableName}(level DESC);
       CREATE INDEX IF NOT EXISTS idx_${tableName}_gold ON ${tableName}(gold DESC);
-      CREATE INDEX IF NOT EXISTS idx_${tableName}_role ON ${tableName}(role);
+    `);
+    
+    // Migration: Add name_color column if it doesn't exist
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'name_color'
+        ) THEN
+          ALTER TABLE ${tableName} ADD COLUMN name_color TEXT DEFAULT NULL;
+        END IF;
+      END $$;
+    `);
+    
+    // Migration: Convert role TEXT to roles JSONB array
+    await pool.query(`
+      DO $$
+      BEGIN
+        -- Check if old 'role' column exists
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'role' AND data_type = 'text'
+        ) THEN
+          -- Add new roles column if it doesn't exist
+          IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns 
+            WHERE table_name = '${tableName}' AND column_name = 'roles'
+          ) THEN
+            ALTER TABLE ${tableName} ADD COLUMN roles JSONB DEFAULT '["viewer"]';
+            -- Migrate existing role data to roles array
+            UPDATE ${tableName} SET roles = jsonb_build_array(role) WHERE role IS NOT NULL;
+          END IF;
+          -- Drop old role column and its constraint
+          ALTER TABLE ${tableName} DROP CONSTRAINT IF EXISTS ${tableName}_role_check;
+          ALTER TABLE ${tableName} DROP COLUMN role;
+        ELSIF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'roles'
+        ) THEN
+          -- If neither exists, add roles column
+          ALTER TABLE ${tableName} ADD COLUMN roles JSONB DEFAULT '["viewer"]';
+        END IF;
+      END $$;
     `);
   }
   
@@ -275,8 +346,8 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     total_xp_earned = 0,
     highest_level_reached = 1,
     total_crits = 0,
-    // Role and name color
-    role = 'viewer',
+    // Roles array and name color
+    roles = ['viewer'],
     nameColor = null
   } = playerData;
 
@@ -311,7 +382,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       unlocked_titles=$32, active_title=$33, stats=$34, dungeon_state=$35, completed_dungeons=$36,
       crafting_xp=$37, known_recipes=$38, season_progress=$39, seasonal_challenges_completed=$40,
       passive_levels=$41, souls=$42, legacy_points=$43, account_stats=$44, total_deaths=$45, total_kills=$46,
-      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, role=$51, name_color=$52, updated_at=NOW()
+      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, roles=$51, name_color=$52, updated_at=NOW()
   `, [
     playerId, name, location, level, xp, xp_to_next, max_hp, hp, gold,
     type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
@@ -325,7 +396,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     JSON.stringify(completed_dungeons),
     crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed),
     JSON.stringify(passive_levels), souls, legacy_points, JSON.stringify(account_stats), total_deaths, total_kills,
-    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, role, nameColor
+    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, JSON.stringify(roles), nameColor
   ]);
 }
 
@@ -397,8 +468,8 @@ async function loadPlayerProgress(playerId, channelName) {
     total_xp_earned: row.total_xp_earned || 0,
     highest_level_reached: row.highest_level_reached || 1,
     total_crits: row.total_crits || 0,
-    // Role and name color
-    role: row.role || 'viewer',
+    // Roles array and name color
+    roles: typeof row.roles === 'string' ? JSON.parse(row.roles) : (row.roles || ['viewer']),
     nameColor: row.name_color || null,
     updated_at: row.updated_at
   };
@@ -705,23 +776,29 @@ async function updateReputation(playerId, channelName, reputation) {
 // ===== USER ROLE FUNCTIONS =====
 
 /**
- * Update or insert user role in a channel
+ * Update or insert user roles in a channel
  * @param {string} playerId - Player ID
  * @param {string} channelName - Channel name
- * @param {string} role - User role: 'viewer', 'subscriber', 'vip', 'moderator', 'streamer'
+ * @param {Array<string>} newRoles - Array of roles: ['viewer'], ['subscriber', 'vip'], etc.
  */
-async function updateUserRole(playerId, channelName, role) {
-  const validRoles = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer', 'creator'];
-  if (!validRoles.includes(role)) {
-    throw new Error(`Invalid role: ${role}. Must be one of: ${validRoles.join(', ')}`);
+async function updateUserRole(playerId, channelName, newRoles) {
+  const validRoles = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer', 'creator', 'tester'];
+  const rolesToSet = Array.isArray(newRoles) ? newRoles : [newRoles];
+  
+  // Validate all roles
+  for (const role of rolesToSet) {
+    if (!validRoles.includes(role)) {
+      throw new Error(`Invalid role: ${role}. Must be one of: ${validRoles.join(', ')}`);
+    }
   }
-
+  
+  const table = getPlayerTable(channelName);
   await query(
-    `INSERT INTO user_roles (player_id, channel_name, role, last_updated)
-     VALUES ($1, $2, $3, NOW())
-     ON CONFLICT (player_id, channel_name) 
-     DO UPDATE SET role = $3, last_updated = NOW()`,
-    [playerId, channelName.toLowerCase(), role]
+    `INSERT INTO ${table} (player_id, roles, updated_at)
+     VALUES ($1, $2, NOW())
+     ON CONFLICT (player_id) 
+     DO UPDATE SET roles = $2, updated_at = NOW()`,
+    [playerId, JSON.stringify(rolesToSet)]
   );
 }
 
@@ -734,11 +811,28 @@ async function updateUserRole(playerId, channelName, role) {
 async function getUserRole(playerId, channelName) {
   const table = getPlayerTable(channelName);
   const result = await query(
-    `SELECT role FROM ${table} WHERE player_id = $1`,
+    `SELECT roles FROM ${table} WHERE player_id = $1`,
     [playerId]
   );
 
-  return result.rows.length > 0 ? result.rows[0].role : 'viewer';
+  if (result.rows.length === 0) {
+    return 'viewer';
+  }
+  
+  const roles = typeof result.rows[0].roles === 'string' 
+    ? JSON.parse(result.rows[0].roles) 
+    : result.rows[0].roles;
+  
+  // Return highest priority role (creator > streamer > moderator > vip > subscriber > tester > viewer)
+  // Note: Tester is cosmetic and doesn't grant permissions
+  const hierarchy = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
+  for (const role of hierarchy) {
+    if (roles && roles.includes(role)) {
+      return role;
+    }
+  }
+  
+  return 'viewer';
 }
 
 /**
@@ -782,35 +876,55 @@ async function setUserRole(playerId, channelName, role) {
 }
 
 /**
- * Determine user role from Twitch tags/badges
+ * Check if username is a beta tester
+ * @param {string} username - Username to check
+ * @returns {boolean} True if user is a beta tester
+ */
+function isBetaTester(username) {
+  return BETA_TESTERS.includes(username.toLowerCase());
+}
+
+/**
+ * Determine user roles from Twitch tags/badges
  * @param {string} username - Twitch username
  * @param {string} channelName - Channel name
  * @param {object} tags - Twitch message tags
- * @returns {string} User role: 'streamer', 'moderator', 'vip', 'subscriber', or 'viewer'
+ * @returns {Array<string>} Array of user roles
  */
 function determineRoleFromTags(username, channelName, tags = {}) {
+  const roles = [];
+  
   // Check if user is the broadcaster/streamer
   if (tags.badges?.broadcaster || username.toLowerCase() === channelName.toLowerCase()) {
-    return 'streamer';
+    roles.push('streamer');
   }
 
   // Check if user is a moderator
   if (tags.mod || tags.badges?.moderator) {
-    return 'moderator';
+    roles.push('moderator');
   }
 
   // Check if user is a VIP
   if (tags.badges?.vip) {
-    return 'vip';
+    roles.push('vip');
   }
 
   // Check if user is a subscriber
   if (tags.subscriber || tags.badges?.subscriber || tags.badges?.founder) {
-    return 'subscriber';
+    roles.push('subscriber');
   }
 
-  // Default to viewer
-  return 'viewer';
+  // Check if user is a beta tester (cosmetic role)
+  if (isBetaTester(username)) {
+    roles.push('tester');
+  }
+
+  // If no roles found, default to viewer
+  if (roles.length === 0) {
+    roles.push('viewer');
+  }
+  
+  return roles;
 }
 
 /**

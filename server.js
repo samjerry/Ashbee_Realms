@@ -382,17 +382,25 @@ app.get('/api/player/roles', async (req, res) => {
   const displayName = user.displayName || user.display_name || 'Adventurer';
   
   try {
-    // Get user's role from database
-    let role = await db.getUserRole(user.id, channel);
+    // Load player data to get their roles array
+    const playerData = await db.loadPlayerProgress(user.id, channel);
+    let roles = playerData?.roles || ['viewer'];
     
-    // Check if this is MarrowOfAlbion (game creator) - detect BEFORE database
+    // Check if this is MarrowOfAlbion (game creator) - add creator role if not present
     if (displayName.toLowerCase() === 'marrowofalbion' || displayName.toLowerCase() === 'marrowofalb1on') {
-      role = 'creator';
+      if (!roles.includes('creator')) {
+        roles = ['creator', ...roles.filter(r => r !== 'viewer')];
+      }
     }
     
-    // Determine which roles the user has (for multi-role scenarios)
-    // In the future, this could be expanded to check multiple role badges
-    const roles = [role]; // For now, just the primary role
+    // Check if user is a beta tester - add tester role if not present
+    if (db.isBetaTester(displayName) && !roles.includes('tester')) {
+      roles = [...roles, 'tester'];
+    }
+    
+    // Get the highest priority role as primary
+    const roleHierarchy = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
+    const primaryRole = roleHierarchy.find(r => roles.includes(r)) || 'viewer';
     
     // Get available colors based on roles
     const roleColors = {
@@ -401,6 +409,7 @@ app.get('/api/player/roles', async (req, res) => {
       moderator: '#00FF00',  // Green
       vip: '#FF1493',        // Deep pink
       subscriber: '#6441A5', // Purple
+      tester: '#00FFFF',     // Cyan - beta testers
       viewer: '#FFFFFF'      // White
     };
     
@@ -411,7 +420,7 @@ app.get('/api/player/roles', async (req, res) => {
     }));
     
     res.json({ 
-      primaryRole: role,
+      primaryRole,
       roles,
       availableColors,
       displayName: displayName
@@ -631,16 +640,27 @@ app.post('/api/player/create', async (req, res) => {
     
     // Check if this is MarrowOfAlbion (game creator) and set creator role
     if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
-      character.role = 'creator';
+      character.roles = ['creator'];
+      character.nameColor = nameColor || '#FFD700'; // Default to gold for creator
       console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
+    } else {
+      // Check if user is a beta tester
+      if (db.isBetaTester(characterName)) {
+        character.roles = character.roles || ['viewer'];
+        if (!character.roles.includes('tester')) {
+          character.roles.push('tester');
+        }
+        character.nameColor = nameColor || '#00FFFF'; // Default to cyan for testers
+        console.log('🧪 Beta tester detected - granting tester role');
+      } else {
+        // Update name color if provided
+        if (nameColor) {
+          character.nameColor = nameColor;
+        }
+      }
     }
     
-    // Update name color if provided
-    if (nameColor) {
-      character.nameColor = nameColor;
-    }
-    
-    // Save character with role and color
+    // Save character with roles and color
     await db.saveCharacter(user.id, channelName, character);
     
     res.json({ 
@@ -651,6 +671,58 @@ app.post('/api/player/create', async (req, res) => {
   } catch (error) {
     console.error('Error creating character:', error);
     res.status(500).json({ error: error.message || 'Failed to create character' });
+  }
+});
+
+/**
+ * POST /api/player/name-color
+ * Update player's name color (must be from one of their available roles)
+ */
+app.post('/api/player/name-color', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { nameColor } = req.body;
+  if (!nameColor) {
+    return res.status(400).json({ error: 'nameColor required' });
+  }
+  
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channelName = CHANNELS[0] || 'default';
+  
+  try {
+    // Load player data
+    const playerData = await db.loadPlayerProgress(user.id, channelName);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    // Validate that the color matches one of their roles
+    const roleColors = {
+      creator: '#FFD700',
+      streamer: '#9146FF',
+      moderator: '#00FF00',
+      vip: '#FF1493',
+      subscriber: '#6441A5',
+      tester: '#00FFFF',
+      viewer: '#FFFFFF'
+    };
+    
+    const roles = playerData.roles || ['viewer'];
+    const validColors = roles.map(r => roleColors[r]);
+    
+    if (!validColors.includes(nameColor)) {
+      return res.status(400).json({ error: 'Color not available for your roles' });
+    }
+    
+    // Update name color
+    playerData.nameColor = nameColor;
+    await db.savePlayerProgress(user.id, channelName, playerData);
+    
+    res.json({ success: true, nameColor });
+  } catch (error) {
+    console.error('Error updating name color:', error);
+    res.status(500).json({ error: 'Failed to update name color' });
   }
 });
 

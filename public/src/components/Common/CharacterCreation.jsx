@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Code } from 'lucide-react';
+import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Code, Beaker } from 'lucide-react';
 
 export default function CharacterCreation({ onComplete }) {
   const [selectedClass, setSelectedClass] = useState(null);
@@ -34,35 +34,35 @@ export default function CharacterCreation({ onComplete }) {
     moderator: Shield,
     vip: Gem,
     subscriber: Star,
+    tester: Beaker,
     viewer: User
   };
 
-  // Get all role badges to display (excluding viewer if higher role exists)
+  // Get all role badges to display based on roles array
   const getRoleBadges = () => {
-    if (!userRoles || !userRoles.primaryRole) return [];
+    if (!userRoles || !userRoles.roles) return [];
     
-    const role = userRoles.primaryRole;
-    
-    // If creator, only show creator badge (highest authority)
-    if (role === 'creator') {
-      return [{ role: 'creator', Icon: Code, color: '#FFD700' }];
-    }
-    
-    // If streamer, only show streamer badge
-    if (role === 'streamer') {
-      return [{ role: 'streamer', Icon: Crown, color: '#9146FF' }];
-    }
-    
-    // Otherwise show all applicable badges (could be extended for multi-role)
+    const roles = userRoles.roles;
     const badges = [];
-    const roleHierarchy = {
+    
+    // Map each role to its badge
+    const roleConfig = {
+      creator: { Icon: Code, color: '#FFD700' },
+      streamer: { Icon: Crown, color: '#9146FF' },
       moderator: { Icon: Shield, color: '#00FF00' },
       vip: { Icon: Gem, color: '#FF1493' },
-      subscriber: { Icon: Star, color: '#6441A5' }
+      subscriber: { Icon: Star, color: '#6441A5' },
+      tester: { Icon: Beaker, color: '#00FFFF' },
+      viewer: { Icon: User, color: '#FFFFFF' }
     };
     
-    if (roleHierarchy[role]) {
-      badges.push({ role, ...roleHierarchy[role] });
+    // Add badges for all roles user has (except viewer if they have other roles)
+    const hasOtherRoles = roles.some(r => r !== 'viewer');
+    for (const role of roles) {
+      if (role === 'viewer' && hasOtherRoles) continue; // Skip viewer if they have higher roles
+      if (roleConfig[role]) {
+        badges.push({ role, ...roleConfig[role] });
+      }
     }
     
     return badges;

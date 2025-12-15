@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Volume2, Bell, Eye, Palette } from 'lucide-react';
+import { X, Volume2, Bell, Eye, Palette, Crown, Shield, Gem, Star, User, Code, Beaker } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const THEMES = [
@@ -82,6 +82,28 @@ const SettingsModal = () => {
     autoLoot: true,
     theme: 'crimson-knight',
   });
+  const [userRoles, setUserRoles] = useState(null);
+  const [selectedNameColor, setSelectedNameColor] = useState(null);
+
+  useEffect(() => {
+    // Fetch user's roles and current name color
+    fetch('/api/player/roles')
+      .then(res => res.json())
+      .then(data => {
+        setUserRoles(data);
+      })
+      .catch(err => console.error('Failed to fetch roles:', err));
+    
+    // Fetch player data to get current name color
+    fetch('/api/player')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.nameColor) {
+          setSelectedNameColor(data.nameColor);
+        }
+      })
+      .catch(err => console.error('Failed to fetch player data:', err));
+  }, []);
 
   useEffect(() => {
     // Load settings from localStorage
@@ -254,6 +276,65 @@ const SettingsModal = () => {
               </div>
             </div>
           </div>
+
+          {/* Name Color Settings - Only show if user has multiple roles */}
+          {userRoles && userRoles.roles && userRoles.roles.length > 1 && (
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <User size={24} className="text-primary-500" />
+                <h2 className="text-xl font-bold text-white">Name Color</h2>
+              </div>
+              
+              <div className="pl-8">
+                <p className="text-sm text-gray-400 mb-3">
+                  You have multiple roles! Choose which color to display for your name:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {userRoles.availableColors.map(({ role, color, name }) => {
+                    const roleIcons = {
+                      creator: Code,
+                      streamer: Crown,
+                      moderator: Shield,
+                      vip: Gem,
+                      subscriber: Star,
+                      tester: Beaker,
+                      viewer: User
+                    };
+                    const Icon = roleIcons[role] || User;
+                    
+                    return (
+                      <button
+                        key={role}
+                        onClick={async () => {
+                          setSelectedNameColor(color);
+                          // Save name color to server
+                          try {
+                            await fetch('/api/player/name-color', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ nameColor: color })
+                            });
+                          } catch (err) {
+                            console.error('Failed to save name color:', err);
+                          }
+                        }}
+                        className={`p-3 rounded-lg border-2 transition-all text-left ${
+                          selectedNameColor === color || (!selectedNameColor && userRoles.primaryRole === role)
+                            ? 'border-primary-500 bg-dark-800'
+                            : 'border-dark-700 bg-dark-900 hover:border-dark-600'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <Icon size={20} style={{ color }} />
+                          <span className="font-medium" style={{ color }}>{name}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
           
           {/* Gameplay Settings */}
           <div className="space-y-4">

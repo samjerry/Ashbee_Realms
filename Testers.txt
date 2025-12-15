@@ -1,0 +1,10 @@
+# Beta Testers for Ashbee Realms
+# Add Twitch usernames below (one per line)
+# Lines starting with # are comments and will be ignored
+#
+# Beta testers get the "Tester" role with cyan (#00FFFF) name color
+# This is a cosmetic role for appreciation - no extra permissions
+#
+# Example:
+# TestUser123
+# AnotherTester

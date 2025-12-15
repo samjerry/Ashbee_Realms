@@ -19,7 +19,7 @@ class OperatorManager {
       CREATOR: 3,      // MarrowOfAlbion - full access
       STREAMER: 2,     // Channel broadcaster - most commands
       MODERATOR: 1,    // Channel moderators - basic commands
-      NONE: 0          // Regular users
+      NONE: 0          // Regular users (including VIP, Subscriber, Tester - these are cosmetic roles only)
     };
 
     // Define which commands are available at each permission level
@@ -67,8 +67,11 @@ class OperatorManager {
    * Check if a user has operator permissions
    * @param {string} username - Twitch username
    * @param {string} channelName - Channel name
-   * @param {string} userRole - User's role from database ('viewer', 'vip', 'moderator', 'streamer', 'creator')
+   * @param {string} userRole - User's role from database ('viewer', 'vip', 'subscriber', 'tester', 'moderator', 'streamer', 'creator')
    * @returns {number} Permission level
+   * 
+   * NOTE: VIP, Subscriber, and Tester roles are COSMETIC ONLY and grant NO operator permissions.
+   * They may provide in-game bonuses (e.g., bonus XP, gold, items) but cannot execute operator commands.
    */
   getPermissionLevel(username, channelName, userRole = 'viewer') {
     // Creator role from database (MarrowOfAlbion or anyone granted creator)
@@ -88,6 +91,8 @@ class OperatorManager {
       case 'moderator':
         return this.PERMISSION_LEVELS.MODERATOR;
       case 'vip':
+      case 'subscriber':
+      case 'tester':
       case 'viewer':
       default:
         return this.PERMISSION_LEVELS.NONE;
