@@ -11,20 +11,37 @@ export default function CharacterCreation({ onComplete }) {
   const [userRoles, setUserRoles] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [displayName, setDisplayName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch user's Twitch roles and display name on mount
   useEffect(() => {
+    setIsLoading(true);
     fetch('/api/player/roles')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch roles');
+        return res.json();
+      })
       .then(data => {
+        console.log('Roles API response:', data); // Debug log
         setUserRoles(data);
         setDisplayName(data.displayName || 'Adventurer');
         // Set default color to primary role color
         if (data.availableColors && data.availableColors.length > 0) {
           setSelectedColor(data.availableColors[0].color);
+        } else {
+          // Fallback to white if no colors available
+          setSelectedColor('#FFFFFF');
         }
       })
-      .catch(err => console.error('Failed to fetch roles:', err));
+      .catch(err => {
+        console.error('Failed to fetch roles:', err);
+        // Set fallback values so character creation can still work
+        setDisplayName('Adventurer');
+        setSelectedColor('#FFFFFF');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   // Role badge icons mapping
@@ -146,6 +163,19 @@ export default function CharacterCreation({ onComplete }) {
     yellow: 'border-yellow-400 bg-yellow-800/40 ring-2 ring-yellow-400'
   };
 
+  // Show loading screen while fetching user data
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary-500 mb-4"></div>
+          <h2 className="text-2xl font-bold text-white mb-2">Loading Your Profile...</h2>
+          <p className="text-gray-400">Fetching your Twitch information</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 p-6 overflow-y-auto">
       <div className="max-w-6xl mx-auto">
@@ -204,10 +234,10 @@ export default function CharacterCreation({ onComplete }) {
         <div className="mb-8">
           <label className="block text-white font-semibold mb-2">Your Character</label>
           <div className="p-4 bg-gray-800 border border-gray-700 rounded-lg">
-            {displayName && selectedColor && (
+            {displayName ? (
               <div className="flex items-center gap-2">
                 <span className="text-gray-400 text-sm">Name:</span>
-                <span className="font-semibold flex items-center gap-1 text-xl" style={{ color: selectedColor }}>
+                <span className="font-semibold flex items-center gap-1 text-xl" style={{ color: selectedColor || '#FFFFFF' }}>
                   {getRoleBadges().map(({ Icon, color }) => (
                     <Icon key={color} size={20} style={{ color }} />
                   ))}
@@ -215,8 +245,7 @@ export default function CharacterCreation({ onComplete }) {
                   {displayName}
                 </span>
               </div>
-            )}
-            {!displayName && (
+            ) : (
               <div className="text-gray-400">Loading your Twitch information...</div>
             )}
           </div>
