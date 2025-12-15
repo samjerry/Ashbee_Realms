@@ -767,10 +767,6 @@ async function setUserRole(playerId, channelName, role) {
   );
 }
 
-  const result = await query(sql, params);
-  return result.rows;
-}
-
 /**
  * Determine user role from Twitch tags/badges
  * @param {string} username - Twitch username
