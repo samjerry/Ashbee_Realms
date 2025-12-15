@@ -44,6 +44,15 @@ async function initPostgres() {
     throw err;
   }
 
+  // Drop obsolete tables from old schema
+  console.log('🗑️ Cleaning up obsolete tables...');
+  await pool.query(`
+    DROP TABLE IF EXISTS permanent_stats CASCADE;
+    DROP TABLE IF EXISTS player_progress CASCADE;
+    DROP TABLE IF EXISTS user_roles CASCADE;
+  `);
+  console.log('✅ Obsolete tables removed');
+
   // Create tables
   console.log('📋 Creating/verifying database tables...');
   const tableStart = Date.now();
