@@ -427,12 +427,11 @@ app.get('/api/player/roles', async (req, res) => {
       availableColors,
       displayName: displayName
     });
-      displayName: displayName
-    });
   } catch (error) {
     console.error('Error fetching user roles:', error);
     res.status(500).json({ error: 'Failed to fetch roles' });
   }
+});
 });
 
 /**

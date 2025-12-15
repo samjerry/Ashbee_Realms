@@ -998,8 +998,10 @@ module.exports = {
   updateReputation,
   setUserRole,
   getUserRole,
+  updateUserRole,
   getChannelUsers,
   determineRoleFromTags,
+  isBetaTester,
   logOperatorAction,
   getOperatorAuditLog
 };
