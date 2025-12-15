@@ -45,6 +45,10 @@ class Character {
     this.consumableCooldowns = data.consumable_cooldowns || {};
     this.dialogueHistory = data.dialogue_history || {};
     
+    // User role and name color
+    this.role = data.role || 'viewer';
+    this.nameColor = data.nameColor || data.name_color || null;
+    
     // Faction reputation tracking
     // Initialize with empty object, FactionManager will handle proper initialization
     this.reputation = data.reputation || {};
@@ -479,7 +483,9 @@ class Character {
       skill_cd: this.skillCd,
       step: this.step,
       pending: this.pending,
-      is_player: true
+      is_player: true,
+      role: this.role,
+      nameColor: this.nameColor
     };
   }
 

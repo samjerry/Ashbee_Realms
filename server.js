@@ -5511,9 +5511,25 @@ app.get('/', (req, res) => {
 });
 
 // Adventure route - main game (requires auth)
-app.get('/adventure', (req, res) => {
+app.get('/adventure', async (req, res) => {
   if (!req.session.user) {
     return res.redirect('/');
+  }
+  
+  // Check if user has a character, redirect to character creation if not
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channel = CHANNELS[0] || 'default';
+  
+  try {
+    const character = await db.loadPlayerProgress(req.session.user.id, channel);
+    
+    // If no character exists and URL doesn't already have tutorial parameter, redirect with it
+    if (!character && req.query.tutorial !== 'true') {
+      return res.redirect('/adventure?tutorial=true');
+    }
+  } catch (error) {
+    console.error('Error checking character:', error);
+    // On error, let the frontend handle it
   }
   
   // Serve the appropriate index based on environment
