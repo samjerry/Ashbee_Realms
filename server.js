@@ -624,7 +624,7 @@ app.post('/api/player/create', async (req, res) => {
     const character = await db.createCharacter(user.id, channelName, characterName, classType);
     
     // Check if this is MarrowOfAlbion (game creator) and set creator role
-    if (characterName.toLowerCase() === 'marrowofalb ion' || characterName.toLowerCase() === 'marrowofalb1on') {
+    if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
       character.role = 'creator';
       console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
     }

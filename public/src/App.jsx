@@ -61,7 +61,6 @@ function App() {
         body: JSON.stringify({
           channel: channel,
           classType: characterData.class,
-          difficulty: characterData.difficulty,
           nameColor: characterData.nameColor
         }),
       });

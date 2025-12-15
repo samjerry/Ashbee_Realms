@@ -8,7 +8,6 @@ import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Co
 
 export default function CharacterCreation({ onComplete }) {
   const [selectedClass, setSelectedClass] = useState(null);
-  const [selectedDifficulty, setSelectedDifficulty] = useState('normal');
   const [userRoles, setUserRoles] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [displayName, setDisplayName] = useState('');
@@ -122,28 +121,10 @@ export default function CharacterCreation({ onComplete }) {
     }
   ];
 
-  const difficulties = [
-    {
-      id: 'normal',
-      name: 'Normal Mode',
-      description: 'Standard difficulty. Death loses 10% gold and 25% XP.',
-      recommended: true,
-      color: 'green'
-    },
-    {
-      id: 'hardcore',
-      name: 'Hardcore Mode',
-      description: '⚠️ Character is DELETED on death! Permanent progression unlocks persist.',
-      recommended: false,
-      color: 'red'
-    }
-  ];
-
   const handleComplete = () => {
     if (selectedClass) {
       onComplete({
         class: selectedClass,
-        difficulty: selectedDifficulty,
         nameColor: selectedColor
       });
     }
@@ -299,34 +280,8 @@ export default function CharacterCreation({ onComplete }) {
           </div>
         </div>
 
-        {/* Difficulty Selection */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-4">Choose Difficulty</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {difficulties.map((diff) => (
-              <button
-                key={diff.id}
-                onClick={() => setSelectedDifficulty(diff.id)}
-                className={`text-left p-4 rounded-lg border-2 transition-all ${
-                  selectedDifficulty === diff.id
-                    ? `border-${diff.color}-400 bg-${diff.color}-900/40 ring-2 ring-${diff.color}-400`
-                    : `border-gray-700 bg-gray-800 hover:border-${diff.color}-500`
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xl font-bold text-white">{diff.name}</h3>
-                  {diff.recommended && (
-                    <span className="px-2 py-1 bg-green-600 text-white text-xs rounded">
-                      Recommended
-                    </span>
-                  )}
-                </div>
-                <p className="text-gray-300 text-sm">{diff.description}</p>
-              </button>
-            ))}
-          </div>
-        </div>
-
+        {/* Difficulty is set by streamer, not individual players */}
+        
         {/* Create Button */}
         <div className="text-center">
           <button
