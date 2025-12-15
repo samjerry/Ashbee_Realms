@@ -161,6 +161,9 @@ async function initPostgres() {
         -- User role (channel-specific permissions)
         role TEXT NOT NULL DEFAULT 'viewer',
         
+        -- Selected name color (for users with multiple roles)
+        name_color TEXT DEFAULT NULL,
+        
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         
@@ -272,8 +275,9 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     total_xp_earned = 0,
     highest_level_reached = 1,
     total_crits = 0,
-    // Role
-    role = 'viewer'
+    // Role and name color
+    role = 'viewer',
+    nameColor = null
   } = playerData;
 
   await query(`
@@ -307,7 +311,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       unlocked_titles=$32, active_title=$33, stats=$34, dungeon_state=$35, completed_dungeons=$36,
       crafting_xp=$37, known_recipes=$38, season_progress=$39, seasonal_challenges_completed=$40,
       passive_levels=$41, souls=$42, legacy_points=$43, account_stats=$44, total_deaths=$45, total_kills=$46,
-      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, role=$51, updated_at=NOW()
+      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, role=$51, name_color=$52, updated_at=NOW()
   `, [
     playerId, name, location, level, xp, xp_to_next, max_hp, hp, gold,
     type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
@@ -321,7 +325,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     JSON.stringify(completed_dungeons),
     crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed),
     JSON.stringify(passive_levels), souls, legacy_points, JSON.stringify(account_stats), total_deaths, total_kills,
-    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, role
+    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, role, nameColor
   ]);
 }
 
@@ -393,8 +397,9 @@ async function loadPlayerProgress(playerId, channelName) {
     total_xp_earned: row.total_xp_earned || 0,
     highest_level_reached: row.highest_level_reached || 1,
     total_crits: row.total_crits || 0,
-    // Role
+    // Role and name color
     role: row.role || 'viewer',
+    nameColor: row.name_color || null,
     updated_at: row.updated_at
   };
 }
@@ -706,7 +711,7 @@ async function updateReputation(playerId, channelName, reputation) {
  * @param {string} role - User role: 'viewer', 'subscriber', 'vip', 'moderator', 'streamer'
  */
 async function updateUserRole(playerId, channelName, role) {
-  const validRoles = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer'];
+  const validRoles = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer', 'creator'];
   if (!validRoles.includes(role)) {
     throw new Error(`Invalid role: ${role}. Must be one of: ${validRoles.join(', ')}`);
   }

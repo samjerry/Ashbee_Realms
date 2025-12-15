@@ -27,7 +27,7 @@ if (!ENABLE_BOT) {
 async function updateUserRoleFromTags(username, channelName, tags) {
   try {
     // Determine role from tags
-    const role = db.determineRoleFromTags(username, channelName, tags);
+    const newRole = db.determineRoleFromTags(username, channelName, tags);
     
     // Get or create player ID
     const playerId = `twitch-${tags['user-id']}`;
@@ -38,8 +38,40 @@ async function updateUserRoleFromTags(username, channelName, tags) {
       [playerId, tags['user-id'], username]
     );
     
+    // Get previous role to check if it changed
+    const previousRole = await db.getUserRole(playerId, channelName);
+    
     // Update user role
-    await db.updateUserRole(playerId, channelName, role);
+    await db.updateUserRole(playerId, channelName, newRole);
+    
+    // If role changed and was downgraded, check if we need to reset nameColor
+    if (previousRole !== newRole) {
+      const roleHierarchy = ['viewer', 'subscriber', 'vip', 'moderator', 'streamer', 'creator'];
+      const previousLevel = roleHierarchy.indexOf(previousRole);
+      const newLevel = roleHierarchy.indexOf(newRole);
+      
+      // Role was downgraded - check if nameColor needs to be reset
+      if (newLevel < previousLevel) {
+        const playerData = await db.loadPlayerProgress(playerId, channelName);
+        if (playerData && playerData.nameColor) {
+          const roleColors = {
+            creator: '#FFD700',
+            streamer: '#9146FF',
+            moderator: '#00FF00',
+            vip: '#FF1493',
+            subscriber: '#6441A5',
+            viewer: '#FFFFFF'
+          };
+          
+          // If the current nameColor matches the old role's color, reset it to viewer color
+          if (playerData.nameColor === roleColors[previousRole]) {
+            playerData.nameColor = roleColors.viewer;
+            await db.savePlayerProgress(playerId, channelName, playerData);
+            console.log(`🎨 Reset ${username}'s name color to viewer (role: ${previousRole} → ${newRole})`);
+          }
+        }
+      }
+    }
   } catch (error) {
     console.error('Error updating user role:', error);
     // Don't throw - this shouldn't block the bot

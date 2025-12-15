@@ -67,12 +67,17 @@ class OperatorManager {
    * Check if a user has operator permissions
    * @param {string} username - Twitch username
    * @param {string} channelName - Channel name
-   * @param {string} userRole - User's role from database ('viewer', 'vip', 'moderator', 'streamer')
+   * @param {string} userRole - User's role from database ('viewer', 'vip', 'moderator', 'streamer', 'creator')
    * @returns {number} Permission level
    */
   getPermissionLevel(username, channelName, userRole = 'viewer') {
-    // Creator always has full access
-    if (username.toLowerCase() === 'marrowofalibion') {
+    // Creator role from database (MarrowOfAlbion or anyone granted creator)
+    if (userRole.toLowerCase() === 'creator') {
+      return this.PERMISSION_LEVELS.CREATOR;
+    }
+    
+    // Creator always has full access (fallback username check)
+    if (username.toLowerCase() === 'marrowofalbion') {
       return this.PERMISSION_LEVELS.CREATOR;
     }
 

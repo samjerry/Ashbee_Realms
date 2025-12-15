@@ -3,13 +3,71 @@
  * Interactive character creation flow for new players
  */
 
-import React, { useState } from 'react';
-import { Sword, Shield, Sparkles, Wind, Heart } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Code } from 'lucide-react';
 
 export default function CharacterCreation({ onComplete }) {
   const [selectedClass, setSelectedClass] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState('normal');
-  const [characterName, setCharacterName] = useState('');
+  const [userRoles, setUserRoles] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [displayName, setDisplayName] = useState('');
+
+  // Fetch user's Twitch roles and display name on mount
+  useEffect(() => {
+    fetch('/api/player/roles')
+      .then(res => res.json())
+      .then(data => {
+        setUserRoles(data);
+        setDisplayName(data.displayName || 'Adventurer');
+        // Set default color to primary role color
+        if (data.availableColors && data.availableColors.length > 0) {
+          setSelectedColor(data.availableColors[0].color);
+        }
+      })
+      .catch(err => console.error('Failed to fetch roles:', err));
+  }, []);
+
+  // Role badge icons mapping
+  const roleIcons = {
+    creator: Code,
+    streamer: Crown,
+    moderator: Shield,
+    vip: Gem,
+    subscriber: Star,
+    viewer: User
+  };
+
+  // Get all role badges to display (excluding viewer if higher role exists)
+  const getRoleBadges = () => {
+    if (!userRoles || !userRoles.primaryRole) return [];
+    
+    const role = userRoles.primaryRole;
+    
+    // If creator, only show creator badge (highest authority)
+    if (role === 'creator') {
+      return [{ role: 'creator', Icon: Code, color: '#FFD700' }];
+    }
+    
+    // If streamer, only show streamer badge
+    if (role === 'streamer') {
+      return [{ role: 'streamer', Icon: Crown, color: '#9146FF' }];
+    }
+    
+    // Otherwise show all applicable badges (could be extended for multi-role)
+    const badges = [];
+    const roleHierarchy = {
+      moderator: { Icon: Shield, color: '#00FF00' },
+      vip: { Icon: Gem, color: '#FF1493' },
+      subscriber: { Icon: Star, color: '#6441A5' }
+    };
+    
+    if (roleHierarchy[role]) {
+      badges.push({ role, ...roleHierarchy[role] });
+    }
+    
+    return badges;
+  };
 
   const classes = [
     {
@@ -82,11 +140,11 @@ export default function CharacterCreation({ onComplete }) {
   ];
 
   const handleComplete = () => {
-    if (selectedClass && characterName.trim()) {
+    if (selectedClass) {
       onComplete({
         class: selectedClass,
         difficulty: selectedDifficulty,
-        name: characterName.trim()
+        nameColor: selectedColor
       });
     }
   };
@@ -116,17 +174,71 @@ export default function CharacterCreation({ onComplete }) {
           <p className="text-gray-400">Choose your class and begin your journey in Ashbee Realms</p>
         </div>
 
-        {/* Character Name */}
+        {/* Role Display */}
+        {userRoles && (
+          <div className="mb-8 p-4 bg-gray-800 border border-gray-700 rounded-lg">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <span className="text-gray-400 font-semibold">Your Status:</span>
+                <div className="flex items-center gap-2">
+                  {getRoleBadges().map(({ role, Icon, color }) => (
+                    <div key={role} className="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded" title={role}>
+                      <Icon size={16} style={{ color }} />
+                      <span className="text-sm capitalize" style={{ color }}>{role}</span>
+                    </div>
+                  ))}
+                  {getRoleBadges().length === 0 && (
+                    <div className="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded">
+                      <User size={16} className="text-gray-400" />
+                      <span className="text-sm text-gray-400">Viewer</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Color selection for users with multiple role colors */}
+              {userRoles.availableColors && userRoles.availableColors.length > 1 && (
+                <div className="flex items-center gap-3">
+                  <span className="text-gray-400 text-sm">Name Color:</span>
+                  <div className="flex gap-2">
+                    {userRoles.availableColors.map(({ role, color, name }) => (
+                      <button
+                        key={role}
+                        onClick={() => setSelectedColor(color)}
+                        className={`w-8 h-8 rounded border-2 transition-all ${
+                          selectedColor === color ? 'border-white scale-110' : 'border-gray-600'
+                        }`}
+                        style={{ backgroundColor: color }}
+                        title={`${name} color`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Character Name Preview */}
         <div className="mb-8">
-          <label className="block text-white font-semibold mb-2">Character Name</label>
-          <input
-            type="text"
-            value={characterName}
-            onChange={(e) => setCharacterName(e.target.value)}
-            placeholder="Enter your character name..."
-            maxLength={20}
-            className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
-          />
+          <label className="block text-white font-semibold mb-2">Your Character</label>
+          <div className="p-4 bg-gray-800 border border-gray-700 rounded-lg">
+            {displayName && selectedColor && (
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400 text-sm">Name:</span>
+                <span className="font-semibold flex items-center gap-1 text-xl" style={{ color: selectedColor }}>
+                  {getRoleBadges().map(({ Icon, color }) => (
+                    <Icon key={color} size={20} style={{ color }} />
+                  ))}
+                  {getRoleBadges().length === 0 && <User size={20} className="text-gray-400" />}
+                  {displayName}
+                </span>
+              </div>
+            )}
+            {!displayName && (
+              <div className="text-gray-400">Loading your Twitch information...</div>
+            )}
+          </div>
         </div>
 
         {/* Class Selection */}
@@ -219,9 +331,9 @@ export default function CharacterCreation({ onComplete }) {
         <div className="text-center">
           <button
             onClick={handleComplete}
-            disabled={!selectedClass || !characterName.trim()}
+            disabled={!selectedClass}
             className={`px-8 py-4 rounded-lg text-lg font-bold transition-all ${
-              selectedClass && characterName.trim()
+              selectedClass
                 ? 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'
                 : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
@@ -229,9 +341,9 @@ export default function CharacterCreation({ onComplete }) {
             Begin Your Adventure
           </button>
           
-          {(!selectedClass || !characterName.trim()) && (
+          {!selectedClass && (
             <p className="text-red-400 text-sm mt-2">
-              Please enter a name and select a class to continue
+              Please select a class to continue
             </p>
           )}
         </div>

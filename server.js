@@ -184,7 +184,29 @@ app.get('/auth/twitch/callback', async (req, res) => {
 
     req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
     console.log('✅ User logged in:', playerId);
-    res.redirect('/adventure');
+    
+    // Get the channel from CHANNELS env (use first channel for now)
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    const channel = CHANNELS[0] || 'default';
+    
+    // Check if player has a character in this channel
+    try {
+      const existingCharacter = await db.loadPlayerProgress(playerId, channel);
+      
+      if (!existingCharacter) {
+        // No character exists - redirect to tutorial/character creation
+        console.log(`📝 New player ${user.display_name} - redirecting to character creation`);
+        return res.redirect('/adventure?tutorial=true');
+      } else {
+        // Character exists - redirect to main game
+        console.log(`🎮 Existing player ${user.display_name} - redirecting to game`);
+        return res.redirect('/adventure');
+      }
+    } catch (err) {
+      console.error('Error checking character:', err);
+      // On error, redirect to character creation to be safe
+      return res.redirect('/adventure?tutorial=true');
+    }
   }catch(err){
     console.error('❌ OAuth callback error:', err.response?.data || err.message);
     console.error('Full error:', err);
@@ -334,6 +356,63 @@ app.get('/api/classes/:classType/preview', (req, res) => {
   } catch (error) {
     console.error('Error generating class preview:', error);
     res.status(500).json({ error: 'Failed to generate preview' });
+  }
+});
+
+/**
+ * GET /api/player/channel
+ * Get the default channel for character creation
+ */
+app.get('/api/player/channel', (req, res) => {
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channel = CHANNELS[0] || 'default';
+  res.json({ channel });
+});
+
+/**
+ * GET /api/player/roles
+ * Get user's Twitch roles for display and color selection
+ */
+app.get('/api/player/roles', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channel = CHANNELS[0] || 'default';
+  
+  try {
+    // Get user's role from database
+    const role = await db.getUserRole(user.id, channel);
+    
+    // Determine which roles the user has (for multi-role scenarios)
+    // In the future, this could be expanded to check multiple role badges
+    const roles = [role]; // For now, just the primary role
+    
+    // Get available colors based on roles
+    const roleColors = {
+      creator: '#FFD700',    // Gold - game creator/developer
+      streamer: '#9146FF',   // Twitch purple
+      moderator: '#00FF00',  // Green
+      vip: '#FF1493',        // Deep pink
+      subscriber: '#6441A5', // Purple
+      viewer: '#FFFFFF'      // White
+    };
+    
+    const availableColors = roles.map(r => ({
+      role: r,
+      color: roleColors[r] || roleColors.viewer,
+      name: r.charAt(0).toUpperCase() + r.slice(1)
+    }));
+    
+    res.json({ 
+      primaryRole: role,
+      roles,
+      availableColors,
+      displayName: user.displayName || user.display_name || 'Adventurer'
+    });
+  } catch (error) {
+    console.error('Error fetching user roles:', error);
+    res.status(500).json({ error: 'Failed to fetch roles' });
   }
 });
 
@@ -526,13 +605,13 @@ app.post('/api/player/create', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
   
-  const { channel, classType, name } = req.body;
+  const { channel, classType, nameColor } = req.body;
   if (!channel || !classType) {
     return res.status(400).json({ error: 'Channel and classType required' });
   }
   
   const channelName = channel.toLowerCase();
-  const characterName = name || user.displayName;
+  const characterName = user.displayName || user.display_name || 'Adventurer';
   
   try {
     // Check if character already exists
@@ -543,6 +622,20 @@ app.post('/api/player/create', async (req, res) => {
     
     // Create new character
     const character = await db.createCharacter(user.id, channelName, characterName, classType);
+    
+    // Check if this is MarrowOfAlbion (game creator) and set creator role
+    if (characterName.toLowerCase() === 'marrowofalb ion' || characterName.toLowerCase() === 'marrowofalb1on') {
+      character.role = 'creator';
+      console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
+    }
+    
+    // Update name color if provided
+    if (nameColor) {
+      character.nameColor = nameColor;
+    }
+    
+    // Save character with role and color
+    await db.saveCharacter(user.id, channelName, character);
     
     res.json({ 
       success: true, 
