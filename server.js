@@ -217,9 +217,18 @@ app.get('/auth/twitch', (req, res) => {
   const state = Math.random().toString(36).slice(2);
   // store state in session to verify later
   req.session.oauthState = state;
-  const scope = encodeURIComponent('user:read:email');
-  const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
-  res.redirect(url);
+  
+  // Save session before redirect to ensure state is persisted
+  req.session.save((err) => {
+    if (err) {
+      console.error('❌ Session save error:', err);
+      return res.status(500).send('Session error');
+    }
+    
+    const scope = encodeURIComponent('user:read:email');
+    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
+    res.redirect(url);
+  });
 });
 
 app.get('/auth/twitch/callback', async (req, res) => {
@@ -316,10 +325,21 @@ app.get('/auth/broadcaster', (req, res) => {
   const state = Math.random().toString(36).slice(2);
   req.session.broadcasterOauthState = state;
   
-  const scope = encodeURIComponent(scopes.join(' '));
-  const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(BROADCASTER_REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
+  console.log('🔐 Broadcaster OAuth initiated:', { targetChannel, state, sessionID: req.sessionID });
   
-  res.redirect(url);
+  // Save session before redirect to ensure state is persisted
+  req.session.save((err) => {
+    if (err) {
+      console.error('❌ Session save error:', err);
+      return res.status(500).send('Session error');
+    }
+    
+    const scope = encodeURIComponent(scopes.join(' '));
+    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(BROADCASTER_REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
+    
+    console.log('✅ Session saved, redirecting to Twitch');
+    res.redirect(url);
+  });
 });
 
 app.get('/auth/broadcaster/callback', 
@@ -327,9 +347,22 @@ app.get('/auth/broadcaster/callback',
   async (req, res) => {
   const { code, state } = req.query;
   
+  console.log('📥 OAuth callback received:', { 
+    hasCode: !!code, 
+    hasState: !!state, 
+    sessionState: req.session.broadcasterOauthState,
+    sessionID: req.sessionID 
+  });
+  
   if (!code || !state || state !== req.session.broadcasterOauthState) {
-    console.error('Broadcaster OAuth validation failed');
-    return res.status(400).send('Invalid OAuth callback');
+    console.error('❌ OAuth validation failed:', { 
+      code: !!code, 
+      state: !!state, 
+      match: state === req.session.broadcasterOauthState,
+      receivedState: state,
+      sessionState: req.session.broadcasterOauthState
+    });
+    return res.status(400).send('Invalid OAuth callback - session expired or state mismatch. Please try again.');
   }
   
   try {
