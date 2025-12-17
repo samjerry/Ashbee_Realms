@@ -1111,6 +1111,19 @@ async function handleCombatEnd(session, result) {
       character.inventory.addItem(item.id, item.quantity || 1);
     }
 
+    // Update bestiary - record defeat
+    if (result.bestiaryUpdate && result.bestiaryUpdate.monsterId) {
+      const BestiaryManager = require('./utils/bestiaryManager');
+      const currentBestiary = character.bestiary || {};
+      const updatedBestiary = BestiaryManager.recordDefeat(currentBestiary, result.bestiaryUpdate.monsterId);
+      character.bestiary = updatedBestiary;
+      
+      // Unlock bestiary if this is first entry
+      if (!character.bestiary_unlocked && BestiaryManager.shouldUnlockBestiary(updatedBestiary)) {
+        character.bestiary_unlocked = true;
+      }
+    }
+
     // Save updated character
     const playerData = character.toObject();
     await db.savePlayerProgress(playerId, channelName, playerData);
@@ -1138,6 +1151,169 @@ async function handleCombatEnd(session, result) {
     });
   });
 }
+
+// ==================== BESTIARY ENDPOINTS ====================
+
+/**
+ * GET /api/bestiary
+ * Get player's bestiary data
+ */
+app.get('/api/bestiary', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const playerId = user.id;
+    const channelName = req.session.channelName;
+    if (!channelName) {
+      return res.status(400).json({ error: 'No channel selected' });
+    }
+
+    const playerData = await db.getPlayerProgress(playerId, channelName);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const BestiaryManager = require('./utils/bestiaryManager');
+    const bestiaryData = playerData.bestiary || {};
+    const entries = BestiaryManager.getBestiaryEntries(bestiaryData);
+    const stats = BestiaryManager.getBestiaryStats(bestiaryData);
+
+    res.json({
+      unlocked: playerData.bestiary_unlocked || false,
+      entries: entries,
+      stats: stats
+    });
+
+  } catch (error) {
+    console.error('Bestiary get error:', error);
+    res.status(500).json({ error: 'Failed to get bestiary', details: error.message });
+  }
+});
+
+/**
+ * POST /api/bestiary/encounter
+ * Record a monster encounter
+ */
+app.post('/api/bestiary/encounter', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const { monsterId } = req.body;
+    if (!monsterId) {
+      return res.status(400).json({ error: 'Monster ID required' });
+    }
+
+    const playerId = user.id;
+    const channelName = req.session.channelName;
+    if (!channelName) {
+      return res.status(400).json({ error: 'No channel selected' });
+    }
+
+    const playerData = await db.getPlayerProgress(playerId, channelName);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const BestiaryManager = require('./utils/bestiaryManager');
+    const currentBestiary = playerData.bestiary || {};
+    const updatedBestiary = BestiaryManager.recordEncounter(currentBestiary, monsterId);
+    
+    // Check if bestiary should be unlocked
+    const shouldUnlock = BestiaryManager.shouldUnlockBestiary(updatedBestiary);
+
+    // Update player data
+    await db.updatePlayerField(playerId, channelName, 'bestiary', updatedBestiary);
+    if (shouldUnlock && !playerData.bestiary_unlocked) {
+      await db.updatePlayerField(playerId, channelName, 'bestiary_unlocked', true);
+    }
+
+    res.json({
+      success: true,
+      unlocked: shouldUnlock,
+      entry: updatedBestiary[monsterId]
+    });
+
+  } catch (error) {
+    console.error('Bestiary encounter error:', error);
+    res.status(500).json({ error: 'Failed to record encounter', details: error.message });
+  }
+});
+
+/**
+ * POST /api/bestiary/defeat
+ * Record a monster defeat
+ */
+app.post('/api/bestiary/defeat', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const { monsterId } = req.body;
+    if (!monsterId) {
+      return res.status(400).json({ error: 'Monster ID required' });
+    }
+
+    const playerId = user.id;
+    const channelName = req.session.channelName;
+    if (!channelName) {
+      return res.status(400).json({ error: 'No channel selected' });
+    }
+
+    const playerData = await db.getPlayerProgress(playerId, channelName);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const BestiaryManager = require('./utils/bestiaryManager');
+    const currentBestiary = playerData.bestiary || {};
+    const updatedBestiary = BestiaryManager.recordDefeat(currentBestiary, monsterId);
+
+    // Update player data
+    await db.updatePlayerField(playerId, channelName, 'bestiary', updatedBestiary);
+
+    res.json({
+      success: true,
+      entry: updatedBestiary[monsterId]
+    });
+
+  } catch (error) {
+    console.error('Bestiary defeat error:', error);
+    res.status(500).json({ error: 'Failed to record defeat', details: error.message });
+  }
+});
+
+/**
+ * GET /api/bestiary/unlock-status
+ * Check if bestiary is unlocked for player
+ */
+app.get('/api/bestiary/unlock-status', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const playerId = user.id;
+    const channelName = req.session.channelName;
+    if (!channelName) {
+      return res.status(400).json({ error: 'No channel selected' });
+    }
+
+    const playerData = await db.getPlayerProgress(playerId, channelName);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    res.json({
+      unlocked: playerData.bestiary_unlocked || false,
+      entryCount: Object.keys(playerData.bestiary || {}).length
+    });
+
+  } catch (error) {
+    console.error('Bestiary unlock status error:', error);
+    res.status(500).json({ error: 'Failed to get unlock status', details: error.message });
+  }
+});
 
 // ==================== PROGRESSION ENDPOINTS ====================
 

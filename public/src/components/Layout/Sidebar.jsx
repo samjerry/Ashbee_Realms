@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Backpack, Scroll, Map, Trophy, Settings, X } from 'lucide-react';
+import { User, Backpack, Scroll, Map, Trophy, Settings, X, Book } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const Sidebar = () => {
@@ -10,6 +10,7 @@ const Sidebar = () => {
     { id: 'inventory', icon: Backpack, label: 'Inventory' },
     { id: 'quests', icon: Scroll, label: 'Quests' },
     { id: 'map', icon: Map, label: 'Map' },
+    { id: 'bestiary', icon: Book, label: 'Bestiary' },
     { id: 'achievements', icon: Trophy, label: 'Achievements' },
   ];
 

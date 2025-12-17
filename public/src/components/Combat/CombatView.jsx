@@ -1,29 +1,56 @@
 import React, { useState } from 'react';
-import { Sword, Shield, Zap, FlaskConical, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
+import MonsterDisplay from './MonsterDisplay';
+import ActionMenu from './ActionMenu';
+import FightSubmenu from './FightSubmenu';
+import ItemsMenu from './ItemsMenu';
 
 const CombatView = () => {
-  const { combat, combatLog, player, performCombatAction, endCombat } = useGameStore();
-  const [selectedAction, setSelectedAction] = useState(null);
+  const { combat, combatLog, player, performCombatAction, endCombat, combatMenuState, setCombatMenuState } = useGameStore();
+  const [isProcessing, setIsProcessing] = useState(false);
   
   if (!combat || !player) return null;
   
   const { monster, playerHp } = combat;
   const safeCombatLog = combatLog || [];
   const playerHpPercent = (playerHp / (player.maxHp || 100)) * 100;
-  const monsterHpPercent = ((monster.hp || 0) / (monster.maxHp || 1)) * 100;
-  
-  const actions = [
-    { id: 'attack', icon: Sword, label: 'Attack', color: 'bg-red-600 hover:bg-red-700' },
-    { id: 'defend', icon: Shield, label: 'Defend', color: 'bg-blue-600 hover:bg-blue-700' },
-    { id: 'ability', icon: Zap, label: 'Ability', color: 'bg-purple-600 hover:bg-purple-700' },
-    { id: 'item', icon: FlaskConical, label: 'Item', color: 'bg-green-600 hover:bg-green-700' },
-  ];
-  
-  const handleAction = async (actionId) => {
-    setSelectedAction(actionId);
+
+  // Get HP bar color based on percentage
+  const getHpBarColor = (percent) => {
+    if (percent > 60) return 'bg-green-500';
+    if (percent > 30) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
+
+  const handleMenuAction = async (actionId) => {
+    if (actionId === 'fight') {
+      setCombatMenuState('fight');
+    } else if (actionId === 'items') {
+      setCombatMenuState('items');
+    } else if (actionId === 'run') {
+      setIsProcessing(true);
+      await performCombatAction('run');
+      setIsProcessing(false);
+    }
+  };
+
+  const handleFightAction = async (actionId) => {
+    setIsProcessing(true);
     await performCombatAction(actionId);
-    setTimeout(() => setSelectedAction(null), 500);
+    setCombatMenuState('main');
+    setIsProcessing(false);
+  };
+
+  const handleUseItem = async (itemId) => {
+    setIsProcessing(true);
+    await performCombatAction({ type: 'item', itemId });
+    setCombatMenuState('main');
+    setIsProcessing(false);
+  };
+
+  const handleBack = () => {
+    setCombatMenuState('main');
   };
 
   return (
@@ -37,14 +64,14 @@ const CombatView = () => {
           <X size={20} className="sm:w-6 sm:h-6" />
         </button>
         
-        <div className="card p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
+        <div className="bg-dark-900 rounded-lg border border-dark-700 p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
           {/* Combat Title */}
           <div className="text-center">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">Combat</h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-400">vs {monster.name}</p>
           </div>
           
-          {/* Combatants */}
+          {/* Top Section: Monster and Player */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
             {/* Player */}
             <div className="space-y-3 sm:space-y-4">
@@ -56,73 +83,43 @@ const CombatView = () => {
                 <p className="text-sm sm:text-base text-gray-400">{player.class} • Level {player.level}</p>
               </div>
               
-              <div className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700">
+              <div className="bg-dark-800 rounded-lg p-3 sm:p-4 border border-dark-700">
                 <div className="flex justify-between text-xs sm:text-sm text-gray-400 mb-2">
                   <span>HP</span>
                   <span>{playerHp} / {player.maxHp}</span>
                 </div>
-                <div className="hp-bar h-6 sm:h-8">
+                <div className="h-6 sm:h-8 bg-dark-900 rounded-full overflow-hidden border border-dark-700">
                   <div 
-                    className={`hp-fill ${selectedAction ? 'combat-hit' : ''}`}
+                    className={`h-full transition-all duration-500 ${getHpBarColor(playerHpPercent)}`}
                     style={{ width: `${playerHpPercent}%` }}
                   />
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
-                <div className="bg-dark-900 rounded p-2 border border-dark-700">
+                <div className="bg-dark-800 rounded p-2 border border-dark-700">
                   <p className="text-gray-400">Attack</p>
-                  <p className="text-white font-bold">{player.stats.attack}</p>
+                  <p className="text-white font-bold">{player.stats?.attack || 10}</p>
                 </div>
-                <div className="bg-dark-900 rounded p-2 border border-dark-700">
+                <div className="bg-dark-800 rounded p-2 border border-dark-700">
                   <p className="text-gray-400">Defense</p>
-                  <p className="text-white font-bold">{player.stats.defense}</p>
+                  <p className="text-white font-bold">{player.stats?.defense || 5}</p>
                 </div>
               </div>
             </div>
             
             {/* Monster */}
-            <div className="space-y-3 sm:space-y-4">
-              <div className="text-center">
-                <div className="text-5xl sm:text-6xl md:text-8xl mb-3 sm:mb-4">{monster.icon || '👹'}</div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white">{monster.name}</h3>
-                <p className="text-sm sm:text-base text-gray-400">Level {monster.level}</p>
-              </div>
-              
-              <div className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700">
-                <div className="flex justify-between text-xs sm:text-sm text-gray-400 mb-2">
-                  <span>HP</span>
-                  <span>{monster.hp} / {monster.maxHp}</span>
-                </div>
-                <div className="hp-bar h-6 sm:h-8">
-                  <div 
-                    className="hp-fill"
-                    style={{ width: `${monsterHpPercent}%` }}
-                  />
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
-                <div className="bg-dark-900 rounded p-2 border border-dark-700">
-                  <p className="text-gray-400">Attack</p>
-                  <p className="text-white font-bold">{monster.attack}</p>
-                </div>
-                <div className="bg-dark-900 rounded p-2 border border-dark-700">
-                  <p className="text-gray-400">Defense</p>
-                  <p className="text-white font-bold">{monster.defense}</p>
-                </div>
-              </div>
-            </div>
+            <MonsterDisplay monster={monster} />
           </div>
           
-          {/* Combat Log */}
-          <div className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700 h-32 sm:h-40 md:h-48 overflow-y-auto">
+          {/* Middle Section: Combat Log */}
+          <div className="bg-dark-800 rounded-lg p-3 sm:p-4 border border-dark-700 h-32 sm:h-40 md:h-48 overflow-y-auto">
             <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3">Combat Log</h3>
-            {combatLog.length === 0 ? (
-              <p className="text-gray-500 text-center py-4 sm:py-8 text-sm sm:text-base">Waiting for action...</p>
+            {safeCombatLog.length === 0 ? (
+              <p className="text-gray-500 text-center py-4 sm:py-8 text-sm sm:text-base">Choose your action...</p>
             ) : (
               <div className="space-y-1 sm:space-y-2">
-                {combatLog.map((log, index) => (
+                {safeCombatLog.map((log, index) => (
                   <p key={index} className="text-gray-300 text-xs sm:text-sm">
                     <span className="text-gray-500">[{new Date(log.timestamp).toLocaleTimeString()}]</span> {log.message}
                   </p>
@@ -131,36 +128,27 @@ const CombatView = () => {
             )}
           </div>
           
-          {/* Actions */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-            {actions.map(action => {
-              const Icon = action.icon;
-              const buttonClasses = [
-                action.color,
-                'text-white',
-                'p-4 sm:p-5 md:p-6',
-                'rounded-lg',
-                'transition-all',
-                'hover:scale-105',
-                'active:scale-95',
-                'disabled:opacity-50',
-                'disabled:cursor-not-allowed',
-                '[touch-action:manipulation]',
-                'min-h-[60px] sm:min-h-0'
-              ].join(' ');
-              
-              return (
-                <button
-                  key={action.id}
-                  onClick={() => handleAction(action.id)}
-                  disabled={selectedAction !== null}
-                  className={buttonClasses}
-                >
-                  <Icon size={24} className="sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-1 sm:mb-2" />
-                  <p className="font-bold text-xs sm:text-sm md:text-base">{action.label}</p>
-                </button>
-              );
-            })}
+          {/* Bottom Section: Action Menu */}
+          <div>
+            <ActionMenu 
+              state={combatMenuState} 
+              onAction={handleMenuAction}
+              disabled={isProcessing}
+            />
+            <FightSubmenu 
+              state={combatMenuState}
+              onAction={handleFightAction}
+              onBack={handleBack}
+              player={player}
+              disabled={isProcessing}
+            />
+            <ItemsMenu 
+              state={combatMenuState}
+              onUseItem={handleUseItem}
+              onBack={handleBack}
+              inventory={player.inventory}
+              disabled={isProcessing}
+            />
           </div>
         </div>
       </div>

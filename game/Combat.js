@@ -1,6 +1,7 @@
 const { loadData } = require('../data/data_loader');
 const StatusEffectManager = require('./StatusEffectManager');
 const LootGenerator = require('./LootGenerator');
+const BestiaryManager = require('../utils/bestiaryManager');
 
 /**
  * Combat System - Turn-based combat with speed-based turn order
@@ -204,23 +205,83 @@ class Combat {
       return { success: false, message: 'Combat is not active' };
     }
 
+    // Check if this is a boss fight (cannot flee)
+    if (this.monster.is_boss || this.monster.rarity === 'legendary') {
+      this.addLog(`Cannot flee from ${this.monster.name}! You must fight!`);
+      return {
+        success: false,
+        message: 'Cannot flee from boss fights!',
+        log: this.combatLog
+      };
+    }
+
+    // Calculate escape chance
     const playerStats = this.character.getFinalStats();
-    const fleeChance = Math.min(0.5 + (playerStats.agility / 100), 0.85);
+    const monsterAgility = this.monster.agility || this.monster.speed || 10;
+    
+    // Base 40% chance
+    let fleeChance = 0.4;
+    
+    // +2% per point of agility difference (capped at +/-20% for balance)
+    const agilityDiff = Math.max(-10, Math.min(10, (playerStats.agility || 10) - monsterAgility));
+    fleeChance += (agilityDiff * 0.02);
+    
+    // -10% if player HP < 30%
+    const hpPercent = (this.character.current_hp / this.character.max_hp) * 100;
+    if (hpPercent < 30) {
+      fleeChance -= 0.1;
+    }
+    
+    // Final cap between 10% and 90%
+    fleeChance = Math.max(0.1, Math.min(0.9, fleeChance));
+    
     const roll = Math.random();
+    this.addLog(`${this.character.name} attempts to flee! (${Math.round(fleeChance * 100)}% chance)`);
 
     if (roll < fleeChance) {
       this.state = Combat.STATES.FLED;
       this.addLog(`${this.character.name} successfully fled from combat!`);
+      
+      // Small XP penalty for fleeing
+      const xpPenalty = Math.floor(this.character.xp * 0.05);
+      if (xpPenalty > 0) {
+        this.character.xp = Math.max(0, this.character.xp - xpPenalty);
+        this.addLog(`Lost ${xpPenalty} XP for fleeing.`);
+      }
+      
       return {
         success: true,
         state: this.state,
+        fled: true,
         message: 'You escaped!',
+        xp_penalty: xpPenalty,
         log: this.combatLog
       };
     } else {
-      this.addLog(`${this.character.name} failed to flee!`);
-      this.endTurn();
-      return this.monsterTurn();
+      this.addLog(`${this.character.name} failed to flee! The monster gets a free attack!`);
+      
+      // Monster gets a free turn to attack
+      const damage = this.calculateDamage(
+        this.monster.attack || 10,
+        playerStats.defense,
+        'monster'
+      );
+      
+      this.character.takeDamage(damage.total);
+      this.addLog(`${this.monster.name} attacks for ${damage.total} damage!${damage.critical ? ' CRITICAL HIT!' : ''}`);
+      
+      // Check for defeat
+      if (this.character.current_hp <= 0) {
+        return this.handleDefeat();
+      }
+      
+      // Return to player's turn
+      return {
+        success: false,
+        message: 'Failed to escape!',
+        log: this.combatLog,
+        state: this.state
+      };
     }
   }
 
@@ -569,7 +630,11 @@ class Combat {
         items: loot.items,
         leveledUp: leveledUp
       },
-      log: this.combatLog
+      log: this.combatLog,
+      bestiaryUpdate: {
+        monsterId: this.monster.id,
+        defeated: true
+      }
     };
   }
 
@@ -610,12 +675,17 @@ class Combat {
       },
       monster: {
         name: this.monster.name,
+        id: this.monster.id,
         hp: this.monster.current_hp,
         max_hp: this.monster.max_hp,
         level: this.monster.level,
         status_effects: this.statusEffects.monster.getActiveEffects()
       },
-      log: this.combatLog
+      log: this.combatLog,
+      bestiaryUpdate: this.turn === 0 ? {
+        monsterId: this.monster.id,
+        encountered: true
+      } : null
     };
   }
 

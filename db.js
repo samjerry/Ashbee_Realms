@@ -175,6 +175,10 @@ async function initPostgres() {
         season_progress JSONB DEFAULT '{}',
         seasonal_challenges_completed JSONB DEFAULT '[]',
         
+        -- Bestiary tracking
+        bestiary JSONB DEFAULT '{}',
+        bestiary_unlocked BOOLEAN DEFAULT false,
+        
         -- Permanent stats (account-wide for this channel)
         passive_levels JSONB DEFAULT '{}',
         souls INTEGER DEFAULT 5,
@@ -243,6 +247,26 @@ async function initPostgres() {
         ) THEN
           -- If neither exists, add roles column
           ALTER TABLE ${tableName} ADD COLUMN roles JSONB DEFAULT '["viewer"]';
+        END IF;
+      END $$;
+    `);
+    
+    // Migration: Add bestiary columns if they don't exist
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'bestiary'
+        ) THEN
+          ALTER TABLE ${tableName} ADD COLUMN bestiary JSONB DEFAULT '{}';
+        END IF;
+        
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'bestiary_unlocked'
+        ) THEN
+          ALTER TABLE ${tableName} ADD COLUMN bestiary_unlocked BOOLEAN DEFAULT false;
         END IF;
       END $$;
     `);
@@ -457,6 +481,9 @@ async function loadPlayerProgress(playerId, channelName) {
     known_recipes: typeof row.known_recipes === 'string' ? JSON.parse(row.known_recipes) : (row.known_recipes || []),
     season_progress: typeof row.season_progress === 'string' ? JSON.parse(row.season_progress) : (row.season_progress || {}),
     seasonal_challenges_completed: typeof row.seasonal_challenges_completed === 'string' ? JSON.parse(row.seasonal_challenges_completed) : (row.seasonal_challenges_completed || []),
+    // Bestiary
+    bestiary: typeof row.bestiary === 'string' ? JSON.parse(row.bestiary) : (row.bestiary || {}),
+    bestiary_unlocked: row.bestiary_unlocked || false,
     // Permanent stats
     passive_levels: typeof row.passive_levels === 'string' ? JSON.parse(row.passive_levels) : (row.passive_levels || {}),
     souls: row.souls || 5,
@@ -976,6 +1003,41 @@ async function getOperatorAuditLog(channelName = null, limit = 100) {
   return result.rows;
 }
 
+/**
+ * Update a single field in player progress
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {string} fieldName - Field name to update
+ * @param {any} value - New value
+ */
+async function updatePlayerField(playerId, channelName, fieldName, value) {
+  const table = getPlayerTable(channelName);
+  
+  // For JSON/JSONB fields, stringify the value
+  const jsonFields = ['inventory', 'equipped', 'base_stats', 'skills', 'active_quests', 
+    'completed_quests', 'consumable_cooldowns', 'dialogue_history', 'reputation',
+    'unlocked_achievements', 'achievement_progress', 'achievement_unlock_dates',
+    'unlocked_titles', 'stats', 'dungeon_state', 'completed_dungeons',
+    'known_recipes', 'season_progress', 'seasonal_challenges_completed',
+    'passive_levels', 'account_stats', 'roles', 'bestiary'];
+  
+  const finalValue = jsonFields.includes(fieldName) && typeof value === 'object' 
+    ? JSON.stringify(value) 
+    : value;
+  
+  await query(
+    `UPDATE ${table} SET ${fieldName} = $2, updated_at = NOW() WHERE player_id = $1`,
+    [playerId, finalValue]
+  );
+}
+
+/**
+ * Get player progress (alias for loadPlayerProgress for consistency)
+ */
+async function getPlayerProgress(playerId, channelName) {
+  return await loadPlayerProgress(playerId, channelName);
+}
+
 module.exports = {
   initDB,
   query,
@@ -986,6 +1048,8 @@ module.exports = {
   getPlayerTable,
   savePlayerProgress,
   loadPlayerProgress,
+  getPlayerProgress,
+  updatePlayerField,
   initializeNewPlayer,
   getCharacter,
   saveCharacter,
