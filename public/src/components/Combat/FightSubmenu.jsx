@@ -6,7 +6,8 @@ const FightSubmenu = ({ state, onAction, onBack, player, disabled }) => {
     return null;
   }
 
-  // Get player's abilities (mock for now, will be from player data)
+  // TODO: Get player's actual equipped abilities from player.skills or player.abilities
+  // For now, using mock data for UI demonstration
   const abilities = [
     {
       id: 'ability1',

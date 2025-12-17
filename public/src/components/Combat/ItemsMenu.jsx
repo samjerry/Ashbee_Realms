@@ -6,7 +6,8 @@ const ItemsMenu = ({ state, onUseItem, onBack, inventory, disabled }) => {
     return null;
   }
 
-  // Filter for usable items in combat (potions, consumables)
+  // TODO: Replace with actual inventory consumables from player data
+  // For now, using mock data for UI demonstration
   const usableItems = [
     {
       id: 'health_potion',

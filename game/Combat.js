@@ -222,8 +222,8 @@ class Combat {
     // Base 40% chance
     let fleeChance = 0.4;
     
-    // +2% per point of agility difference
-    const agilityDiff = (playerStats.agility || 10) - monsterAgility;
+    // +2% per point of agility difference (capped at +/-20% for balance)
+    const agilityDiff = Math.max(-10, Math.min(10, (playerStats.agility || 10) - monsterAgility));
     fleeChance += (agilityDiff * 0.02);
     
     // -10% if player HP < 30%
@@ -232,7 +232,7 @@ class Combat {
       fleeChance -= 0.1;
     }
     
-    // Cap between 10% and 90%
+    // Final cap between 10% and 90%
     fleeChance = Math.max(0.1, Math.min(0.9, fleeChance));
     
     const roll = Math.random();

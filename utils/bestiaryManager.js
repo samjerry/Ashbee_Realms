@@ -44,7 +44,7 @@ class BestiaryManager {
     const bestiary = { ...currentBestiary };
     
     if (!bestiary[monsterId]) {
-      // Shouldn't happen, but handle it just in case
+      // First time encountering AND defeating (shouldn't normally happen, but handle it)
       bestiary[monsterId] = {
         monster_id: monsterId,
         encountered: true,
@@ -57,7 +57,9 @@ class BestiaryManager {
     } else {
       // Mark as defeated and increment count
       bestiary[monsterId].defeated = true;
-      bestiary[monsterId].defeat_count += 1;
+      bestiary[monsterId].defeat_count = (bestiary[monsterId].defeat_count || 0) + 1;
+      // Update last encountered since we just fought it
+      bestiary[monsterId].last_encountered = new Date().toISOString();
     }
     
     return bestiary;
