@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Shield, Crown, Star, X, Search } from 'lucide-react';
+import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
 
 /**
  * OperatorMenu - Admin panel for moderators and streamers
@@ -120,33 +121,6 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
         return 'border-blue-500 bg-blue-900/20';
       default:
         return 'border-gray-500 bg-gray-900/20';
-    }
-  };
-
-  /**
-   * Get color for player name based on their Twitch role
-   * @param {string} role - User's role (viewer, subscriber, vip, moderator, streamer)
-   * @param {string} playerName - Player's name to check if they're the creator
-   * @returns {string} Tailwind CSS color class
-   */
-  const getPlayerNameColor = (role, playerName) => {
-    // Check if player is the game creator
-    if (playerName?.toLowerCase() === 'marrowofalibion') {
-      return 'text-red-900'; // Maroon for game creator
-    }
-    
-    switch (role?.toLowerCase()) {
-      case 'streamer':
-        return 'text-purple-400'; // Twitch purple for streamer
-      case 'moderator':
-        return 'text-green-400'; // Green for moderators
-      case 'vip':
-        return 'text-pink-400'; // Pink for VIPs
-      case 'subscriber':
-        return 'text-cyan-400'; // Cyan/blue for subscribers
-      case 'viewer':
-      default:
-        return 'text-white'; // White for viewers
     }
   };
 
@@ -285,8 +259,11 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                                   }}
                                   className="w-full text-left px-3 py-2 hover:bg-gray-600"
                                 >
-                                  <div className={`font-medium ${getPlayerNameColor(player.role, player.name)}`}>
-                                    {player.name}
+                                  <div className="font-medium flex items-center gap-1" style={{ color: getPlayerNameColor(player.name_color, player.roles) }}>
+                                    {player.roles && getRoleBadges(player.roles).map(({ Icon, color, role }) => (
+                                      <Icon key={role} size={14} style={{ color }} />
+                                    ))}
+                                    <span>{player.name}</span>
                                   </div>
                                   <div className="text-xs text-gray-400">
                                     Level {player.level} - {player.location}

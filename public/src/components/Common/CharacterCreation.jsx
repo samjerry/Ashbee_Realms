@@ -4,7 +4,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Code, Beaker } from 'lucide-react';
+import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Eye, Beaker } from 'lucide-react';
+import { getRoleBadges as getRoleBadgesHelper } from '../../utils/roleHelpers';
 
 export default function CharacterCreation({ onComplete }) {
   const [selectedClass, setSelectedClass] = useState(null);
@@ -50,45 +51,10 @@ export default function CharacterCreation({ onComplete }) {
       });
   }, []);
 
-  // Role badge icons mapping
-  const roleIcons = {
-    creator: Code,
-    streamer: Crown,
-    moderator: Shield,
-    vip: Gem,
-    subscriber: Star,
-    tester: Beaker,
-    viewer: User
-  };
-
   // Get all role badges to display based on roles array
   const getRoleBadges = () => {
     if (!userRoles || !userRoles.roles) return [];
-    
-    const roles = userRoles.roles;
-    const badges = [];
-    
-    // Map each role to its badge
-    const roleConfig = {
-      creator: { Icon: Code, color: '#FFD700' },
-      streamer: { Icon: Crown, color: '#9146FF' },
-      moderator: { Icon: Shield, color: '#00FF00' },
-      vip: { Icon: Gem, color: '#FF1493' },
-      subscriber: { Icon: Star, color: '#6441A5' },
-      tester: { Icon: Beaker, color: '#00FFFF' },
-      viewer: { Icon: User, color: '#FFFFFF' }
-    };
-    
-    // Add badges for all roles user has (except viewer if they have other roles)
-    const hasOtherRoles = roles.some(r => r !== 'viewer');
-    for (const role of roles) {
-      if (role === 'viewer' && hasOtherRoles) continue; // Skip viewer if they have higher roles
-      if (roleConfig[role]) {
-        badges.push({ role, ...roleConfig[role] });
-      }
-    }
-    
-    return badges;
+    return getRoleBadgesHelper(userRoles.roles);
   };
 
   const classes = [

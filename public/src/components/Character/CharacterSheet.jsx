@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sword, Shield, Zap, Wind, Heart, Star, Book } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
+import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
 
 // Force rebuild - fixed null safety issues
 const CharacterSheet = () => {
@@ -38,7 +39,12 @@ const CharacterSheet = () => {
           </div>
           
           <div className="flex-1 w-full">
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 text-center sm:text-left">{player.username || 'Unknown'}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-center sm:text-left flex items-center justify-center sm:justify-start gap-1 sm:gap-2" style={{ color: getPlayerNameColor(player.nameColor, player.roles) }}>
+              {getRoleBadges(player.roles).map(({ Icon, color, role }) => (
+                <Icon key={role} size={24} className="sm:w-7 sm:h-7" style={{ color }} />
+              ))}
+              <span>{player.username || 'Unknown'}</span>
+            </h1>
             <p className="text-base sm:text-lg text-gray-400 mb-4 text-center sm:text-left">{player.class || 'Adventurer'} • Level {player.level || 1}</p>
             
             <div className="grid grid-cols-2 gap-3 sm:gap-4">

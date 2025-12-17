@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Heart, Droplet, TrendingUp, Coins, Shield, Menu } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import axios from 'axios';
+import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
 
 // Lazy load OperatorMenu for code splitting
 const OperatorMenu = lazy(() => import('../Operator/OperatorMenu'));
@@ -54,8 +55,11 @@ const Header = () => {
                 {player.level}
               </div>
               <div className="min-w-0">
-                <h2 className="text-sm sm:text-lg font-bold truncate" style={{ color: player.nameColor || '#FFFFFF' }}>
-                  {player.username}
+                <h2 className="text-sm sm:text-lg font-bold truncate flex items-center gap-1" style={{ color: getPlayerNameColor(player.nameColor, player.roles) }}>
+                  {getRoleBadges(player.roles).map(({ Icon, color, role }) => (
+                    <Icon key={role} size={16} className="sm:w-5 sm:h-5 flex-shrink-0" style={{ color }} />
+                  ))}
+                  <span className="truncate">{player.username}</span>
                 </h2>
                 <p className="text-xs sm:text-sm text-gray-400 truncate">
                   {player.class} • Level {player.level}

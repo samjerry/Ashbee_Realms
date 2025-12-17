@@ -5,6 +5,7 @@ import MonsterDisplay from './MonsterDisplay';
 import ActionMenu from './ActionMenu';
 import FightSubmenu from './FightSubmenu';
 import ItemsMenu from './ItemsMenu';
+import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
 
 const CombatView = () => {
   const { combat, combatLog, player, performCombatAction, endCombat, combatMenuState, setCombatMenuState } = useGameStore();
@@ -79,7 +80,12 @@ const CombatView = () => {
                 <div className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 mx-auto bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center text-white font-bold text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4">
                   {player.level}
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white">{player.username}</h3>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center justify-center gap-1 sm:gap-2" style={{ color: getPlayerNameColor(player.nameColor, player.roles) }}>
+                  {getRoleBadges(player.roles).map(({ Icon, color, role }) => (
+                    <Icon key={role} size={20} className="sm:w-6 sm:h-6" style={{ color }} />
+                  ))}
+                  <span>{player.username}</span>
+                </h3>
                 <p className="text-sm sm:text-base text-gray-400">{player.class} • Level {player.level}</p>
               </div>
               

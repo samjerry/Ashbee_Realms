@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, Shield, Zap, Droplet, Activity } from 'lucide-react';
+import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
 
 const PartyMemberCard = ({ member, isLeader }) => {
   const getHealthPercentage = () => {
@@ -55,10 +56,13 @@ const PartyMemberCard = ({ member, isLeader }) => {
         <div className="flex items-center gap-2">
           {getRoleIcon()}
           <div>
-            <h4 className="text-white font-semibold flex items-center gap-2">
-              {member.name}
+            <h4 className="font-semibold flex items-center gap-1" style={{ color: getPlayerNameColor(member.nameColor, member.roles) }}>
+              {member.roles && getRoleBadges(member.roles).map(({ Icon, color, role }) => (
+                <Icon key={role} size={14} style={{ color }} />
+              ))}
+              <span>{member.name}</span>
               {isLeader && (
-                <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded">
+                <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded ml-1">
                   Leader
                 </span>
               )}

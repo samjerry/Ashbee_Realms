@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Volume2, Bell, Eye, Palette, Crown, Shield, Gem, Star, User, Code, Beaker } from 'lucide-react';
+import { X, Volume2, Bell, Eye, Palette, Crown, Shield, Gem, Star, User, Beaker } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const THEMES = [
@@ -292,7 +292,7 @@ const SettingsModal = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {userRoles.availableColors.map(({ role, color, name }) => {
                     const roleIcons = {
-                      creator: Code,
+                      creator: Eye,
                       streamer: Crown,
                       moderator: Shield,
                       vip: Gem,
