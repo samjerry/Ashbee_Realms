@@ -128,6 +128,8 @@ async function initPostgres() {
       season TEXT DEFAULT 'Spring',
       game_mode TEXT DEFAULT 'softcore',
       active_event TEXT DEFAULT NULL,
+      maintenance_mode BOOLEAN DEFAULT false,
+      last_broadcast TEXT DEFAULT NULL,
       last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 

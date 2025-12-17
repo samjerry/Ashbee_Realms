@@ -600,6 +600,157 @@ class OperatorManager {
   }
 
   /**
+   * Execute: Delete character (CREATOR only)
+   */
+  async deleteCharacter(targetPlayerId, channelName, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    const table = db.getPlayerTable(channelName);
+    await db.query(
+      `DELETE FROM ${table} WHERE player_id = $1`,
+      [targetPlayerId]
+    );
+
+    return {
+      success: true,
+      message: `Permanently deleted character ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: Wipe progress (CREATOR only)
+   */
+  async wipeProgress(targetPlayerId, channelName, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    const table = db.getPlayerTable(channelName);
+    // Reset to level 1 with fresh stats
+    await db.query(
+      `UPDATE ${table} SET 
+        level = 1, 
+        xp = 0, 
+        xp_to_next = 10, 
+        gold = 0, 
+        inventory = $1,
+        equipped = $2,
+        active_quests = '[]',
+        completed_quests = '[]',
+        unlocked_achievements = '[]',
+        stats = '{}',
+        hp = 100,
+        max_hp = 100
+      WHERE player_id = $3`,
+      [JSON.stringify(['Potion']), JSON.stringify({
+        headgear: null, armor: null, legs: null, footwear: null,
+        hands: null, cape: null, off_hand: null, amulet: null,
+        ring1: null, ring2: null, belt: null, main_hand: null,
+        relic1: null, relic2: null, relic3: null
+      }), targetPlayerId]
+    );
+
+    return {
+      success: true,
+      message: `Wiped all progress for ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: Grant operator permissions (CREATOR only)
+   */
+  async grantOperator(targetPlayerId, channelName, level, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    const validLevels = ['moderator', 'streamer'];
+    const normalizedLevel = level.toLowerCase();
+    
+    if (!validLevels.includes(normalizedLevel)) {
+      throw new Error('Invalid operator level. Must be MODERATOR or STREAMER');
+    }
+
+    // Update roles array to include the new role
+    let roles = progress.roles || ['viewer'];
+    if (!roles.includes(normalizedLevel)) {
+      roles.push(normalizedLevel);
+      roles = roles.filter(r => r !== 'viewer'); // Remove viewer if they have operator role
+      
+      const table = db.getPlayerTable(channelName);
+      await db.query(
+        `UPDATE ${table} SET roles = $1 WHERE player_id = $2`,
+        [JSON.stringify(roles), targetPlayerId]
+      );
+    }
+
+    return {
+      success: true,
+      message: `Granted ${normalizedLevel} permissions to ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: Revoke operator permissions (CREATOR only)
+   */
+  async revokeOperator(targetPlayerId, channelName, db) {
+    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
+    if (!progress) throw new Error('Player not found');
+
+    // Remove moderator and streamer roles
+    let roles = progress.roles || ['viewer'];
+    roles = roles.filter(r => r !== 'moderator' && r !== 'streamer');
+    if (roles.length === 0) roles = ['viewer'];
+
+    const table = db.getPlayerTable(channelName);
+    await db.query(
+      `UPDATE ${table} SET roles = $1 WHERE player_id = $2`,
+      [JSON.stringify(roles), targetPlayerId]
+    );
+
+    return {
+      success: true,
+      message: `Revoked operator permissions from ${progress.name}`
+    };
+  }
+
+  /**
+   * Execute: System broadcast (CREATOR only)
+   */
+  async systemBroadcast(channelName, message, db) {
+    // Store broadcast in game state
+    await db.query(
+      `INSERT INTO game_state (channel_name, last_broadcast, last_updated)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (channel_name) 
+       DO UPDATE SET last_broadcast = $2, last_updated = NOW()`,
+      [channelName.toLowerCase(), message]
+    );
+
+    return {
+      success: true,
+      message: `Broadcast sent to ${channelName}: "${message}"`
+    };
+  }
+
+  /**
+   * Execute: Maintenance mode (CREATOR only)
+   */
+  async maintenanceMode(channelName, enabled, db) {
+    await db.query(
+      `INSERT INTO game_state (channel_name, maintenance_mode, last_updated)
+       VALUES ($1, $2, NOW())
+       ON CONFLICT (channel_name) 
+       DO UPDATE SET maintenance_mode = $2, last_updated = NOW()`,
+      [channelName.toLowerCase(), enabled]
+    );
+
+    return {
+      success: true,
+      message: `Maintenance mode ${enabled ? 'enabled' : 'disabled'} for ${channelName}`
+    };
+  }
+
+  /**
    * Get command metadata for UI
    */
   getCommandMetadata() {

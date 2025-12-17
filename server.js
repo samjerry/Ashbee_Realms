@@ -6329,6 +6329,80 @@ app.post('/api/operator/execute',
           );
           break;
 
+        // CREATOR level commands
+        case 'deleteCharacter':
+          if (req.operatorLevel < operatorMgr.PERMISSION_LEVELS.CREATOR) {
+            return res.status(403).json({ error: 'Creator permissions required' });
+          }
+          if (sanitizedParams.confirm !== 'DELETE') {
+            return res.status(400).json({ error: 'Confirmation required: type DELETE to confirm' });
+          }
+          result = await operatorMgr.deleteCharacter(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
+
+        case 'wipeProgress':
+          if (req.operatorLevel < operatorMgr.PERMISSION_LEVELS.CREATOR) {
+            return res.status(403).json({ error: 'Creator permissions required' });
+          }
+          if (sanitizedParams.confirm !== 'WIPE') {
+            return res.status(400).json({ error: 'Confirmation required: type WIPE to confirm' });
+          }
+          result = await operatorMgr.wipeProgress(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
+
+        case 'grantOperator':
+          if (req.operatorLevel < operatorMgr.PERMISSION_LEVELS.CREATOR) {
+            return res.status(403).json({ error: 'Creator permissions required' });
+          }
+          result = await operatorMgr.grantOperator(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.level, { maxLength: 20 }),
+            db
+          );
+          break;
+
+        case 'revokeOperator':
+          if (req.operatorLevel < operatorMgr.PERMISSION_LEVELS.CREATOR) {
+            return res.status(403).json({ error: 'Creator permissions required' });
+          }
+          result = await operatorMgr.revokeOperator(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
+
+        case 'systemBroadcast':
+          if (req.operatorLevel < operatorMgr.PERMISSION_LEVELS.CREATOR) {
+            return res.status(403).json({ error: 'Creator permissions required' });
+          }
+          result = await operatorMgr.systemBroadcast(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.message, { maxLength: 500 }),
+            db
+          );
+          break;
+
+        case 'maintenanceMode':
+          if (req.operatorLevel < operatorMgr.PERMISSION_LEVELS.CREATOR) {
+            return res.status(403).json({ error: 'Creator permissions required' });
+          }
+          result = await operatorMgr.maintenanceMode(
+            req.channelName,
+            sanitizedParams.enabled === 'true',
+            db
+          );
+          break;
+
         default:
           return res.status(400).json({ error: `Unknown command: ${sanitizedCommand}` });
       }
