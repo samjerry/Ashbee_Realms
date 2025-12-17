@@ -54,7 +54,7 @@ const Header = () => {
                 {player.level}
               </div>
               <div className="min-w-0">
-                <h2 className="text-sm sm:text-lg font-bold text-white truncate">
+                <h2 className="text-sm sm:text-lg font-bold truncate" style={{ color: player.nameColor || '#FFFFFF' }}>
                   {player.username}
                 </h2>
                 <p className="text-xs sm:text-sm text-gray-400 truncate">
