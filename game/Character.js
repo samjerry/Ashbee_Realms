@@ -48,6 +48,7 @@ class Character {
     // User roles and name color
     this.roles = data.roles || ['viewer'];
     this.nameColor = data.nameColor || data.name_color || null;
+    this.selectedRoleBadge = data.selectedRoleBadge || data.selected_role_badge || null;
     
     // Faction reputation tracking
     // Initialize with empty object, FactionManager will handle proper initialization
@@ -490,6 +491,7 @@ class Character {
       is_player: true,
       roles: this.roles,
       nameColor: this.nameColor,
+      selectedRoleBadge: this.selectedRoleBadge,
       bestiary: this.bestiary,
       bestiary_unlocked: this.bestiaryUnlocked
     };

@@ -81,7 +81,7 @@ const CombatView = () => {
                   {player.level}
                 </div>
                 <h3 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center justify-center gap-1 sm:gap-2" style={{ color: getPlayerNameColor(player.nameColor, player.roles) }}>
-                  {getRoleBadges(player.roles).map(({ Icon, color, role }) => (
+                  {getRoleBadges(player.roles, player.selectedRoleBadge).map(({ Icon, color, role }) => (
                     <Icon key={role} size={20} className="sm:w-6 sm:h-6" style={{ color }} />
                   ))}
                   <span>{player.username}</span>

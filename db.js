@@ -249,6 +249,19 @@ async function initPostgres() {
       END $$;
     `);
     
+    // Migration: Add selected_role_badge column if it doesn't exist
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'selected_role_badge'
+        ) THEN
+          ALTER TABLE ${tableName} ADD COLUMN selected_role_badge TEXT DEFAULT NULL;
+        END IF;
+      END $$;
+    `);
+    
     // Migration: Convert role TEXT to roles JSONB array
     await pool.query(`
       DO $$
@@ -416,7 +429,8 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     total_crits = 0,
     // Roles array and name color
     roles = ['viewer'],
-    nameColor = null
+    nameColor = null,
+    selectedRoleBadge = null
   } = playerData;
 
   await query(`
@@ -429,7 +443,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       unlocked_titles, active_title, stats, dungeon_state, completed_dungeons,
       crafting_xp, known_recipes, season_progress, seasonal_challenges_completed,
       passive_levels, souls, legacy_points, account_stats, total_deaths, total_kills,
-      total_gold_earned, total_xp_earned, highest_level_reached, total_crits, roles, name_color, updated_at
+      total_gold_earned, total_xp_earned, highest_level_reached, total_crits, roles, name_color, selected_role_badge, updated_at
     ) VALUES (
       $1, $2, $3, $4, $5, $6, $7, $8, $9,
       $10, $11, $12, $13, $14, $15, $16, $17, $18,
@@ -439,7 +453,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       $32, $33, $34, $35, $36,
       $37, $38, $39, $40,
       $41, $42, $43, $44, $45, $46,
-      $47, $48, $49, $50, $51, $52, NOW()
+      $47, $48, $49, $50, $51, $52, $53, NOW()
     )
     ON CONFLICT(player_id) DO UPDATE SET
       name=$2, location=$3, level=$4, xp=$5, xp_to_next=$6, max_hp=$7, hp=$8, gold=$9,
@@ -450,7 +464,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       unlocked_titles=$32, active_title=$33, stats=$34, dungeon_state=$35, completed_dungeons=$36,
       crafting_xp=$37, known_recipes=$38, season_progress=$39, seasonal_challenges_completed=$40,
       passive_levels=$41, souls=$42, legacy_points=$43, account_stats=$44, total_deaths=$45, total_kills=$46,
-      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, roles=$51, name_color=$52, updated_at=NOW()
+      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, roles=$51, name_color=$52, selected_role_badge=$53, updated_at=NOW()
   `, [
     playerId, name, location, level, xp, xp_to_next, max_hp, hp, gold,
     type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
@@ -464,7 +478,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     JSON.stringify(completed_dungeons),
     crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed),
     JSON.stringify(passive_levels), souls, legacy_points, JSON.stringify(account_stats), total_deaths, total_kills,
-    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, JSON.stringify(roles), nameColor
+    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, JSON.stringify(roles), nameColor, selectedRoleBadge
   ]);
 }
 
@@ -542,6 +556,7 @@ async function loadPlayerProgress(playerId, channelName) {
     // Roles array and name color
     roles: typeof row.roles === 'string' ? JSON.parse(row.roles) : (row.roles || ['viewer']),
     nameColor: row.name_color || null,
+    selectedRoleBadge: row.selected_role_badge || null,
     // Abilities system
     unlocked_abilities: typeof row.unlocked_abilities === 'string' ? JSON.parse(row.unlocked_abilities) : (row.unlocked_abilities || []),
     equipped_abilities: typeof row.equipped_abilities === 'string' ? JSON.parse(row.equipped_abilities) : (row.equipped_abilities || []),

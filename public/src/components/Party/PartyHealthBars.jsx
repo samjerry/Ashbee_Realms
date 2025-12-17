@@ -57,7 +57,7 @@ const PartyMemberCard = ({ member, isLeader }) => {
           {getRoleIcon()}
           <div>
             <h4 className="font-semibold flex items-center gap-1" style={{ color: getPlayerNameColor(member.nameColor, member.roles) }}>
-              {member.roles && getRoleBadges(member.roles).map(({ Icon, color, role }) => (
+              {member.roles && getRoleBadges(member.roles, member.selectedRoleBadge).map(({ Icon, color, role }) => (
                 <Icon key={role} size={14} style={{ color }} />
               ))}
               <span>{member.name}</span>

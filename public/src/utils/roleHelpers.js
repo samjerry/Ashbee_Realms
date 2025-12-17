@@ -33,14 +33,28 @@ export function getPrimaryRole(roles) {
 
 /**
  * Get role badges for a player (excludes 'viewer' if they have other roles)
+ * If selectedRoleBadge is provided, returns only that badge
  * @param {Array<string>} roles - Array of role strings
+ * @param {string} selectedRoleBadge - Optional selected role badge to display
  * @returns {Array<Object>} Array of role badge objects with Icon, color, and role name
  */
-export function getRoleBadges(roles) {
+export function getRoleBadges(roles, selectedRoleBadge = null) {
   if (!roles || !Array.isArray(roles) || roles.length === 0) {
     return [{ role: 'viewer', ...ROLE_CONFIG.viewer }];
   }
   
+  // If a specific badge is selected, return only that one
+  if (selectedRoleBadge && roles.includes(selectedRoleBadge)) {
+    return [{ role: selectedRoleBadge, ...ROLE_CONFIG[selectedRoleBadge] }];
+  }
+  
+  // If selectedRoleBadge is provided but not in roles, use primary role
+  if (selectedRoleBadge) {
+    const primaryRole = getPrimaryRole(roles);
+    return [{ role: primaryRole, ...ROLE_CONFIG[primaryRole] }];
+  }
+  
+  // Otherwise return all badges (legacy behavior for places that don't have selectedRoleBadge yet)
   const badges = [];
   const hasOtherRoles = roles.some(r => r !== 'viewer');
   

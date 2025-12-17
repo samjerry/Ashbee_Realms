@@ -910,12 +910,23 @@ app.get('/api/player/roles', async (req, res) => {
     // Get the highest priority role as primary
     const primaryRole = db.ROLE_HIERARCHY.find(r => roles.includes(r)) || 'viewer';
     
-    // Get available colors based on roles
-    const availableColors = roles.map(r => ({
-      role: r,
-      color: db.ROLE_COLORS[r] || db.ROLE_COLORS.viewer,
-      name: r.charAt(0).toUpperCase() + r.slice(1)
-    }));
+    // Creators can display as any role - give them all options
+    let availableColors;
+    if (roles.includes('creator')) {
+      // Creators get all possible roles to choose from
+      availableColors = db.ROLE_HIERARCHY.map(r => ({
+        role: r,
+        color: db.ROLE_COLORS[r] || db.ROLE_COLORS.viewer,
+        name: r.charAt(0).toUpperCase() + r.slice(1)
+      }));
+    } else {
+      // Regular users only get their actual roles
+      availableColors = roles.map(r => ({
+        role: r,
+        color: db.ROLE_COLORS[r] || db.ROLE_COLORS.viewer,
+        name: r.charAt(0).toUpperCase() + r.slice(1)
+      }));
+    }
     
     console.log(`🎭 Roles API for ${displayName}:`, { roles, primaryRole }); // Debug log
     
@@ -1547,6 +1558,88 @@ app.post('/api/player/name-color',
     res.status(500).json({ error: 'Failed to update name color' });
   }
 });
+
+/**
+ * POST /api/player/role-display
+ * Update player's name color and selected role badge (must be from one of their available roles)
+ */
+app.post('/api/player/role-display',
+  rateLimiter.middleware('default'),
+  security.auditLog('update_role_display'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { nameColor, selectedRoleBadge } = req.body;
+    if (!nameColor || !selectedRoleBadge) {
+      return res.status(400).json({ error: 'nameColor and selectedRoleBadge required' });
+    }
+    
+    // Validate color format
+    const validatedColor = sanitization.sanitizeColorCode(nameColor);
+    if (!validatedColor) {
+      return res.status(400).json({ error: 'Invalid color code format' });
+    }
+    
+    // Validate role badge is a string
+    if (typeof selectedRoleBadge !== 'string') {
+      return res.status(400).json({ error: 'Invalid role badge format' });
+    }
+    
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    const channelName = CHANNELS[0] || 'default';
+    
+    try {
+      // Load player data
+      const playerData = await db.loadPlayerProgress(user.id, channelName);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      // Validate that the color and badge match one of their roles
+      const roles = playerData.roles || ['viewer'];
+      const isCreator = roles.includes('creator');
+      const validRoles = roles.map(r => r.toLowerCase());
+      const validColors = roles.map(r => db.ROLE_COLORS[r]);
+      
+      // Creators can select any role appearance
+      if (!isCreator) {
+        if (!validColors.includes(validatedColor)) {
+          console.warn(`[SECURITY] Invalid color selection attempt by ${security.sanitizeUserForLog(user)}: ${validatedColor} not in ${validColors}`);
+          return res.status(403).json({ error: 'Color not available for your roles' });
+        }
+        
+        if (!validRoles.includes(selectedRoleBadge.toLowerCase())) {
+          console.warn(`[SECURITY] Invalid badge selection attempt by ${security.sanitizeUserForLog(user)}: ${selectedRoleBadge} not in ${validRoles}`);
+          return res.status(403).json({ error: 'Badge not available for your roles' });
+        }
+      } else {
+        // Validate creator is selecting a valid role that exists in the system
+        const allValidRoles = db.ROLE_HIERARCHY.map(r => r.toLowerCase());
+        const allValidColors = Object.values(db.ROLE_COLORS);
+        
+        if (!allValidColors.includes(validatedColor)) {
+          console.warn(`[SECURITY] Invalid color selection by creator ${security.sanitizeUserForLog(user)}: ${validatedColor}`);
+          return res.status(403).json({ error: 'Invalid color code' });
+        }
+        
+        if (!allValidRoles.includes(selectedRoleBadge.toLowerCase())) {
+          console.warn(`[SECURITY] Invalid badge selection by creator ${security.sanitizeUserForLog(user)}: ${selectedRoleBadge}`);
+          return res.status(403).json({ error: 'Invalid role badge' });
+        }
+      }
+      
+      // Update name color and selected role badge
+      playerData.nameColor = validatedColor;
+      playerData.selectedRoleBadge = selectedRoleBadge.toLowerCase();
+      await db.savePlayerProgress(user.id, channelName, playerData);
+      
+      res.json({ success: true, nameColor: validatedColor, selectedRoleBadge: selectedRoleBadge.toLowerCase() });
+    } catch (error) {
+      console.error('Error updating role display:', error);
+      res.status(500).json({ error: 'Failed to update role display' });
+    }
+  });
 
 // Update the existing /api/action endpoint to save after each action
 app.post('/api/action', async (req, res) => {

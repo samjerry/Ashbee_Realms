@@ -40,7 +40,7 @@ const CharacterSheet = () => {
           
           <div className="flex-1 w-full">
             <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-center sm:text-left flex items-center justify-center sm:justify-start gap-1 sm:gap-2" style={{ color: getPlayerNameColor(player.nameColor, player.roles) }}>
-              {getRoleBadges(player.roles).map(({ Icon, color, role }) => (
+              {getRoleBadges(player.roles, player.selectedRoleBadge).map(({ Icon, color, role }) => (
                 <Icon key={role} size={24} className="sm:w-7 sm:h-7" style={{ color }} />
               ))}
               <span>{player.username || 'Unknown'}</span>

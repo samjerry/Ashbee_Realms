@@ -56,7 +56,7 @@ const Header = () => {
               </div>
               <div className="min-w-0">
                 <h2 className="text-sm sm:text-lg font-bold truncate flex items-center gap-1" style={{ color: getPlayerNameColor(player.nameColor, player.roles) }}>
-                  {getRoleBadges(player.roles).map(({ Icon, color, role }) => (
+                  {getRoleBadges(player.roles, player.selectedRoleBadge).map(({ Icon, color, role }) => (
                     <Icon key={role} size={16} className="sm:w-5 sm:h-5 flex-shrink-0" style={{ color }} />
                   ))}
                   <span className="truncate">{player.username}</span>

@@ -84,6 +84,7 @@ const SettingsModal = () => {
   });
   const [userRoles, setUserRoles] = useState(null);
   const [selectedNameColor, setSelectedNameColor] = useState(null);
+  const [selectedRoleBadge, setSelectedRoleBadge] = useState(null);
 
   useEffect(() => {
     // Fetch user's roles and current name color
@@ -100,6 +101,9 @@ const SettingsModal = () => {
       .then(data => {
         if (data && data.nameColor) {
           setSelectedNameColor(data.nameColor);
+        }
+        if (data && data.selectedRoleBadge) {
+          setSelectedRoleBadge(data.selectedRoleBadge);
         }
       })
       .catch(err => console.error('Failed to fetch player data:', err));
@@ -277,17 +281,17 @@ const SettingsModal = () => {
             </div>
           </div>
 
-          {/* Name Color Settings - Only show if user has multiple roles */}
+          {/* Name Color & Badge Settings - Only show if user has multiple roles */}
           {userRoles && userRoles.roles && userRoles.roles.length > 1 && (
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <User size={24} className="text-primary-500" />
-                <h2 className="text-xl font-bold text-white">Name Color</h2>
+                <h2 className="text-xl font-bold text-white">Role Display</h2>
               </div>
               
               <div className="pl-8">
                 <p className="text-sm text-gray-400 mb-3">
-                  You have multiple roles! Choose which color to display for your name:
+                  You have multiple roles! Choose which role's color and symbol to display:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {userRoles.availableColors.map(({ role, color, name }) => {
@@ -302,24 +306,27 @@ const SettingsModal = () => {
                     };
                     const Icon = roleIcons[role] || User;
                     
+                    const isSelected = selectedRoleBadge === role || (!selectedRoleBadge && userRoles.primaryRole === role);
+                    
                     return (
                       <button
                         key={role}
                         onClick={async () => {
                           setSelectedNameColor(color);
-                          // Save name color to server
+                          setSelectedRoleBadge(role);
+                          // Save both name color and role badge to server
                           try {
-                            await fetch('/api/player/name-color', {
+                            await fetch('/api/player/role-display', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ nameColor: color })
+                              body: JSON.stringify({ nameColor: color, selectedRoleBadge: role })
                             });
                           } catch (err) {
-                            console.error('Failed to save name color:', err);
+                            console.error('Failed to save role display:', err);
                           }
                         }}
                         className={`p-3 rounded-lg border-2 transition-all text-left ${
-                          selectedNameColor === color || (!selectedNameColor && userRoles.primaryRole === role)
+                          isSelected
                             ? 'border-primary-500 bg-dark-800'
                             : 'border-dark-700 bg-dark-900 hover:border-dark-600'
                         }`}
