@@ -524,6 +524,22 @@ class Character {
       }
     }
 
+    // Prepare starting inventory with class-specific items (unequipped)
+    const startingInventory = ["potion", "bread"]; // Base starting items
+    
+    // Add class-specific starting items to inventory (these are unequipped backups/extras)
+    const classStartingItems = {
+      warrior: ["health_potion"],           // Warriors get extra healing
+      mage: ["mana_potion"],                // Mages get mana management
+      rogue: ["antidote"],                  // Rogues get poison cure for trap disarming
+      cleric: ["health_potion"],            // Clerics get extra healing items  
+      ranger: ["bread"]                     // Rangers get extra food for wilderness
+    };
+    
+    if (classStartingItems[classType]) {
+      startingInventory.push(...classStartingItems[classType]);
+    }
+
     const characterData = {
       name: playerName,
       type: classType,
@@ -534,7 +550,7 @@ class Character {
       max_hp: startingStats.max_hp,
       gold: 50, // Starting gold
       location: location,
-      inventory: ["Potion", "Bread"], // Starting items
+      inventory: startingInventory,
       equipped: equipped,
       in_combat: false,
       combat: null,

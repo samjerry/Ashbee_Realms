@@ -435,7 +435,7 @@ app.get('/api/player/roles', async (req, res) => {
 
 /**
  * GET /api/player/stats
- * Get detailed character stats breakdown
+ * Get detailed character stats breakdown and player data
  */
 app.get('/api/player/stats', async (req, res) => {
   const user = req.session.user;
@@ -462,8 +462,35 @@ app.get('/api/player/stats', async (req, res) => {
       return res.status(404).json({ error: 'Character not found' });
     }
     
-    const stats = character.getStatsBreakdown();
-    res.json({ success: true, stats });
+    const statsBreakdown = character.getStatsBreakdown();
+    const finalStats = character.getFinalStats();
+    
+    // Return complete player data for the frontend
+    res.json({
+      username: character.name,
+      class: character.classData?.name || 'Unknown',
+      level: character.level,
+      xp: character.xp,
+      xpToNextLevel: character.xpToNext,
+      hp: character.hp,
+      maxHp: finalStats.maxHp,
+      mana: character.mana || 0,
+      maxMana: character.maxMana || 100,
+      gold: character.gold,
+      nameColor: character.nameColor || '#FFFFFF',
+      channel: channelName,
+      stats: {
+        attack: finalStats.attack,
+        defense: finalStats.defense,
+        magic: finalStats.magic,
+        agility: finalStats.agility,
+        strength: finalStats.strength,
+        critChance: parseFloat(finalStats.critChance) || 5,
+        dodgeChance: parseFloat(finalStats.dodgeChance) || 0,
+        blockChance: parseFloat(finalStats.blockChance) || 0
+      },
+      statsBreakdown: statsBreakdown
+    });
   } catch (error) {
     console.error('Error fetching stats:', error);
     res.status(500).json({ error: 'Failed to fetch stats' });
