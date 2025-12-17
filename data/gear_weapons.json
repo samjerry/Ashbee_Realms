@@ -140,6 +140,19 @@
           "attack": 4
         },
         "value": 10
+      },
+      {
+        "id": "farming_scythe",
+        "name": "Farming Scythe",
+        "description": "A simple tool for harvesting crops, repurposed for combat",
+        "slot": "main_hand",
+        "rarity": "common",
+        "required_level": 2,
+        "stats": {
+          "attack": 6,
+          "agility": 1
+        },
+        "value": 12
       }
     ],
     "uncommon": [
@@ -298,6 +311,22 @@
           "armor_penetration": 0.15
         },
         "value": 150
+      },
+      {
+        "id": "war_scythe",
+        "name": "War Scythe",
+        "description": "A combat scythe with a reinforced blade and balanced grip",
+        "slot": "main_hand",
+        "rarity": "uncommon",
+        "required_level": 7,
+        "stats": {
+          "attack": 10,
+          "agility": 2
+        },
+        "passive": {
+          "cleave_damage": 0.15
+        },
+        "value": 45
       }
     ],
     "rare": [
@@ -420,6 +449,23 @@
           "life_steal": 0.15
         },
         "value": 65
+      },
+      {
+        "id": "reaper_scythe",
+        "name": "Reaper's Scythe",
+        "description": "A curved blade mounted on a long pole, said to harvest souls",
+        "slot": "main_hand",
+        "rarity": "rare",
+        "required_level": 16,
+        "stats": {
+          "attack": 14,
+          "agility": 3
+        },
+        "passive": {
+          "cleave_damage": 0.25,
+          "crit_chance": 0.05
+        },
+        "value": 85
       },
       {
         "id": "flame_tongue_sword",
