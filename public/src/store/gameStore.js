@@ -20,6 +20,7 @@ const useGameStore = create((set, get) => ({
   // Combat state
   combat: null,
   combatLog: [],
+  combatMenuState: 'main', // 'main', 'fight', 'items'
   
   // Quest state
   activeQuests: [],
@@ -35,6 +36,21 @@ const useGameStore = create((set, get) => ({
   
   // Achievements
   achievements: [],
+  
+  // Bestiary state
+  bestiary: {
+    unlocked: false,
+    entries: [],
+    stats: {
+      totalMonsters: 0,
+      encountered: 0,
+      defeated: 0,
+      unknown: 0,
+      encounterPercentage: 0,
+      defeatPercentage: 0,
+      completionPercentage: 0
+    }
+  },
   
   // Dialogue state
   currentDialogue: null,
@@ -82,12 +98,13 @@ const useGameStore = create((set, get) => ({
   startCombat: (monster) => {
     set({ 
       showCombat: true, 
-      combat: { monster, turn: 'player', playerHp: get().player.hp }
+      combat: { monster, turn: 'player', playerHp: get().player.hp },
+      combatMenuState: 'main'
     });
   },
   
   endCombat: () => {
-    set({ showCombat: false, combat: null, combatLog: [] });
+    set({ showCombat: false, combat: null, combatLog: [], combatMenuState: 'main' });
   },
   
   addCombatLog: (message) => {
@@ -116,6 +133,42 @@ const useGameStore = create((set, get) => ({
       return result;
     } catch (error) {
       console.error('Combat action failed:', error);
+    }
+  },
+  
+  setCombatMenuState: (state) => set({ combatMenuState: state }),
+  
+  // Bestiary actions
+  fetchBestiary: async () => {
+    try {
+      const response = await fetch('/api/bestiary');
+      if (!response.ok) {
+        throw new Error('Failed to fetch bestiary');
+      }
+      
+      const data = await response.json();
+      set({ bestiary: data });
+    } catch (error) {
+      console.error('Failed to fetch bestiary:', error);
+    }
+  },
+  
+  checkBestiaryUnlock: async () => {
+    try {
+      const response = await fetch('/api/bestiary/unlock-status');
+      if (!response.ok) {
+        return;
+      }
+      
+      const data = await response.json();
+      set((state) => ({
+        bestiary: {
+          ...state.bestiary,
+          unlocked: data.unlocked
+        }
+      }));
+    } catch (error) {
+      console.error('Failed to check bestiary unlock:', error);
     }
   },
   
