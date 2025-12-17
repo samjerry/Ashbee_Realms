@@ -20,27 +20,48 @@ const ROLE_COLORS = {
 const DEFAULT_STARTING_LOCATION = 'Silverbrook';
 
 /**
- * Load beta tester usernames from Testers.txt
+ * Load beta tester usernames from environment variable and Testers.txt
  * @returns {Array<string>} Array of tester usernames (lowercase)
  */
 function loadTestersFromFile() {
+  const testers = [];
+  
+  // First, load from TESTERS environment variable (comma-separated)
+  if (process.env.TESTERS) {
+    const envTesters = process.env.TESTERS
+      .split(',')
+      .map(name => name.trim().toLowerCase())
+      .filter(name => name);
+    testers.push(...envTesters);
+    console.log(`📋 Loaded ${envTesters.length} beta testers from TESTERS environment variable`);
+  }
+  
+  // Then, load from Testers.txt file
   try {
     const testersPath = path.join(__dirname, 'Testers.txt');
     if (fs.existsSync(testersPath)) {
       const content = fs.readFileSync(testersPath, 'utf8');
-      const testers = content
+      const fileTesters = content
         .split('\n')
         .map(line => line.trim().toLowerCase())
         .filter(line => line && !line.startsWith('#'));
-      console.log(`📋 Loaded ${testers.length} beta testers from Testers.txt`);
-      return testers;
+      
+      // Merge with env testers (avoid duplicates)
+      const uniqueFileTesters = fileTesters.filter(t => !testers.includes(t));
+      testers.push(...uniqueFileTesters);
+      console.log(`📋 Loaded ${fileTesters.length} beta testers from Testers.txt`);
+    } else if (!process.env.TESTERS) {
+      console.log('⚠️ No TESTERS environment variable and Testers.txt not found - no beta testers loaded');
     }
-    console.log('⚠️ Testers.txt not found - no beta testers loaded');
-    return [];
   } catch (error) {
     console.error('Error loading Testers.txt:', error);
-    return [];
   }
+  
+  if (testers.length > 0) {
+    console.log(`✅ Total beta testers loaded: ${testers.length}`);
+  }
+  
+  return testers;
 }
 
 const BETA_TESTERS = loadTestersFromFile();
