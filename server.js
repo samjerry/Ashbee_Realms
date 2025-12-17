@@ -309,13 +309,16 @@ app.get('/auth/twitch/callback', async (req, res) => {
     try {
       const existingCharacter = await db.loadPlayerProgress(playerId, channel);
       
-      if (!existingCharacter) {
-        // No character exists - redirect to tutorial/character creation
-        console.log(`📝 New player ${user.display_name} - redirecting to character creation`);
+      // Character needs creation if: no record exists, no type/class set, or type is 'Unknown'
+      const needsCharacterCreation = !existingCharacter || !existingCharacter.type || existingCharacter.type === 'Unknown';
+      
+      if (needsCharacterCreation) {
+        // No character exists or incomplete - redirect to tutorial/character creation
+        console.log(`📝 New player ${user.display_name} (type: ${existingCharacter?.type || 'none'}) - redirecting to character creation`);
         return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
       } else {
-        // Character exists - redirect to main game
-        console.log(`🎮 Existing player ${user.display_name} - redirecting to game`);
+        // Character exists and is complete - redirect to main game
+        console.log(`🎮 Existing player ${user.display_name} (${existingCharacter.type}) - redirecting to game`);
         return res.redirect(`/adventure?channel=${encodeURIComponent(channel)}`);
       }
     } catch (err) {
@@ -6453,8 +6456,11 @@ app.get('/adventure', async (req, res) => {
   try {
     const character = await db.loadPlayerProgress(req.session.user.id, channel);
     
-    // If no character exists and URL doesn't already have tutorial parameter, redirect with it
-    if (!character && req.query.tutorial !== 'true') {
+    // Character needs creation if: no record exists, no type/class set, or type is 'Unknown'
+    const needsCharacterCreation = !character || !character.type || character.type === 'Unknown';
+    
+    // If character doesn't exist or is incomplete and URL doesn't already have tutorial parameter, redirect with it
+    if (needsCharacterCreation && req.query.tutorial !== 'true') {
       return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
     }
   } catch (error) {
