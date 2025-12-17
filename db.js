@@ -1026,7 +1026,7 @@ async function updatePlayerField(playerId, channelName, fieldName, value) {
     : value;
   
   await query(
-    `UPDATE ${table} SET ${fieldName} = $3, updated_at = NOW() WHERE player_id = $1`,
+    `UPDATE ${table} SET ${fieldName} = $2, updated_at = NOW() WHERE player_id = $1`,
     [playerId, finalValue]
   );
 }

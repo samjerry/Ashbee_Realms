@@ -93,6 +93,10 @@ class Character {
     // Season tracking
     this.seasonProgress = data.season_progress || {};
     this.seasonalChallengesCompleted = data.seasonal_challenges_completed || [];
+    
+    // Bestiary tracking
+    this.bestiary = data.bestiary || {};
+    this.bestiaryUnlocked = data.bestiary_unlocked || false;
 
     // Initialize managers
     this.equipment = new EquipmentManager(data.equipped || {});
@@ -485,8 +489,18 @@ class Character {
       pending: this.pending,
       is_player: true,
       roles: this.roles,
-      nameColor: this.nameColor
+      nameColor: this.nameColor,
+      bestiary: this.bestiary,
+      bestiary_unlocked: this.bestiaryUnlocked
     };
+  }
+
+  /**
+   * Alias for toDatabase for backwards compatibility
+   * @returns {Object} Character data object
+   */
+  toObject() {
+    return this.toDatabase();
   }
 
   /**
