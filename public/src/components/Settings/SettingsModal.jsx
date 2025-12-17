@@ -86,6 +86,27 @@ const SettingsModal = () => {
   const [selectedNameColor, setSelectedNameColor] = useState(null);
   const [selectedRoleBadge, setSelectedRoleBadge] = useState(null);
 
+  // Helper function to get icon for a role
+  const getRoleIcon = (role) => {
+    const roleIcons = {
+      creator: Eye,
+      streamer: Crown,
+      moderator: Shield,
+      vip: Gem,
+      subscriber: Star,
+      tester: Beaker,
+      viewer: User
+    };
+    return roleIcons[role] || User;
+  };
+
+  // Helper function to get color for a role
+  const getRoleColor = (role) => {
+    if (!userRoles || !userRoles.availableColors) return '#FFFFFF';
+    const roleColor = userRoles.availableColors.find(r => r.role === role);
+    return roleColor ? roleColor.color : '#FFFFFF';
+  };
+
   useEffect(() => {
     // Fetch user's roles and current name color
     fetch('/api/player/roles')
@@ -290,8 +311,8 @@ const SettingsModal = () => {
             </div>
           </div>
 
-          {/* Name Color & Badge Settings - Only show if user has multiple roles */}
-          {userRoles && userRoles.roles && userRoles.roles.length > 1 && (
+          {/* Role Badge Selection - Complete Package (Icon + Color) */}
+          {userRoles && userRoles.availableColors && userRoles.availableColors.length > 0 && (
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <User size={24} className="text-primary-500" />
@@ -300,21 +321,13 @@ const SettingsModal = () => {
               
               <div className="pl-8">
                 <p className="text-sm text-gray-400 mb-3">
-                  You have multiple roles! Choose which role's color and symbol to display:
+                  {userRoles.availableColors.length > 1
+                    ? 'Choose which role to display (icon + color come as a package):'
+                    : 'Your display role:'}
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-wrap gap-3">
                   {userRoles.availableColors.map(({ role, color, name }) => {
-                    const roleIcons = {
-                      creator: Eye,
-                      streamer: Crown,
-                      moderator: Shield,
-                      vip: Gem,
-                      subscriber: Star,
-                      tester: Beaker,
-                      viewer: User
-                    };
-                    const Icon = roleIcons[role] || User;
-                    
+                    const RoleIcon = getRoleIcon(role);
                     const isSelected = selectedRoleBadge === role || (!selectedRoleBadge && userRoles.primaryRole === role);
                     
                     return (
@@ -334,16 +347,14 @@ const SettingsModal = () => {
                             console.error('Failed to save role display:', err);
                           }
                         }}
-                        className={`p-3 rounded-lg border-2 transition-all text-left ${
+                        className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                           isSelected
-                            ? 'border-primary-500 bg-dark-800'
-                            : 'border-dark-700 bg-dark-900 hover:border-dark-600'
+                            ? 'border-white bg-gray-700 shadow-lg scale-105'
+                            : 'border-gray-600 bg-gray-800 hover:border-gray-500'
                         }`}
                       >
-                        <div className="flex items-center space-x-3">
-                          <Icon size={20} style={{ color }} />
-                          <span className="font-medium" style={{ color }}>{name}</span>
-                        </div>
+                        <RoleIcon size={20} style={{ color }} />
+                        <span className="font-semibold capitalize" style={{ color }}>{name}</span>
                       </button>
                     );
                   })}
