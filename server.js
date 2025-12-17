@@ -220,6 +220,10 @@ app.get('/auth/twitch', (req, res) => {
   const state = Math.random().toString(36).slice(2);
   // store state in session to verify later
   req.session.oauthState = state;
+  // Store channel if provided in query parameter
+  if (req.query.channel) {
+    req.session.oauthChannel = req.query.channel;
+  }
   
   // Save session before redirect to ensure state is persisted
   req.session.save((err) => {
@@ -290,9 +294,16 @@ app.get('/auth/twitch/callback', async (req, res) => {
     req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
     console.log('✅ User logged in:', playerId);
     
-    // Get the channel from CHANNELS env (use first channel for now)
-    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-    const channel = CHANNELS[0] || 'default';
+    // Get the channel from session (set during /auth/twitch) or fall back to env
+    let channel = req.session.oauthChannel;
+    if (!channel) {
+      const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+      channel = CHANNELS[0] || 'default';
+    }
+    console.log('🔍 Checking character for channel:', channel);
+    
+    // Clear the oauthChannel from session now that we've used it
+    delete req.session.oauthChannel;
     
     // Check if player has a character in this channel
     try {
@@ -301,16 +312,16 @@ app.get('/auth/twitch/callback', async (req, res) => {
       if (!existingCharacter) {
         // No character exists - redirect to tutorial/character creation
         console.log(`📝 New player ${user.display_name} - redirecting to character creation`);
-        return res.redirect('/adventure?tutorial=true');
+        return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
       } else {
         // Character exists - redirect to main game
         console.log(`🎮 Existing player ${user.display_name} - redirecting to game`);
-        return res.redirect('/adventure');
+        return res.redirect(`/adventure?channel=${encodeURIComponent(channel)}`);
       }
     } catch (err) {
       console.error('Error checking character:', err);
       // On error, redirect to character creation to be safe
-      return res.redirect('/adventure?tutorial=true');
+      return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
     }
   }catch(err){
     console.error('❌ OAuth callback error:', err.response?.data || err.message);
@@ -6391,6 +6402,11 @@ app.get('/api/leaderboards/:type/stats', (req, res) => {
 
 // Root route - landing page
 app.get('/', (req, res) => {
+  // Store channel parameter in session if provided
+  if (req.query.channel) {
+    req.session.oauthChannel = req.query.channel;
+  }
+  
   if (req.session.user) {
     return res.redirect('/adventure');
   }
@@ -6419,19 +6435,27 @@ app.get('/setup', async (req, res) => {
 // Adventure route - main game (requires auth)
 app.get('/adventure', async (req, res) => {
   if (!req.session.user) {
+    // Store channel parameter before redirecting to login
+    if (req.query.channel) {
+      req.session.oauthChannel = req.query.channel;
+    }
     return res.redirect('/');
   }
   
-  // Check if user has a character, redirect to character creation if not
-  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-  const channel = CHANNELS[0] || 'default';
+  // Get the channel from query parameter or session
+  let channel = req.query.channel || req.session.oauthChannel;
+  if (!channel) {
+    // Fall back to CHANNELS env
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
+  }
   
   try {
     const character = await db.loadPlayerProgress(req.session.user.id, channel);
     
     // If no character exists and URL doesn't already have tutorial parameter, redirect with it
     if (!character && req.query.tutorial !== 'true') {
-      return res.redirect('/adventure?tutorial=true');
+      return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
     }
   } catch (error) {
     console.error('Error checking character:', error);

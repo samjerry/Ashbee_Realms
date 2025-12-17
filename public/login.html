@@ -165,5 +165,15 @@
       We use official Twitch OAuth. We never see your password and only request basic profile information.
     </div>
   </div>
+  
+  <script>
+    // Preserve channel parameter through OAuth flow
+    const params = new URLSearchParams(window.location.search);
+    const channel = params.get('channel');
+    if (channel) {
+      const loginBtn = document.querySelector('.login-btn');
+      loginBtn.href = `/auth/twitch?channel=${encodeURIComponent(channel)}`;
+    }
+  </script>
 </body>
 </html>
