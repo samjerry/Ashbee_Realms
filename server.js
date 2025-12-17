@@ -5326,232 +5326,243 @@ app.get('/api/operator/commands', checkOperatorAccess, (req, res) => {
  * POST /api/operator/execute
  * Execute an operator command
  * Body: { channel, command, params }
+ * WITH ENHANCED VALIDATION
  */
-app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
-  try {
-    const { command, params } = req.body;
+app.post('/api/operator/execute',
+  checkOperatorAccess,
+  validation.validateOperatorCommand,
+  security.auditLog('operator_execute'),
+  async (req, res) => {
+    try {
+      const { command, params } = req.body;
 
-    if (!command) {
-      return res.status(400).json({ error: 'Command is required' });
-    }
+      if (!command) {
+        return res.status(400).json({ error: 'Command is required' });
+      }
 
-    // Check rate limit
-    if (!checkOperatorRateLimit(req.session.user.id)) {
-      return res.status(429).json({ 
-        error: 'Rate limit exceeded. Please wait before executing more commands.',
-        retryAfter: 60 
-      });
-    }
+      // Sanitize command name
+      const sanitizedCommand = sanitization.sanitizeInput(command, { maxLength: 50 });
 
-    // Check if user can execute this command
-    if (!operatorMgr.canExecuteCommand(command, req.operatorLevel)) {
-      return res.status(403).json({ 
-        error: 'Insufficient permissions for this command',
-        required: 'Higher operator level required'
-      });
-    }
+      // Check rate limit
+      if (!checkOperatorRateLimit(req.session.user.id)) {
+        return res.status(429).json({ 
+          error: 'Rate limit exceeded. Please wait before executing more commands.',
+          retryAfter: 60 
+        });
+      }
 
-    // Execute the command
-    let result;
-    switch (command) {
-      case 'giveItem':
-        result = await operatorMgr.giveItem(
-          params.playerId,
-          req.channelName,
-          params.itemId,
-          params.quantity || 1,
-          db
-        );
-        break;
+      // Check if user can execute this command
+      if (!operatorMgr.canExecuteCommand(sanitizedCommand, req.operatorLevel)) {
+        return res.status(403).json({ 
+          error: 'Insufficient permissions for this command',
+          required: 'Higher operator level required'
+        });
+      }
 
-      case 'giveGold':
-        result = await operatorMgr.giveGold(
-          params.playerId,
-          req.channelName,
-          params.amount,
-          db
-        );
-        break;
+      // Sanitize params
+      const sanitizedParams = params ? sanitization.sanitizeObject(params, { maxDepth: 3 }) : {};
 
-      case 'giveExp':
-        result = await operatorMgr.giveExp(
-          params.playerId,
-          req.channelName,
-          params.amount,
-          db
-        );
-        break;
+      // Execute the command
+      let result;
+      switch (sanitizedCommand) {
+        case 'giveItem':
+          result = await operatorMgr.giveItem(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.itemId, { maxLength: 100 }),
+            sanitization.sanitizeNumber(sanitizedParams.quantity || 1, { min: 1, max: 1000, integer: true }),
+            db
+          );
+          break;
 
-      case 'healPlayer':
-        result = await operatorMgr.healPlayer(
-          params.playerId,
-          req.channelName,
-          db
-        );
-        break;
+        case 'giveGold':
+          result = await operatorMgr.giveGold(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.amount, { min: -1000000, max: 1000000, integer: true }),
+            db
+          );
+          break;
 
-      case 'removeItem':
-        result = await operatorMgr.removeItem(
-          params.playerId,
-          req.channelName,
-          params.itemId,
-          params.quantity || 1,
-          db
-        );
-        break;
+        case 'giveExp':
+          result = await operatorMgr.giveExp(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.amount, { min: 1, max: 10000000, integer: true }),
+            db
+          );
+          break;
 
-      case 'removeGold':
-        result = await operatorMgr.removeGold(
-          params.playerId,
-          req.channelName,
-          params.amount,
-          db
-        );
-        break;
+        case 'healPlayer':
+          result = await operatorMgr.healPlayer(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
 
-      case 'removeLevel':
-        result = await operatorMgr.removeLevel(
-          params.playerId,
-          req.channelName,
-          params.levels,
-          db
-        );
-        break;
+        case 'removeItem':
+          result = await operatorMgr.removeItem(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.itemId, { maxLength: 100 }),
+            sanitization.sanitizeNumber(sanitizedParams.quantity || 1, { min: 1, max: 1000, integer: true }),
+            db
+          );
+          break;
 
-      case 'setPlayerLevel':
-        result = await operatorMgr.setPlayerLevel(
-          params.playerId,
-          req.channelName,
-          params.level,
-          db
-        );
-        break;
+        case 'removeGold':
+          result = await operatorMgr.removeGold(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.amount, { min: 1, max: 1000000, integer: true }),
+            db
+          );
+          break;
 
-      case 'teleportPlayer':
-        result = await operatorMgr.teleportPlayer(
-          params.playerId,
-          req.channelName,
-          params.location,
-          db
-        );
-        break;
+        case 'removeLevel':
+          result = await operatorMgr.removeLevel(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.levels, { min: 1, max: 100, integer: true }),
+            db
+          );
+          break;
 
-      case 'clearInventory':
-        result = await operatorMgr.clearInventory(
-          params.playerId,
-          req.channelName,
-          db
-        );
-        break;
+        case 'setPlayerLevel':
+          result = await operatorMgr.setPlayerLevel(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.level, { min: 1, max: 100, integer: true }),
+            db
+          );
+          break;
 
-      case 'changeWeather':
-        result = await operatorMgr.changeWeather(
-          req.channelName,
-          params.weather,
-          db
-        );
-        break;
+        case 'teleportPlayer':
+          result = await operatorMgr.teleportPlayer(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeLocationName(sanitizedParams.location),
+            db
+          );
+          break;
 
-      case 'changeTime':
-        result = await operatorMgr.changeTime(
-          req.channelName,
-          params.time,
-          db
-        );
-        break;
+        case 'clearInventory':
+          result = await operatorMgr.clearInventory(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
 
-      case 'changeSeason':
-        result = await operatorMgr.changeSeason(
-          req.channelName,
-          params.season,
-          db
-        );
-        break;
+        case 'changeWeather':
+          result = await operatorMgr.changeWeather(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.weather, { maxLength: 50 }),
+            db
+          );
+          break;
 
-      case 'spawnEncounter':
-        result = await operatorMgr.spawnEncounter(
-          params.playerId,
-          req.channelName,
-          params.encounterId,
-          db
-        );
-        break;
+        case 'changeTime':
+          result = await operatorMgr.changeTime(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.time, { maxLength: 50 }),
+            db
+          );
+          break;
 
-      case 'resetQuest':
-        result = await operatorMgr.resetQuest(
-          params.playerId,
-          req.channelName,
-          params.questId,
-          db
-        );
-        break;
+        case 'changeSeason':
+          result = await operatorMgr.changeSeason(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.season, { maxLength: 50 }),
+            db
+          );
+          break;
 
-      case 'forceEvent':
-        result = await operatorMgr.forceEvent(
-          req.channelName,
-          params.eventId,
-          db
-        );
-        break;
+        case 'spawnEncounter':
+          result = await operatorMgr.spawnEncounter(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.encounterId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-      case 'setPlayerStats':
-        result = await operatorMgr.setPlayerStats(
-          params.playerId,
-          req.channelName,
-          params.stats,
-          db
-        );
-        break;
+        case 'resetQuest':
+          result = await operatorMgr.resetQuest(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.questId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-      case 'giveAllItems':
-        result = await operatorMgr.giveAllItems(
-          params.playerId,
-          req.channelName,
-          db
-        );
-        break;
+        case 'forceEvent':
+          result = await operatorMgr.forceEvent(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.eventId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-      case 'unlockAchievement':
-        result = await operatorMgr.unlockAchievement(
-          params.playerId,
-          req.channelName,
-          params.achievementId,
-          db
-        );
-        break;
+        case 'setPlayerStats':
+          result = await operatorMgr.setPlayerStats(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizePlayerStats(sanitizedParams.stats),
+            db
+          );
+          break;
 
-      default:
-        return res.status(400).json({ error: `Unknown command: ${command}` });
-    }
+        case 'giveAllItems':
+          result = await operatorMgr.giveAllItems(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
 
-    // Log the action to audit log
-    await db.logOperatorAction(
-      req.session.user.id,
-      req.session.user.displayName,
-      req.channelName,
-      command,
-      params,
-      true,
-      null
-    );
+        case 'unlockAchievement':
+          result = await operatorMgr.unlockAchievement(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.achievementId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-    console.log(`[OPERATOR] ${req.session.user.displayName} executed ${command} in ${req.channelName}`);
+        default:
+          return res.status(400).json({ error: `Unknown command: ${sanitizedCommand}` });
+      }
 
-    res.json(result);
-  } catch (error) {
-    // Log failed action to audit log
-    const channelName = req.channelName || req.body?.channel || 'unknown';
-    const userId = req.session?.user?.id || 'unknown';
-    const userName = req.session?.user?.displayName || 'unknown';
-    
-    await db.logOperatorAction(
-      userId,
-      userName,
-      channelName,
-      req.body?.command || 'unknown',
-      req.body?.params || {},
-      false,
-      error.message
+      // Log the action to audit log
+      await db.logOperatorAction(
+        req.session.user.id,
+        req.session.user.displayName,
+        req.channelName,
+        sanitizedCommand,
+        sanitizedParams,
+        true,
+        null
+      );
+
+      console.log(`[OPERATOR] ${req.session.user.displayName} executed ${sanitizedCommand} in ${req.channelName}`);
+
+      res.json(result);
+    } catch (error) {
+      // Log failed action to audit log
+      const channelName = req.channelName || req.body?.channel || 'unknown';
+      const userId = req.session?.user?.id || 'unknown';
+      const userName = req.session?.user?.displayName || 'unknown';
+      
+      await db.logOperatorAction(
+        userId,
+        userName,
+        channelName,
+        req.body?.command || 'unknown',
+        req.body?.params || {},
+        false,
+        error.message
     ).catch(err => console.error('Failed to log error:', err));
 
     console.error('Operator command execution error:', error);
