@@ -125,9 +125,14 @@ async function initializeBot() {
         console.error('Failed to update user role:', err);
       });
 
-      // Only command: !adventure - all other features through in-game UI
+      // Only commands: !adventure and !setup
       if (msg === '!adventure') {
         client.say(channel, `🗡️ Join the adventure: ${BASE_URL}/adventure?channel=${channelName}`);
+        return;
+      }
+      
+      if (msg === '!setup') {
+        client.say(channel, `🔧 Broadcaster setup: ${BASE_URL}/auth/broadcaster?channel=${channelName}`);
         return;
       }
 

@@ -299,6 +299,12 @@ const BROADCASTER_REDIRECT_URI = process.env.BASE_URL ? `${process.env.BASE_URL.
 app.get('/auth/broadcaster', (req, res) => {
   if (!TWITCH_CLIENT_ID) return res.status(500).send('Twitch client id not configured');
   
+  // Store the target channel in session if provided
+  const targetChannel = req.query.channel;
+  if (targetChannel) {
+    req.session.targetChannel = targetChannel.toLowerCase();
+  }
+  
   // Extended scopes for broadcaster to check VIP, subscriber, and moderator status of users
   const scopes = [
     'user:read:email',
@@ -361,6 +367,49 @@ app.get('/auth/broadcaster/callback',
     const broadcasterName = user.display_name;
     
     console.log(`✅ Broadcaster authenticated: ${broadcasterName} (${channelName})`);
+    
+    // Check if this matches the target channel (if specified)
+    const targetChannel = req.session.targetChannel;
+    if (targetChannel && targetChannel !== channelName) {
+      // User is not the broadcaster of the target channel
+      console.log(`⚠️ User ${channelName} tried to authenticate for channel ${targetChannel}`);
+      return res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Not Authorized</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              margin: 0;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+            }
+            .container {
+              text-align: center;
+              padding: 40px;
+              background: rgba(0, 0, 0, 0.3);
+              border-radius: 15px;
+              max-width: 500px;
+            }
+            h1 { font-size: 2.5em; margin-bottom: 20px; }
+            p { font-size: 1.2em; line-height: 1.6; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>🚫 Not Authorized</h1>
+            <p>You are not the streamer of the channel <strong>${targetChannel}</strong>.</p>
+            <p>Only the broadcaster can set up their channel's game settings.</p>
+          </div>
+        </body>
+        </html>
+      `);
+    }
     
     // Save broadcaster credentials
     await db.saveBroadcasterAuth(channelName, broadcasterId, broadcasterName, access_token, refresh_token, scopes);
