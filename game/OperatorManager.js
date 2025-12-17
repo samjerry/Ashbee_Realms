@@ -772,6 +772,61 @@ class OperatorManager {
           { name: 'achievementId', type: 'string', required: true }
         ],
         level: 'STREAMER'
+      },
+
+      // Creator commands (dangerous/system)
+      deleteCharacter: {
+        name: 'Delete Character',
+        description: '⚠️ DANGER: Permanently delete a player character',
+        params: [
+          { name: 'playerId', type: 'string', required: true },
+          { name: 'confirm', type: 'string', required: true, placeholder: 'Type DELETE to confirm' }
+        ],
+        level: 'CREATOR',
+        dangerous: true
+      },
+      wipeProgress: {
+        name: 'Wipe Progress',
+        description: '⚠️ DANGER: Reset all progress for a player',
+        params: [
+          { name: 'playerId', type: 'string', required: true },
+          { name: 'confirm', type: 'string', required: true, placeholder: 'Type WIPE to confirm' }
+        ],
+        level: 'CREATOR',
+        dangerous: true
+      },
+      grantOperator: {
+        name: 'Grant Operator',
+        description: 'Grant operator permissions to a player',
+        params: [
+          { name: 'playerId', type: 'string', required: true },
+          { name: 'level', type: 'select', options: ['MODERATOR', 'STREAMER'], required: true }
+        ],
+        level: 'CREATOR'
+      },
+      revokeOperator: {
+        name: 'Revoke Operator',
+        description: 'Remove operator permissions from a player',
+        params: [
+          { name: 'playerId', type: 'string', required: true }
+        ],
+        level: 'CREATOR'
+      },
+      systemBroadcast: {
+        name: 'System Broadcast',
+        description: 'Send a system-wide message to all players',
+        params: [
+          { name: 'message', type: 'text', required: true }
+        ],
+        level: 'CREATOR'
+      },
+      maintenanceMode: {
+        name: 'Maintenance Mode',
+        description: 'Toggle maintenance mode for the game',
+        params: [
+          { name: 'enabled', type: 'select', options: ['true', 'false'], required: true }
+        ],
+        level: 'CREATOR'
       }
     };
   }

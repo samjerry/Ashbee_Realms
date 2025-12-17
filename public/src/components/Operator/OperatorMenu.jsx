@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Shield, Crown, Star, X, Search } from 'lucide-react';
+import { Shield, Crown, Star, X, Search, Eye, AlertTriangle, Zap, Users, Settings, Database } from 'lucide-react';
 import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
 
 /**
@@ -16,6 +16,27 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [executing, setExecuting] = useState(false);
   const [message, setMessage] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
+
+  // Command categories for better organization
+  const COMMAND_CATEGORIES = {
+    PLAYER: { name: 'Player Management', icon: Users, color: 'blue' },
+    ECONOMY: { name: 'Economy', icon: Star, color: 'yellow' },
+    WORLD: { name: 'World Control', icon: Settings, color: 'green' },
+    SYSTEM: { name: 'System', icon: Database, color: 'red' }
+  };
+
+  const categorizeCommand = (cmdName, cmdData) => {
+    if (['giveGold', 'removeGold', 'giveItem', 'removeItem', 'giveAllItems'].includes(cmdName)) {
+      return 'ECONOMY';
+    } else if (['changeWeather', 'changeTime', 'changeSeason', 'forceEvent', 'spawnEncounter'].includes(cmdName)) {
+      return 'WORLD';
+    } else if (['deleteCharacter', 'wipeProgress', 'grantOperator', 'revokeOperator', 'systemBroadcast', 'maintenanceMode'].includes(cmdName)) {
+      return 'SYSTEM';
+    } else {
+      return 'PLAYER';
+    }
+  };
 
   useEffect(() => {
     if (isOpen && channelName) {
@@ -101,7 +122,7 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
   const getLevelIcon = (level) => {
     switch (level) {
       case 'CREATOR':
-        return <Crown className="w-5 h-5 text-purple-400" />;
+        return <Eye className="w-5 h-5 text-purple-400" />;
       case 'STREAMER':
         return <Star className="w-5 h-5 text-yellow-400" />;
       case 'MODERATOR':
@@ -109,6 +130,15 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
       default:
         return null;
     }
+  };
+
+  const getLevelBadge = (level) => {
+    const badges = {
+      CREATOR: { icon: Eye, color: 'purple', bgColor: 'bg-purple-600', textColor: 'text-purple-300' },
+      STREAMER: { icon: Star, color: 'yellow', bgColor: 'bg-yellow-600', textColor: 'text-yellow-300' },
+      MODERATOR: { icon: Shield, color: 'blue', bgColor: 'bg-blue-600', textColor: 'text-blue-300' }
+    };
+    return badges[level] || badges.MODERATOR;
   };
 
   const getLevelColor = (level) => {
@@ -128,6 +158,30 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
     p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.player_id?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Group commands by permission level
+  const groupCommandsByLevel = () => {
+    const grouped = {
+      MODERATOR: [],
+      STREAMER: [],
+      CREATOR: []
+    };
+
+    Object.entries(commands).forEach(([cmdName, cmdData]) => {
+      const level = cmdData.level || 'MODERATOR';
+      if (grouped[level]) {
+        grouped[level].push({ name: cmdName, data: cmdData });
+      }
+    });
+
+    return grouped;
+  };
+
+  // Filter commands by category
+  const filterCommandsByCategory = (commandsList) => {
+    if (selectedCategory === 'ALL') return commandsList;
+    return commandsList.filter(cmd => categorizeCommand(cmd.name, cmd.data) === selectedCategory);
+  };
 
   if (!isOpen) return null;
 
@@ -188,50 +242,161 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
         <div className="flex-1 overflow-y-auto p-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Commands List */}
-            <div className="lg:col-span-1">
-              <h3 className="text-lg font-bold text-white mb-3">Available Commands</h3>
-              <div className="space-y-2">
-                {Object.entries(commands).map(([cmdName, cmdData]) => (
+            <div className="lg:col-span-1 space-y-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-bold text-white">Commands</h3>
+                <div className="text-xs text-gray-400">
+                  {Object.keys(commands).length} available
+                </div>
+              </div>
+
+              {/* Category Filter */}
+              <div className="bg-gray-800 rounded-lg p-3 mb-4">
+                <div className="text-xs font-medium text-gray-400 mb-2">Filter by Category</div>
+                <div className="flex flex-wrap gap-2">
                   <button
-                    key={cmdName}
-                    onClick={() => selectCommand(cmdName)}
-                    className={`w-full text-left p-3 rounded-lg transition-colors ${
-                      selectedCommand === cmdName
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    onClick={() => setSelectedCategory('ALL')}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                      selectedCategory === 'ALL'
+                        ? 'bg-white text-gray-900'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                     }`}
                   >
-                    <div className="font-medium">{cmdData.name}</div>
-                    <div className="text-xs opacity-75">{cmdData.level}</div>
+                    All
                   </button>
-                ))}
+                  {Object.entries(COMMAND_CATEGORIES).map(([key, cat]) => {
+                    const Icon = cat.icon;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => setSelectedCategory(key)}
+                        className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1 ${
+                          selectedCategory === key
+                            ? `bg-${cat.color}-600 text-white`
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`}
+                      >
+                        <Icon className="w-3 h-3" />
+                        {cat.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Commands by Permission Level */}
+              <div className="space-y-4 max-h-[calc(90vh-300px)] overflow-y-auto pr-2">
+                {Object.entries(groupCommandsByLevel()).map(([level, commandsList]) => {
+                  const filteredCommands = filterCommandsByCategory(commandsList);
+                  if (filteredCommands.length === 0) return null;
+
+                  const badge = getLevelBadge(level);
+                  const LevelIcon = badge.icon;
+
+                  return (
+                    <div key={level} className="space-y-2">
+                      {/* Level Header */}
+                      <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${badge.bgColor} bg-opacity-20 border-l-4 border-${badge.color}-500`}>
+                        <LevelIcon className={`w-4 h-4 ${badge.textColor}`} />
+                        <span className={`text-sm font-bold ${badge.textColor}`}>
+                          {level} Commands
+                        </span>
+                        <span className="text-xs text-gray-400 ml-auto">
+                          {filteredCommands.length}
+                        </span>
+                      </div>
+
+                      {/* Commands in this level */}
+                      {filteredCommands.map(({ name: cmdName, data: cmdData }) => {
+                        const category = COMMAND_CATEGORIES[categorizeCommand(cmdName, cmdData)];
+                        const CategoryIcon = category.icon;
+                        
+                        return (
+                          <button
+                            key={cmdName}
+                            onClick={() => selectCommand(cmdName)}
+                            className={`w-full text-left p-3 rounded-lg transition-all group ${
+                              selectedCommand === cmdName
+                                ? `${badge.bgColor} border-2 border-${badge.color}-400 shadow-lg`
+                                : 'bg-gray-800 border-2 border-transparent hover:border-gray-600 hover:bg-gray-700'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <CategoryIcon className={`w-3.5 h-3.5 text-${category.color}-400`} />
+                                  <span className={`font-medium ${
+                                    selectedCommand === cmdName ? 'text-white' : 'text-gray-200'
+                                  }`}>
+                                    {cmdData.name}
+                                  </span>
+                                  {cmdData.dangerous && (
+                                    <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+                                  )}
+                                </div>
+                                <div className={`text-xs ${
+                                  selectedCommand === cmdName ? 'text-gray-300' : 'text-gray-500'
+                                }`}>
+                                  {cmdData.description}
+                                </div>
+                              </div>
+                              <LevelIcon className={`w-4 h-4 ${badge.textColor} opacity-50 group-hover:opacity-100 transition-opacity`} />
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
             {/* Command Details & Execution */}
             <div className="lg:col-span-2">
               {selectedCommand ? (
-                <div className="bg-gray-800 rounded-lg p-4">
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    {commands[selectedCommand].name}
-                  </h3>
-                  <p className="text-gray-400 mb-4">
-                    {commands[selectedCommand].description}
-                  </p>
+                <div className="bg-gray-800 rounded-lg p-6 border-2 border-gray-700">
+                  {/* Command Header */}
+                  <div className="mb-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                        {commands[selectedCommand].name}
+                        {commands[selectedCommand].dangerous && (
+                          <span className="flex items-center gap-1 text-sm font-medium text-red-400 bg-red-900/30 px-3 py-1 rounded-full">
+                            <AlertTriangle className="w-4 h-4" />
+                            Dangerous
+                          </span>
+                        )}
+                      </h3>
+                      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
+                        getLevelBadge(commands[selectedCommand].level).bgColor
+                      } bg-opacity-30`}>
+                        {getLevelIcon(commands[selectedCommand].level)}
+                        <span className={`text-sm font-bold ${
+                          getLevelBadge(commands[selectedCommand].level).textColor
+                        }`}>
+                          {commands[selectedCommand].level}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-gray-400">
+                      {commands[selectedCommand].description}
+                    </p>
+                  </div>
 
                   {/* Parameters */}
-                  <div className="space-y-3 mb-4">
+                  <div className="space-y-4 mb-6">
+                    <div className="text-sm font-bold text-gray-300 mb-3">Parameters</div>
                     {commands[selectedCommand].params.map((param) => (
                       <div key={param.name}>
-                        <label className="block text-sm font-medium text-gray-300 mb-1">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
                           {param.name}
-                          {param.required && <span className="text-red-400">*</span>}
+                          {param.required && <span className="text-red-400 ml-1">*</span>}
                         </label>
                         {param.type === 'select' ? (
                           <select
                             value={commandParams[param.name] || ''}
                             onChange={(e) => updateParam(param.name, e.target.value)}
-                            className="w-full bg-gray-700 text-white rounded px-3 py-2"
+                            className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                           >
                             <option value="">Select {param.name}</option>
                             {param.options.map((opt) => (
@@ -247,31 +412,45 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
                               placeholder="Search players..."
-                              className="w-full bg-gray-700 text-white rounded px-3 py-2 mb-2"
+                              className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 mb-2 border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                             />
-                            <div className="max-h-40 overflow-y-auto bg-gray-700 rounded">
-                              {filteredPlayers.map((player) => (
-                                <button
-                                  key={player.player_id}
-                                  onClick={() => {
-                                    updateParam('playerId', player.player_id);
-                                    setSearchTerm(player.name);
-                                  }}
-                                  className="w-full text-left px-3 py-2 hover:bg-gray-600"
-                                >
-                                  <div className="font-medium flex items-center gap-1" style={{ color: getPlayerNameColor(player.name_color, player.roles) }}>
-                                    {player.roles && getRoleBadges(player.roles, player.selected_role_badge).map(({ Icon, color, role }) => (
-                                      <Icon key={role} size={14} style={{ color }} />
-                                    ))}
-                                    <span>{player.name}</span>
-                                  </div>
-                                  <div className="text-xs text-gray-400">
-                                    Level {player.level} - {player.location}
-                                  </div>
-                                </button>
-                              ))}
+                            <div className="max-h-48 overflow-y-auto bg-gray-700 rounded-lg border border-gray-600">
+                              {filteredPlayers.length > 0 ? (
+                                filteredPlayers.map((player) => (
+                                  <button
+                                    key={player.player_id}
+                                    onClick={() => {
+                                      updateParam('playerId', player.player_id);
+                                      setSearchTerm(player.name);
+                                    }}
+                                    className="w-full text-left px-4 py-3 hover:bg-gray-600 transition-colors border-b border-gray-600 last:border-b-0"
+                                  >
+                                    <div className="font-medium flex items-center gap-1" style={{ color: getPlayerNameColor(player.name_color, player.roles) }}>
+                                      {player.roles && getRoleBadges(player.roles, player.selected_role_badge).map(({ Icon, color, role }) => (
+                                        <Icon key={role} size={14} style={{ color }} />
+                                      ))}
+                                      <span>{player.name}</span>
+                                    </div>
+                                    <div className="text-xs text-gray-400 mt-1">
+                                      Level {player.level} • {player.location}
+                                    </div>
+                                  </button>
+                                ))
+                              ) : (
+                                <div className="px-4 py-3 text-gray-400 text-sm">
+                                  No players found
+                                </div>
+                              )}
                             </div>
                           </div>
+                        ) : param.type === 'text' ? (
+                          <textarea
+                            value={commandParams[param.name] || ''}
+                            onChange={(e) => updateParam(param.name, e.target.value)}
+                            placeholder={param.placeholder || `Enter ${param.name}`}
+                            rows={3}
+                            className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
+                          />
                         ) : (
                           <input
                             type={param.type === 'number' ? 'number' : 'text'}
@@ -284,8 +463,8 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                                   : e.target.value
                               )
                             }
-                            placeholder={`Enter ${param.name}`}
-                            className="w-full bg-gray-700 text-white rounded px-3 py-2"
+                            placeholder={param.placeholder || `Enter ${param.name}`}
+                            className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                           />
                         )}
                       </div>
@@ -295,13 +474,18 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                   {/* Message Display */}
                   {message && (
                     <div
-                      className={`p-3 rounded mb-4 ${
+                      className={`p-4 rounded-lg mb-4 flex items-start gap-3 ${
                         message.type === 'success'
-                          ? 'bg-green-900/50 text-green-300'
-                          : 'bg-red-900/50 text-red-300'
+                          ? 'bg-green-900/30 border border-green-700 text-green-300'
+                          : 'bg-red-900/30 border border-red-700 text-red-300'
                       }`}
                     >
-                      {message.text}
+                      {message.type === 'success' ? (
+                        <Zap className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      ) : (
+                        <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                      )}
+                      <span className="flex-1">{message.text}</span>
                     </div>
                   )}
 
@@ -309,19 +493,32 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                   <button
                     onClick={executeCommand}
                     disabled={executing}
-                    className={`w-full py-3 rounded-lg font-bold transition-colors ${
+                    className={`w-full py-4 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${
                       executing
                         ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        : 'bg-green-600 text-white hover:bg-green-700'
+                        : commands[selectedCommand].dangerous
+                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-red-900/50'
+                        : 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-green-900/50'
                     }`}
                   >
-                    {executing ? 'Executing...' : 'Execute Command'}
+                    {executing ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                        Executing...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-5 h-5" />
+                        Execute Command
+                      </>
+                    )}
                   </button>
                 </div>
               ) : (
-                <div className="bg-gray-800 rounded-lg p-8 text-center text-gray-400">
-                  <Shield className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p>Select a command from the list to begin</p>
+                <div className="bg-gray-800 rounded-lg p-12 text-center border-2 border-dashed border-gray-700">
+                  <Shield className="w-20 h-20 mx-auto mb-4 text-gray-600" />
+                  <p className="text-gray-400 text-lg">Select a command from the list to begin</p>
+                  <p className="text-gray-500 text-sm mt-2">Commands are organized by permission level and category</p>
                 </div>
               )}
             </div>
