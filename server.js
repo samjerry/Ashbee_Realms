@@ -340,7 +340,7 @@ app.get('/auth/broadcaster', (req, res) => {
     const scope = encodeURIComponent(scopes.join(' '));
     const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(BROADCASTER_REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
     
-    console.log('✅ Session saved, redirecting to Twitch');
+    console.log('✅ Session saved, redirecting to Twitch with URI:', BROADCASTER_REDIRECT_URI);
     res.redirect(url);
   });
 });
