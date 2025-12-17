@@ -308,7 +308,9 @@ app.get('/auth/broadcaster', (req, res) => {
   res.redirect(url);
 });
 
-app.get('/auth/broadcaster/callback', async (req, res) => {
+app.get('/auth/broadcaster/callback', 
+  rateLimiter.middleware('strict'),
+  async (req, res) => {
   const { code, state } = req.query;
   
   if (!code || !state || state !== req.session.broadcasterOauthState) {
