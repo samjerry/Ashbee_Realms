@@ -71,10 +71,13 @@ let sessionConfig = {
     secure: process.env.NODE_ENV === 'production', // HTTPS only in production
     httpOnly: true, // Prevents JavaScript access to cookies
     sameSite: 'lax', // CSRF protection
-    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    domain: process.env.COOKIE_DOMAIN || undefined, // Allow subdomain cookies if needed
+    path: '/' // Ensure cookie is sent for all paths
   },
   name: 'sessionId', // Don't use default 'connect.sid' - obscurity
-  rolling: true // Reset expiration on activity
+  rolling: true, // Reset expiration on activity
+  proxy: process.env.NODE_ENV === 'production' // Trust Railway's proxy
 };
 
 // Use PostgreSQL session store in production
@@ -345,14 +348,26 @@ app.get('/auth/broadcaster', (req, res) => {
 app.get('/auth/broadcaster/callback', 
   rateLimiter.middleware('strict'),
   async (req, res) => {
-  const { code, state } = req.query;
+  const { code, state, error, error_description } = req.query;
   
   console.log('📥 OAuth callback received:', { 
     hasCode: !!code, 
-    hasState: !!state, 
+    hasState: !!state,
+    hasError: !!error,
+    error: error,
+    error_description: error_description,
     sessionState: req.session.broadcasterOauthState,
-    sessionID: req.sessionID 
+    sessionID: req.sessionID,
+    targetChannel: req.session.targetChannel,
+    cookies: Object.keys(req.cookies),
+    hasSessionCookie: !!req.cookies.sessionId
   });
+  
+  // Check if user denied authorization
+  if (error) {
+    console.error('❌ Twitch OAuth error:', error, error_description);
+    return res.status(400).send(`Authorization failed: ${error_description || error}`);
+  }
   
   if (!code || !state || state !== req.session.broadcasterOauthState) {
     console.error('❌ OAuth validation failed:', { 
@@ -362,7 +377,7 @@ app.get('/auth/broadcaster/callback',
       receivedState: state,
       sessionState: req.session.broadcasterOauthState
     });
-    return res.status(400).send('Invalid OAuth callback - session expired or state mismatch. Please try again.');
+    return res.status(400).send('Invalid OAuth callback - session expired or state mismatch. Please try the !setup command again.');
   }
   
   try {
