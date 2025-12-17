@@ -11,6 +11,7 @@ const Combat = require('./game/Combat');
 const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager, OperatorManager } = require('./game');
 const { loadData } = require('./data/data_loader');
 const socketHandler = require('./websocket/socketHandler');
+const { fetchUserRolesFromTwitch } = require('./utils/twitchRoleChecker');
 
 // Security middleware
 const security = require('./middleware/security');
@@ -178,6 +179,26 @@ function canAnnounce(userId){
   return true;
 }
 
+/**
+ * Helper: Determine if we should fetch user roles from Twitch API
+ * @param {Array<string>|null} existingRoles - Existing roles from database
+ * @returns {boolean} True if we should fetch from Twitch API
+ */
+function shouldFetchRolesFromTwitchAPI(existingRoles) {
+  // No existing roles - need to fetch
+  if (!existingRoles || existingRoles.length === 0) {
+    return true;
+  }
+  
+  // Only has 'viewer' role - may have higher roles to fetch
+  if (existingRoles.length === 1 && existingRoles[0] === 'viewer') {
+    return true;
+  }
+  
+  // Has other roles - use existing
+  return false;
+}
+
 // Twitch OAuth: /auth/twitch -> redirect, /auth/twitch/callback -> handle
 const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const TWITCH_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
@@ -261,6 +282,96 @@ app.get('/auth/twitch/callback', async (req, res) => {
     console.error('❌ OAuth callback error:', err.response?.data || err.message);
     console.error('Full error:', err);
     res.status(500).send(`OAuth failed: ${err.response?.data?.message || err.message}`);
+  }
+});
+
+// Broadcaster OAuth: Enhanced authentication with expanded scopes for role detection
+const BROADCASTER_REDIRECT_URI = process.env.BASE_URL ? `${process.env.BASE_URL.replace(/\/$/, '')}/auth/broadcaster/callback` : `http://localhost:${process.env.PORT || 3000}/auth/broadcaster/callback`;
+
+app.get('/auth/broadcaster', (req, res) => {
+  if (!TWITCH_CLIENT_ID) return res.status(500).send('Twitch client id not configured');
+  
+  // Extended scopes for broadcaster to check VIP, subscriber, and moderator status of users
+  const scopes = [
+    'user:read:email',
+    'channel:read:vips',
+    'channel:read:subscriptions',
+    'moderation:read'
+  ];
+  
+  const state = Math.random().toString(36).slice(2);
+  req.session.broadcasterOauthState = state;
+  
+  const scope = encodeURIComponent(scopes.join(' '));
+  const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(BROADCASTER_REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
+  
+  res.redirect(url);
+});
+
+app.get('/auth/broadcaster/callback', 
+  rateLimiter.middleware('strict'),
+  async (req, res) => {
+  const { code, state } = req.query;
+  
+  if (!code || !state || state !== req.session.broadcasterOauthState) {
+    console.error('Broadcaster OAuth validation failed');
+    return res.status(400).send('Invalid OAuth callback');
+  }
+  
+  try {
+    // Exchange code for token
+    const tokenResp = await axios.post('https://id.twitch.tv/oauth2/token', null, {
+      params: {
+        client_id: TWITCH_CLIENT_ID,
+        client_secret: TWITCH_CLIENT_SECRET,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: BROADCASTER_REDIRECT_URI
+      }
+    });
+
+    const access_token = tokenResp.data.access_token;
+    const refresh_token = tokenResp.data.refresh_token;
+    const scopes = tokenResp.data.scope || [];
+    
+    console.log('✅ Broadcaster token exchange successful');
+    console.log('📋 Granted scopes:', scopes);
+
+    // Get broadcaster info
+    const userResp = await axios.get('https://api.twitch.tv/helix/users', { 
+      headers: { 
+        Authorization: `Bearer ${access_token}`, 
+        'Client-Id': TWITCH_CLIENT_ID 
+      } 
+    });
+    
+    const user = userResp.data.data && userResp.data.data[0];
+    if (!user) return res.status(500).send('Could not fetch broadcaster info');
+    
+    const channelName = user.login.toLowerCase();
+    const broadcasterId = user.id;
+    const broadcasterName = user.display_name;
+    
+    console.log(`✅ Broadcaster authenticated: ${broadcasterName} (${channelName})`);
+    
+    // Save broadcaster credentials
+    await db.saveBroadcasterAuth(channelName, broadcasterId, broadcasterName, access_token, refresh_token, scopes);
+    
+    // Also log in the broadcaster as a regular user
+    const playerId = `twitch-${broadcasterId}`;
+    await db.query(
+      'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO UPDATE SET twitch_id=$2, display_name=$3, access_token=$4, refresh_token=$5',
+      [playerId, broadcasterId, broadcasterName, access_token, refresh_token]
+    );
+    
+    req.session.user = { id: playerId, displayName: broadcasterName, twitchId: broadcasterId };
+    req.session.isBroadcaster = true;
+    
+    // Redirect to admin/setup page with success message
+    res.redirect('/adventure?broadcaster=authenticated');
+  } catch (err) {
+    console.error('❌ Broadcaster OAuth callback error:', err.response?.data || err.message);
+    res.status(500).send(`Broadcaster authentication failed: ${err.response?.data?.message || err.message}`);
   }
 });
 
@@ -547,23 +658,12 @@ app.get('/api/player/roles', async (req, res) => {
     }
     
     // Get the highest priority role as primary
-    const roleHierarchy = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
-    const primaryRole = roleHierarchy.find(r => roles.includes(r)) || 'viewer';
+    const primaryRole = db.ROLE_HIERARCHY.find(r => roles.includes(r)) || 'viewer';
     
     // Get available colors based on roles
-    const roleColors = {
-      creator: '#FFD700',    // Gold - game creator/developer
-      streamer: '#9146FF',   // Twitch purple
-      moderator: '#00FF00',  // Green
-      vip: '#FF1493',        // Deep pink
-      subscriber: '#6441A5', // Purple
-      tester: '#00FFFF',     // Cyan - beta testers
-      viewer: '#FFFFFF'      // White
-    };
-    
     const availableColors = roles.map(r => ({
       role: r,
-      color: roleColors[r] || roleColors.viewer,
+      color: db.ROLE_COLORS[r] || db.ROLE_COLORS.viewer,
       name: r.charAt(0).toUpperCase() + r.slice(1)
     }));
     
@@ -835,30 +935,75 @@ app.post('/api/player/create',
         return res.status(400).json({ error: 'Character already exists for this channel' });
       }
       
+      // Check if user has existing roles from previous activity (e.g., Twitch chat)
+      const existingProgress = await db.loadPlayerProgress(user.id, channelName);
+      let userRoles = existingProgress?.roles || null;
+      
+      // Try to fetch from Twitch API if we don't have accurate roles and broadcaster is authenticated
+      if (shouldFetchRolesFromTwitchAPI(userRoles)) {
+        const broadcasterAuth = await db.getBroadcasterAuth(channelName);
+        
+        if (broadcasterAuth && user.twitchId) {
+          console.log(`🔍 Fetching roles from Twitch API for ${characterName}`);
+          try {
+            const fetchedRoles = await fetchUserRolesFromTwitch(
+              broadcasterAuth.accessToken,
+              broadcasterAuth.broadcasterId,
+              user.twitchId,
+              characterName,
+              channelName
+            );
+            
+            if (fetchedRoles && fetchedRoles.length > 0) {
+              userRoles = fetchedRoles;
+              console.log(`✅ Fetched roles from Twitch API:`, userRoles);
+            } else {
+              userRoles = ['viewer'];
+            }
+          } catch (error) {
+            console.error('Failed to fetch roles from Twitch API:', error);
+            // Fall back to existing roles or viewer
+            userRoles = userRoles || ['viewer'];
+          }
+        } else {
+          // No broadcaster auth or twitchId - fall back to existing or viewer
+          userRoles = userRoles || ['viewer'];
+          if (!broadcasterAuth) {
+            console.log(`⚠️ Broadcaster not authenticated for channel ${channelName} - using fallback role detection`);
+          }
+        }
+      }
+      
+      // Ensure userRoles is never null
+      userRoles = userRoles || ['viewer'];
+      
       // Create new character
       const character = await db.createCharacter(user.id, channelName, characterName, classType);
       
       // Check if this is MarrowOfAlbion (game creator) and set creator role
       if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
-        character.roles = ['creator'];
+        userRoles = ['creator'];
         character.nameColor = validatedColor || '#FFD700'; // Default to gold for creator
         console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
       } else {
-        // Check if user is a beta tester
-        if (db.isBetaTester(characterName)) {
-          character.roles = character.roles || ['viewer'];
-          if (!character.roles.includes('tester')) {
-            character.roles.push('tester');
-          }
-          character.nameColor = validatedColor || '#00FFFF'; // Default to cyan for testers
+        // Check if user is a beta tester - add tester role if not already present
+        if (db.isBetaTester(characterName) && !userRoles.includes('tester')) {
+          userRoles = [...userRoles, 'tester'];
           console.log('🧪 Beta tester detected - granting tester role');
+        }
+        
+        // Set appropriate default name color based on highest role if not provided
+        if (!validatedColor) {
+          const highestRole = db.ROLE_HIERARCHY.find(r => userRoles.includes(r)) || 'viewer';
+          character.nameColor = db.ROLE_COLORS[highestRole];
         } else {
-          // Update name color if provided
-          if (validatedColor) {
-            character.nameColor = validatedColor;
-          }
+          character.nameColor = validatedColor;
         }
       }
+      
+      // Apply roles to character
+      character.roles = userRoles;
+      console.log(`🎭 Assigned roles to ${characterName}:`, userRoles);
       
       // Save character with roles and color
       await db.saveCharacter(user.id, channelName, character);
@@ -908,18 +1053,8 @@ app.post('/api/player/name-color',
       }
       
       // Validate that the color matches one of their roles
-      const roleColors = {
-        creator: '#FFD700',
-        streamer: '#9146FF',
-        moderator: '#00FF00',
-        vip: '#FF1493',
-        subscriber: '#6441A5',
-        tester: '#00FFFF',
-        viewer: '#FFFFFF'
-      };
-      
       const roles = playerData.roles || ['viewer'];
-      const validColors = roles.map(r => roleColors[r]);
+      const validColors = roles.map(r => db.ROLE_COLORS[r]);
       
       if (!validColors.includes(validatedColor)) {
         // Sanitize display name for logging to prevent log injection
