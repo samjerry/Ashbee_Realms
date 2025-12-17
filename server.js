@@ -1,5 +1,7 @@
 const express = require('express');
 const session = require('express-session');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const { rawAnnounce } = require('./bot');
 const path = require('path');
@@ -10,18 +12,54 @@ const { Character, ProgressionManager, ExplorationManager, QuestManager, Consuma
 const { loadData } = require('./data/data_loader');
 const socketHandler = require('./websocket/socketHandler');
 
-const app = express();
-app.use(express.json());
+// Security middleware
+const security = require('./middleware/security');
+const validation = require('./middleware/validation');
+const sanitization = require('./middleware/sanitization');
+const rateLimiter = require('./utils/rateLimiter');
 
-// Session store configuration
+const app = express();
+
+// Security headers with helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Required for React dev
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "wss:", "ws:"],
+      fontSrc: ["'self'", "data:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"]
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
+
+// Request size limits to prevent payload attacks
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+app.use(cookieParser());
+
+// Session store configuration with security hardening
 let sessionConfig = {
   secret: process.env.SESSION_SECRET || 'dev-secret',
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false,
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    httpOnly: true, // Prevents JavaScript access to cookies
+    sameSite: 'lax', // CSRF protection
     maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-  }
+  },
+  name: 'sessionId', // Don't use default 'connect.sid' - obscurity
+  rolling: true // Reset expiration on activity
 };
 
 // Use PostgreSQL session store in production
@@ -37,6 +75,12 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'))
 }
 
 app.use(session(sessionConfig));
+
+// Attach CSRF token to session
+app.use(security.attachCsrfToken);
+
+// Detect suspicious activity (after session, before routes)
+app.use(security.detectSuspiciousActivity);
 
 // Track initialization state
 let isReady = false;
@@ -216,22 +260,20 @@ app.get('/auth/twitch/callback', async (req, res) => {
 
 // Stub login for local testing: /auth/fake?name=Viewer123
 app.get('/auth/fake', async (req, res) => {
-  const name = req.query.name || 'Guest';
+  const rawName = req.query.name || 'Guest';
+  const name = sanitization.sanitizeCharacterName(rawName);
+  
+  if (!name) {
+    return res.status(400).send('Invalid username');
+  }
+  
   const id = 'stub-' + name;
   try {
     // Insert or ignore player
-    const dbType = db.getType();
-    if (dbType === 'sqlite') {
-      await db.query(
-        'INSERT INTO players(id, display_name) VALUES (?, ?) ON CONFLICT(id) DO NOTHING',
-        [id, name]
-      );
-    } else {
-      await db.query(
-        'INSERT INTO players(id, display_name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING',
-        [id, name]
-      );
-    }
+    await db.query(
+      'INSERT INTO players(id, display_name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING',
+      [id, name]
+    );
     req.session.user = { id, displayName: name };
     res.redirect('/adventure');
   } catch (err) {
@@ -253,6 +295,12 @@ app.get('/auth/logout', (req, res) => {
 app.get('/api/me', (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
   res.json({ user: req.session.user });
+});
+
+// Get CSRF token for authenticated users
+app.get('/api/csrf-token', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
+  res.json({ csrfToken: req.session.csrfToken });
 });
 
 // Get player progress
@@ -279,22 +327,110 @@ app.get('/api/player/progress', async (req, res) => {
   }
 });
 
-// Save player progress
-app.post('/api/player/progress', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
+// Save player progress - WITH SERVER-SIDE VALIDATION
+app.post('/api/player/progress', 
+  rateLimiter.middleware('strict'),
+  security.auditLog('save_progress'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  // Get channel from body or query parameter
-  const channelName = req.body.channel || req.query.channel;
-  if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
+    // Get channel from body or query parameter
+    const channelName = req.body.channel || req.query.channel;
+    if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
 
-  try {
-    const playerData = req.body.progress || req.body;
-    await db.savePlayerProgress(user.id, channelName.toLowerCase(), playerData);
-    res.json({ status: 'ok', message: 'Progress saved' });
-  } catch (err) {
-    console.error('Save progress error:', err);
-    res.status(500).json({ error: 'Failed to save progress' });
+    try {
+      const playerData = req.body.progress || req.body;
+      
+      // SERVER-SIDE VALIDATION: Verify current progress from database
+      const currentProgress = await db.loadPlayerProgress(user.id, channelName.toLowerCase());
+      
+      if (!currentProgress) {
+        return res.status(404).json({ error: 'No character found. Please create a character first.' });
+      }
+      
+      // Validate critical stats haven't been tampered with
+      if (playerData.level !== undefined) {
+        // Level can only increase by 1 at a time, and must be within valid range
+        if (playerData.level < 1 || playerData.level > 100) {
+          console.warn(`[SECURITY] Invalid level attempt: ${playerData.level} for user ${user.displayName}`);
+          return res.status(400).json({ error: 'Invalid level value' });
+        }
+        if (playerData.level > currentProgress.level + 1) {
+          console.warn(`[SECURITY] Level jump detected for user ${user.displayName}: ${currentProgress.level} -> ${playerData.level}`);
+          return res.status(400).json({ error: 'Invalid level progression' });
+        }
+      }
+      
+      // Validate gold changes
+      if (playerData.gold !== undefined) {
+        if (playerData.gold < 0 || playerData.gold > 100000000) {
+          console.warn(`[SECURITY] Invalid gold amount: ${playerData.gold} for user ${user.displayName}`);
+          return res.status(400).json({ error: 'Invalid gold amount' });
+        }
+        // Gold can't increase by more than 100k at once (reasonable transaction limit)
+        if (playerData.gold > currentProgress.gold + 100000) {
+          console.warn(`[SECURITY] Large gold increase detected for user ${user.displayName}: ${currentProgress.gold} -> ${playerData.gold}`);
+          return res.status(400).json({ error: 'Invalid gold change' });
+        }
+      }
+      
+      // Validate XP changes
+      if (playerData.xp !== undefined) {
+        if (playerData.xp < 0 || playerData.xp > 1000000000) {
+          console.warn(`[SECURITY] Invalid XP amount: ${playerData.xp} for user ${user.displayName}`);
+          return res.status(400).json({ error: 'Invalid XP amount' });
+        }
+      }
+      
+      // Validate HP
+      if (playerData.hp !== undefined) {
+        if (playerData.hp < 0 || playerData.hp > 1000000) {
+          console.warn(`[SECURITY] Invalid HP: ${playerData.hp} for user ${user.displayName}`);
+          return res.status(400).json({ error: 'Invalid HP value' });
+        }
+        // HP can't exceed max_hp
+        const maxHp = playerData.max_hp || currentProgress.max_hp;
+        if (playerData.hp > maxHp) {
+          console.warn(`[SECURITY] HP > max_hp for user ${user.displayName}: ${playerData.hp} > ${maxHp}`);
+          playerData.hp = maxHp; // Cap at max
+        }
+      }
+      
+      // Sanitize string fields
+      if (playerData.name) {
+        playerData.name = sanitization.sanitizeCharacterName(playerData.name);
+      }
+      if (playerData.location) {
+        playerData.location = sanitization.sanitizeLocationName(playerData.location);
+      }
+      
+      // Sanitize inventory
+      if (playerData.inventory) {
+        playerData.inventory = sanitization.sanitizeInventory(playerData.inventory);
+        // Limit inventory size
+        if (playerData.inventory.length > 1000) {
+          console.warn(`[SECURITY] Inventory size exceeded for user ${user.displayName}: ${playerData.inventory.length}`);
+          playerData.inventory = playerData.inventory.slice(0, 1000);
+        }
+      }
+      
+      // Sanitize equipment
+      if (playerData.equipped) {
+        playerData.equipped = sanitization.sanitizeEquipment(playerData.equipped);
+      }
+      
+      // Merge with current progress to prevent data loss
+      const mergedData = {
+        ...currentProgress,
+        ...playerData
+      };
+      
+      await db.savePlayerProgress(user.id, channelName.toLowerCase(), mergedData);
+      res.json({ status: 'ok', message: 'Progress saved' });
+    } catch (err) {
+      console.error('Save progress error:', err);
+      res.status(500).json({ error: 'Failed to save progress' });
   }
 });
 
@@ -573,181 +709,215 @@ app.get('/api/player/equipment', async (req, res) => {
 
 /**
  * POST /api/player/equip
- * Equip an item from inventory
+ * Equip an item from inventory - WITH VALIDATION
  */
-app.post('/api/player/equip', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { channel, itemId } = req.body;
-  if (!channel || !itemId) {
-    return res.status(400).json({ error: 'Channel and itemId required' });
-  }
-  
-  const channelName = channel.toLowerCase();
-  
-  try {
-    const character = await db.getCharacter(user.id, channelName);
+app.post('/api/player/equip',
+  validation.validateEquipment,
+  rateLimiter.middleware('default'),
+  security.auditLog('equip_item'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+    const { channel, itemId } = req.body;
+    if (!channel || !itemId) {
+      return res.status(400).json({ error: 'Channel and itemId required' });
     }
     
-    const result = character.equipItem(itemId);
+    const channelName = channel.toLowerCase();
+    const sanitizedItemId = sanitization.sanitizeInput(itemId, { maxLength: 100 });
     
-    if (result.success) {
-      await db.saveCharacter(user.id, channelName, character);
+    try {
+      const character = await db.getCharacter(user.id, channelName);
+      
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      const result = character.equipItem(sanitizedItemId);
+      
+      if (result.success) {
+        await db.saveCharacter(user.id, channelName, character);
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error equipping item:', error);
+      res.status(500).json({ error: 'Failed to equip item' });
     }
-    
-    res.json(result);
-  } catch (error) {
-    console.error('Error equipping item:', error);
-    res.status(500).json({ error: 'Failed to equip item' });
-  }
-});
+  });
 
 /**
  * POST /api/player/unequip
- * Unequip an item to inventory
+ * Unequip an item to inventory - WITH VALIDATION
  */
-app.post('/api/player/unequip', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { channel, slot } = req.body;
-  if (!channel || !slot) {
-    return res.status(400).json({ error: 'Channel and slot required' });
-  }
-  
-  const channelName = channel.toLowerCase();
-  
-  try {
-    const character = await db.getCharacter(user.id, channelName);
+app.post('/api/player/unequip',
+  validation.validateEquipment,
+  rateLimiter.middleware('default'),
+  security.auditLog('unequip_item'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+    const { channel, slot } = req.body;
+    if (!channel || !slot) {
+      return res.status(400).json({ error: 'Channel and slot required' });
     }
     
-    const result = character.unequipItem(slot);
+    const channelName = channel.toLowerCase();
     
-    if (result.success) {
-      await db.saveCharacter(user.id, channelName, character);
+    try {
+      const character = await db.getCharacter(user.id, channelName);
+      
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      const result = character.unequipItem(slot);
+      
+      if (result.success) {
+        await db.saveCharacter(user.id, channelName, character);
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error unequipping item:', error);
+      res.status(500).json({ error: 'Failed to unequip item' });
     }
-    
-    res.json(result);
-  } catch (error) {
-    console.error('Error unequipping item:', error);
-    res.status(500).json({ error: 'Failed to unequip item' });
-  }
-});
+  });
 
 /**
  * POST /api/player/create
- * Create a new character with a class
+ * Create a new character with a class - WITH VALIDATION
  */
-app.post('/api/player/create', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { channel, classType, nameColor } = req.body;
-  if (!channel || !classType) {
-    return res.status(400).json({ error: 'Channel and classType required' });
-  }
-  
-  const channelName = channel.toLowerCase();
-  const characterName = user.displayName || user.display_name || 'Adventurer';
-  
-  try {
-    // Check if character already exists
-    const existing = await db.getCharacter(user.id, channelName);
-    if (existing) {
-      return res.status(400).json({ error: 'Character already exists for this channel' });
+app.post('/api/player/create',
+  validation.validateCharacterCreate,
+  rateLimiter.middleware('strict'),
+  security.auditLog('create_character'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { channel, classType, nameColor } = req.body;
+    if (!channel || !classType) {
+      return res.status(400).json({ error: 'Channel and classType required' });
     }
     
-    // Create new character
-    const character = await db.createCharacter(user.id, channelName, characterName, classType);
+    const channelName = channel.toLowerCase();
+    const rawCharacterName = user.displayName || user.display_name || 'Adventurer';
+    const characterName = sanitization.sanitizeCharacterName(rawCharacterName);
     
-    // Check if this is MarrowOfAlbion (game creator) and set creator role
-    if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
-      character.roles = ['creator'];
-      character.nameColor = nameColor || '#FFD700'; // Default to gold for creator
-      console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
-    } else {
-      // Check if user is a beta tester
-      if (db.isBetaTester(characterName)) {
-        character.roles = character.roles || ['viewer'];
-        if (!character.roles.includes('tester')) {
-          character.roles.push('tester');
-        }
-        character.nameColor = nameColor || '#00FFFF'; // Default to cyan for testers
-        console.log('🧪 Beta tester detected - granting tester role');
-      } else {
-        // Update name color if provided
-        if (nameColor) {
-          character.nameColor = nameColor;
-        }
+    // Validate nameColor if provided
+    let validatedColor = null;
+    if (nameColor) {
+      validatedColor = sanitization.sanitizeColorCode(nameColor);
+      if (!validatedColor) {
+        return res.status(400).json({ error: 'Invalid color code format' });
       }
     }
     
-    // Save character with roles and color
-    await db.saveCharacter(user.id, channelName, character);
-    
-    res.json({ 
-      success: true, 
-      message: `Created ${classType} character: ${characterName}`,
-      character: character.toDatabase()
-    });
-  } catch (error) {
-    console.error('Error creating character:', error);
-    res.status(500).json({ error: error.message || 'Failed to create character' });
-  }
-});
+    try {
+      // Check if character already exists
+      const existing = await db.getCharacter(user.id, channelName);
+      if (existing) {
+        return res.status(400).json({ error: 'Character already exists for this channel' });
+      }
+      
+      // Create new character
+      const character = await db.createCharacter(user.id, channelName, characterName, classType);
+      
+      // Check if this is MarrowOfAlbion (game creator) and set creator role
+      if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
+        character.roles = ['creator'];
+        character.nameColor = validatedColor || '#FFD700'; // Default to gold for creator
+        console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
+      } else {
+        // Check if user is a beta tester
+        if (db.isBetaTester(characterName)) {
+          character.roles = character.roles || ['viewer'];
+          if (!character.roles.includes('tester')) {
+            character.roles.push('tester');
+          }
+          character.nameColor = validatedColor || '#00FFFF'; // Default to cyan for testers
+          console.log('🧪 Beta tester detected - granting tester role');
+        } else {
+          // Update name color if provided
+          if (validatedColor) {
+            character.nameColor = validatedColor;
+          }
+        }
+      }
+      
+      // Save character with roles and color
+      await db.saveCharacter(user.id, channelName, character);
+      
+      res.json({ 
+        success: true, 
+        message: `Created ${classType} character: ${characterName}`,
+        character: character.toDatabase()
+      });
+    } catch (error) {
+      console.error('Error creating character:', error);
+      res.status(500).json({ error: error.message || 'Failed to create character' });
+    }
+  });
 
 /**
  * POST /api/player/name-color
- * Update player's name color (must be from one of their available roles)
+ * Update player's name color (must be from one of their available roles) - WITH VALIDATION
  */
-app.post('/api/player/name-color', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { nameColor } = req.body;
-  if (!nameColor) {
-    return res.status(400).json({ error: 'nameColor required' });
-  }
-  
-  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-  const channelName = CHANNELS[0] || 'default';
-  
-  try {
-    // Load player data
-    const playerData = await db.loadPlayerProgress(user.id, channelName);
-    if (!playerData) {
-      return res.status(404).json({ error: 'Character not found' });
+app.post('/api/player/name-color',
+  validation.validateNameColor,
+  rateLimiter.middleware('default'),
+  security.auditLog('update_name_color'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { nameColor } = req.body;
+    if (!nameColor) {
+      return res.status(400).json({ error: 'nameColor required' });
     }
     
-    // Validate that the color matches one of their roles
-    const roleColors = {
-      creator: '#FFD700',
-      streamer: '#9146FF',
-      moderator: '#00FF00',
-      vip: '#FF1493',
-      subscriber: '#6441A5',
-      tester: '#00FFFF',
-      viewer: '#FFFFFF'
-    };
-    
-    const roles = playerData.roles || ['viewer'];
-    const validColors = roles.map(r => roleColors[r]);
-    
-    if (!validColors.includes(nameColor)) {
-      return res.status(400).json({ error: 'Color not available for your roles' });
+    // Validate color format
+    const validatedColor = sanitization.sanitizeColorCode(nameColor);
+    if (!validatedColor) {
+      return res.status(400).json({ error: 'Invalid color code format' });
     }
     
-    // Update name color
-    playerData.nameColor = nameColor;
-    await db.savePlayerProgress(user.id, channelName, playerData);
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    const channelName = CHANNELS[0] || 'default';
     
+    try {
+      // Load player data
+      const playerData = await db.loadPlayerProgress(user.id, channelName);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      // Validate that the color matches one of their roles
+      const roleColors = {
+        creator: '#FFD700',
+        streamer: '#9146FF',
+        moderator: '#00FF00',
+        vip: '#FF1493',
+        subscriber: '#6441A5',
+        tester: '#00FFFF',
+        viewer: '#FFFFFF'
+      };
+      
+      const roles = playerData.roles || ['viewer'];
+      const validColors = roles.map(r => roleColors[r]);
+      
+      if (!validColors.includes(validatedColor)) {
+        console.warn(`[SECURITY] Invalid color selection attempt by ${user.displayName}: ${validatedColor} not in ${validColors}`);
+        return res.status(403).json({ error: 'Color not available for your roles' });
+      }
+      
+      // Update name color
+      playerData.nameColor = validatedColor;
+      await db.savePlayerProgress(user.id, channelName, playerData);
+      
     res.json({ success: true, nameColor });
   } catch (error) {
     console.error('Error updating name color:', error);
