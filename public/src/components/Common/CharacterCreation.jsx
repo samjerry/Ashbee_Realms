@@ -10,7 +10,7 @@ import { getRoleBadges as getRoleBadgesHelper } from '../../utils/roleHelpers';
 export default function CharacterCreation({ onComplete }) {
   const [selectedClass, setSelectedClass] = useState(null);
   const [userRoles, setUserRoles] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedRoleBadge, setSelectedRoleBadge] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,19 +31,22 @@ export default function CharacterCreation({ onComplete }) {
         console.log('Setting displayName to:', name);
         setDisplayName(name);
         
-        // Set default color to primary role color
-        if (data.availableColors && data.availableColors.length > 0) {
-          setSelectedColor(data.availableColors[0].color);
+        // If user has only one role, auto-select it
+        if (data.availableColors && data.availableColors.length === 1) {
+          setSelectedRoleBadge(data.availableColors[0].role);
+        } else if (data.availableColors && data.availableColors.length > 0) {
+          // Default to primary role
+          setSelectedRoleBadge(data.availableColors[0].role);
         } else {
-          // Fallback to white if no colors available
-          setSelectedColor('#FFFFFF');
+          // Fallback to viewer
+          setSelectedRoleBadge('viewer');
         }
       })
       .catch(err => {
         console.error('Failed to fetch roles:', err);
         // Set fallback values so character creation can still work
         setDisplayName('Adventurer');
-        setSelectedColor('#FFFFFF');
+        setSelectedRoleBadge('viewer');
         setUserRoles({ roles: ['viewer'], availableColors: [{ role: 'viewer', color: '#FFFFFF', name: 'Viewer' }] });
       })
       .finally(() => {
@@ -51,10 +54,25 @@ export default function CharacterCreation({ onComplete }) {
       });
   }, []);
 
-  // Get all role badges to display based on roles array
-  const getRoleBadges = () => {
-    if (!userRoles || !userRoles.roles) return [];
-    return getRoleBadgesHelper(userRoles.roles);
+  // Get the icon for the selected role badge
+  const getRoleIcon = (role) => {
+    const icons = {
+      creator: Eye,
+      streamer: Crown,
+      moderator: Shield,
+      vip: Gem,
+      subscriber: Star,
+      tester: Beaker,
+      viewer: User
+    };
+    return icons[role] || User;
+  };
+
+  // Get the color for the selected role badge
+  const getRoleColor = (role) => {
+    if (!userRoles || !userRoles.availableColors) return '#FFFFFF';
+    const roleData = userRoles.availableColors.find(r => r.role === role);
+    return roleData ? roleData.color : '#FFFFFF';
   };
 
   const classes = [
@@ -111,10 +129,12 @@ export default function CharacterCreation({ onComplete }) {
   ];
 
   const handleComplete = () => {
-    if (selectedClass) {
+    if (selectedClass && selectedRoleBadge) {
+      const roleColor = getRoleColor(selectedRoleBadge);
       onComplete({
         class: selectedClass,
-        nameColor: selectedColor
+        nameColor: roleColor,
+        selectedRoleBadge: selectedRoleBadge
       });
     }
   };
@@ -157,47 +177,37 @@ export default function CharacterCreation({ onComplete }) {
           <p className="text-gray-400">Choose your class and begin your journey in Ashbee Realms</p>
         </div>
 
-        {/* Role Display */}
+        {/* Role Display and Selection */}
         {userRoles && (
-          <div className="mb-8 p-4 bg-gray-800 border border-gray-700 rounded-lg">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-3">
-                <span className="text-gray-400 font-semibold">Your Status:</span>
-                <div className="flex items-center gap-2">
-                  {getRoleBadges().map(({ role, Icon, color }) => (
-                    <div key={role} className="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded" title={role}>
-                      <Icon size={16} style={{ color }} />
-                      <span className="text-sm capitalize" style={{ color }}>{role}</span>
-                    </div>
-                  ))}
-                  {getRoleBadges().length === 0 && (
-                    <div className="flex items-center gap-1 px-2 py-1 bg-gray-700 rounded">
-                      <User size={16} className="text-gray-400" />
-                      <span className="text-sm text-gray-400">Viewer</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              {/* Color selection for users with multiple role colors */}
-              {userRoles.availableColors && userRoles.availableColors.length > 1 && (
-                <div className="flex items-center gap-3">
-                  <span className="text-gray-400 text-sm">Name Color:</span>
-                  <div className="flex gap-2">
-                    {userRoles.availableColors.map(({ role, color, name }) => (
-                      <button
-                        key={role}
-                        onClick={() => setSelectedColor(color)}
-                        className={`w-8 h-8 rounded border-2 transition-all ${
-                          selectedColor === color ? 'border-white scale-110' : 'border-gray-600'
-                        }`}
-                        style={{ backgroundColor: color }}
-                        title={`${name} color`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
+          <div className="mb-8 p-6 bg-gray-800 border border-gray-700 rounded-lg">
+            <h3 className="text-lg font-semibold text-white mb-4">Select Your Display Role</h3>
+            <p className="text-sm text-gray-400 mb-4">
+              {userRoles.availableColors && userRoles.availableColors.length > 1
+                ? 'You have multiple roles. Choose which one to display (icon + color come together):'
+                : 'Your display role:'}
+            </p>
+            
+            {/* Role Selection - Package deal (icon + color) */}
+            <div className="flex flex-wrap gap-3">
+              {userRoles.availableColors && userRoles.availableColors.map(({ role, color, name }) => {
+                const RoleIcon = getRoleIcon(role);
+                const isSelected = selectedRoleBadge === role;
+                
+                return (
+                  <button
+                    key={role}
+                    onClick={() => setSelectedRoleBadge(role)}
+                    className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                      isSelected
+                        ? 'border-white bg-gray-700 shadow-lg scale-105'
+                        : 'border-gray-600 bg-gray-800 hover:border-gray-500'
+                    }`}
+                  >
+                    <RoleIcon size={20} style={{ color }} />
+                    <span className="font-semibold capitalize" style={{ color }}>{name}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
@@ -209,11 +219,11 @@ export default function CharacterCreation({ onComplete }) {
             {displayName ? (
               <div className="flex items-center gap-2">
                 <span className="text-gray-400 text-sm">Name:</span>
-                <span className="font-semibold flex items-center gap-1 text-xl" style={{ color: selectedColor || '#FFFFFF' }}>
-                  {getRoleBadges().map(({ Icon, color }) => (
-                    <Icon key={color} size={20} style={{ color }} />
-                  ))}
-                  {getRoleBadges().length === 0 && <User size={20} className="text-gray-400" />}
+                <span className="font-semibold flex items-center gap-1 text-xl" style={{ color: getRoleColor(selectedRoleBadge) }}>
+                  {(() => {
+                    const RoleIcon = getRoleIcon(selectedRoleBadge);
+                    return <RoleIcon size={20} style={{ color: getRoleColor(selectedRoleBadge) }} />;
+                  })()}
                   {displayName}
                 </span>
               </div>
