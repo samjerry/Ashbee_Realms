@@ -835,30 +835,47 @@ app.post('/api/player/create',
         return res.status(400).json({ error: 'Character already exists for this channel' });
       }
       
+      // Check if user has existing roles from previous activity (e.g., Twitch chat)
+      const existingProgress = await db.loadPlayerProgress(user.id, channelName);
+      let userRoles = existingProgress?.roles || ['viewer'];
+      
       // Create new character
       const character = await db.createCharacter(user.id, channelName, characterName, classType);
       
       // Check if this is MarrowOfAlbion (game creator) and set creator role
       if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
-        character.roles = ['creator'];
+        userRoles = ['creator'];
         character.nameColor = validatedColor || '#FFD700'; // Default to gold for creator
         console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
       } else {
-        // Check if user is a beta tester
-        if (db.isBetaTester(characterName)) {
-          character.roles = character.roles || ['viewer'];
-          if (!character.roles.includes('tester')) {
-            character.roles.push('tester');
-          }
-          character.nameColor = validatedColor || '#00FFFF'; // Default to cyan for testers
+        // Check if user is a beta tester - add tester role if not already present
+        if (db.isBetaTester(characterName) && !userRoles.includes('tester')) {
+          userRoles = [...userRoles, 'tester'];
           console.log('🧪 Beta tester detected - granting tester role');
+        }
+        
+        // Set appropriate default name color based on highest role if not provided
+        if (!validatedColor) {
+          const roleHierarchy = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
+          const roleColors = {
+            creator: '#FFD700',
+            streamer: '#9146FF',
+            moderator: '#00FF00',
+            vip: '#FF1493',
+            subscriber: '#6441A5',
+            tester: '#00FFFF',
+            viewer: '#FFFFFF'
+          };
+          const highestRole = roleHierarchy.find(r => userRoles.includes(r)) || 'viewer';
+          character.nameColor = roleColors[highestRole];
         } else {
-          // Update name color if provided
-          if (validatedColor) {
-            character.nameColor = validatedColor;
-          }
+          character.nameColor = validatedColor;
         }
       }
+      
+      // Apply roles to character
+      character.roles = userRoles;
+      console.log(`🎭 Assigned roles to ${characterName}:`, userRoles);
       
       // Save character with roles and color
       await db.saveCharacter(user.id, channelName, character);
