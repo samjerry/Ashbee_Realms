@@ -443,14 +443,14 @@ app.get('/api/player/stats', async (req, res) => {
   
   let { channel } = req.query;
   
-  // If no channel specified, use the user's Twitch username as default
+  // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
-    channel = user.login || user.displayName || user.display_name;
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
   }
   
-  // Still no channel? Return error
   if (!channel) {
-    return res.status(400).json({ error: 'Channel parameter required and no user login found' });
+    return res.status(400).json({ error: 'No channel configured' });
   }
   
   const channelName = channel.toLowerCase();
@@ -507,14 +507,14 @@ app.get('/api/player/inventory', async (req, res) => {
   
   let { channel } = req.query;
   
-  // If no channel specified, use the user's Twitch username as default
+  // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
-    channel = user.login || user.displayName || user.display_name;
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
   }
   
-  // Still no channel? Return error
   if (!channel) {
-    return res.status(400).json({ error: 'Channel parameter required and no user login found' });
+    return res.status(400).json({ error: 'No channel configured' });
   }
   
   const channelName = channel.toLowerCase();
@@ -544,14 +544,14 @@ app.get('/api/player/equipment', async (req, res) => {
   
   let { channel } = req.query;
   
-  // If no channel specified, use the user's Twitch username as default
+  // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
-    channel = user.login || user.displayName || user.display_name;
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
   }
   
-  // Still no channel? Return error
   if (!channel) {
-    return res.status(400).json({ error: 'Channel parameter required and no user login found' });
+    return res.status(400).json({ error: 'No channel configured' });
   }
   
   const channelName = channel.toLowerCase();
@@ -2200,12 +2200,14 @@ app.get('/api/quests/available', async (req, res) => {
 
   let { channel } = req.query;
   
+  // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
-    channel = user.login || user.displayName || user.display_name;
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
   }
   
   if (!channel) {
-    return res.status(400).json({ error: 'Unable to determine channel' });
+    return res.status(400).json({ error: 'No channel configured' });
   }
 
   try {
@@ -2244,12 +2246,14 @@ app.post('/api/quests/accept', async (req, res) => {
 
   let { channel, questId } = req.body;
   
+  // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
-    channel = user.login || user.displayName || user.display_name;
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
   }
   
   if (!channel) {
-    return res.status(400).json({ error: 'Unable to determine channel' });
+    return res.status(400).json({ error: 'No channel configured' });
   }
   
   if (!questId) {
@@ -2314,12 +2318,14 @@ app.post('/api/quests/abandon', async (req, res) => {
 
   let { channel, questId } = req.body;
   
+  // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
-    channel = user.login || user.displayName || user.display_name;
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
   }
   
   if (!channel) {
-    return res.status(400).json({ error: 'Unable to determine channel' });
+    return res.status(400).json({ error: 'No channel configured' });
   }
   
   if (!questId) {
@@ -2368,12 +2374,14 @@ app.get('/api/quests/active', async (req, res) => {
 
   let { channel } = req.query;
   
+  // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
-    channel = user.login || user.displayName || user.display_name;
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
   }
   
   if (!channel) {
-    return res.status(400).json({ error: 'Unable to determine channel' });
+    return res.status(400).json({ error: 'No channel configured' });
   }
 
   try {
@@ -3111,13 +3119,14 @@ app.get('/api/achievements', async (req, res) => {
   try {
     let { channel, includeHidden } = req.query;
     
-    // Use authenticated user's channel if not specified
+    // If no channel specified, use the first channel from CHANNELS environment variable
     if (!channel) {
-      channel = user.login || user.displayName || user.display_name;
+      const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+      channel = CHANNELS[0] || 'default';
     }
     
     if (!channel) {
-      return res.status(400).json({ error: 'Unable to determine channel' });
+      return res.status(400).json({ error: 'No channel configured' });
     }
 
     const character = await db.getCharacter(user.id, channel.toLowerCase());
