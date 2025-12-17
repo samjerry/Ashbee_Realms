@@ -109,6 +109,17 @@ async function initPostgres() {
       refresh_token TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+    
+    CREATE TABLE IF NOT EXISTS broadcaster_auth (
+      channel_name TEXT PRIMARY KEY,
+      broadcaster_id TEXT NOT NULL,
+      broadcaster_name TEXT NOT NULL,
+      access_token TEXT NOT NULL,
+      refresh_token TEXT NOT NULL,
+      scopes TEXT NOT NULL,
+      authenticated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
 
     CREATE TABLE IF NOT EXISTS game_state (
       channel_name TEXT PRIMARY KEY,
@@ -1045,6 +1056,70 @@ async function getOperatorAuditLog(channelName = null, limit = 100) {
 }
 
 /**
+ * Save broadcaster authentication credentials
+ * @param {string} channelName - Channel name
+ * @param {string} broadcasterId - Broadcaster's Twitch ID
+ * @param {string} broadcasterName - Broadcaster's display name
+ * @param {string} accessToken - OAuth access token with expanded scopes
+ * @param {string} refreshToken - OAuth refresh token
+ * @param {Array<string>} scopes - Array of granted OAuth scopes
+ */
+async function saveBroadcasterAuth(channelName, broadcasterId, broadcasterName, accessToken, refreshToken, scopes) {
+  await query(
+    `INSERT INTO broadcaster_auth (channel_name, broadcaster_id, broadcaster_name, access_token, refresh_token, scopes, authenticated_at, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+     ON CONFLICT (channel_name)
+     DO UPDATE SET 
+       broadcaster_id = $2,
+       broadcaster_name = $3,
+       access_token = $4,
+       refresh_token = $5,
+       scopes = $6,
+       updated_at = NOW()`,
+    [channelName.toLowerCase(), broadcasterId, broadcasterName, accessToken, refreshToken, scopes.join(' ')]
+  );
+  console.log(`✅ Saved broadcaster auth for channel: ${channelName}`);
+}
+
+/**
+ * Get broadcaster authentication credentials for a channel
+ * @param {string} channelName - Channel name
+ * @returns {Promise<Object|null>} Broadcaster auth data or null if not found
+ */
+async function getBroadcasterAuth(channelName) {
+  const result = await query(
+    `SELECT * FROM broadcaster_auth WHERE channel_name = $1`,
+    [channelName.toLowerCase()]
+  );
+  
+  if (result.rows.length === 0) {
+    return null;
+  }
+  
+  const row = result.rows[0];
+  return {
+    channelName: row.channel_name,
+    broadcasterId: row.broadcaster_id,
+    broadcasterName: row.broadcaster_name,
+    accessToken: row.access_token,
+    refreshToken: row.refresh_token,
+    scopes: row.scopes.split(' '),
+    authenticatedAt: row.authenticated_at,
+    updatedAt: row.updated_at
+  };
+}
+
+/**
+ * Check if broadcaster is authenticated for a channel
+ * @param {string} channelName - Channel name
+ * @returns {Promise<boolean>} True if broadcaster is authenticated
+ */
+async function isBroadcasterAuthenticated(channelName) {
+  const auth = await getBroadcasterAuth(channelName);
+  return auth !== null;
+}
+
+/**
  * Update a single field in player progress
  * @param {string} playerId - Player ID
  * @param {string} channelName - Channel name
@@ -1109,6 +1184,10 @@ module.exports = {
   isBetaTester,
   logOperatorAction,
   getOperatorAuditLog,
+  // Broadcaster authentication
+  saveBroadcasterAuth,
+  getBroadcasterAuth,
+  isBroadcasterAuthenticated,
   // Constants
   ROLE_HIERARCHY,
   ROLE_COLORS,

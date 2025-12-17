@@ -11,6 +11,7 @@ const Combat = require('./game/Combat');
 const { Character, ProgressionManager, ExplorationManager, QuestManager, ConsumableManager, ShopManager, ItemComparator, NPCManager, DialogueManager, DungeonManager, OperatorManager } = require('./game');
 const { loadData } = require('./data/data_loader');
 const socketHandler = require('./websocket/socketHandler');
+const { fetchUserRolesFromTwitch } = require('./utils/twitchRoleChecker');
 
 // Security middleware
 const security = require('./middleware/security');
@@ -261,6 +262,94 @@ app.get('/auth/twitch/callback', async (req, res) => {
     console.error('❌ OAuth callback error:', err.response?.data || err.message);
     console.error('Full error:', err);
     res.status(500).send(`OAuth failed: ${err.response?.data?.message || err.message}`);
+  }
+});
+
+// Broadcaster OAuth: Enhanced authentication with expanded scopes for role detection
+const BROADCASTER_REDIRECT_URI = process.env.BASE_URL ? `${process.env.BASE_URL.replace(/\/$/, '')}/auth/broadcaster/callback` : `http://localhost:${process.env.PORT || 3000}/auth/broadcaster/callback`;
+
+app.get('/auth/broadcaster', (req, res) => {
+  if (!TWITCH_CLIENT_ID) return res.status(500).send('Twitch client id not configured');
+  
+  // Extended scopes for broadcaster to check VIP, subscriber, and moderator status of users
+  const scopes = [
+    'user:read:email',
+    'channel:read:vips',
+    'channel:read:subscriptions',
+    'moderation:read'
+  ];
+  
+  const state = Math.random().toString(36).slice(2);
+  req.session.broadcasterOauthState = state;
+  
+  const scope = encodeURIComponent(scopes.join(' '));
+  const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(BROADCASTER_REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
+  
+  res.redirect(url);
+});
+
+app.get('/auth/broadcaster/callback', async (req, res) => {
+  const { code, state } = req.query;
+  
+  if (!code || !state || state !== req.session.broadcasterOauthState) {
+    console.error('Broadcaster OAuth validation failed');
+    return res.status(400).send('Invalid OAuth callback');
+  }
+  
+  try {
+    // Exchange code for token
+    const tokenResp = await axios.post('https://id.twitch.tv/oauth2/token', null, {
+      params: {
+        client_id: TWITCH_CLIENT_ID,
+        client_secret: TWITCH_CLIENT_SECRET,
+        code,
+        grant_type: 'authorization_code',
+        redirect_uri: BROADCASTER_REDIRECT_URI
+      }
+    });
+
+    const access_token = tokenResp.data.access_token;
+    const refresh_token = tokenResp.data.refresh_token;
+    const scopes = tokenResp.data.scope || [];
+    
+    console.log('✅ Broadcaster token exchange successful');
+    console.log('📋 Granted scopes:', scopes);
+
+    // Get broadcaster info
+    const userResp = await axios.get('https://api.twitch.tv/helix/users', { 
+      headers: { 
+        Authorization: `Bearer ${access_token}`, 
+        'Client-Id': TWITCH_CLIENT_ID 
+      } 
+    });
+    
+    const user = userResp.data.data && userResp.data.data[0];
+    if (!user) return res.status(500).send('Could not fetch broadcaster info');
+    
+    const channelName = user.login.toLowerCase();
+    const broadcasterId = user.id;
+    const broadcasterName = user.display_name;
+    
+    console.log(`✅ Broadcaster authenticated: ${broadcasterName} (${channelName})`);
+    
+    // Save broadcaster credentials
+    await db.saveBroadcasterAuth(channelName, broadcasterId, broadcasterName, access_token, refresh_token, scopes);
+    
+    // Also log in the broadcaster as a regular user
+    const playerId = `twitch-${broadcasterId}`;
+    await db.query(
+      'INSERT INTO players(id, twitch_id, display_name, access_token, refresh_token) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO UPDATE SET twitch_id=$2, display_name=$3, access_token=$4, refresh_token=$5',
+      [playerId, broadcasterId, broadcasterName, access_token, refresh_token]
+    );
+    
+    req.session.user = { id: playerId, displayName: broadcasterName, twitchId: broadcasterId };
+    req.session.isBroadcaster = true;
+    
+    // Redirect to admin/setup page with success message
+    res.redirect('/adventure?broadcaster=authenticated');
+  } catch (err) {
+    console.error('❌ Broadcaster OAuth callback error:', err.response?.data || err.message);
+    res.status(500).send(`Broadcaster authentication failed: ${err.response?.data?.message || err.message}`);
   }
 });
 
@@ -825,10 +914,41 @@ app.post('/api/player/create',
       }
       
       // Check if user has existing roles from previous activity (e.g., Twitch chat)
-      // NOTE: If user creates character before chatting in Twitch, they will start with 'viewer' role
-      // Their actual roles (VIP, subscriber, etc.) will be applied when they first chat in Twitch
       const existingProgress = await db.loadPlayerProgress(user.id, channelName);
-      let userRoles = existingProgress?.roles || ['viewer'];
+      let userRoles = existingProgress?.roles || null;
+      
+      // If no existing roles, try to fetch from Twitch API if broadcaster is authenticated
+      if (!userRoles || (userRoles.length === 1 && userRoles[0] === 'viewer')) {
+        const broadcasterAuth = await db.getBroadcasterAuth(channelName);
+        
+        if (broadcasterAuth && user.twitchId) {
+          console.log(`🔍 Fetching roles from Twitch API for ${characterName}`);
+          try {
+            const fetchedRoles = await fetchUserRolesFromTwitch(
+              broadcasterAuth.accessToken,
+              broadcasterAuth.broadcasterId,
+              user.twitchId,
+              characterName,
+              channelName
+            );
+            
+            if (fetchedRoles && fetchedRoles.length > 0) {
+              userRoles = fetchedRoles;
+              console.log(`✅ Fetched roles from Twitch API:`, userRoles);
+            }
+          } catch (error) {
+            console.error('Failed to fetch roles from Twitch API:', error);
+            // Fall back to viewer if fetch fails
+            userRoles = userRoles || ['viewer'];
+          }
+        } else {
+          // No broadcaster auth - fall back to existing or viewer
+          userRoles = userRoles || ['viewer'];
+          if (!broadcasterAuth) {
+            console.log(`⚠️ Broadcaster not authenticated for channel ${channelName} - roles may not be accurate`);
+          }
+        }
+      }
       
       // Create new character
       const character = await db.createCharacter(user.id, channelName, characterName, classType);
