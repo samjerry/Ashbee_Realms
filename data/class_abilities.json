@@ -1,0 +1,1272 @@
+{
+  "abilities": {
+    "warrior": [
+      {
+        "id": "shield_bash",
+        "name": "Shield Bash",
+        "description": "Bash the enemy with your shield, dealing damage and stunning for 1 turn",
+        "unlock_type": "level",
+        "unlock_requirement": 3,
+        "cooldown": 3,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 15, "scales_with": "strength", "scaling": 1.2},
+          "stun": {"duration": 1, "chance": 0.75}
+        },
+        "tags": ["melee", "control"]
+      },
+      {
+        "id": "power_strike",
+        "name": "Power Strike",
+        "description": "A devastating strike that deals massive damage",
+        "unlock_type": "level",
+        "unlock_requirement": 5,
+        "cooldown": 4,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 35, "scales_with": "strength", "scaling": 2.0}
+        },
+        "tags": ["melee", "damage"]
+      },
+      {
+        "id": "rallying_cry",
+        "name": "Rallying Cry",
+        "description": "Boost your defense and restore 15% HP",
+        "unlock_type": "level",
+        "unlock_requirement": 7,
+        "cooldown": 5,
+        "cost": {"type": "none"},
+        "effects": {
+          "heal": {"percent": 0.15},
+          "buff": {"stat": "defense", "amount": 5, "duration": 3}
+        },
+        "tags": ["support", "healing"]
+      },
+      {
+        "id": "cleave",
+        "name": "Cleave",
+        "description": "Swing your weapon in a wide arc, dealing damage to all enemies",
+        "unlock_type": "scroll",
+        "unlock_requirement": "cleave_scroll",
+        "cooldown": 5,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "strength", "scaling": 1.5},
+          "aoe": true
+        },
+        "tags": ["melee", "aoe"]
+      },
+      {
+        "id": "iron_skin",
+        "name": "Iron Skin",
+        "description": "Harden your skin, reducing incoming damage by 40% for 3 turns",
+        "unlock_type": "trainer",
+        "unlock_requirement": "master_defender",
+        "cooldown": 6,
+        "cost": {"type": "none"},
+        "effects": {
+          "buff": {"stat": "damage_reduction", "amount": 0.40, "duration": 3}
+        },
+        "tags": ["defense", "buff"]
+      },
+      {
+        "id": "execute",
+        "name": "Execute",
+        "description": "Deal massive damage to enemies below 30% HP",
+        "unlock_type": "level",
+        "unlock_requirement": 12,
+        "cooldown": 6,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 60, "scales_with": "strength", "scaling": 2.5},
+          "conditional": {"target_hp_below": 0.30, "damage_multiplier": 2.0}
+        },
+        "tags": ["melee", "execute"]
+      },
+      {
+        "id": "whirlwind",
+        "name": "Whirlwind",
+        "description": "Spin rapidly, hitting all enemies multiple times",
+        "unlock_type": "scroll",
+        "unlock_requirement": "whirlwind_tome",
+        "cooldown": 7,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "strength", "scaling": 1.0},
+          "hits": 3,
+          "aoe": true
+        },
+        "tags": ["melee", "aoe"]
+      },
+      {
+        "id": "challenge",
+        "name": "Challenge",
+        "description": "Taunt enemies, forcing them to attack you while increasing your defense",
+        "unlock_type": "trainer",
+        "unlock_requirement": "veteran_guardian",
+        "cooldown": 4,
+        "cost": {"type": "none"},
+        "effects": {
+          "taunt": {"duration": 2},
+          "buff": {"stat": "defense", "amount": 8, "duration": 2}
+        },
+        "tags": ["tank", "control"]
+      },
+      {
+        "id": "mortal_strike",
+        "name": "Mortal Strike",
+        "description": "A grievous wound that prevents healing for 3 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 15,
+        "cooldown": 5,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 40, "scales_with": "strength", "scaling": 1.8},
+          "debuff": {"type": "healing_reduction", "amount": 1.0, "duration": 3}
+        },
+        "tags": ["melee", "debuff"]
+      },
+      {
+        "id": "second_wind",
+        "name": "Second Wind",
+        "description": "Recover from injuries, restoring 35% HP and removing debuffs",
+        "unlock_type": "level",
+        "unlock_requirement": 18,
+        "cooldown": 8,
+        "cost": {"type": "none"},
+        "effects": {
+          "heal": {"percent": 0.35},
+          "cleanse": {"type": "all_debuffs"}
+        },
+        "tags": ["healing", "utility"]
+      },
+      {
+        "id": "reckless_assault",
+        "name": "Reckless Assault",
+        "description": "Sacrifice defense for offense, gaining 50% damage but taking 30% more",
+        "unlock_type": "scroll",
+        "unlock_requirement": "assault_manual",
+        "cooldown": 6,
+        "cost": {"type": "none"},
+        "effects": {
+          "buff": {"stat": "damage", "amount": 0.50, "duration": 4},
+          "debuff": {"stat": "damage_taken", "amount": 0.30, "duration": 4}
+        },
+        "tags": ["buff", "risky"]
+      },
+      {
+        "id": "fortress_stance",
+        "name": "Fortress Stance",
+        "description": "Become immovable, gaining massive defense but reducing attack",
+        "unlock_type": "trainer",
+        "unlock_requirement": "iron_sentinel",
+        "cooldown": 7,
+        "cost": {"type": "none"},
+        "effects": {
+          "buff": {"stat": "defense", "amount": 15, "duration": 4},
+          "debuff": {"stat": "attack", "amount": 10, "duration": 4}
+        },
+        "tags": ["tank", "stance"]
+      },
+      {
+        "id": "sunder_armor",
+        "name": "Sunder Armor",
+        "description": "Shatter enemy armor, reducing their defense by 40%",
+        "unlock_type": "level",
+        "unlock_requirement": 20,
+        "cooldown": 5,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "strength", "scaling": 1.0},
+          "debuff": {"stat": "defense", "amount": 0.40, "duration": 4}
+        },
+        "tags": ["melee", "debuff"]
+      },
+      {
+        "id": "bloodlust",
+        "name": "Bloodlust",
+        "description": "Each kill increases your strength. Stacks up to 5 times",
+        "unlock_type": "scroll",
+        "unlock_requirement": "bloodlust_codex",
+        "cooldown": 10,
+        "cost": {"type": "none"},
+        "effects": {
+          "buff": {"stat": "strength", "amount": 3, "duration": 999, "on_kill_stack": true, "max_stacks": 5}
+        },
+        "tags": ["buff", "scaling"]
+      },
+      {
+        "id": "titans_grip",
+        "name": "Titan's Grip",
+        "description": "Channel the strength of titans, doubling your strength for 2 turns",
+        "unlock_type": "trainer",
+        "unlock_requirement": "legendary_berserker",
+        "cooldown": 10,
+        "cost": {"type": "none"},
+        "effects": {
+          "buff": {"stat": "strength", "multiplier": 2.0, "duration": 2}
+        },
+        "tags": ["buff", "ultimate"]
+      },
+      {
+        "id": "war_cry",
+        "name": "War Cry",
+        "description": "Intimidate enemies, reducing their attack by 25% for 3 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 10,
+        "cooldown": 5,
+        "cost": {"type": "none"},
+        "effects": {
+          "debuff": {"stat": "attack", "amount": 0.25, "duration": 3, "aoe": true}
+        },
+        "tags": ["debuff", "aoe"]
+      },
+      {
+        "id": "crushing_blow",
+        "name": "Crushing Blow",
+        "description": "A devastating overhead strike that ignores 50% of armor",
+        "unlock_type": "level",
+        "unlock_requirement": 25,
+        "cooldown": 6,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 50, "scales_with": "strength", "scaling": 2.2},
+          "armor_penetration": 0.50
+        },
+        "tags": ["melee", "damage"]
+      },
+      {
+        "id": "indomitable",
+        "name": "Indomitable",
+        "description": "Become immune to crowd control and reduce damage by 50% for 2 turns",
+        "unlock_type": "scroll",
+        "unlock_requirement": "indomitable_scripture",
+        "cooldown": 12,
+        "cost": {"type": "none"},
+        "effects": {
+          "buff": {"stat": "cc_immunity", "duration": 2},
+          "buff": {"stat": "damage_reduction", "amount": 0.50, "duration": 2}
+        },
+        "tags": ["defense", "ultimate"]
+      }
+    ],
+    "mage": [
+      {
+        "id": "fireball",
+        "name": "Fireball",
+        "description": "Hurl a ball of fire dealing magic damage",
+        "unlock_type": "level",
+        "unlock_requirement": 3,
+        "cooldown": 2,
+        "cost": {"type": "mana", "amount": 15},
+        "effects": {
+          "damage": {"base": 30, "scales_with": "magic", "scaling": 2.0},
+          "element": "fire"
+        },
+        "tags": ["magic", "fire", "damage"]
+      },
+      {
+        "id": "frost_bolt",
+        "name": "Frost Bolt",
+        "description": "Launch a bolt of ice that damages and slows the target",
+        "unlock_type": "level",
+        "unlock_requirement": 4,
+        "cooldown": 2,
+        "cost": {"type": "mana", "amount": 12},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "magic", "scaling": 1.8},
+          "debuff": {"stat": "agility", "amount": 5, "duration": 2},
+          "element": "ice"
+        },
+        "tags": ["magic", "ice", "control"]
+      },
+      {
+        "id": "lightning_bolt",
+        "name": "Lightning Bolt",
+        "description": "Strike with lightning, dealing high damage with chance to chain",
+        "unlock_type": "level",
+        "unlock_requirement": 6,
+        "cooldown": 3,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "damage": {"base": 35, "scales_with": "magic", "scaling": 2.2},
+          "chain": {"targets": 2, "damage_reduction": 0.5},
+          "element": "lightning"
+        },
+        "tags": ["magic", "lightning", "damage"]
+      },
+      {
+        "id": "arcane_shield",
+        "name": "Arcane Shield",
+        "description": "Summon a magical barrier that absorbs damage",
+        "unlock_type": "level",
+        "unlock_requirement": 5,
+        "cooldown": 5,
+        "cost": {"type": "mana", "amount": 18},
+        "effects": {
+          "shield": {"amount": 50, "scales_with": "magic", "scaling": 3.0, "duration": 3}
+        },
+        "tags": ["defense", "shield"]
+      },
+      {
+        "id": "meteor_strike",
+        "name": "Meteor Strike",
+        "description": "Call down a meteor from the sky, devastating all enemies",
+        "unlock_type": "scroll",
+        "unlock_requirement": "meteor_grimoire",
+        "cooldown": 8,
+        "cost": {"type": "mana", "amount": 40},
+        "effects": {
+          "damage": {"base": 70, "scales_with": "magic", "scaling": 3.0},
+          "aoe": true,
+          "element": "fire"
+        },
+        "tags": ["magic", "fire", "aoe", "ultimate"]
+      },
+      {
+        "id": "ice_wall",
+        "name": "Ice Wall",
+        "description": "Create a wall of ice that blocks attacks and freezes enemies",
+        "unlock_type": "trainer",
+        "unlock_requirement": "frost_enchanter",
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "shield": {"amount": 80, "duration": 2},
+          "debuff": {"type": "freeze", "duration": 1, "aoe": true},
+          "element": "ice"
+        },
+        "tags": ["defense", "control", "ice"]
+      },
+      {
+        "id": "mana_surge",
+        "name": "Mana Surge",
+        "description": "Channel pure mana, increasing magic power by 40% for 4 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 8,
+        "cooldown": 7,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "buff": {"stat": "magic", "amount": 0.40, "duration": 4}
+        },
+        "tags": ["buff", "magic"]
+      },
+      {
+        "id": "teleport",
+        "name": "Teleport",
+        "description": "Instantly teleport away, dodging the next attack",
+        "unlock_type": "scroll",
+        "unlock_requirement": "blink_scroll",
+        "cooldown": 4,
+        "cost": {"type": "mana", "amount": 15},
+        "effects": {
+          "dodge": {"guaranteed": true, "duration": 1}
+        },
+        "tags": ["utility", "mobility"]
+      },
+      {
+        "id": "chain_lightning",
+        "name": "Chain Lightning",
+        "description": "Unleash lightning that jumps between all enemies",
+        "unlock_type": "level",
+        "unlock_requirement": 12,
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 35},
+        "effects": {
+          "damage": {"base": 40, "scales_with": "magic", "scaling": 2.0},
+          "chain": {"targets": 99, "damage_reduction": 0.2},
+          "element": "lightning",
+          "aoe": true
+        },
+        "tags": ["magic", "lightning", "aoe"]
+      },
+      {
+        "id": "time_slow",
+        "name": "Time Slow",
+        "description": "Slow time around enemies, reducing their agility by 60%",
+        "unlock_type": "trainer",
+        "unlock_requirement": "chronomancer",
+        "cooldown": 7,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "debuff": {"stat": "agility", "amount": 0.60, "duration": 3, "aoe": true},
+          "element": "arcane"
+        },
+        "tags": ["control", "debuff", "aoe"]
+      },
+      {
+        "id": "fire_storm",
+        "name": "Fire Storm",
+        "description": "Summon a storm of fire that burns all enemies over time",
+        "unlock_type": "scroll",
+        "unlock_requirement": "inferno_codex",
+        "cooldown": 8,
+        "cost": {"type": "mana", "amount": 45},
+        "effects": {
+          "damage": {"base": 30, "scales_with": "magic", "scaling": 1.5},
+          "dot": {"damage": 15, "scales_with": "magic", "scaling": 1.0, "duration": 3},
+          "aoe": true,
+          "element": "fire"
+        },
+        "tags": ["magic", "fire", "aoe", "dot"]
+      },
+      {
+        "id": "blizzard",
+        "name": "Blizzard",
+        "description": "Create a freezing blizzard that damages and slows all enemies",
+        "unlock_type": "level",
+        "unlock_requirement": 15,
+        "cooldown": 7,
+        "cost": {"type": "mana", "amount": 40},
+        "effects": {
+          "damage": {"base": 45, "scales_with": "magic", "scaling": 2.5},
+          "debuff": {"stat": "agility", "amount": 8, "duration": 3},
+          "aoe": true,
+          "element": "ice"
+        },
+        "tags": ["magic", "ice", "aoe"]
+      },
+      {
+        "id": "mana_drain",
+        "name": "Mana Drain",
+        "description": "Drain magical energy from the enemy, restoring your mana",
+        "unlock_type": "trainer",
+        "unlock_requirement": "void_mage",
+        "cooldown": 5,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.5},
+          "mana_steal": {"percent": 0.50},
+          "element": "arcane"
+        },
+        "tags": ["magic", "utility"]
+      },
+      {
+        "id": "polymorph",
+        "name": "Polymorph",
+        "description": "Transform enemy into a harmless creature for 2 turns",
+        "unlock_type": "scroll",
+        "unlock_requirement": "polymorph_tome",
+        "cooldown": 10,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "debuff": {"type": "polymorph", "duration": 2}
+        },
+        "tags": ["control", "crowd_control"]
+      },
+      {
+        "id": "mirror_image",
+        "name": "Mirror Image",
+        "description": "Create illusions of yourself, gaining 50% dodge chance for 3 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 18,
+        "cooldown": 8,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "buff": {"stat": "dodge_chance", "amount": 0.50, "duration": 3}
+        },
+        "tags": ["defense", "illusion"]
+      },
+      {
+        "id": "arcane_missiles",
+        "name": "Arcane Missiles",
+        "description": "Launch 5 missiles of pure arcane energy at random targets",
+        "unlock_type": "level",
+        "unlock_requirement": 10,
+        "cooldown": 4,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "damage": {"base": 12, "scales_with": "magic", "scaling": 1.2},
+          "hits": 5,
+          "random_targets": true,
+          "element": "arcane"
+        },
+        "tags": ["magic", "arcane", "multi_hit"]
+      },
+      {
+        "id": "timestop",
+        "name": "Time Stop",
+        "description": "Freeze time, stunning all enemies for 1 turn",
+        "unlock_type": "trainer",
+        "unlock_requirement": "archmage_temporis",
+        "cooldown": 15,
+        "cost": {"type": "mana", "amount": 60},
+        "effects": {
+          "stun": {"duration": 1, "aoe": true},
+          "element": "arcane"
+        },
+        "tags": ["control", "ultimate", "crowd_control"]
+      },
+      {
+        "id": "power_word_kill",
+        "name": "Power Word: Kill",
+        "description": "Instantly kill enemies below 20% HP",
+        "unlock_type": "scroll",
+        "unlock_requirement": "death_scroll",
+        "cooldown": 12,
+        "cost": {"type": "mana", "amount": 50},
+        "effects": {
+          "execute": {"threshold": 0.20},
+          "element": "arcane"
+        },
+        "tags": ["magic", "execute", "ultimate"]
+      }
+    ],
+    "rogue": [
+      {
+        "id": "backstab",
+        "name": "Backstab",
+        "description": "Strike from behind for guaranteed critical damage",
+        "unlock_type": "level",
+        "unlock_requirement": 3,
+        "cooldown": 3,
+        "cost": {"type": "energy", "amount": 30},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "agility", "scaling": 2.5},
+          "guaranteed_crit": true
+        },
+        "tags": ["melee", "critical"]
+      },
+      {
+        "id": "smoke_bomb",
+        "name": "Smoke Bomb",
+        "description": "Disappear in smoke, becoming untargetable for 1 turn",
+        "unlock_type": "level",
+        "unlock_requirement": 4,
+        "cooldown": 6,
+        "cost": {"type": "energy", "amount": 25},
+        "effects": {
+          "buff": {"stat": "untargetable", "duration": 1}
+        },
+        "tags": ["utility", "stealth"]
+      },
+      {
+        "id": "poison_blade",
+        "name": "Poison Blade",
+        "description": "Coat your weapon in poison, dealing damage over time",
+        "unlock_type": "level",
+        "unlock_requirement": 5,
+        "cooldown": 4,
+        "cost": {"type": "energy", "amount": 20},
+        "effects": {
+          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.0},
+          "dot": {"damage": 10, "scales_with": "agility", "scaling": 0.8, "duration": 4}
+        },
+        "tags": ["melee", "poison", "dot"]
+      },
+      {
+        "id": "evasion",
+        "name": "Evasion",
+        "description": "Increase dodge chance by 70% for 2 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 6,
+        "cooldown": 5,
+        "cost": {"type": "energy", "amount": 20},
+        "effects": {
+          "buff": {"stat": "dodge_chance", "amount": 0.70, "duration": 2}
+        },
+        "tags": ["defense", "dodge"]
+      },
+      {
+        "id": "fan_of_knives",
+        "name": "Fan of Knives",
+        "description": "Throw knives in all directions, hitting all enemies",
+        "unlock_type": "scroll",
+        "unlock_requirement": "knife_techniques",
+        "cooldown": 6,
+        "cost": {"type": "energy", "amount": 35},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
+          "aoe": true
+        },
+        "tags": ["ranged", "aoe"]
+      },
+      {
+        "id": "shadowstep",
+        "name": "Shadowstep",
+        "description": "Teleport behind the enemy and strike with bonus damage",
+        "unlock_type": "trainer",
+        "unlock_requirement": "shadow_master",
+        "cooldown": 4,
+        "cost": {"type": "energy", "amount": 25},
+        "effects": {
+          "damage": {"base": 30, "scales_with": "agility", "scaling": 2.0},
+          "buff": {"stat": "damage", "amount": 0.30, "duration": 1}
+        },
+        "tags": ["melee", "mobility"]
+      },
+      {
+        "id": "garrote",
+        "name": "Garrote",
+        "description": "Silence the enemy, preventing them from using abilities",
+        "unlock_type": "level",
+        "unlock_requirement": 8,
+        "cooldown": 7,
+        "cost": {"type": "energy", "amount": 30},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
+          "debuff": {"type": "silence", "duration": 2}
+        },
+        "tags": ["control", "silence"]
+      },
+      {
+        "id": "blade_flurry",
+        "name": "Blade Flurry",
+        "description": "Your attacks hit an additional nearby enemy",
+        "unlock_type": "scroll",
+        "unlock_requirement": "dual_wield_manual",
+        "cooldown": 8,
+        "cost": {"type": "energy", "amount": 30},
+        "effects": {
+          "buff": {"stat": "cleave", "amount": 1, "duration": 5}
+        },
+        "tags": ["buff", "aoe"]
+      },
+      {
+        "id": "kidney_shot",
+        "name": "Kidney Shot",
+        "description": "Stun the enemy for 2 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 10,
+        "cooldown": 8,
+        "cost": {"type": "energy", "amount": 35},
+        "effects": {
+          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.0},
+          "stun": {"duration": 2}
+        },
+        "tags": ["control", "stun"]
+      },
+      {
+        "id": "deadly_poison",
+        "name": "Deadly Poison",
+        "description": "Apply a lethal poison that deals massive damage over time",
+        "unlock_type": "trainer",
+        "unlock_requirement": "poison_master",
+        "cooldown": 10,
+        "cost": {"type": "energy", "amount": 40},
+        "effects": {
+          "dot": {"damage": 25, "scales_with": "agility", "scaling": 1.5, "duration": 5}
+        },
+        "tags": ["poison", "dot"]
+      },
+      {
+        "id": "vanish",
+        "name": "Vanish",
+        "description": "Completely disappear, removing all debuffs and guaranteeing your next attack crits",
+        "unlock_type": "level",
+        "unlock_requirement": 12,
+        "cooldown": 10,
+        "cost": {"type": "energy", "amount": 50},
+        "effects": {
+          "cleanse": {"type": "all_debuffs"},
+          "buff": {"stat": "next_attack_crit", "duration": 1},
+          "buff": {"stat": "untargetable", "duration": 1}
+        },
+        "tags": ["utility", "stealth"]
+      },
+      {
+        "id": "ambush",
+        "name": "Ambush",
+        "description": "A devastating opening strike that deals triple damage from stealth",
+        "unlock_type": "scroll",
+        "unlock_requirement": "ambush_codex",
+        "cooldown": 5,
+        "cost": {"type": "energy", "amount": 45},
+        "effects": {
+          "damage": {"base": 40, "scales_with": "agility", "scaling": 3.0},
+          "conditional": {"requires_stealth": true}
+        },
+        "tags": ["melee", "stealth", "burst"]
+      },
+      {
+        "id": "crimson_tempest",
+        "name": "Crimson Tempest",
+        "description": "Spin with blades extended, applying bleeding to all enemies",
+        "unlock_type": "level",
+        "unlock_requirement": 15,
+        "cooldown": 7,
+        "cost": {"type": "energy", "amount": 40},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "agility", "scaling": 1.5},
+          "dot": {"damage": 12, "scales_with": "agility", "scaling": 1.0, "duration": 4},
+          "aoe": true
+        },
+        "tags": ["melee", "aoe", "bleed"]
+      },
+      {
+        "id": "vendetta",
+        "name": "Vendetta",
+        "description": "Mark your target, increasing all damage you deal to them by 50%",
+        "unlock_type": "trainer",
+        "unlock_requirement": "legendary_assassin",
+        "cooldown": 12,
+        "cost": {"type": "energy", "amount": 35},
+        "effects": {
+          "debuff": {"stat": "damage_taken", "amount": 0.50, "duration": 5}
+        },
+        "tags": ["buff", "single_target"]
+      },
+      {
+        "id": "adrenaline_rush",
+        "name": "Adrenaline Rush",
+        "description": "Surge with energy, increasing agility by 100% for 3 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 18,
+        "cooldown": 10,
+        "cost": {"type": "energy", "amount": 50},
+        "effects": {
+          "buff": {"stat": "agility", "multiplier": 2.0, "duration": 3}
+        },
+        "tags": ["buff", "ultimate"]
+      },
+      {
+        "id": "shadowdance",
+        "name": "Shadow Dance",
+        "description": "Enter the shadow realm, allowing stealth abilities without stealth",
+        "unlock_type": "scroll",
+        "unlock_requirement": "shadow_dance_tome",
+        "cooldown": 15,
+        "cost": {"type": "energy", "amount": 60},
+        "effects": {
+          "buff": {"stat": "shadow_dance", "duration": 4}
+        },
+        "tags": ["buff", "ultimate", "stealth"]
+      },
+      {
+        "id": "mutilate",
+        "name": "Mutilate",
+        "description": "Dual strike dealing damage twice and applying poison",
+        "unlock_type": "level",
+        "unlock_requirement": 20,
+        "cooldown": 3,
+        "cost": {"type": "energy", "amount": 35},
+        "effects": {
+          "damage": {"base": 18, "scales_with": "agility", "scaling": 1.8},
+          "hits": 2,
+          "dot": {"damage": 8, "scales_with": "agility", "scaling": 0.5, "duration": 3}
+        },
+        "tags": ["melee", "poison", "multi_hit"]
+      },
+      {
+        "id": "envenom",
+        "name": "Envenom",
+        "description": "Consume all poisons on target for massive instant damage",
+        "unlock_type": "scroll",
+        "unlock_requirement": "envenom_technique",
+        "cooldown": 8,
+        "cost": {"type": "energy", "amount": 45},
+        "effects": {
+          "damage": {"base": 50, "scales_with": "agility", "scaling": 2.5},
+          "consume_dots": true,
+          "bonus_per_dot": 1.5
+        },
+        "tags": ["melee", "poison", "burst"]
+      }
+    ],
+    "cleric": [
+      {
+        "id": "heal",
+        "name": "Heal",
+        "description": "Restore health to yourself or an ally",
+        "unlock_type": "level",
+        "unlock_requirement": 1,
+        "cooldown": 2,
+        "cost": {"type": "mana", "amount": 15},
+        "effects": {
+          "heal": {"base": 40, "scales_with": "magic", "scaling": 2.5}
+        },
+        "tags": ["healing", "support"]
+      },
+      {
+        "id": "smite",
+        "name": "Smite",
+        "description": "Strike with holy power, dealing extra damage to undead",
+        "unlock_type": "level",
+        "unlock_requirement": 3,
+        "cooldown": 2,
+        "cost": {"type": "mana", "amount": 12},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "magic", "scaling": 1.8},
+          "conditional": {"target_type": "undead", "damage_multiplier": 2.0},
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "damage"]
+      },
+      {
+        "id": "shield_of_faith",
+        "name": "Shield of Faith",
+        "description": "Protect an ally with a shield that absorbs damage",
+        "unlock_type": "level",
+        "unlock_requirement": 4,
+        "cooldown": 4,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "shield": {"amount": 50, "scales_with": "magic", "scaling": 3.5, "duration": 3}
+        },
+        "tags": ["support", "shield"]
+      },
+      {
+        "id": "holy_fire",
+        "name": "Holy Fire",
+        "description": "Burn the enemy with holy flames, dealing damage over time",
+        "unlock_type": "level",
+        "unlock_requirement": 5,
+        "cooldown": 4,
+        "cost": {"type": "mana", "amount": 18},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.5},
+          "dot": {"damage": 10, "scales_with": "magic", "scaling": 1.0, "duration": 4},
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "dot"]
+      },
+      {
+        "id": "prayer_of_healing",
+        "name": "Prayer of Healing",
+        "description": "Heal all allies in the area",
+        "unlock_type": "scroll",
+        "unlock_requirement": "prayer_scroll",
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 35},
+        "effects": {
+          "heal": {"base": 30, "scales_with": "magic", "scaling": 2.0},
+          "aoe": true
+        },
+        "tags": ["healing", "aoe", "support"]
+      },
+      {
+        "id": "purify",
+        "name": "Purify",
+        "description": "Remove all debuffs and poisons from an ally",
+        "unlock_type": "level",
+        "unlock_requirement": 6,
+        "cooldown": 5,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "cleanse": {"type": "all_debuffs"}
+        },
+        "tags": ["support", "cleanse"]
+      },
+      {
+        "id": "holy_nova",
+        "name": "Holy Nova",
+        "description": "Blast of holy energy that damages enemies and heals allies",
+        "unlock_type": "trainer",
+        "unlock_requirement": "high_priest",
+        "cooldown": 5,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "magic", "scaling": 1.8, "aoe": true},
+          "heal": {"base": 20, "scales_with": "magic", "scaling": 1.5, "aoe": true},
+          "element": "holy"
+        },
+        "tags": ["magic", "healing", "aoe"]
+      },
+      {
+        "id": "blessing_of_protection",
+        "name": "Blessing of Protection",
+        "description": "Grant immunity to physical damage for 1 turn",
+        "unlock_type": "level",
+        "unlock_requirement": 8,
+        "cooldown": 10,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "buff": {"stat": "physical_immunity", "duration": 1}
+        },
+        "tags": ["support", "protection"]
+      },
+      {
+        "id": "resurrection",
+        "name": "Resurrection",
+        "description": "Revive a fallen ally with 50% HP",
+        "unlock_type": "scroll",
+        "unlock_requirement": "resurrection_tome",
+        "cooldown": 20,
+        "cost": {"type": "mana", "amount": 80},
+        "effects": {
+          "resurrect": {"hp_percent": 0.50}
+        },
+        "tags": ["support", "resurrection"]
+      },
+      {
+        "id": "hammer_of_justice",
+        "name": "Hammer of Justice",
+        "description": "Stun the enemy with divine justice",
+        "unlock_type": "level",
+        "unlock_requirement": 10,
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.5},
+          "stun": {"duration": 1},
+          "element": "holy"
+        },
+        "tags": ["control", "holy"]
+      },
+      {
+        "id": "divine_hymn",
+        "name": "Divine Hymn",
+        "description": "Channel a powerful hymn, healing all allies over 3 turns",
+        "unlock_type": "trainer",
+        "unlock_requirement": "divine_oracle",
+        "cooldown": 12,
+        "cost": {"type": "mana", "amount": 50},
+        "effects": {
+          "heal": {"base": 25, "scales_with": "magic", "scaling": 2.0, "aoe": true},
+          "hot": {"heal": 15, "scales_with": "magic", "scaling": 1.5, "duration": 3, "aoe": true}
+        },
+        "tags": ["healing", "channeled", "aoe"]
+      },
+      {
+        "id": "holy_wrath",
+        "name": "Holy Wrath",
+        "description": "Unleash holy fury, dealing massive damage to all undead and demons",
+        "unlock_type": "level",
+        "unlock_requirement": 12,
+        "cooldown": 8,
+        "cost": {"type": "mana", "amount": 40},
+        "effects": {
+          "damage": {"base": 60, "scales_with": "magic", "scaling": 3.0},
+          "conditional": {"target_type": ["undead", "demon"], "damage_multiplier": 2.5},
+          "aoe": true,
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "aoe"]
+      },
+      {
+        "id": "divine_spirit",
+        "name": "Divine Spirit",
+        "description": "Bless all allies, increasing their magic power",
+        "unlock_type": "scroll",
+        "unlock_requirement": "blessing_codex",
+        "cooldown": 10,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "buff": {"stat": "magic", "amount": 8, "duration": 5, "aoe": true}
+        },
+        "tags": ["support", "buff", "aoe"]
+      },
+      {
+        "id": "penance",
+        "name": "Penance",
+        "description": "Channel holy energy dealing damage or healing in 3 bursts",
+        "unlock_type": "level",
+        "unlock_requirement": 15,
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 35},
+        "effects": {
+          "damage": {"base": 18, "scales_with": "magic", "scaling": 1.8, "hits": 3},
+          "heal": {"base": 18, "scales_with": "magic", "scaling": 1.8, "hits": 3},
+          "element": "holy"
+        },
+        "tags": ["magic", "healing", "versatile"]
+      },
+      {
+        "id": "guardian_spirit",
+        "name": "Guardian Spirit",
+        "description": "Protect an ally - if they would die, restore them to 40% HP instead",
+        "unlock_type": "trainer",
+        "unlock_requirement": "angel_guardian",
+        "cooldown": 15,
+        "cost": {"type": "mana", "amount": 40},
+        "effects": {
+          "buff": {"stat": "guardian_spirit", "duration": 3, "revive_percent": 0.40}
+        },
+        "tags": ["support", "protection"]
+      },
+      {
+        "id": "consecration",
+        "name": "Consecration",
+        "description": "Consecrate the ground, dealing holy damage to enemies standing in it",
+        "unlock_type": "level",
+        "unlock_requirement": 18,
+        "cooldown": 7,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "damage": {"base": 15, "scales_with": "magic", "scaling": 1.2},
+          "dot": {"damage": 12, "scales_with": "magic", "scaling": 1.0, "duration": 4},
+          "aoe": true,
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "aoe", "ground"]
+      },
+      {
+        "id": "divine_shield",
+        "name": "Divine Shield",
+        "description": "Become invulnerable for 2 turns",
+        "unlock_type": "scroll",
+        "unlock_requirement": "divine_protection_scroll",
+        "cooldown": 20,
+        "cost": {"type": "mana", "amount": 50},
+        "effects": {
+          "buff": {"stat": "invulnerable", "duration": 2}
+        },
+        "tags": ["defense", "ultimate"]
+      },
+      {
+        "id": "atonement",
+        "name": "Atonement",
+        "description": "Your offensive spells also heal nearby allies for 50% of damage dealt",
+        "unlock_type": "trainer",
+        "unlock_requirement": "discipline_priest",
+        "cooldown": 10,
+        "cost": {"type": "mana", "amount": 35},
+        "effects": {
+          "buff": {"stat": "damage_to_healing", "amount": 0.50, "duration": 5, "aoe_heal": true}
+        },
+        "tags": ["support", "healing", "buff"]
+      }
+    ],
+    "ranger": [
+      {
+        "id": "aimed_shot",
+        "name": "Aimed Shot",
+        "description": "A carefully aimed shot dealing high damage",
+        "unlock_type": "level",
+        "unlock_requirement": 3,
+        "cooldown": 3,
+        "cost": {"type": "focus", "amount": 30},
+        "effects": {
+          "damage": {"base": 35, "scales_with": "agility", "scaling": 2.2}
+        },
+        "tags": ["ranged", "damage"]
+      },
+      {
+        "id": "rapid_fire",
+        "name": "Rapid Fire",
+        "description": "Fire three quick shots in succession",
+        "unlock_type": "level",
+        "unlock_requirement": 4,
+        "cooldown": 4,
+        "cost": {"type": "focus", "amount": 35},
+        "effects": {
+          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.5},
+          "hits": 3
+        },
+        "tags": ["ranged", "multi_hit"]
+      },
+      {
+        "id": "hunters_mark",
+        "name": "Hunter's Mark",
+        "description": "Mark your prey, increasing damage dealt to them by 30%",
+        "unlock_type": "level",
+        "unlock_requirement": 5,
+        "cooldown": 6,
+        "cost": {"type": "focus", "amount": 20},
+        "effects": {
+          "debuff": {"stat": "damage_taken", "amount": 0.30, "duration": 5}
+        },
+        "tags": ["debuff", "utility"]
+      },
+      {
+        "id": "explosive_shot",
+        "name": "Explosive Shot",
+        "description": "Fire an explosive arrow that damages all nearby enemies",
+        "unlock_type": "scroll",
+        "unlock_requirement": "explosive_arrows",
+        "cooldown": 5,
+        "cost": {"type": "focus", "amount": 40},
+        "effects": {
+          "damage": {"base": 30, "scales_with": "agility", "scaling": 2.0},
+          "aoe": true
+        },
+        "tags": ["ranged", "aoe", "explosive"]
+      },
+      {
+        "id": "disengage",
+        "name": "Disengage",
+        "description": "Leap backwards, escaping melee range and increasing dodge",
+        "unlock_type": "level",
+        "unlock_requirement": 6,
+        "cooldown": 5,
+        "cost": {"type": "focus", "amount": 20},
+        "effects": {
+          "buff": {"stat": "dodge_chance", "amount": 0.40, "duration": 1}
+        },
+        "tags": ["mobility", "defense"]
+      },
+      {
+        "id": "trap",
+        "name": "Trap",
+        "description": "Set a trap that immobilizes and damages the enemy",
+        "unlock_type": "trainer",
+        "unlock_requirement": "trap_master",
+        "cooldown": 8,
+        "cost": {"type": "focus", "amount": 25},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
+          "debuff": {"type": "immobilize", "duration": 2}
+        },
+        "tags": ["control", "trap"]
+      },
+      {
+        "id": "volley",
+        "name": "Volley",
+        "description": "Rain arrows on an area, hitting all enemies",
+        "unlock_type": "level",
+        "unlock_requirement": 8,
+        "cooldown": 7,
+        "cost": {"type": "focus", "amount": 45},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "agility", "scaling": 1.8},
+          "aoe": true
+        },
+        "tags": ["ranged", "aoe"]
+      },
+      {
+        "id": "serpent_sting",
+        "name": "Serpent Sting",
+        "description": "Poison arrow that deals damage over time",
+        "unlock_type": "level",
+        "unlock_requirement": 7,
+        "cooldown": 3,
+        "cost": {"type": "focus", "amount": 25},
+        "effects": {
+          "damage": {"base": 10, "scales_with": "agility", "scaling": 1.0},
+          "dot": {"damage": 15, "scales_with": "agility", "scaling": 1.2, "duration": 5}
+        },
+        "tags": ["ranged", "poison", "dot"]
+      },
+      {
+        "id": "camouflage",
+        "name": "Camouflage",
+        "description": "Blend into surroundings, becoming hard to hit",
+        "unlock_type": "scroll",
+        "unlock_requirement": "stealth_manual",
+        "cooldown": 10,
+        "cost": {"type": "focus", "amount": 30},
+        "effects": {
+          "buff": {"stat": "dodge_chance", "amount": 0.60, "duration": 3}
+        },
+        "tags": ["defense", "stealth"]
+      },
+      {
+        "id": "barrage",
+        "name": "Barrage",
+        "description": "Unleash a barrage of arrows at random enemies",
+        "unlock_type": "level",
+        "unlock_requirement": 10,
+        "cooldown": 6,
+        "cost": {"type": "focus", "amount": 50},
+        "effects": {
+          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.5},
+          "hits": 6,
+          "random_targets": true
+        },
+        "tags": ["ranged", "multi_hit"]
+      },
+      {
+        "id": "piercing_shot",
+        "name": "Piercing Shot",
+        "description": "Fire an arrow that pierces through all enemies",
+        "unlock_type": "trainer",
+        "unlock_requirement": "master_archer",
+        "cooldown": 7,
+        "cost": {"type": "focus", "amount": 40},
+        "effects": {
+          "damage": {"base": 40, "scales_with": "agility", "scaling": 2.5},
+          "piercing": true,
+          "aoe": true
+        },
+        "tags": ["ranged", "aoe"]
+      },
+      {
+        "id": "feign_death",
+        "name": "Feign Death",
+        "description": "Play dead, removing you from combat and clearing threat",
+        "unlock_type": "level",
+        "unlock_requirement": 12,
+        "cooldown": 15,
+        "cost": {"type": "none"},
+        "effects": {
+          "buff": {"stat": "untargetable", "duration": 1},
+          "threat_clear": true
+        },
+        "tags": ["utility", "survival"]
+      },
+      {
+        "id": "aspect_of_the_hawk",
+        "name": "Aspect of the Hawk",
+        "description": "Increase your agility by 40% for 4 turns",
+        "unlock_type": "scroll",
+        "unlock_requirement": "aspect_codex",
+        "cooldown": 8,
+        "cost": {"type": "focus", "amount": 30},
+        "effects": {
+          "buff": {"stat": "agility", "amount": 0.40, "duration": 4}
+        },
+        "tags": ["buff", "aspect"]
+      },
+      {
+        "id": "kill_shot",
+        "name": "Kill Shot",
+        "description": "Devastating shot that deals massive damage to low HP targets",
+        "unlock_type": "level",
+        "unlock_requirement": 15,
+        "cooldown": 6,
+        "cost": {"type": "focus", "amount": 40},
+        "effects": {
+          "damage": {"base": 50, "scales_with": "agility", "scaling": 2.8},
+          "conditional": {"target_hp_below": 0.35, "damage_multiplier": 2.0}
+        },
+        "tags": ["ranged", "execute"]
+      },
+      {
+        "id": "bestial_wrath",
+        "name": "Bestial Wrath",
+        "description": "Enter a feral state, increasing all damage by 60% for 3 turns",
+        "unlock_type": "trainer",
+        "unlock_requirement": "beast_lord",
+        "cooldown": 10,
+        "cost": {"type": "focus", "amount": 50},
+        "effects": {
+          "buff": {"stat": "damage", "amount": 0.60, "duration": 3}
+        },
+        "tags": ["buff", "ultimate"]
+      },
+      {
+        "id": "black_arrow",
+        "name": "Black Arrow",
+        "description": "Fire a cursed arrow that deals heavy shadow damage over time",
+        "unlock_type": "scroll",
+        "unlock_requirement": "dark_archery",
+        "cooldown": 8,
+        "cost": {"type": "focus", "amount": 35},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
+          "dot": {"damage": 20, "scales_with": "agility", "scaling": 1.8, "duration": 4},
+          "element": "shadow"
+        },
+        "tags": ["ranged", "dot", "shadow"]
+      },
+      {
+        "id": "trueshot_aura",
+        "name": "Trueshot Aura",
+        "description": "Empower all allies, increasing their agility",
+        "unlock_type": "level",
+        "unlock_requirement": 18,
+        "cooldown": 12,
+        "cost": {"type": "focus", "amount": 40},
+        "effects": {
+          "buff": {"stat": "agility", "amount": 10, "duration": 5, "aoe": true}
+        },
+        "tags": ["support", "buff", "aoe"]
+      },
+      {
+        "id": "harpoon",
+        "name": "Harpoon",
+        "description": "Launch a harpoon that pulls you to the enemy and stuns them",
+        "unlock_type": "scroll",
+        "unlock_requirement": "harpoon_technique",
+        "cooldown": 9,
+        "cost": {"type": "focus", "amount": 30},
+        "effects": {
+          "damage": {"base": 25, "scales_with": "agility", "scaling": 1.8},
+          "stun": {"duration": 1},
+          "mobility": {"type": "charge"}
+        },
+        "tags": ["mobility", "control", "melee"]
+      }
+    ]
+  }
+}
