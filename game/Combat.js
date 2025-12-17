@@ -1,6 +1,7 @@
 const { loadData } = require('../data/data_loader');
 const StatusEffectManager = require('./StatusEffectManager');
 const LootGenerator = require('./LootGenerator');
+const BestiaryManager = require('../utils/bestiaryManager');
 
 /**
  * Combat System - Turn-based combat with speed-based turn order
@@ -569,7 +570,11 @@ class Combat {
         items: loot.items,
         leveledUp: leveledUp
       },
-      log: this.combatLog
+      log: this.combatLog,
+      bestiaryUpdate: {
+        monsterId: this.monster.id,
+        defeated: true
+      }
     };
   }
 
@@ -610,12 +615,17 @@ class Combat {
       },
       monster: {
         name: this.monster.name,
+        id: this.monster.id,
         hp: this.monster.current_hp,
         max_hp: this.monster.max_hp,
         level: this.monster.level,
         status_effects: this.statusEffects.monster.getActiveEffects()
       },
-      log: this.combatLog
+      log: this.combatLog,
+      bestiaryUpdate: this.turn === 0 ? {
+        monsterId: this.monster.id,
+        encountered: true
+      } : null
     };
   }
 
