@@ -9,6 +9,7 @@ import QuestLog from './components/Quests/QuestLog';
 import MapView from './components/Map/MapView';
 import DialogueModal from './components/Dialogue/DialogueModal';
 import AchievementTracker from './components/Achievements/AchievementTracker';
+import BestiaryView from './components/Bestiary/BestiaryView';
 import SettingsModal from './components/Settings/SettingsModal';
 import LoadingScreen from './components/Layout/LoadingScreen';
 import CharacterCreation from './components/Common/CharacterCreation';
@@ -107,6 +108,8 @@ function App() {
         return <MapView />;
       case 'achievements':
         return <AchievementTracker />;
+      case 'bestiary':
+        return <BestiaryView />;
       default:
         return <CharacterSheet />;
     }
