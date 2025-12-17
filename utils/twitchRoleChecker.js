@@ -44,7 +44,15 @@ async function fetchUserRolesFromTwitch(broadcasterToken, broadcasterId, userId,
       }
     } catch (error) {
       // Moderator check failed - might not have required scope
-      console.warn('Failed to check moderator status:', error.response?.status || error.message);
+      const statusCode = error.response?.status;
+      const endpoint = 'GET /helix/moderation/moderators';
+      const requiredScope = 'moderation:read';
+      
+      if (statusCode === 401 || statusCode === 403) {
+        console.warn(`Failed to check moderator status: ${endpoint} requires scope: ${requiredScope} (Status: ${statusCode})`);
+      } else {
+        console.warn(`Failed to check moderator status: ${error.message} (Endpoint: ${endpoint})`);
+      }
     }
     
     // Check if user is a VIP
@@ -65,7 +73,15 @@ async function fetchUserRolesFromTwitch(broadcasterToken, broadcasterId, userId,
       }
     } catch (error) {
       // VIP check failed - might not have required scope
-      console.warn('Failed to check VIP status:', error.response?.status || error.message);
+      const statusCode = error.response?.status;
+      const endpoint = 'GET /helix/channels/vips';
+      const requiredScope = 'channel:read:vips';
+      
+      if (statusCode === 401 || statusCode === 403) {
+        console.warn(`Failed to check VIP status: ${endpoint} requires scope: ${requiredScope} (Status: ${statusCode})`);
+      } else {
+        console.warn(`Failed to check VIP status: ${error.message} (Endpoint: ${endpoint})`);
+      }
     }
     
     // Check if user is a subscriber
@@ -86,7 +102,15 @@ async function fetchUserRolesFromTwitch(broadcasterToken, broadcasterId, userId,
       }
     } catch (error) {
       // Subscriber check failed - might not have required scope
-      console.warn('Failed to check subscriber status:', error.response?.status || error.message);
+      const statusCode = error.response?.status;
+      const endpoint = 'GET /helix/subscriptions/user';
+      const requiredScope = 'channel:read:subscriptions';
+      
+      if (statusCode === 401 || statusCode === 403) {
+        console.warn(`Failed to check subscriber status: ${endpoint} requires scope: ${requiredScope} (Status: ${statusCode})`);
+      } else {
+        console.warn(`Failed to check subscriber status: ${error.message} (Endpoint: ${endpoint})`);
+      }
     }
     
     // If no roles found, default to viewer

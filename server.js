@@ -179,6 +179,26 @@ function canAnnounce(userId){
   return true;
 }
 
+/**
+ * Helper: Determine if we should fetch user roles from Twitch API
+ * @param {Array<string>|null} existingRoles - Existing roles from database
+ * @returns {boolean} True if we should fetch from Twitch API
+ */
+function shouldFetchRolesFromTwitchAPI(existingRoles) {
+  // No existing roles - need to fetch
+  if (!existingRoles || existingRoles.length === 0) {
+    return true;
+  }
+  
+  // Only has 'viewer' role - may have higher roles to fetch
+  if (existingRoles.length === 1 && existingRoles[0] === 'viewer') {
+    return true;
+  }
+  
+  // Has other roles - use existing
+  return false;
+}
+
 // Twitch OAuth: /auth/twitch -> redirect, /auth/twitch/callback -> handle
 const TWITCH_CLIENT_ID = process.env.TWITCH_CLIENT_ID;
 const TWITCH_CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET;
@@ -917,8 +937,8 @@ app.post('/api/player/create',
       const existingProgress = await db.loadPlayerProgress(user.id, channelName);
       let userRoles = existingProgress?.roles || null;
       
-      // If no existing roles, try to fetch from Twitch API if broadcaster is authenticated
-      if (!userRoles || (userRoles.length === 1 && userRoles[0] === 'viewer')) {
+      // Try to fetch from Twitch API if we don't have accurate roles and broadcaster is authenticated
+      if (shouldFetchRolesFromTwitchAPI(userRoles)) {
         const broadcasterAuth = await db.getBroadcasterAuth(channelName);
         
         if (broadcasterAuth && user.twitchId) {
@@ -935,20 +955,25 @@ app.post('/api/player/create',
             if (fetchedRoles && fetchedRoles.length > 0) {
               userRoles = fetchedRoles;
               console.log(`✅ Fetched roles from Twitch API:`, userRoles);
+            } else {
+              userRoles = ['viewer'];
             }
           } catch (error) {
             console.error('Failed to fetch roles from Twitch API:', error);
-            // Fall back to viewer if fetch fails
+            // Fall back to existing roles or viewer
             userRoles = userRoles || ['viewer'];
           }
         } else {
-          // No broadcaster auth - fall back to existing or viewer
+          // No broadcaster auth or twitchId - fall back to existing or viewer
           userRoles = userRoles || ['viewer'];
           if (!broadcasterAuth) {
-            console.log(`⚠️ Broadcaster not authenticated for channel ${channelName} - roles may not be accurate`);
+            console.log(`⚠️ Broadcaster not authenticated for channel ${channelName} - using fallback role detection`);
           }
         }
       }
+      
+      // Ensure userRoles is never null
+      userRoles = userRoles || ['viewer'];
       
       // Create new character
       const character = await db.createCharacter(user.id, channelName, characterName, classType);

@@ -869,6 +869,8 @@ async function updateUserRole(playerId, channelName, newRoles) {
     if (playerInfo.rows.length > 0) {
       const displayName = playerInfo.rows[0].display_name;
       // Create a minimal player entry with roles
+      // Uses DEFAULT_STARTING_LOCATION as the initial spawn point for players who haven't created a character yet
+      // This allows the bot to track roles for users before they officially create a character through the web UI
       await query(
         `INSERT INTO ${table} (player_id, name, location, roles, updated_at)
          VALUES ($1, $2, $3, $4, NOW())`,
