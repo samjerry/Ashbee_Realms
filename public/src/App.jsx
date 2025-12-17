@@ -13,6 +13,7 @@ import BestiaryView from './components/Bestiary/BestiaryView';
 import SettingsModal from './components/Settings/SettingsModal';
 import LoadingScreen from './components/Layout/LoadingScreen';
 import CharacterCreation from './components/Common/CharacterCreation';
+import BroadcasterSetup from './components/Broadcaster/BroadcasterSetup';
 
 function App() {
   const { 
@@ -27,8 +28,15 @@ function App() {
 
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
   const [isCreatingCharacter, setIsCreatingCharacter] = useState(false);
+  const [showSetup, setShowSetup] = useState(false);
 
   useEffect(() => {
+    // Check if this is the setup page
+    if (window.location.pathname === '/setup') {
+      setShowSetup(true);
+      return;
+    }
+
     // Check if this is a new user (tutorial=true in URL)
     const urlParams = new URLSearchParams(window.location.search);
     const isTutorial = urlParams.get('tutorial') === 'true';
@@ -84,6 +92,11 @@ function App() {
       setIsCreatingCharacter(false);
     }
   };
+
+  // Show broadcaster setup screen if on /setup route
+  if (showSetup) {
+    return <BroadcasterSetup />;
+  }
 
   // Show character creation screen for new users
   if (showCharacterCreation) {

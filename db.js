@@ -126,6 +126,7 @@ async function initPostgres() {
       weather TEXT DEFAULT 'Clear',
       time_of_day TEXT DEFAULT 'Day',
       season TEXT DEFAULT 'Spring',
+      game_mode TEXT DEFAULT 'softcore',
       active_event TEXT DEFAULT NULL,
       last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -295,6 +296,19 @@ async function initPostgres() {
       END $$;
     `);
   }
+  
+  // Migration: Add game_mode column to game_state table if it doesn't exist
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'game_state' AND column_name = 'game_mode'
+      ) THEN
+        ALTER TABLE game_state ADD COLUMN game_mode TEXT DEFAULT 'softcore';
+      END IF;
+    END $$;
+  `);
   
   console.log(`✅ Tables created/verified in ${Date.now() - tableStart}ms`);
   
@@ -1156,6 +1170,61 @@ async function getPlayerProgress(playerId, channelName) {
   return await loadPlayerProgress(playerId, channelName);
 }
 
+/**
+ * Get game state for a channel
+ * @param {string} channelName - Channel name
+ * @returns {Object|null} Game state object or null if not found
+ */
+async function getGameState(channelName) {
+  try {
+    const result = await query(
+      'SELECT * FROM game_state WHERE channel_name = $1',
+      [channelName.toLowerCase()]
+    );
+    
+    if (result.rows && result.rows.length > 0) {
+      return result.rows[0];
+    }
+    
+    // If no game state exists, create default one
+    return null;
+  } catch (error) {
+    console.error('Error getting game state:', error);
+    throw error;
+  }
+}
+
+/**
+ * Set/update game state for a channel
+ * @param {string} channelName - Channel name
+ * @param {Object} gameState - Game state object with weather, time_of_day, season, game_mode
+ * @returns {Object} Updated game state
+ */
+async function setGameState(channelName, gameState) {
+  try {
+    const { weather, time_of_day, season, game_mode } = gameState;
+    
+    const result = await query(
+      `INSERT INTO game_state (channel_name, weather, time_of_day, season, game_mode, last_updated)
+       VALUES ($1, $2, $3, $4, $5, NOW())
+       ON CONFLICT (channel_name) 
+       DO UPDATE SET 
+         weather = $2,
+         time_of_day = $3,
+         season = $4,
+         game_mode = $5,
+         last_updated = NOW()
+       RETURNING *`,
+      [channelName.toLowerCase(), weather, time_of_day, season, game_mode]
+    );
+    
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error setting game state:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   initDB,
   query,
@@ -1190,6 +1259,9 @@ module.exports = {
   saveBroadcasterAuth,
   getBroadcasterAuth,
   isBroadcasterAuthenticated,
+  // Game state management
+  getGameState,
+  setGameState,
   // Constants
   ROLE_HIERARCHY,
   ROLE_COLORS,
