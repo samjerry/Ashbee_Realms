@@ -25,6 +25,8 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
+      // NOTE: unsafe-inline and unsafe-eval are ONLY for React development
+      // TODO: Remove these in production builds and use nonces/hashes
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Required for React dev
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
@@ -368,10 +370,16 @@ app.post('/api/player/progress',
           console.warn(`[SECURITY] Invalid gold amount: ${playerData.gold} for user ${user.displayName}`);
           return res.status(400).json({ error: 'Invalid gold amount' });
         }
-        // Gold can't increase by more than 100k at once (reasonable transaction limit)
-        if (playerData.gold > currentProgress.gold + 100000) {
+        // Allow spending (decrease) but validate large INCREASES
+        const goldChange = playerData.gold - currentProgress.gold;
+        if (goldChange > 100000) {
           console.warn(`[SECURITY] Large gold increase detected for user ${user.displayName}: ${currentProgress.gold} -> ${playerData.gold}`);
-          return res.status(400).json({ error: 'Invalid gold change' });
+          return res.status(400).json({ error: 'Invalid gold increase - suspiciously large' });
+        }
+        // Validate spending doesn't exceed current gold (paranoid check)
+        if (goldChange < 0 && playerData.gold < 0) {
+          console.warn(`[SECURITY] Negative gold after spending for user ${user.displayName}: ${playerData.gold}`);
+          playerData.gold = 0; // Cap at 0
         }
       }
       

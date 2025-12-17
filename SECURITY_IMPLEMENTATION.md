@@ -21,7 +21,7 @@ This document outlines all security measures implemented to prevent client-side 
 
 ```json
 {
-  "helmet": "^7.x",           // Security headers
+  "helmet": "^8.x",           // Security headers (updated from 7.x to 8.x)
   "express-validator": "^7.x", // Input validation
   "validator": "^13.x",        // String sanitization
   "cookie-parser": "^1.x"      // Cookie handling

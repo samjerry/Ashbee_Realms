@@ -97,7 +97,8 @@ const validateNameColor = [
  */
 const validateOperatorCommand = [
   body('channel').isString().trim().isLength({ min: 1, max: 50 }).escape(),
-  body('command').isString().trim().isLength({ min: 1, max: 50 }).isAlphanumeric(),
+  body('command').isString().trim().isLength({ min: 1, max: 50 })
+    .matches(/^[a-zA-Z]+$/), // Allow alphanumeric including camelCase
   body('params').optional().isObject(),
   body('params.playerId').optional().isString().trim().isLength({ min: 1, max: 100 }),
   body('params.amount').optional().isInt({ min: -1000000, max: 1000000 }),

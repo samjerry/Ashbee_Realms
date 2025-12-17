@@ -135,6 +135,8 @@ function sanitizeForLog(data) {
 
 /**
  * Suspicious activity detection
+ * NOTE: Uses in-memory Map which will reset on server restart
+ * For production with multiple instances, consider Redis or database-backed solution
  */
 const suspiciousActivity = new Map(); // userId -> { count, lastReset }
 const SUSPICIOUS_THRESHOLD = 10; // 10 suspicious actions in window
