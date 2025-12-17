@@ -468,7 +468,7 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                                     className="w-full text-left px-4 py-3 hover:bg-gray-600 transition-colors border-b border-gray-600 last:border-b-0"
                                   >
                                     <div className="font-medium flex items-center gap-1" style={{ color: getPlayerNameColor(player.name_color, player.roles) }}>
-                                      {player.roles && getRoleBadges(player.roles, player.selected_role_badge).map(({ Icon, color, role }) => (
+                                      {player.roles && getRoleBadges(player.roles, player.selectedRoleBadge).map(({ Icon, color, role }) => (
                                         <Icon key={role} size={14} style={{ color }} />
                                       ))}
                                       <span>{player.name}</span>

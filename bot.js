@@ -27,7 +27,8 @@ if (!ENABLE_BOT) {
 async function updateUserRoleFromTags(username, channelName, tags) {
   try {
     // Determine roles from tags (returns array)
-    const newRoles = db.determineRoleFromTags(username, channelName, tags);
+    const userId = tags['user-id'];
+    const newRoles = db.determineRoleFromTags(username, channelName, tags, userId);
     
     // Get or create player ID
     const playerId = `twitch-${tags['user-id']}`;

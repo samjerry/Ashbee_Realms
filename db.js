@@ -20,31 +20,42 @@ const ROLE_COLORS = {
 const DEFAULT_STARTING_LOCATION = 'Silverbrook';
 
 /**
- * Load beta tester usernames from environment variable and Testers.txt
- * @returns {Array<string>} Array of tester usernames (lowercase)
+ * Load beta tester IDs from environment variable and Testers.txt
+ * TESTERS env var should contain Twitch IDs (e.g., "32319902,12345678")
+ * These will be converted to the internal format: twitch-{id}
+ * @returns {Array<string>} Array of tester player IDs (twitch-{id} format)
  */
 function loadTestersFromFile() {
   const testers = [];
   
-  // First, load from TESTERS environment variable (comma-separated)
+  // First, load from TESTERS environment variable (comma-separated Twitch IDs)
   if (process.env.TESTERS) {
     const envTesters = process.env.TESTERS
       .split(',')
-      .map(name => name.trim().toLowerCase())
-      .filter(name => name);
+      .map(id => id.trim())
+      .filter(id => id)
+      .map(id => `twitch-${id}`);
     testers.push(...envTesters);
     console.log(`📋 Loaded ${envTesters.length} beta testers from TESTERS environment variable`);
   }
   
-  // Then, load from Testers.txt file
+  // Then, load from Testers.txt file (supports both usernames and IDs)
   try {
     const testersPath = path.join(__dirname, 'Testers.txt');
     if (fs.existsSync(testersPath)) {
       const content = fs.readFileSync(testersPath, 'utf8');
       const fileTesters = content
         .split('\n')
-        .map(line => line.trim().toLowerCase())
-        .filter(line => line && !line.startsWith('#'));
+        .map(line => line.trim())
+        .filter(line => line && !line.startsWith('#'))
+        .map(line => {
+          // If it's a number, treat it as a Twitch ID
+          if (/^\d+$/.test(line)) {
+            return `twitch-${line}`;
+          }
+          // Otherwise, assume it's a username (legacy support)
+          return line.toLowerCase();
+        });
       
       // Merge with env testers (avoid duplicates)
       const uniqueFileTesters = fileTesters.filter(t => !testers.includes(t));
@@ -1031,12 +1042,17 @@ async function setUserRole(playerId, channelName, role) {
 }
 
 /**
- * Check if username is a beta tester
- * @param {string} username - Username to check
+ * Check if user is a beta tester by player ID or username
+ * @param {string} identifier - Player ID (twitch-{id}) or username to check
  * @returns {boolean} True if user is a beta tester
  */
-function isBetaTester(username) {
-  return BETA_TESTERS.includes(username.toLowerCase());
+function isBetaTester(identifier) {
+  // Check if it's a player ID (twitch-{id}) or username
+  if (identifier.startsWith('twitch-')) {
+    return BETA_TESTERS.includes(identifier);
+  }
+  // Legacy support: check by username (lowercase)
+  return BETA_TESTERS.includes(identifier.toLowerCase());
 }
 
 /**
@@ -1044,9 +1060,10 @@ function isBetaTester(username) {
  * @param {string} username - Twitch username
  * @param {string} channelName - Channel name
  * @param {object} tags - Twitch message tags
+ * @param {string} userId - Twitch user ID (optional, for tester checking)
  * @returns {Array<string>} Array of user roles
  */
-function determineRoleFromTags(username, channelName, tags = {}) {
+function determineRoleFromTags(username, channelName, tags = {}, userId = null) {
   const roles = [];
   
   // Check if user is the broadcaster/streamer
@@ -1070,7 +1087,9 @@ function determineRoleFromTags(username, channelName, tags = {}) {
   }
 
   // Check if user is a beta tester (cosmetic role)
-  if (isBetaTester(username)) {
+  // Prefer checking by user ID (twitch-{id}), fallback to username
+  const identifier = userId ? `twitch-${userId}` : username;
+  if (isBetaTester(identifier)) {
     roles.push('tester');
   }
 

@@ -1664,6 +1664,12 @@ app.post('/api/player/role-display',
       playerData.selectedRoleBadge = selectedRoleBadge.toLowerCase();
       await db.savePlayerProgress(user.id, channelName, playerData);
       
+      // Emit websocket event for live update
+      socketHandler.emitPlayerUpdate(user.login || user.displayName, channelName, {
+        nameColor: validatedColor,
+        selectedRoleBadge: selectedRoleBadge.toLowerCase()
+      });
+      
       res.json({ success: true, nameColor: validatedColor, selectedRoleBadge: selectedRoleBadge.toLowerCase() });
     } catch (error) {
       console.error('Error updating role display:', error);

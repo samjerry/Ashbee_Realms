@@ -72,7 +72,7 @@ const THEMES = [
 ];
 
 const SettingsModal = () => {
-  const { showSettings, closeSettings } = useGameStore();
+  const { showSettings, closeSettings, player, setPlayer } = useGameStore();
   const [settings, setSettings] = useState({
     volume: 70,
     sfxVolume: 80,
@@ -343,6 +343,15 @@ const SettingsModal = () => {
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ nameColor: color, selectedRoleBadge: role })
                             });
+                            
+                            // Update player state in gameStore for immediate UI update
+                            if (player) {
+                              setPlayer({
+                                ...player,
+                                nameColor: color,
+                                selectedRoleBadge: role
+                              });
+                            }
                           } catch (err) {
                             console.error('Failed to save role display:', err);
                           }
