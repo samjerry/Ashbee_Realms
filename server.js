@@ -236,7 +236,7 @@ app.get('/auth/twitch', (req, res) => {
 
 app.get('/auth/twitch/callback', async (req, res) => {
   const { code, state } = req.query;
-  console.log('OAuth callback received:', { hasCode: !!code, hasState: !!state, sessionState: req.session.oauthState });
+  console.log('🎮 PLAYER OAuth callback received (not broadcaster!):', { hasCode: !!code, hasState: !!state, sessionState: req.session.oauthState });
   
   if (!code || !state || state !== req.session.oauthState) {
     console.error('OAuth validation failed:', { code: !!code, state: !!state, match: state === req.session.oauthState });
@@ -350,7 +350,7 @@ app.get('/auth/broadcaster/callback',
   async (req, res) => {
   const { code, state, error, error_description } = req.query;
   
-  console.log('📥 OAuth callback received:', { 
+  console.log('� BROADCASTER OAuth callback received:', { 
     hasCode: !!code, 
     hasState: !!state,
     hasError: !!error,
