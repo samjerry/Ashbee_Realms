@@ -822,13 +822,39 @@ async function updateUserRole(playerId, channelName, newRoles) {
   }
   
   const table = getPlayerTable(channelName);
-  await query(
-    `INSERT INTO ${table} (player_id, roles, updated_at)
-     VALUES ($1, $2, NOW())
-     ON CONFLICT (player_id) 
-     DO UPDATE SET roles = $2, updated_at = NOW()`,
-    [playerId, JSON.stringify(rolesToSet)]
+  
+  // Check if player exists first
+  const existing = await query(
+    `SELECT player_id FROM ${table} WHERE player_id = $1`,
+    [playerId]
   );
+  
+  if (existing.rows.length > 0) {
+    // Player exists, just update roles
+    await query(
+      `UPDATE ${table} SET roles = $1, updated_at = NOW() WHERE player_id = $2`,
+      [JSON.stringify(rolesToSet), playerId]
+    );
+  } else {
+    // Player doesn't exist, get their display name from the players table
+    const playerInfo = await query(
+      `SELECT display_name FROM players WHERE id = $1`,
+      [playerId]
+    );
+    
+    if (playerInfo.rows.length > 0) {
+      const displayName = playerInfo.rows[0].display_name;
+      // Create a minimal player entry with roles
+      await query(
+        `INSERT INTO ${table} (player_id, name, location, roles, updated_at)
+         VALUES ($1, $2, $3, $4, NOW())`,
+        [playerId, displayName, 'Silverbrook', JSON.stringify(rolesToSet)]
+      );
+    } else {
+      // Player doesn't exist in global players table either - skip update
+      console.warn(`Cannot update roles for ${playerId} - player not found in global players table`);
+    }
+  }
 }
 
 /**
