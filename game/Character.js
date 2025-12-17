@@ -49,6 +49,7 @@ class Character {
     this.roles = data.roles || ['viewer'];
     this.nameColor = data.nameColor || data.name_color || null;
     this.selectedRoleBadge = data.selectedRoleBadge || data.selected_role_badge || null;
+    this.theme = data.theme || 'crimson-knight';
     
     // Faction reputation tracking
     // Initialize with empty object, FactionManager will handle proper initialization
@@ -492,6 +493,7 @@ class Character {
       roles: this.roles,
       nameColor: this.nameColor,
       selectedRoleBadge: this.selectedRoleBadge,
+      theme: this.theme,
       bestiary: this.bestiary,
       bestiary_unlocked: this.bestiaryUnlocked
     };

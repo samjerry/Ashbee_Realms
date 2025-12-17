@@ -95,28 +95,24 @@ const SettingsModal = () => {
       })
       .catch(err => console.error('Failed to fetch roles:', err));
     
-    // Fetch player data to get current name color
+    // Fetch player data to get current name color, role badge, and theme
     fetch('/api/player')
       .then(res => res.json())
       .then(data => {
-        if (data && data.nameColor) {
-          setSelectedNameColor(data.nameColor);
-        }
-        if (data && data.selectedRoleBadge) {
-          setSelectedRoleBadge(data.selectedRoleBadge);
+        if (data) {
+          if (data.nameColor) {
+            setSelectedNameColor(data.nameColor);
+          }
+          if (data.selectedRoleBadge) {
+            setSelectedRoleBadge(data.selectedRoleBadge);
+          }
+          if (data.theme) {
+            setSettings(prev => ({ ...prev, theme: data.theme }));
+            applyTheme(data.theme);
+          }
         }
       })
       .catch(err => console.error('Failed to fetch player data:', err));
-  }, []);
-
-  useEffect(() => {
-    // Load settings from localStorage
-    const saved = localStorage.getItem('gameSettings');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setSettings(parsed);
-      applyTheme(parsed.theme);
-    }
   }, []);
 
   const applyTheme = (themeId) => {
@@ -137,10 +133,23 @@ const SettingsModal = () => {
     closeSettings();
   };
   
-  const handleSettingChange = (key, value) => {
+  const handleSettingChange = async (key, value) => {
     setSettings(prev => ({ ...prev, [key]: value }));
     // Save to localStorage
     localStorage.setItem('gameSettings', JSON.stringify({ ...settings, [key]: value }));
+    
+    // If theme is changed, also save to database
+    if (key === 'theme') {
+      try {
+        await fetch('/api/player/theme', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ theme: value })
+        });
+      } catch (err) {
+        console.error('Failed to save theme to database:', err);
+      }
+    }
   };
 
   return (

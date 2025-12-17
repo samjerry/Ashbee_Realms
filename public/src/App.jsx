@@ -31,6 +31,78 @@ function App() {
   const [isCreatingCharacter, setIsCreatingCharacter] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
 
+  // Apply theme helper function
+  const applyTheme = (themeId) => {
+    const THEMES = {
+      'crimson-knight': { 
+        colors: {
+          50: '254 242 242', 100: '254 226 226', 200: '254 202 202', 300: '252 165 165',
+          400: '248 113 113', 500: '239 68 68', 600: '220 38 38', 700: '185 28 28',
+          800: '153 27 27', 900: '127 29 29'
+        },
+        bg: '10 10 15'
+      },
+      'lovecraftian': { 
+        colors: {
+          50: '240 253 244', 100: '220 252 231', 200: '187 247 208', 300: '134 239 172',
+          400: '74 222 128', 500: '34 197 94', 600: '21 128 61', 700: '20 83 45',
+          800: '22 101 52', 900: '20 83 45'
+        },
+        bg: '2 6 23'
+      },
+      'azure-mage': { 
+        colors: {
+          50: '239 246 255', 100: '219 234 254', 200: '191 219 254', 300: '147 197 253',
+          400: '96 165 250', 500: '59 130 246', 600: '37 99 235', 700: '29 78 216',
+          800: '30 64 175', 900: '30 58 138'
+        },
+        bg: '15 23 42'
+      },
+      'golden-paladin': { 
+        colors: {
+          50: '254 252 232', 100: '254 249 195', 200: '254 240 138', 300: '253 224 71',
+          400: '250 204 21', 500: '234 179 8', 600: '202 138 4', 700: '161 98 7',
+          800: '133 77 14', 900: '113 63 18'
+        },
+        bg: '24 24 27'
+      },
+      'shadow-assassin': { 
+        colors: {
+          50: '250 245 255', 100: '243 232 255', 200: '233 213 255', 300: '216 180 254',
+          400: '192 132 252', 500: '168 85 247', 600: '124 58 237', 700: '109 40 217',
+          800: '91 33 182', 900: '76 29 149'
+        },
+        bg: '12 10 9'
+      },
+      'frost-warden': { 
+        colors: {
+          50: '240 249 255', 100: '224 242 254', 200: '186 230 253', 300: '125 211 252',
+          400: '56 189 248', 500: '14 165 233', 600: '8 145 178', 700: '14 116 144',
+          800: '21 94 117', 900: '22 78 99'
+        },
+        bg: '10 10 15'
+      }
+    };
+    
+    const theme = THEMES[themeId] || THEMES['crimson-knight'];
+    Object.entries(theme.colors).forEach(([shade, rgb]) => {
+      document.documentElement.style.setProperty(`--color-primary-${shade}`, rgb);
+    });
+    document.documentElement.style.setProperty('--color-bg-950', theme.bg);
+  };
+
+  useEffect(() => {
+    // Load theme from database
+    fetch('/api/player')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.theme) {
+          applyTheme(data.theme);
+        }
+      })
+      .catch(err => console.error('Failed to load theme:', err));
+  }, []);
+
   useEffect(() => {
     // Check if this is the setup page
     if (window.location.pathname === '/setup') {

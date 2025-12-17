@@ -879,6 +879,36 @@ app.get('/api/player/channel', (req, res) => {
 });
 
 /**
+ * GET /api/player
+ * Get basic player information including theme, name color, and selected role badge
+ */
+app.get('/api/player', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channelName = CHANNELS[0] || 'default';
+  
+  try {
+    const playerData = await db.loadPlayerProgress(user.id, channelName);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    res.json({
+      name: playerData.name,
+      nameColor: playerData.nameColor,
+      selectedRoleBadge: playerData.selectedRoleBadge,
+      theme: playerData.theme || 'crimson-knight',
+      roles: playerData.roles
+    });
+  } catch (error) {
+    console.error('Error fetching player:', error);
+    res.status(500).json({ error: 'Failed to fetch player data' });
+  }
+});
+
+/**
  * GET /api/player/roles
  * Get user's Twitch roles for display and color selection
  */
@@ -1638,6 +1668,48 @@ app.post('/api/player/role-display',
     } catch (error) {
       console.error('Error updating role display:', error);
       res.status(500).json({ error: 'Failed to update role display' });
+    }
+  });
+
+/**
+ * POST /api/player/theme
+ * Update player's theme preference
+ */
+app.post('/api/player/theme',
+  rateLimiter.middleware('default'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { theme } = req.body;
+    if (!theme || typeof theme !== 'string') {
+      return res.status(400).json({ error: 'Theme required' });
+    }
+    
+    // Validate theme is one of the allowed themes
+    const validThemes = ['crimson-knight', 'lovecraftian', 'azure-mage', 'golden-paladin', 'shadow-assassin', 'frost-warden'];
+    if (!validThemes.includes(theme)) {
+      return res.status(400).json({ error: 'Invalid theme' });
+    }
+    
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    const channelName = CHANNELS[0] || 'default';
+    
+    try {
+      // Load player data
+      const playerData = await db.loadPlayerProgress(user.id, channelName);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      // Update theme
+      playerData.theme = theme;
+      await db.savePlayerProgress(user.id, channelName, playerData);
+      
+      res.json({ success: true, theme });
+    } catch (error) {
+      console.error('Error updating theme:', error);
+      res.status(500).json({ error: 'Failed to update theme' });
     }
   });
 
