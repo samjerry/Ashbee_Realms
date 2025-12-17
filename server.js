@@ -973,46 +973,52 @@ app.post('/api/action', async (req, res) => {
  * Start combat with a monster
  * POST /api/combat/start
  * Body: { monsterId: string, channelName?: string }
+ * WITH VALIDATION
  */
-app.post('/api/combat/start', async (req, res) => {
-  try {
-    const user = req.session.user;
-    if (!user) return res.status(401).json({ error: 'Not logged in' });
+app.post('/api/combat/start',
+  validation.validateCombatAction,
+  rateLimiter.middleware('default'),
+  security.auditLog('start_combat'),
+  async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-    const { monsterId, channelName } = req.body;
-    if (!monsterId) {
-      return res.status(400).json({ error: 'monsterId is required' });
-    }
-
-    const channel = channelName || user.channels?.[0] || 'default';
-
-    // Load player progress
-    const playerData = await db.getPlayerProgress(user.id, channel);
-    if (!playerData) {
-      return res.status(404).json({ error: 'Player progress not found. Create a character first.' });
-    }
-
-    // Check if already in combat
-    if (req.session.combat) {
-      return res.status(400).json({ error: 'Already in combat. Finish current combat first.' });
-    }
-
-    // Load monster data
-    const monstersData = loadData('monsters');
-    let monster = null;
-
-    // Search for monster
-    for (const rarity of Object.keys(monstersData.monsters)) {
-      const found = monstersData.monsters[rarity].find(m => m.id === monsterId);
-      if (found) {
-        monster = found;
-        break;
+      const { monsterId, channelName } = req.body;
+      if (!monsterId) {
+        return res.status(400).json({ error: 'monsterId is required' });
       }
-    }
 
-    if (!monster) {
-      return res.status(404).json({ error: 'Monster not found' });
-    }
+      const sanitizedMonsterId = sanitization.sanitizeInput(monsterId, { maxLength: 100 });
+      const channel = channelName || user.channels?.[0] || 'default';
+
+      // Load player progress
+      const playerData = await db.getPlayerProgress(user.id, channel);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Player progress not found. Create a character first.' });
+      }
+
+      // Check if already in combat
+      if (req.session.combat) {
+        return res.status(400).json({ error: 'Already in combat. Finish current combat first.' });
+      }
+
+      // Load monster data
+      const monstersData = loadData('monsters');
+      let monster = null;
+
+      // Search for monster
+      for (const rarity of Object.keys(monstersData.monsters)) {
+        const found = monstersData.monsters[rarity].find(m => m.id === sanitizedMonsterId);
+        if (found) {
+          monster = found;
+          break;
+        }
+      }
+
+      if (!monster) {
+        return res.status(404).json({ error: 'Monster not found' });
+      }
 
     // Create Character instance
     const character = Character.fromObject(playerData);
@@ -1087,36 +1093,40 @@ app.get('/api/combat/state', async (req, res) => {
 /**
  * Perform combat action - Attack
  * POST /api/combat/attack
+ * WITH VALIDATION
  */
-app.post('/api/combat/attack', async (req, res) => {
-  try {
-    const user = req.session.user;
-    if (!user) return res.status(401).json({ error: 'Not logged in' });
+app.post('/api/combat/attack',
+  rateLimiter.middleware('default'),
+  security.auditLog('combat_attack'),
+  async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-    if (!req.session.combat) {
-      return res.status(400).json({ error: 'No active combat' });
-    }
+      if (!req.session.combat) {
+        return res.status(400).json({ error: 'No active combat' });
+      }
 
-    const combat = req.session.combat.combatInstance;
-    const result = combat.playerAttack();
+      const combat = req.session.combat.combatInstance;
+      const result = combat.playerAttack();
 
-    // Emit real-time combat action
-    const channel = req.session.combat.channelName;
-    socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
-      type: 'combat_action',
-      action: 'attack',
-      result: result
-    });
-
-    // If combat ended, save results and clean up
-    if (result.victory || result.defeat) {
-      await handleCombatEnd(req.session, result);
-      
-      // Emit combat ended
+      // Emit real-time combat action
+      const channel = req.session.combat.channelName;
       socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
-        type: result.victory ? 'combat_victory' : 'combat_defeat',
+        type: 'combat_action',
+        action: 'attack',
         result: result
       });
+
+      // If combat ended, save results and clean up
+      if (result.victory || result.defeat) {
+        await handleCombatEnd(req.session, result);
+        
+        // Emit combat ended
+        socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
+          type: result.victory ? 'combat_victory' : 'combat_defeat',
+          result: result
+        });
     } else {
       // Save session with updated combat state
       await new Promise((resolve, reject) => {
@@ -1524,24 +1534,34 @@ app.get('/api/progression/xp-info', async (req, res) => {
 
 /**
  * POST /api/progression/add-xp
- * Add XP to character (admin/testing endpoint)
+ * Add XP to character (admin/testing endpoint) - WITH VALIDATION
  */
-app.post('/api/progression/add-xp', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
+app.post('/api/progression/add-xp',
+  validation.validateAmount,
+  rateLimiter.middleware('strict'),
+  security.auditLog('add_xp'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel, amount } = req.body;
-  if (!channel) return res.status(400).json({ error: 'Channel required' });
-  if (!amount || amount < 1) return res.status(400).json({ error: 'Valid XP amount required' });
+    const { channel, amount } = req.body;
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
+    if (!amount || amount < 1) return res.status(400).json({ error: 'Valid XP amount required' });
 
-  try {
-    const character = await db.getCharacter(user.id, channel.toLowerCase());
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+    // Validate XP amount is reasonable (prevent abuse)
+    const sanitizedAmount = sanitization.sanitizeNumber(amount, { min: 1, max: 10000000, integer: true });
+    if (!sanitizedAmount) {
+      return res.status(400).json({ error: 'Invalid XP amount' });
     }
 
-    const progressionMgr = new ProgressionManager();
-    const result = progressionMgr.addXP(character, amount);
+    try {
+      const character = await db.getCharacter(user.id, channel.toLowerCase());
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+
+      const progressionMgr = new ProgressionManager();
+      const result = progressionMgr.addXP(character, sanitizedAmount);
 
     // Save updated character
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
