@@ -235,8 +235,22 @@ app.get('/auth/twitch', (req, res) => {
 });
 
 app.get('/auth/twitch/callback', async (req, res) => {
-  const { code, state } = req.query;
-  console.log('🎮 PLAYER OAuth callback received (not broadcaster!):', { hasCode: !!code, hasState: !!state, sessionState: req.session.oauthState });
+  const { code, state, error, error_description } = req.query;
+  console.log('🎮 PLAYER OAuth callback received (not broadcaster!):', { 
+    hasCode: !!code, 
+    hasState: !!state, 
+    hasError: !!error,
+    error: error,
+    error_description: error_description,
+    sessionState: req.session.oauthState,
+    fullQuery: req.query
+  });
+  
+  // Check if Twitch sent an error
+  if (error) {
+    console.error('❌ Twitch OAuth error in player callback:', error, error_description);
+    return res.status(400).send(`Authorization failed: ${error_description || error}`);
+  }
   
   if (!code || !state || state !== req.session.oauthState) {
     console.error('OAuth validation failed:', { code: !!code, state: !!state, match: state === req.session.oauthState });
