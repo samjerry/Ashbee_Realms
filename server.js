@@ -1,5 +1,7 @@
 const express = require('express');
 const session = require('express-session');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const { rawAnnounce } = require('./bot');
 const path = require('path');
@@ -10,18 +12,60 @@ const { Character, ProgressionManager, ExplorationManager, QuestManager, Consuma
 const { loadData } = require('./data/data_loader');
 const socketHandler = require('./websocket/socketHandler');
 
-const app = express();
-app.use(express.json());
+// Security middleware
+const security = require('./middleware/security');
+const validation = require('./middleware/validation');
+const sanitization = require('./middleware/sanitization');
+const rateLimiter = require('./utils/rateLimiter');
 
-// Session store configuration
+const app = express();
+
+// Security headers with helmet
+// CSP configuration based on environment
+const isProduction = process.env.NODE_ENV === 'production';
+const cspScriptSrc = isProduction 
+  ? ["'self'"] // Production: No unsafe-inline or unsafe-eval
+  : ["'self'", "'unsafe-inline'", "'unsafe-eval'"]; // Development only
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: cspScriptSrc,
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "wss:", "ws:"],
+      fontSrc: ["'self'", "data:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"]
+    }
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
+}));
+
+// Request size limits to prevent payload attacks
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+app.use(cookieParser());
+
+// Session store configuration with security hardening
 let sessionConfig = {
   secret: process.env.SESSION_SECRET || 'dev-secret',
   resave: false,
   saveUninitialized: false,
   cookie: { 
-    secure: false,
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    httpOnly: true, // Prevents JavaScript access to cookies
+    sameSite: 'lax', // CSRF protection
     maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-  }
+  },
+  name: 'sessionId', // Don't use default 'connect.sid' - obscurity
+  rolling: true // Reset expiration on activity
 };
 
 // Use PostgreSQL session store in production
@@ -37,6 +81,12 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'))
 }
 
 app.use(session(sessionConfig));
+
+// Attach CSRF token to session
+app.use(security.attachCsrfToken);
+
+// Detect suspicious activity (after session, before routes)
+app.use(security.detectSuspiciousActivity);
 
 // Track initialization state
 let isReady = false;
@@ -216,22 +266,20 @@ app.get('/auth/twitch/callback', async (req, res) => {
 
 // Stub login for local testing: /auth/fake?name=Viewer123
 app.get('/auth/fake', async (req, res) => {
-  const name = req.query.name || 'Guest';
+  const rawName = req.query.name || 'Guest';
+  const name = sanitization.sanitizeCharacterName(rawName);
+  
+  if (!name) {
+    return res.status(400).send('Invalid username');
+  }
+  
   const id = 'stub-' + name;
   try {
     // Insert or ignore player
-    const dbType = db.getType();
-    if (dbType === 'sqlite') {
-      await db.query(
-        'INSERT INTO players(id, display_name) VALUES (?, ?) ON CONFLICT(id) DO NOTHING',
-        [id, name]
-      );
-    } else {
-      await db.query(
-        'INSERT INTO players(id, display_name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING',
-        [id, name]
-      );
-    }
+    await db.query(
+      'INSERT INTO players(id, display_name) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING',
+      [id, name]
+    );
     req.session.user = { id, displayName: name };
     res.redirect('/adventure');
   } catch (err) {
@@ -253,6 +301,12 @@ app.get('/auth/logout', (req, res) => {
 app.get('/api/me', (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
   res.json({ user: req.session.user });
+});
+
+// Get CSRF token for authenticated users
+app.get('/api/csrf-token', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
+  res.json({ csrfToken: req.session.csrfToken });
 });
 
 // Get player progress
@@ -279,22 +333,116 @@ app.get('/api/player/progress', async (req, res) => {
   }
 });
 
-// Save player progress
-app.post('/api/player/progress', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
+// Save player progress - WITH SERVER-SIDE VALIDATION
+app.post('/api/player/progress', 
+  rateLimiter.middleware('strict'),
+  security.auditLog('save_progress'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  // Get channel from body or query parameter
-  const channelName = req.body.channel || req.query.channel;
-  if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
+    // Get channel from body or query parameter
+    const channelName = req.body.channel || req.query.channel;
+    if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
 
-  try {
-    const playerData = req.body.progress || req.body;
-    await db.savePlayerProgress(user.id, channelName.toLowerCase(), playerData);
-    res.json({ status: 'ok', message: 'Progress saved' });
-  } catch (err) {
-    console.error('Save progress error:', err);
-    res.status(500).json({ error: 'Failed to save progress' });
+    try {
+      const playerData = req.body.progress || req.body;
+      
+      // SERVER-SIDE VALIDATION: Verify current progress from database
+      const currentProgress = await db.loadPlayerProgress(user.id, channelName.toLowerCase());
+      
+      if (!currentProgress) {
+        return res.status(404).json({ error: 'No character found. Please create a character first.' });
+      }
+      
+      // Validate critical stats haven't been tampered with
+      if (playerData.level !== undefined) {
+        // Level can only increase by 1 at a time, and must be within valid range
+        if (playerData.level < 1 || playerData.level > 100) {
+          console.warn(`[SECURITY] Invalid level attempt: ${playerData.level} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid level value' });
+        }
+        if (playerData.level > currentProgress.level + 1) {
+          console.warn(`[SECURITY] Level jump detected for user ${security.sanitizeUserForLog(user)}: ${currentProgress.level} -> ${playerData.level}`);
+          return res.status(400).json({ error: 'Invalid level progression' });
+        }
+      }
+      
+      // Validate gold changes
+      if (playerData.gold !== undefined) {
+        if (playerData.gold < 0 || playerData.gold > 100000000) {
+          console.warn(`[SECURITY] Invalid gold amount: ${playerData.gold} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid gold amount' });
+        }
+        // Allow spending (decrease) but validate large INCREASES
+        const goldChange = playerData.gold - currentProgress.gold;
+        if (goldChange > 100000) {
+          console.warn(`[SECURITY] Large gold increase detected for user ${security.sanitizeUserForLog(user)}: ${currentProgress.gold} -> ${playerData.gold}`);
+          return res.status(400).json({ error: 'Invalid gold increase - suspiciously large' });
+        }
+        // Validate spending doesn't exceed current gold (paranoid check)
+        if (goldChange < 0 && playerData.gold < 0) {
+          console.warn(`[SECURITY] Negative gold after spending for user ${security.sanitizeUserForLog(user)}: ${playerData.gold}`);
+          playerData.gold = 0; // Cap at 0
+        }
+      }
+      
+      // Validate XP changes
+      if (playerData.xp !== undefined) {
+        if (playerData.xp < 0 || playerData.xp > 1000000000) {
+          console.warn(`[SECURITY] Invalid XP amount: ${playerData.xp} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid XP amount' });
+        }
+      }
+      
+      // Validate HP
+      if (playerData.hp !== undefined) {
+        if (playerData.hp < 0 || playerData.hp > 1000000) {
+          console.warn(`[SECURITY] Invalid HP: ${playerData.hp} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid HP value' });
+        }
+        // HP can't exceed max_hp
+        const maxHp = playerData.max_hp || currentProgress.max_hp;
+        if (playerData.hp > maxHp) {
+          console.warn(`[SECURITY] HP > max_hp for user ${security.sanitizeUserForLog(user)}: ${playerData.hp} > ${maxHp}`);
+          playerData.hp = maxHp; // Cap at max
+        }
+      }
+      
+      // Sanitize string fields
+      if (playerData.name) {
+        playerData.name = sanitization.sanitizeCharacterName(playerData.name);
+      }
+      if (playerData.location) {
+        playerData.location = sanitization.sanitizeLocationName(playerData.location);
+      }
+      
+      // Sanitize inventory
+      if (playerData.inventory) {
+        playerData.inventory = sanitization.sanitizeInventory(playerData.inventory);
+        // Limit inventory size
+        if (playerData.inventory.length > 1000) {
+          console.warn(`[SECURITY] Inventory size exceeded for user ${security.sanitizeUserForLog(user)}: ${playerData.inventory.length}`);
+          playerData.inventory = playerData.inventory.slice(0, 1000);
+        }
+      }
+      
+      // Sanitize equipment
+      if (playerData.equipped) {
+        playerData.equipped = sanitization.sanitizeEquipment(playerData.equipped);
+      }
+      
+      // Merge with current progress to prevent data loss
+      const mergedData = {
+        ...currentProgress,
+        ...playerData
+      };
+      
+      await db.savePlayerProgress(user.id, channelName.toLowerCase(), mergedData);
+      res.json({ status: 'ok', message: 'Progress saved' });
+    } catch (err) {
+      console.error('Save progress error:', err);
+      res.status(500).json({ error: 'Failed to save progress' });
   }
 });
 
@@ -573,181 +721,216 @@ app.get('/api/player/equipment', async (req, res) => {
 
 /**
  * POST /api/player/equip
- * Equip an item from inventory
+ * Equip an item from inventory - WITH VALIDATION
  */
-app.post('/api/player/equip', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { channel, itemId } = req.body;
-  if (!channel || !itemId) {
-    return res.status(400).json({ error: 'Channel and itemId required' });
-  }
-  
-  const channelName = channel.toLowerCase();
-  
-  try {
-    const character = await db.getCharacter(user.id, channelName);
+app.post('/api/player/equip',
+  validation.validateEquipment,
+  rateLimiter.middleware('default'),
+  security.auditLog('equip_item'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+    const { channel, itemId } = req.body;
+    if (!channel || !itemId) {
+      return res.status(400).json({ error: 'Channel and itemId required' });
     }
     
-    const result = character.equipItem(itemId);
+    const channelName = channel.toLowerCase();
+    const sanitizedItemId = sanitization.sanitizeInput(itemId, { maxLength: 100 });
     
-    if (result.success) {
-      await db.saveCharacter(user.id, channelName, character);
+    try {
+      const character = await db.getCharacter(user.id, channelName);
+      
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      const result = character.equipItem(sanitizedItemId);
+      
+      if (result.success) {
+        await db.saveCharacter(user.id, channelName, character);
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error equipping item:', error);
+      res.status(500).json({ error: 'Failed to equip item' });
     }
-    
-    res.json(result);
-  } catch (error) {
-    console.error('Error equipping item:', error);
-    res.status(500).json({ error: 'Failed to equip item' });
-  }
-});
+  });
 
 /**
  * POST /api/player/unequip
- * Unequip an item to inventory
+ * Unequip an item to inventory - WITH VALIDATION
  */
-app.post('/api/player/unequip', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { channel, slot } = req.body;
-  if (!channel || !slot) {
-    return res.status(400).json({ error: 'Channel and slot required' });
-  }
-  
-  const channelName = channel.toLowerCase();
-  
-  try {
-    const character = await db.getCharacter(user.id, channelName);
+app.post('/api/player/unequip',
+  validation.validateEquipment,
+  rateLimiter.middleware('default'),
+  security.auditLog('unequip_item'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+    const { channel, slot } = req.body;
+    if (!channel || !slot) {
+      return res.status(400).json({ error: 'Channel and slot required' });
     }
     
-    const result = character.unequipItem(slot);
+    const channelName = channel.toLowerCase();
     
-    if (result.success) {
-      await db.saveCharacter(user.id, channelName, character);
+    try {
+      const character = await db.getCharacter(user.id, channelName);
+      
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      const result = character.unequipItem(slot);
+      
+      if (result.success) {
+        await db.saveCharacter(user.id, channelName, character);
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error unequipping item:', error);
+      res.status(500).json({ error: 'Failed to unequip item' });
     }
-    
-    res.json(result);
-  } catch (error) {
-    console.error('Error unequipping item:', error);
-    res.status(500).json({ error: 'Failed to unequip item' });
-  }
-});
+  });
 
 /**
  * POST /api/player/create
- * Create a new character with a class
+ * Create a new character with a class - WITH VALIDATION
  */
-app.post('/api/player/create', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { channel, classType, nameColor } = req.body;
-  if (!channel || !classType) {
-    return res.status(400).json({ error: 'Channel and classType required' });
-  }
-  
-  const channelName = channel.toLowerCase();
-  const characterName = user.displayName || user.display_name || 'Adventurer';
-  
-  try {
-    // Check if character already exists
-    const existing = await db.getCharacter(user.id, channelName);
-    if (existing) {
-      return res.status(400).json({ error: 'Character already exists for this channel' });
+app.post('/api/player/create',
+  validation.validateCharacterCreate,
+  rateLimiter.middleware('strict'),
+  security.auditLog('create_character'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { channel, classType, nameColor } = req.body;
+    if (!channel || !classType) {
+      return res.status(400).json({ error: 'Channel and classType required' });
     }
     
-    // Create new character
-    const character = await db.createCharacter(user.id, channelName, characterName, classType);
+    const channelName = channel.toLowerCase();
+    const rawCharacterName = user.displayName || user.display_name || 'Adventurer';
+    const characterName = sanitization.sanitizeCharacterName(rawCharacterName);
     
-    // Check if this is MarrowOfAlbion (game creator) and set creator role
-    if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
-      character.roles = ['creator'];
-      character.nameColor = nameColor || '#FFD700'; // Default to gold for creator
-      console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
-    } else {
-      // Check if user is a beta tester
-      if (db.isBetaTester(characterName)) {
-        character.roles = character.roles || ['viewer'];
-        if (!character.roles.includes('tester')) {
-          character.roles.push('tester');
-        }
-        character.nameColor = nameColor || '#00FFFF'; // Default to cyan for testers
-        console.log('🧪 Beta tester detected - granting tester role');
-      } else {
-        // Update name color if provided
-        if (nameColor) {
-          character.nameColor = nameColor;
-        }
+    // Validate nameColor if provided
+    let validatedColor = null;
+    if (nameColor) {
+      validatedColor = sanitization.sanitizeColorCode(nameColor);
+      if (!validatedColor) {
+        return res.status(400).json({ error: 'Invalid color code format' });
       }
     }
     
-    // Save character with roles and color
-    await db.saveCharacter(user.id, channelName, character);
-    
-    res.json({ 
-      success: true, 
-      message: `Created ${classType} character: ${characterName}`,
-      character: character.toDatabase()
-    });
-  } catch (error) {
-    console.error('Error creating character:', error);
-    res.status(500).json({ error: error.message || 'Failed to create character' });
-  }
-});
+    try {
+      // Check if character already exists
+      const existing = await db.getCharacter(user.id, channelName);
+      if (existing) {
+        return res.status(400).json({ error: 'Character already exists for this channel' });
+      }
+      
+      // Create new character
+      const character = await db.createCharacter(user.id, channelName, characterName, classType);
+      
+      // Check if this is MarrowOfAlbion (game creator) and set creator role
+      if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
+        character.roles = ['creator'];
+        character.nameColor = validatedColor || '#FFD700'; // Default to gold for creator
+        console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
+      } else {
+        // Check if user is a beta tester
+        if (db.isBetaTester(characterName)) {
+          character.roles = character.roles || ['viewer'];
+          if (!character.roles.includes('tester')) {
+            character.roles.push('tester');
+          }
+          character.nameColor = validatedColor || '#00FFFF'; // Default to cyan for testers
+          console.log('🧪 Beta tester detected - granting tester role');
+        } else {
+          // Update name color if provided
+          if (validatedColor) {
+            character.nameColor = validatedColor;
+          }
+        }
+      }
+      
+      // Save character with roles and color
+      await db.saveCharacter(user.id, channelName, character);
+      
+      res.json({ 
+        success: true, 
+        message: `Created ${classType} character: ${characterName}`,
+        character: character.toDatabase()
+      });
+    } catch (error) {
+      console.error('Error creating character:', error);
+      res.status(500).json({ error: error.message || 'Failed to create character' });
+    }
+  });
 
 /**
  * POST /api/player/name-color
- * Update player's name color (must be from one of their available roles)
+ * Update player's name color (must be from one of their available roles) - WITH VALIDATION
  */
-app.post('/api/player/name-color', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
-  
-  const { nameColor } = req.body;
-  if (!nameColor) {
-    return res.status(400).json({ error: 'nameColor required' });
-  }
-  
-  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-  const channelName = CHANNELS[0] || 'default';
-  
-  try {
-    // Load player data
-    const playerData = await db.loadPlayerProgress(user.id, channelName);
-    if (!playerData) {
-      return res.status(404).json({ error: 'Character not found' });
+app.post('/api/player/name-color',
+  validation.validateNameColor,
+  rateLimiter.middleware('default'),
+  security.auditLog('update_name_color'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { nameColor } = req.body;
+    if (!nameColor) {
+      return res.status(400).json({ error: 'nameColor required' });
     }
     
-    // Validate that the color matches one of their roles
-    const roleColors = {
-      creator: '#FFD700',
-      streamer: '#9146FF',
-      moderator: '#00FF00',
-      vip: '#FF1493',
-      subscriber: '#6441A5',
-      tester: '#00FFFF',
-      viewer: '#FFFFFF'
-    };
-    
-    const roles = playerData.roles || ['viewer'];
-    const validColors = roles.map(r => roleColors[r]);
-    
-    if (!validColors.includes(nameColor)) {
-      return res.status(400).json({ error: 'Color not available for your roles' });
+    // Validate color format
+    const validatedColor = sanitization.sanitizeColorCode(nameColor);
+    if (!validatedColor) {
+      return res.status(400).json({ error: 'Invalid color code format' });
     }
     
-    // Update name color
-    playerData.nameColor = nameColor;
-    await db.savePlayerProgress(user.id, channelName, playerData);
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    const channelName = CHANNELS[0] || 'default';
     
+    try {
+      // Load player data
+      const playerData = await db.loadPlayerProgress(user.id, channelName);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      // Validate that the color matches one of their roles
+      const roleColors = {
+        creator: '#FFD700',
+        streamer: '#9146FF',
+        moderator: '#00FF00',
+        vip: '#FF1493',
+        subscriber: '#6441A5',
+        tester: '#00FFFF',
+        viewer: '#FFFFFF'
+      };
+      
+      const roles = playerData.roles || ['viewer'];
+      const validColors = roles.map(r => roleColors[r]);
+      
+      if (!validColors.includes(validatedColor)) {
+        // Sanitize display name for logging to prevent log injection
+        console.warn(`[SECURITY] Invalid color selection attempt by ${security.sanitizeUserForLog(user)}: ${validatedColor} not in ${validColors}`);
+        return res.status(403).json({ error: 'Color not available for your roles' });
+      }
+      
+      // Update name color
+      playerData.nameColor = validatedColor;
+      await db.savePlayerProgress(user.id, channelName, playerData);
+      
     res.json({ success: true, nameColor });
   } catch (error) {
     console.error('Error updating name color:', error);
@@ -803,46 +986,52 @@ app.post('/api/action', async (req, res) => {
  * Start combat with a monster
  * POST /api/combat/start
  * Body: { monsterId: string, channelName?: string }
+ * WITH VALIDATION
  */
-app.post('/api/combat/start', async (req, res) => {
-  try {
-    const user = req.session.user;
-    if (!user) return res.status(401).json({ error: 'Not logged in' });
+app.post('/api/combat/start',
+  validation.validateCombatAction,
+  rateLimiter.middleware('default'),
+  security.auditLog('start_combat'),
+  async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-    const { monsterId, channelName } = req.body;
-    if (!monsterId) {
-      return res.status(400).json({ error: 'monsterId is required' });
-    }
-
-    const channel = channelName || user.channels?.[0] || 'default';
-
-    // Load player progress
-    const playerData = await db.getPlayerProgress(user.id, channel);
-    if (!playerData) {
-      return res.status(404).json({ error: 'Player progress not found. Create a character first.' });
-    }
-
-    // Check if already in combat
-    if (req.session.combat) {
-      return res.status(400).json({ error: 'Already in combat. Finish current combat first.' });
-    }
-
-    // Load monster data
-    const monstersData = loadData('monsters');
-    let monster = null;
-
-    // Search for monster
-    for (const rarity of Object.keys(monstersData.monsters)) {
-      const found = monstersData.monsters[rarity].find(m => m.id === monsterId);
-      if (found) {
-        monster = found;
-        break;
+      const { monsterId, channelName } = req.body;
+      if (!monsterId) {
+        return res.status(400).json({ error: 'monsterId is required' });
       }
-    }
 
-    if (!monster) {
-      return res.status(404).json({ error: 'Monster not found' });
-    }
+      const sanitizedMonsterId = sanitization.sanitizeInput(monsterId, { maxLength: 100 });
+      const channel = channelName || user.channels?.[0] || 'default';
+
+      // Load player progress
+      const playerData = await db.getPlayerProgress(user.id, channel);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Player progress not found. Create a character first.' });
+      }
+
+      // Check if already in combat
+      if (req.session.combat) {
+        return res.status(400).json({ error: 'Already in combat. Finish current combat first.' });
+      }
+
+      // Load monster data
+      const monstersData = loadData('monsters');
+      let monster = null;
+
+      // Search for monster
+      for (const rarity of Object.keys(monstersData.monsters)) {
+        const found = monstersData.monsters[rarity].find(m => m.id === sanitizedMonsterId);
+        if (found) {
+          monster = found;
+          break;
+        }
+      }
+
+      if (!monster) {
+        return res.status(404).json({ error: 'Monster not found' });
+      }
 
     // Create Character instance
     const character = Character.fromObject(playerData);
@@ -917,36 +1106,40 @@ app.get('/api/combat/state', async (req, res) => {
 /**
  * Perform combat action - Attack
  * POST /api/combat/attack
+ * WITH VALIDATION
  */
-app.post('/api/combat/attack', async (req, res) => {
-  try {
-    const user = req.session.user;
-    if (!user) return res.status(401).json({ error: 'Not logged in' });
+app.post('/api/combat/attack',
+  rateLimiter.middleware('default'),
+  security.auditLog('combat_attack'),
+  async (req, res) => {
+    try {
+      const user = req.session.user;
+      if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-    if (!req.session.combat) {
-      return res.status(400).json({ error: 'No active combat' });
-    }
+      if (!req.session.combat) {
+        return res.status(400).json({ error: 'No active combat' });
+      }
 
-    const combat = req.session.combat.combatInstance;
-    const result = combat.playerAttack();
+      const combat = req.session.combat.combatInstance;
+      const result = combat.playerAttack();
 
-    // Emit real-time combat action
-    const channel = req.session.combat.channelName;
-    socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
-      type: 'combat_action',
-      action: 'attack',
-      result: result
-    });
-
-    // If combat ended, save results and clean up
-    if (result.victory || result.defeat) {
-      await handleCombatEnd(req.session, result);
-      
-      // Emit combat ended
+      // Emit real-time combat action
+      const channel = req.session.combat.channelName;
       socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
-        type: result.victory ? 'combat_victory' : 'combat_defeat',
+        type: 'combat_action',
+        action: 'attack',
         result: result
       });
+
+      // If combat ended, save results and clean up
+      if (result.victory || result.defeat) {
+        await handleCombatEnd(req.session, result);
+        
+        // Emit combat ended
+        socketHandler.emitCombatUpdate(user.login || user.displayName, channel, {
+          type: result.victory ? 'combat_victory' : 'combat_defeat',
+          result: result
+        });
     } else {
       // Save session with updated combat state
       await new Promise((resolve, reject) => {
@@ -1354,24 +1547,34 @@ app.get('/api/progression/xp-info', async (req, res) => {
 
 /**
  * POST /api/progression/add-xp
- * Add XP to character (admin/testing endpoint)
+ * Add XP to character (admin/testing endpoint) - WITH VALIDATION
  */
-app.post('/api/progression/add-xp', async (req, res) => {
-  const user = req.session.user;
-  if (!user) return res.status(401).json({ error: 'Not logged in' });
+app.post('/api/progression/add-xp',
+  validation.validateAmount,
+  rateLimiter.middleware('strict'),
+  security.auditLog('add_xp'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel, amount } = req.body;
-  if (!channel) return res.status(400).json({ error: 'Channel required' });
-  if (!amount || amount < 1) return res.status(400).json({ error: 'Valid XP amount required' });
+    const { channel, amount } = req.body;
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
+    if (!amount || amount < 1) return res.status(400).json({ error: 'Valid XP amount required' });
 
-  try {
-    const character = await db.getCharacter(user.id, channel.toLowerCase());
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
+    // Validate XP amount is reasonable (prevent abuse)
+    const sanitizedAmount = sanitization.sanitizeNumber(amount, { min: 1, max: 10000000, integer: true });
+    if (!sanitizedAmount) {
+      return res.status(400).json({ error: 'Invalid XP amount' });
     }
 
-    const progressionMgr = new ProgressionManager();
-    const result = progressionMgr.addXP(character, amount);
+    try {
+      const character = await db.getCharacter(user.id, channel.toLowerCase());
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+
+      const progressionMgr = new ProgressionManager();
+      const result = progressionMgr.addXP(character, sanitizedAmount);
 
     // Save updated character
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
@@ -5136,232 +5339,243 @@ app.get('/api/operator/commands', checkOperatorAccess, (req, res) => {
  * POST /api/operator/execute
  * Execute an operator command
  * Body: { channel, command, params }
+ * WITH ENHANCED VALIDATION
  */
-app.post('/api/operator/execute', checkOperatorAccess, async (req, res) => {
-  try {
-    const { command, params } = req.body;
+app.post('/api/operator/execute',
+  checkOperatorAccess,
+  validation.validateOperatorCommand,
+  security.auditLog('operator_execute'),
+  async (req, res) => {
+    try {
+      const { command, params } = req.body;
 
-    if (!command) {
-      return res.status(400).json({ error: 'Command is required' });
-    }
+      if (!command) {
+        return res.status(400).json({ error: 'Command is required' });
+      }
 
-    // Check rate limit
-    if (!checkOperatorRateLimit(req.session.user.id)) {
-      return res.status(429).json({ 
-        error: 'Rate limit exceeded. Please wait before executing more commands.',
-        retryAfter: 60 
-      });
-    }
+      // Sanitize command name
+      const sanitizedCommand = sanitization.sanitizeInput(command, { maxLength: 50 });
 
-    // Check if user can execute this command
-    if (!operatorMgr.canExecuteCommand(command, req.operatorLevel)) {
-      return res.status(403).json({ 
-        error: 'Insufficient permissions for this command',
-        required: 'Higher operator level required'
-      });
-    }
+      // Check rate limit
+      if (!checkOperatorRateLimit(req.session.user.id)) {
+        return res.status(429).json({ 
+          error: 'Rate limit exceeded. Please wait before executing more commands.',
+          retryAfter: 60 
+        });
+      }
 
-    // Execute the command
-    let result;
-    switch (command) {
-      case 'giveItem':
-        result = await operatorMgr.giveItem(
-          params.playerId,
-          req.channelName,
-          params.itemId,
-          params.quantity || 1,
-          db
-        );
-        break;
+      // Check if user can execute this command
+      if (!operatorMgr.canExecuteCommand(sanitizedCommand, req.operatorLevel)) {
+        return res.status(403).json({ 
+          error: 'Insufficient permissions for this command',
+          required: 'Higher operator level required'
+        });
+      }
 
-      case 'giveGold':
-        result = await operatorMgr.giveGold(
-          params.playerId,
-          req.channelName,
-          params.amount,
-          db
-        );
-        break;
+      // Sanitize params
+      const sanitizedParams = params ? sanitization.sanitizeObject(params, { maxDepth: 3 }) : {};
 
-      case 'giveExp':
-        result = await operatorMgr.giveExp(
-          params.playerId,
-          req.channelName,
-          params.amount,
-          db
-        );
-        break;
+      // Execute the command
+      let result;
+      switch (sanitizedCommand) {
+        case 'giveItem':
+          result = await operatorMgr.giveItem(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.itemId, { maxLength: 100 }),
+            sanitization.sanitizeNumber(sanitizedParams.quantity || 1, { min: 1, max: 1000, integer: true }),
+            db
+          );
+          break;
 
-      case 'healPlayer':
-        result = await operatorMgr.healPlayer(
-          params.playerId,
-          req.channelName,
-          db
-        );
-        break;
+        case 'giveGold':
+          result = await operatorMgr.giveGold(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.amount, { min: -1000000, max: 1000000, integer: true }),
+            db
+          );
+          break;
 
-      case 'removeItem':
-        result = await operatorMgr.removeItem(
-          params.playerId,
-          req.channelName,
-          params.itemId,
-          params.quantity || 1,
-          db
-        );
-        break;
+        case 'giveExp':
+          result = await operatorMgr.giveExp(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.amount, { min: 1, max: 10000000, integer: true }),
+            db
+          );
+          break;
 
-      case 'removeGold':
-        result = await operatorMgr.removeGold(
-          params.playerId,
-          req.channelName,
-          params.amount,
-          db
-        );
-        break;
+        case 'healPlayer':
+          result = await operatorMgr.healPlayer(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
 
-      case 'removeLevel':
-        result = await operatorMgr.removeLevel(
-          params.playerId,
-          req.channelName,
-          params.levels,
-          db
-        );
-        break;
+        case 'removeItem':
+          result = await operatorMgr.removeItem(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.itemId, { maxLength: 100 }),
+            sanitization.sanitizeNumber(sanitizedParams.quantity || 1, { min: 1, max: 1000, integer: true }),
+            db
+          );
+          break;
 
-      case 'setPlayerLevel':
-        result = await operatorMgr.setPlayerLevel(
-          params.playerId,
-          req.channelName,
-          params.level,
-          db
-        );
-        break;
+        case 'removeGold':
+          result = await operatorMgr.removeGold(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.amount, { min: 1, max: 1000000, integer: true }),
+            db
+          );
+          break;
 
-      case 'teleportPlayer':
-        result = await operatorMgr.teleportPlayer(
-          params.playerId,
-          req.channelName,
-          params.location,
-          db
-        );
-        break;
+        case 'removeLevel':
+          result = await operatorMgr.removeLevel(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.levels, { min: 1, max: 100, integer: true }),
+            db
+          );
+          break;
 
-      case 'clearInventory':
-        result = await operatorMgr.clearInventory(
-          params.playerId,
-          req.channelName,
-          db
-        );
-        break;
+        case 'setPlayerLevel':
+          result = await operatorMgr.setPlayerLevel(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeNumber(sanitizedParams.level, { min: 1, max: 100, integer: true }),
+            db
+          );
+          break;
 
-      case 'changeWeather':
-        result = await operatorMgr.changeWeather(
-          req.channelName,
-          params.weather,
-          db
-        );
-        break;
+        case 'teleportPlayer':
+          result = await operatorMgr.teleportPlayer(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeLocationName(sanitizedParams.location),
+            db
+          );
+          break;
 
-      case 'changeTime':
-        result = await operatorMgr.changeTime(
-          req.channelName,
-          params.time,
-          db
-        );
-        break;
+        case 'clearInventory':
+          result = await operatorMgr.clearInventory(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
 
-      case 'changeSeason':
-        result = await operatorMgr.changeSeason(
-          req.channelName,
-          params.season,
-          db
-        );
-        break;
+        case 'changeWeather':
+          result = await operatorMgr.changeWeather(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.weather, { maxLength: 50 }),
+            db
+          );
+          break;
 
-      case 'spawnEncounter':
-        result = await operatorMgr.spawnEncounter(
-          params.playerId,
-          req.channelName,
-          params.encounterId,
-          db
-        );
-        break;
+        case 'changeTime':
+          result = await operatorMgr.changeTime(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.time, { maxLength: 50 }),
+            db
+          );
+          break;
 
-      case 'resetQuest':
-        result = await operatorMgr.resetQuest(
-          params.playerId,
-          req.channelName,
-          params.questId,
-          db
-        );
-        break;
+        case 'changeSeason':
+          result = await operatorMgr.changeSeason(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.season, { maxLength: 50 }),
+            db
+          );
+          break;
 
-      case 'forceEvent':
-        result = await operatorMgr.forceEvent(
-          req.channelName,
-          params.eventId,
-          db
-        );
-        break;
+        case 'spawnEncounter':
+          result = await operatorMgr.spawnEncounter(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.encounterId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-      case 'setPlayerStats':
-        result = await operatorMgr.setPlayerStats(
-          params.playerId,
-          req.channelName,
-          params.stats,
-          db
-        );
-        break;
+        case 'resetQuest':
+          result = await operatorMgr.resetQuest(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.questId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-      case 'giveAllItems':
-        result = await operatorMgr.giveAllItems(
-          params.playerId,
-          req.channelName,
-          db
-        );
-        break;
+        case 'forceEvent':
+          result = await operatorMgr.forceEvent(
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.eventId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-      case 'unlockAchievement':
-        result = await operatorMgr.unlockAchievement(
-          params.playerId,
-          req.channelName,
-          params.achievementId,
-          db
-        );
-        break;
+        case 'setPlayerStats':
+          result = await operatorMgr.setPlayerStats(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizePlayerStats(sanitizedParams.stats),
+            db
+          );
+          break;
 
-      default:
-        return res.status(400).json({ error: `Unknown command: ${command}` });
-    }
+        case 'giveAllItems':
+          result = await operatorMgr.giveAllItems(
+            sanitizedParams.playerId,
+            req.channelName,
+            db
+          );
+          break;
 
-    // Log the action to audit log
-    await db.logOperatorAction(
-      req.session.user.id,
-      req.session.user.displayName,
-      req.channelName,
-      command,
-      params,
-      true,
-      null
-    );
+        case 'unlockAchievement':
+          result = await operatorMgr.unlockAchievement(
+            sanitizedParams.playerId,
+            req.channelName,
+            sanitization.sanitizeInput(sanitizedParams.achievementId, { maxLength: 100 }),
+            db
+          );
+          break;
 
-    console.log(`[OPERATOR] ${req.session.user.displayName} executed ${command} in ${req.channelName}`);
+        default:
+          return res.status(400).json({ error: `Unknown command: ${sanitizedCommand}` });
+      }
 
-    res.json(result);
-  } catch (error) {
-    // Log failed action to audit log
-    const channelName = req.channelName || req.body?.channel || 'unknown';
-    const userId = req.session?.user?.id || 'unknown';
-    const userName = req.session?.user?.displayName || 'unknown';
-    
-    await db.logOperatorAction(
-      userId,
-      userName,
-      channelName,
-      req.body?.command || 'unknown',
-      req.body?.params || {},
-      false,
-      error.message
+      // Log the action to audit log
+      await db.logOperatorAction(
+        req.session.user.id,
+        req.session.user.displayName,
+        req.channelName,
+        sanitizedCommand,
+        sanitizedParams,
+        true,
+        null
+      );
+
+      console.log(`[OPERATOR] ${req.session.user.displayName} executed ${sanitizedCommand} in ${req.channelName}`);
+
+      res.json(result);
+    } catch (error) {
+      // Log failed action to audit log
+      const channelName = req.channelName || req.body?.channel || 'unknown';
+      const userId = req.session?.user?.id || 'unknown';
+      const userName = req.session?.user?.displayName || 'unknown';
+      
+      await db.logOperatorAction(
+        userId,
+        userName,
+        channelName,
+        req.body?.command || 'unknown',
+        req.body?.params || {},
+        false,
+        error.message
     ).catch(err => console.error('Failed to log error:', err));
 
     console.error('Operator command execution error:', error);

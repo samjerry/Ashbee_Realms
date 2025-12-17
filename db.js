@@ -281,10 +281,12 @@ async function initPostgres() {
 }
 
 // Helper function to get channel-specific player table name
+// SECURITY: Table name is sanitized to prevent SQL injection
 function getPlayerTable(channelName) {
   if (!channelName) {
     throw new Error('Channel name is required');
   }
+  // Remove all characters except alphanumeric and underscores to prevent SQL injection
   const sanitized = channelName.toLowerCase().replace(/[^a-z0-9_]/g, '_');
   return `players_${sanitized}`;
 }
