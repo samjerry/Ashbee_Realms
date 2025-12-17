@@ -313,6 +313,11 @@ app.get('/auth/broadcaster', (req, res) => {
   
   // Store the target channel in session if provided
   const targetChannel = req.query.channel;
+  const state = Math.random().toString(36).slice(2);
+  
+  // Encode channel in state parameter as backup (format: state|channel)
+  const stateWithChannel = targetChannel ? `${state}|${targetChannel.toLowerCase()}` : state;
+  
   if (targetChannel) {
     req.session.targetChannel = targetChannel.toLowerCase();
   }
@@ -325,7 +330,6 @@ app.get('/auth/broadcaster', (req, res) => {
     'moderation:read'
   ];
   
-  const state = Math.random().toString(36).slice(2);
   req.session.broadcasterOauthState = state;
   
   console.log('🔐 Broadcaster OAuth initiated:', { targetChannel, state, sessionID: req.sessionID });
@@ -338,7 +342,7 @@ app.get('/auth/broadcaster', (req, res) => {
     }
     
     const scope = encodeURIComponent(scopes.join(' '));
-    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(BROADCASTER_REDIRECT_URI)}&response_type=code&scope=${scope}&state=${state}`;
+    const url = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(BROADCASTER_REDIRECT_URI)}&response_type=code&scope=${scope}&state=${encodeURIComponent(stateWithChannel)}`;
     
     console.log('✅ Session saved, redirecting to Twitch with URI:', BROADCASTER_REDIRECT_URI);
     console.log('🔗 Full OAuth URL:', url);
@@ -371,14 +375,25 @@ app.get('/auth/broadcaster/callback',
   }
   
   if (!code || !state || state !== req.session.broadcasterOauthState) {
-    console.error('❌ OAuth validation failed:', { 
-      code: !!code, 
-      state: !!state, 
-      match: state === req.session.broadcasterOauthState,
-      receivedState: state,
-      sessionState: req.session.broadcasterOauthState
-    });
-    return res.status(400).send('Invalid OAuth callback - session expired or state mismatch. Please try the !setup command again.');
+    // Try parsing state as state|channel format if session is lost
+    let stateValid = false;
+    let actualState = state;
+    if (state && state.includes('|')) {
+      actualState = state.split('|')[0];
+      stateValid = actualState === req.session.broadcasterOauthState;
+      console.log('📦 Attempting state recovery from parameter');
+    }
+    
+    if (!stateValid) {
+      console.error('❌ OAuth validation failed:', { 
+        code: !!code, 
+        state: !!state, 
+        match: state === req.session.broadcasterOauthState,
+        receivedState: state,
+        sessionState: req.session.broadcasterOauthState
+      });
+      return res.status(400).send('Invalid OAuth callback - session expired or state mismatch. Please try the !setup command again.');
+    }
   }
   
   try {
