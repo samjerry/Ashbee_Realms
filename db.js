@@ -6,6 +6,19 @@
 const fs = require('fs');
 const path = require('path');
 
+// Role hierarchy and colors (used throughout the application)
+const ROLE_HIERARCHY = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
+const ROLE_COLORS = {
+  creator: '#FFD700',    // Gold - game creator/developer
+  streamer: '#9146FF',   // Twitch purple
+  moderator: '#00FF00',  // Green
+  vip: '#FF1493',        // Deep pink
+  subscriber: '#6441A5', // Purple
+  tester: '#00FFFF',     // Cyan - beta testers
+  viewer: '#FFFFFF'      // White
+};
+const DEFAULT_STARTING_LOCATION = 'Silverbrook';
+
 /**
  * Load beta tester usernames from Testers.txt
  * @returns {Array<string>} Array of tester usernames (lowercase)
@@ -848,7 +861,7 @@ async function updateUserRole(playerId, channelName, newRoles) {
       await query(
         `INSERT INTO ${table} (player_id, name, location, roles, updated_at)
          VALUES ($1, $2, $3, $4, NOW())`,
-        [playerId, displayName, 'Silverbrook', JSON.stringify(rolesToSet)]
+        [playerId, displayName, DEFAULT_STARTING_LOCATION, JSON.stringify(rolesToSet)]
       );
     } else {
       // Player doesn't exist in global players table either - skip update
@@ -1095,5 +1108,9 @@ module.exports = {
   determineRoleFromTags,
   isBetaTester,
   logOperatorAction,
-  getOperatorAuditLog
+  getOperatorAuditLog,
+  // Constants
+  ROLE_HIERARCHY,
+  ROLE_COLORS,
+  DEFAULT_STARTING_LOCATION
 };

@@ -547,23 +547,12 @@ app.get('/api/player/roles', async (req, res) => {
     }
     
     // Get the highest priority role as primary
-    const roleHierarchy = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
-    const primaryRole = roleHierarchy.find(r => roles.includes(r)) || 'viewer';
+    const primaryRole = db.ROLE_HIERARCHY.find(r => roles.includes(r)) || 'viewer';
     
     // Get available colors based on roles
-    const roleColors = {
-      creator: '#FFD700',    // Gold - game creator/developer
-      streamer: '#9146FF',   // Twitch purple
-      moderator: '#00FF00',  // Green
-      vip: '#FF1493',        // Deep pink
-      subscriber: '#6441A5', // Purple
-      tester: '#00FFFF',     // Cyan - beta testers
-      viewer: '#FFFFFF'      // White
-    };
-    
     const availableColors = roles.map(r => ({
       role: r,
-      color: roleColors[r] || roleColors.viewer,
+      color: db.ROLE_COLORS[r] || db.ROLE_COLORS.viewer,
       name: r.charAt(0).toUpperCase() + r.slice(1)
     }));
     
@@ -836,6 +825,8 @@ app.post('/api/player/create',
       }
       
       // Check if user has existing roles from previous activity (e.g., Twitch chat)
+      // NOTE: If user creates character before chatting in Twitch, they will start with 'viewer' role
+      // Their actual roles (VIP, subscriber, etc.) will be applied when they first chat in Twitch
       const existingProgress = await db.loadPlayerProgress(user.id, channelName);
       let userRoles = existingProgress?.roles || ['viewer'];
       
@@ -856,18 +847,8 @@ app.post('/api/player/create',
         
         // Set appropriate default name color based on highest role if not provided
         if (!validatedColor) {
-          const roleHierarchy = ['creator', 'streamer', 'moderator', 'vip', 'subscriber', 'tester', 'viewer'];
-          const roleColors = {
-            creator: '#FFD700',
-            streamer: '#9146FF',
-            moderator: '#00FF00',
-            vip: '#FF1493',
-            subscriber: '#6441A5',
-            tester: '#00FFFF',
-            viewer: '#FFFFFF'
-          };
-          const highestRole = roleHierarchy.find(r => userRoles.includes(r)) || 'viewer';
-          character.nameColor = roleColors[highestRole];
+          const highestRole = db.ROLE_HIERARCHY.find(r => userRoles.includes(r)) || 'viewer';
+          character.nameColor = db.ROLE_COLORS[highestRole];
         } else {
           character.nameColor = validatedColor;
         }
@@ -925,18 +906,8 @@ app.post('/api/player/name-color',
       }
       
       // Validate that the color matches one of their roles
-      const roleColors = {
-        creator: '#FFD700',
-        streamer: '#9146FF',
-        moderator: '#00FF00',
-        vip: '#FF1493',
-        subscriber: '#6441A5',
-        tester: '#00FFFF',
-        viewer: '#FFFFFF'
-      };
-      
       const roles = playerData.roles || ['viewer'];
-      const validColors = roles.map(r => roleColors[r]);
+      const validColors = roles.map(r => db.ROLE_COLORS[r]);
       
       if (!validColors.includes(validatedColor)) {
         // Sanitize display name for logging to prevent log injection
