@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, Sun, Moon, Snowflake, Leaf, Skull, Heart } from 'lucide-react';
+import { Cloud, Sun, Snowflake, Leaf, Skull, Heart } from 'lucide-react';
 
 const BroadcasterSetup = () => {
   const [channel, setChannel] = useState('');

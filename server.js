@@ -19,6 +19,14 @@ const validation = require('./middleware/validation');
 const sanitization = require('./middleware/sanitization');
 const rateLimiter = require('./utils/rateLimiter');
 
+// Default game state values
+const DEFAULT_GAME_STATE = {
+  weather: 'Clear',
+  time_of_day: 'Day',
+  season: 'Spring',
+  game_mode: 'softcore'
+};
+
 const app = express();
 
 // Security headers with helmet
@@ -437,10 +445,7 @@ app.get('/api/game-state', async (req, res) => {
     if (!gameState) {
       gameState = {
         channel_name: channelName.toLowerCase(),
-        weather: 'Clear',
-        time_of_day: 'Day',
-        season: 'Spring',
-        game_mode: 'softcore'
+        ...DEFAULT_GAME_STATE
       };
     }
     
@@ -493,12 +498,7 @@ app.post('/api/game-state',
 
   try {
     // Get current game state or use defaults
-    let currentState = await db.getGameState(channel.toLowerCase()) || {
-      weather: 'Clear',
-      time_of_day: 'Day',
-      season: 'Spring',
-      game_mode: 'softcore'
-    };
+    let currentState = await db.getGameState(channel.toLowerCase()) || DEFAULT_GAME_STATE;
 
     // Update only provided fields
     const updatedState = {
@@ -1860,7 +1860,13 @@ app.post('/api/progression/death', async (req, res) => {
 
     // Get game state to determine if hardcore mode is enabled
     const gameState = await db.getGameState(channel.toLowerCase());
-    const isHardcore = gameState && gameState.game_mode === 'hardcore';
+    
+    // If no game state exists, default to softcore (safer default)
+    const isHardcore = gameState ? gameState.game_mode === 'hardcore' : false;
+    
+    if (!gameState) {
+      console.warn(`⚠️ No game state found for channel ${channel}, defaulting to softcore mode`);
+    }
 
     // Get permanent stats from database
     const permanentStats = await db.getPermanentStats(user.id) || {};
