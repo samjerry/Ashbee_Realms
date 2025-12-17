@@ -84,7 +84,7 @@
         "rarity": "common",
         "required_level": 1,
         "stats": {
-          "attack": 5
+          "attack": 4
         },
         "value": 10
       },
@@ -96,7 +96,7 @@
         "rarity": "common",
         "required_level": 1,
         "stats": {
-          "magic": 6,
+          "magic": 4,
           "attack": 2
         },
         "value": 12
@@ -109,7 +109,7 @@
         "rarity": "common",
         "required_level": 1,
         "stats": {
-          "attack": 4,
+          "attack": 3,
           "agility": 2
         },
         "passive": {
@@ -125,7 +125,7 @@
         "rarity": "common",
         "required_level": 1,
         "stats": {
-          "attack": 5
+          "attack": 4
         },
         "value": 10
       },
@@ -149,7 +149,7 @@
         "rarity": "common",
         "required_level": 2,
         "stats": {
-          "attack": 6,
+          "attack": 5,
           "agility": 1
         },
         "value": 12
@@ -164,7 +164,7 @@
         "rarity": "uncommon",
         "required_level": 5,
         "stats": {
-          "attack": 4
+          "attack": 7
         },
         "value": 15
       },
@@ -176,7 +176,7 @@
         "rarity": "uncommon",
         "required_level": 5,
         "stats": {
-          "attack": 3
+          "attack": 7
         },
         "passive": {
           "crit_chance": 0.05
@@ -191,7 +191,7 @@
         "rarity": "uncommon",
         "required_level": 5,
         "stats": {
-          "attack": 3
+          "attack": 7
         },
         "passive": {
           "bleed_chance": 0.15
@@ -206,7 +206,7 @@
         "rarity": "uncommon",
         "required_level": 6,
         "stats": {
-          "attack": 5
+          "attack": 8
         },
         "value": 22
       },
@@ -218,7 +218,7 @@
         "rarity": "uncommon",
         "required_level": 6,
         "stats": {
-          "attack": 4
+          "attack": 8
         },
         "passive": {
           "bleed_chance": 0.10
@@ -233,7 +233,7 @@
         "rarity": "uncommon",
         "required_level": 7,
         "stats": {
-          "attack": 5
+          "attack": 9
         },
         "passive": {
           "armor_penetration": 0.10
@@ -248,7 +248,7 @@
         "rarity": "uncommon",
         "required_level": 6,
         "stats": {
-          "attack": 4
+          "attack": 8
         },
         "passive": {
           "first_strike": true
@@ -263,8 +263,8 @@
         "rarity": "uncommon",
         "required_level": 6,
         "stats": {
-          "attack": 3,
-          "magic": 6
+          "attack": 7,
+          "magic": 10
         },
         "value": 26
       },
@@ -276,7 +276,7 @@
         "rarity": "uncommon",
         "required_level": 8,
         "stats": {
-          "attack": 5
+          "attack": 10
         },
         "passive": {
           "crit_chance": 0.03
@@ -291,8 +291,8 @@
         "rarity": "uncommon",
         "required_level": 5,
         "stats": {
-          "attack": 15,
-          "strength": 3
+          "attack": 9,
+          "strength": 2
         },
         "value": 100
       },
@@ -304,8 +304,8 @@
         "rarity": "uncommon",
         "required_level": 6,
         "stats": {
-          "attack": 18,
-          "strength": 5
+          "attack": 10,
+          "strength": 3
         },
         "passive": {
           "armor_penetration": 0.15
@@ -320,7 +320,7 @@
         "rarity": "uncommon",
         "required_level": 7,
         "stats": {
-          "attack": 10,
+          "attack": 9,
           "agility": 2
         },
         "passive": {
@@ -338,7 +338,7 @@
         "rarity": "rare",
         "required_level": 10,
         "stats": {
-          "attack": 8
+          "attack": 14
         },
         "value": 45
       },
@@ -350,7 +350,7 @@
         "rarity": "rare",
         "required_level": 10,
         "stats": {
-          "attack": 5
+          "attack": 14
         },
         "passive": {
           "bleed_damage": 2,
@@ -366,11 +366,11 @@
         "rarity": "rare",
         "required_level": 12,
         "stats": {
-          "attack": 6,
-          "magic": 10
+          "attack": 15,
+          "magic": 18
         },
         "passive": {
-          "fire_damage": 4
+          "fire_damage": 5
         },
         "value": 70
       },
@@ -382,7 +382,7 @@
         "rarity": "rare",
         "required_level": 15,
         "stats": {
-          "attack": 12
+          "attack": 18
         },
         "passive": {
           "armor_penetration": 0.15
@@ -397,10 +397,10 @@
         "rarity": "rare",
         "required_level": 14,
         "stats": {
-          "attack": 6
+          "attack": 17
         },
         "passive": {
-          "poison_damage": 3,
+          "poison_damage": 4,
           "poison_duration": 5
         },
         "value": 55
@@ -413,10 +413,10 @@
         "rarity": "rare",
         "required_level": 16,
         "stats": {
-          "attack": 9
+          "attack": 19
         },
         "passive": {
-          "lightning_damage": 6
+          "lightning_damage": 7
         },
         "value": 75
       },
@@ -428,7 +428,7 @@
         "rarity": "rare",
         "required_level": 16,
         "stats": {
-          "attack": 8
+          "attack": 19
         },
         "passive": {
           "piercing": true
@@ -443,7 +443,7 @@
         "rarity": "rare",
         "required_level": 15,
         "stats": {
-          "attack": 7
+          "attack": 18
         },
         "passive": {
           "life_steal": 0.15
@@ -458,7 +458,7 @@
         "rarity": "rare",
         "required_level": 16,
         "stats": {
-          "attack": 14,
+          "attack": 19,
           "agility": 3
         },
         "passive": {
@@ -475,10 +475,10 @@
         "rarity": "rare",
         "required_level": 18,
         "stats": {
-          "attack": 12
+          "attack": 20
         },
         "passive": {
-          "fire_damage": 8
+          "fire_damage": 7
         },
         "value": 780
       },
@@ -490,10 +490,10 @@
         "rarity": "rare",
         "required_level": 17,
         "stats": {
-          "attack": 10
+          "attack": 19
         },
         "passive": {
-          "ice_damage": 6,
+          "ice_damage": 7,
           "stun_chance": 0.15
         },
         "value": 650
@@ -506,11 +506,11 @@
         "rarity": "rare",
         "required_level": 18,
         "stats": {
-          "attack": 8,
-          "magic": 15
+          "attack": 20,
+          "magic": 22
         },
         "passive": {
-          "lightning_damage": 10
+          "lightning_damage": 7
         },
         "value": 850
       },
@@ -522,10 +522,10 @@
         "rarity": "rare",
         "required_level": 20,
         "stats": {
-          "attack": 14
+          "attack": 22
         },
         "passive": {
-          "soul_damage": 8,
+          "soul_damage": 6,
           "undead_bonus": 0.20
         },
         "value": 900
@@ -538,7 +538,7 @@
         "rarity": "rare",
         "required_level": 15,
         "stats": {
-          "attack": 8
+          "attack": 18
         },
         "passive": {
           "life_steal": 0.20,
@@ -554,12 +554,12 @@
         "rarity": "rare",
         "required_level": 12,
         "stats": {
-          "attack": 30,
-          "strength": 8,
+          "attack": 16,
+          "strength": 4,
           "magic": 5
         },
         "passive": {
-          "fire_damage": 10,
+          "fire_damage": 5,
           "burn_chance": 0.25
         },
         "value": 500
@@ -572,8 +572,8 @@
         "rarity": "rare",
         "required_level": 14,
         "stats": {
-          "magic": 25,
-          "attack": 8
+          "magic": 20,
+          "attack": 17
         },
         "passive": {
           "spell_power": 0.2,
@@ -591,10 +591,10 @@
         "rarity": "epic",
         "required_level": 25,
         "stats": {
-          "attack": 18
+          "attack": 28
         },
         "passive": {
-          "burn_damage": 5,
+          "burn_damage": 6,
           "burn_duration": 4
         },
         "value": 250
@@ -607,8 +607,8 @@
         "rarity": "epic",
         "required_level": 25,
         "stats": {
-          "attack": 15,
-          "magic": 25
+          "attack": 28,
+          "magic": 32
         },
         "passive": {
           "spell_power": 0.50
@@ -623,8 +623,8 @@
         "rarity": "epic",
         "required_level": 28,
         "stats": {
-          "attack": 20,
-          "magic": 8
+          "attack": 32,
+          "magic": 12
         },
         "value": 400
       },
@@ -636,12 +636,12 @@
         "rarity": "epic",
         "required_level": 30,
         "stats": {
-          "attack": 22
+          "attack": 35
         },
         "passive": {
-          "fire_damage": 8,
-          "ice_damage": 8,
-          "lightning_damage": 8
+          "fire_damage": 10,
+          "ice_damage": 10,
+          "lightning_damage": 10
         },
         "value": 500
       },
@@ -653,8 +653,8 @@
         "rarity": "epic",
         "required_level": 28,
         "stats": {
-          "attack": 16,
-          "magic": 20
+          "attack": 32,
+          "magic": 30
         },
         "passive": {
           "storm_control": true
@@ -669,8 +669,8 @@
         "rarity": "epic",
         "required_level": 26,
         "stats": {
-          "attack": 14,
-          "magic": 18
+          "attack": 30,
+          "magic": 28
         },
         "passive": {
           "heal_on_kill": 10
@@ -685,7 +685,7 @@
         "rarity": "epic",
         "required_level": 30,
         "stats": {
-          "attack": 20
+          "attack": 35
         },
         "passive": {
           "true_strike": true,
@@ -701,8 +701,8 @@
         "rarity": "epic",
         "required_level": 20,
         "stats": {
-          "attack": 50,
-          "strength": 15,
+          "attack": 32,
+          "strength": 8,
           "defense": 10
         },
         "passive": {
@@ -721,14 +721,14 @@
         "rarity": "legendary",
         "required_level": 30,
         "stats": {
-          "attack": 80,
-          "strength": 25,
-          "magic": 20,
-          "defense": 15
+          "attack": 50,
+          "strength": 15,
+          "magic": 12,
+          "defense": 10
         },
         "passive": {
           "all_stats": 10,
-          "holy_damage": 25,
+          "holy_damage": 15,
           "lifesteal": 0.2
         },
         "special_ability": {
@@ -746,10 +746,10 @@
         "rarity": "legendary",
         "required_level": 40,
         "stats": {
-          "attack": 40
+          "attack": 75
         },
         "passive": {
-          "divine_damage": 50,
+          "divine_damage": 25,
           "crit_chance": 0.25
         },
         "value": 2000
@@ -762,11 +762,11 @@
         "rarity": "legendary",
         "required_level": 45,
         "stats": {
-          "attack": 200
+          "attack": 100
         },
         "passive": {
-          "void_damage": 100,
-          "reality_tear": 80
+          "void_damage": 35,
+          "reality_tear": 30
         },
         "value": 100000
       },
@@ -778,8 +778,8 @@
         "rarity": "legendary",
         "required_level": 45,
         "stats": {
-          "attack": 180,
-          "magic": 100
+          "attack": 100,
+          "magic": 80
         },
         "passive": {
           "create_matter": true,
@@ -800,8 +800,8 @@
           "attack": 150
         },
         "passive": {
-          "void_damage": 100,
-          "soul_steal": 50
+          "void_damage": 50,
+          "soul_steal": 30
         },
         "value": 500000
       },
@@ -813,9 +813,11 @@
         "rarity": "mythic",
         "required_level": 50,
         "stats": {
-          "attack": 300
+          "attack": 250
         },
         "passive": {
+          "cosmic_damage": 80,
+          "reality_shaping": 20,
           "create_matter": true,
           "dimensional_rift": true
         },
@@ -829,9 +831,11 @@
         "rarity": "mythic",
         "required_level": 50,
         "stats": {
-          "attack": 250
+          "attack": 200
         },
         "passive": {
+          "quantum_damage": 60,
+          "dimensional_slash": 20,
           "quantum_strike": true,
           "probability_control": 0.50
         },

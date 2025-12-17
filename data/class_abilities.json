@@ -2,6 +2,19 @@
   "abilities": {
     "warrior": [
       {
+        "id": "strike",
+        "name": "Strike",
+        "description": "A basic but reliable attack that every warrior knows",
+        "unlock_type": "level",
+        "unlock_requirement": 1,
+        "cooldown": 2,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 6, "scales_with": "strength", "scaling": 0.5}
+        },
+        "tags": ["melee", "basic"]
+      },
+      {
         "id": "shield_bash",
         "name": "Shield Bash",
         "description": "Bash the enemy with your shield, dealing damage and stunning for 1 turn",
@@ -10,7 +23,7 @@
         "cooldown": 3,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 15, "scales_with": "strength", "scaling": 1.2},
+          "damage": {"base": 9, "scales_with": "strength", "scaling": 0.6},
           "stun": {"duration": 1, "chance": 0.75}
         },
         "tags": ["melee", "control"]
@@ -24,7 +37,7 @@
         "cooldown": 4,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 35, "scales_with": "strength", "scaling": 2.0}
+          "damage": {"base": 12, "scales_with": "strength", "scaling": 0.8}
         },
         "tags": ["melee", "damage"]
       },
@@ -51,7 +64,7 @@
         "cooldown": 5,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 25, "scales_with": "strength", "scaling": 1.5},
+          "damage": {"base": 11, "scales_with": "strength", "scaling": 0.6},
           "aoe": true
         },
         "tags": ["melee", "aoe"]
@@ -78,7 +91,7 @@
         "cooldown": 6,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 60, "scales_with": "strength", "scaling": 2.5},
+          "damage": {"base": 18, "scales_with": "strength", "scaling": 1.0},
           "conditional": {"target_hp_below": 0.30, "damage_multiplier": 2.0}
         },
         "tags": ["melee", "execute"]
@@ -92,7 +105,7 @@
         "cooldown": 7,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 20, "scales_with": "strength", "scaling": 1.0},
+          "damage": {"base": 8, "scales_with": "strength", "scaling": 0.4},
           "hits": 3,
           "aoe": true
         },
@@ -121,7 +134,7 @@
         "cooldown": 5,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 40, "scales_with": "strength", "scaling": 1.8},
+          "damage": {"base": 20, "scales_with": "strength", "scaling": 0.9},
           "debuff": {"type": "healing_reduction", "amount": 1.0, "duration": 3}
         },
         "tags": ["melee", "debuff"]
@@ -177,7 +190,7 @@
         "cooldown": 5,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 20, "scales_with": "strength", "scaling": 1.0},
+          "damage": {"base": 25, "scales_with": "strength", "scaling": 1.0},
           "debuff": {"stat": "defense", "amount": 0.40, "duration": 4}
         },
         "tags": ["melee", "debuff"]
@@ -230,7 +243,7 @@
         "cooldown": 6,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 50, "scales_with": "strength", "scaling": 2.2},
+          "damage": {"base": 32, "scales_with": "strength", "scaling": 1.2},
           "armor_penetration": 0.50
         },
         "tags": ["melee", "damage"]
@@ -252,6 +265,20 @@
     ],
     "mage": [
       {
+        "id": "magic_bolt",
+        "name": "Magic Bolt",
+        "description": "A basic magical projectile taught to all apprentice mages",
+        "unlock_type": "level",
+        "unlock_requirement": 1,
+        "cooldown": 1,
+        "cost": {"type": "mana", "amount": 10},
+        "effects": {
+          "damage": {"base": 7, "scales_with": "magic", "scaling": 0.6},
+          "element": "arcane"
+        },
+        "tags": ["magic", "arcane", "basic"]
+      },
+      {
         "id": "fireball",
         "name": "Fireball",
         "description": "Hurl a ball of fire dealing magic damage",
@@ -260,7 +287,7 @@
         "cooldown": 2,
         "cost": {"type": "mana", "amount": 15},
         "effects": {
-          "damage": {"base": 30, "scales_with": "magic", "scaling": 2.0},
+          "damage": {"base": 10, "scales_with": "magic", "scaling": 0.8},
           "element": "fire"
         },
         "tags": ["magic", "fire", "damage"]
@@ -274,7 +301,7 @@
         "cooldown": 2,
         "cost": {"type": "mana", "amount": 12},
         "effects": {
-          "damage": {"base": 25, "scales_with": "magic", "scaling": 1.8},
+          "damage": {"base": 9, "scales_with": "magic", "scaling": 0.7},
           "debuff": {"stat": "agility", "amount": 5, "duration": 2},
           "element": "ice"
         },
@@ -289,7 +316,7 @@
         "cooldown": 3,
         "cost": {"type": "mana", "amount": 20},
         "effects": {
-          "damage": {"base": 35, "scales_with": "magic", "scaling": 2.2},
+          "damage": {"base": 13, "scales_with": "magic", "scaling": 0.9},
           "chain": {"targets": 2, "damage_reduction": 0.5},
           "element": "lightning"
         },
@@ -317,7 +344,7 @@
         "cooldown": 8,
         "cost": {"type": "mana", "amount": 40},
         "effects": {
-          "damage": {"base": 70, "scales_with": "magic", "scaling": 3.0},
+          "damage": {"base": 28, "scales_with": "magic", "scaling": 1.5},
           "aoe": true,
           "element": "fire"
         },
@@ -373,7 +400,7 @@
         "cooldown": 6,
         "cost": {"type": "mana", "amount": 35},
         "effects": {
-          "damage": {"base": 40, "scales_with": "magic", "scaling": 2.0},
+          "damage": {"base": 17, "scales_with": "magic", "scaling": 0.8},
           "chain": {"targets": 99, "damage_reduction": 0.2},
           "element": "lightning",
           "aoe": true
@@ -403,8 +430,8 @@
         "cooldown": 8,
         "cost": {"type": "mana", "amount": 45},
         "effects": {
-          "damage": {"base": 30, "scales_with": "magic", "scaling": 1.5},
-          "dot": {"damage": 15, "scales_with": "magic", "scaling": 1.0, "duration": 3},
+          "damage": {"base": 14, "scales_with": "magic", "scaling": 0.6},
+          "dot": {"damage": 5, "scales_with": "magic", "scaling": 0.5, "duration": 3},
           "aoe": true,
           "element": "fire"
         },
@@ -419,7 +446,7 @@
         "cooldown": 7,
         "cost": {"type": "mana", "amount": 40},
         "effects": {
-          "damage": {"base": 45, "scales_with": "magic", "scaling": 2.5},
+          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.0},
           "debuff": {"stat": "agility", "amount": 8, "duration": 3},
           "aoe": true,
           "element": "ice"
@@ -435,7 +462,7 @@
         "cooldown": 5,
         "cost": {"type": "none"},
         "effects": {
-          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.5},
+          "damage": {"base": 14, "scales_with": "magic", "scaling": 0.7},
           "mana_steal": {"percent": 0.50},
           "element": "arcane"
         },
@@ -476,7 +503,7 @@
         "cooldown": 4,
         "cost": {"type": "mana", "amount": 25},
         "effects": {
-          "damage": {"base": 12, "scales_with": "magic", "scaling": 1.2},
+          "damage": {"base": 7, "scales_with": "magic", "scaling": 0.5},
           "hits": 5,
           "random_targets": true,
           "element": "arcane"
@@ -514,6 +541,19 @@
     ],
     "rogue": [
       {
+        "id": "quick_strike",
+        "name": "Quick Strike",
+        "description": "A swift attack that takes advantage of openings",
+        "unlock_type": "level",
+        "unlock_requirement": 1,
+        "cooldown": 2,
+        "cost": {"type": "energy", "amount": 20},
+        "effects": {
+          "damage": {"base": 6, "scales_with": "agility", "scaling": 0.7}
+        },
+        "tags": ["melee", "basic"]
+      },
+      {
         "id": "backstab",
         "name": "Backstab",
         "description": "Strike from behind for guaranteed critical damage",
@@ -522,7 +562,7 @@
         "cooldown": 3,
         "cost": {"type": "energy", "amount": 30},
         "effects": {
-          "damage": {"base": 25, "scales_with": "agility", "scaling": 2.5},
+          "damage": {"base": 10, "scales_with": "agility", "scaling": 0.9},
           "guaranteed_crit": true
         },
         "tags": ["melee", "critical"]
@@ -549,8 +589,8 @@
         "cooldown": 4,
         "cost": {"type": "energy", "amount": 20},
         "effects": {
-          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.0},
-          "dot": {"damage": 10, "scales_with": "agility", "scaling": 0.8, "duration": 4}
+          "damage": {"base": 11, "scales_with": "agility", "scaling": 0.6},
+          "dot": {"damage": 4, "scales_with": "agility", "scaling": 0.5, "duration": 4}
         },
         "tags": ["melee", "poison", "dot"]
       },
@@ -576,7 +616,7 @@
         "cooldown": 6,
         "cost": {"type": "energy", "amount": 35},
         "effects": {
-          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
+          "damage": {"base": 13, "scales_with": "agility", "scaling": 0.7},
           "aoe": true
         },
         "tags": ["ranged", "aoe"]
@@ -590,7 +630,7 @@
         "cooldown": 4,
         "cost": {"type": "energy", "amount": 25},
         "effects": {
-          "damage": {"base": 30, "scales_with": "agility", "scaling": 2.0},
+          "damage": {"base": 14, "scales_with": "agility", "scaling": 0.8},
           "buff": {"stat": "damage", "amount": 0.30, "duration": 1}
         },
         "tags": ["melee", "mobility"]
@@ -604,7 +644,7 @@
         "cooldown": 7,
         "cost": {"type": "energy", "amount": 30},
         "effects": {
-          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
+          "damage": {"base": 14, "scales_with": "agility", "scaling": 0.7},
           "debuff": {"type": "silence", "duration": 2}
         },
         "tags": ["control", "silence"]
@@ -631,7 +671,7 @@
         "cooldown": 8,
         "cost": {"type": "energy", "amount": 35},
         "effects": {
-          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.0},
+          "damage": {"base": 16, "scales_with": "agility", "scaling": 0.7},
           "stun": {"duration": 2}
         },
         "tags": ["control", "stun"]
@@ -645,7 +685,7 @@
         "cooldown": 10,
         "cost": {"type": "energy", "amount": 40},
         "effects": {
-          "dot": {"damage": 25, "scales_with": "agility", "scaling": 1.5, "duration": 5}
+          "dot": {"damage": 15, "scales_with": "agility", "scaling": 0.9, "duration": 5}
         },
         "tags": ["poison", "dot"]
       },
@@ -673,7 +713,7 @@
         "cooldown": 5,
         "cost": {"type": "energy", "amount": 45},
         "effects": {
-          "damage": {"base": 40, "scales_with": "agility", "scaling": 3.0},
+          "damage": {"base": 24, "scales_with": "agility", "scaling": 1.2},
           "conditional": {"requires_stealth": true}
         },
         "tags": ["melee", "stealth", "burst"]
@@ -687,8 +727,8 @@
         "cooldown": 7,
         "cost": {"type": "energy", "amount": 40},
         "effects": {
-          "damage": {"base": 25, "scales_with": "agility", "scaling": 1.5},
-          "dot": {"damage": 12, "scales_with": "agility", "scaling": 1.0, "duration": 4},
+          "damage": {"base": 26, "scales_with": "agility", "scaling": 1.0},
+          "dot": {"damage": 6, "scales_with": "agility", "scaling": 0.6, "duration": 4},
           "aoe": true
         },
         "tags": ["melee", "aoe", "bleed"]
@@ -741,9 +781,9 @@
         "cooldown": 3,
         "cost": {"type": "energy", "amount": 35},
         "effects": {
-          "damage": {"base": 18, "scales_with": "agility", "scaling": 1.8},
+          "damage": {"base": 30, "scales_with": "agility", "scaling": 1.2},
           "hits": 2,
-          "dot": {"damage": 8, "scales_with": "agility", "scaling": 0.5, "duration": 3}
+          "dot": {"damage": 5, "scales_with": "agility", "scaling": 0.4, "duration": 3}
         },
         "tags": ["melee", "poison", "multi_hit"]
       },
@@ -756,7 +796,7 @@
         "cooldown": 8,
         "cost": {"type": "energy", "amount": 45},
         "effects": {
-          "damage": {"base": 50, "scales_with": "agility", "scaling": 2.5},
+          "damage": {"base": 35, "scales_with": "agility", "scaling": 1.5},
           "consume_dots": true,
           "bonus_per_dot": 1.5
         },
@@ -773,7 +813,7 @@
         "cooldown": 2,
         "cost": {"type": "mana", "amount": 15},
         "effects": {
-          "heal": {"base": 40, "scales_with": "magic", "scaling": 2.5}
+          "heal": {"base": 20, "scales_with": "magic", "scaling": 1.5}
         },
         "tags": ["healing", "support"]
       },
@@ -786,7 +826,7 @@
         "cooldown": 2,
         "cost": {"type": "mana", "amount": 12},
         "effects": {
-          "damage": {"base": 25, "scales_with": "magic", "scaling": 1.8},
+          "damage": {"base": 9, "scales_with": "magic", "scaling": 0.7},
           "conditional": {"target_type": "undead", "damage_multiplier": 2.0},
           "element": "holy"
         },
@@ -801,7 +841,7 @@
         "cooldown": 4,
         "cost": {"type": "mana", "amount": 20},
         "effects": {
-          "shield": {"amount": 50, "scales_with": "magic", "scaling": 3.5, "duration": 3}
+          "shield": {"amount": 25, "scales_with": "magic", "scaling": 2.0, "duration": 3}
         },
         "tags": ["support", "shield"]
       },
@@ -814,8 +854,8 @@
         "cooldown": 4,
         "cost": {"type": "mana", "amount": 18},
         "effects": {
-          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.5},
-          "dot": {"damage": 10, "scales_with": "magic", "scaling": 1.0, "duration": 4},
+          "damage": {"base": 11, "scales_with": "magic", "scaling": 0.6},
+          "dot": {"damage": 4, "scales_with": "magic", "scaling": 0.5, "duration": 4},
           "element": "holy"
         },
         "tags": ["magic", "holy", "dot"]
@@ -829,7 +869,7 @@
         "cooldown": 6,
         "cost": {"type": "mana", "amount": 35},
         "effects": {
-          "heal": {"base": 30, "scales_with": "magic", "scaling": 2.0},
+          "heal": {"base": 15, "scales_with": "magic", "scaling": 1.2},
           "aoe": true
         },
         "tags": ["healing", "aoe", "support"]
@@ -856,8 +896,8 @@
         "cooldown": 5,
         "cost": {"type": "mana", "amount": 30},
         "effects": {
-          "damage": {"base": 25, "scales_with": "magic", "scaling": 1.8, "aoe": true},
-          "heal": {"base": 20, "scales_with": "magic", "scaling": 1.5, "aoe": true},
+          "damage": {"base": 14, "scales_with": "magic", "scaling": 0.7, "aoe": true},
+          "heal": {"base": 10, "scales_with": "magic", "scaling": 0.8, "aoe": true},
           "element": "holy"
         },
         "tags": ["magic", "healing", "aoe"]
@@ -897,7 +937,7 @@
         "cooldown": 6,
         "cost": {"type": "mana", "amount": 20},
         "effects": {
-          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.5},
+          "damage": {"base": 15, "scales_with": "magic", "scaling": 0.8},
           "stun": {"duration": 1},
           "element": "holy"
         },
@@ -912,8 +952,8 @@
         "cooldown": 12,
         "cost": {"type": "mana", "amount": 50},
         "effects": {
-          "heal": {"base": 25, "scales_with": "magic", "scaling": 2.0, "aoe": true},
-          "hot": {"heal": 15, "scales_with": "magic", "scaling": 1.5, "duration": 3, "aoe": true}
+          "heal": {"base": 12, "scales_with": "magic", "scaling": 1.0, "aoe": true},
+          "hot": {"heal": 7, "scales_with": "magic", "scaling": 0.8, "duration": 3, "aoe": true}
         },
         "tags": ["healing", "channeled", "aoe"]
       },
@@ -926,7 +966,7 @@
         "cooldown": 8,
         "cost": {"type": "mana", "amount": 40},
         "effects": {
-          "damage": {"base": 60, "scales_with": "magic", "scaling": 3.0},
+          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.2},
           "conditional": {"target_type": ["undead", "demon"], "damage_multiplier": 2.5},
           "aoe": true,
           "element": "holy"
@@ -955,8 +995,8 @@
         "cooldown": 6,
         "cost": {"type": "mana", "amount": 35},
         "effects": {
-          "damage": {"base": 18, "scales_with": "magic", "scaling": 1.8, "hits": 3},
-          "heal": {"base": 18, "scales_with": "magic", "scaling": 1.8, "hits": 3},
+          "damage": {"base": 24, "scales_with": "magic", "scaling": 1.0, "hits": 3},
+          "heal": {"base": 24, "scales_with": "magic", "scaling": 1.0, "hits": 3},
           "element": "holy"
         },
         "tags": ["magic", "healing", "versatile"]
@@ -983,8 +1023,8 @@
         "cooldown": 7,
         "cost": {"type": "mana", "amount": 30},
         "effects": {
-          "damage": {"base": 15, "scales_with": "magic", "scaling": 1.2},
-          "dot": {"damage": 12, "scales_with": "magic", "scaling": 1.0, "duration": 4},
+          "damage": {"base": 28, "scales_with": "magic", "scaling": 0.9},
+          "dot": {"damage": 7, "scales_with": "magic", "scaling": 0.6, "duration": 4},
           "aoe": true,
           "element": "holy"
         },
@@ -1019,6 +1059,20 @@
     ],
     "ranger": [
       {
+        "id": "steady_shot",
+        "name": "Steady Shot",
+        "description": "A reliable ranged attack that never misses",
+        "unlock_type": "level",
+        "unlock_requirement": 1,
+        "cooldown": 2,
+        "cost": {"type": "focus", "amount": 20},
+        "effects": {
+          "damage": {"base": 6, "scales_with": "agility", "scaling": 0.6},
+          "guaranteed_hit": true
+        },
+        "tags": ["ranged", "basic"]
+      },
+      {
         "id": "aimed_shot",
         "name": "Aimed Shot",
         "description": "A carefully aimed shot dealing high damage",
@@ -1027,7 +1081,7 @@
         "cooldown": 3,
         "cost": {"type": "focus", "amount": 30},
         "effects": {
-          "damage": {"base": 35, "scales_with": "agility", "scaling": 2.2}
+          "damage": {"base": 10, "scales_with": "agility", "scaling": 0.8}
         },
         "tags": ["ranged", "damage"]
       },
@@ -1040,7 +1094,7 @@
         "cooldown": 4,
         "cost": {"type": "focus", "amount": 35},
         "effects": {
-          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.5},
+          "damage": {"base": 9, "scales_with": "agility", "scaling": 0.6},
           "hits": 3
         },
         "tags": ["ranged", "multi_hit"]
@@ -1067,7 +1121,7 @@
         "cooldown": 5,
         "cost": {"type": "focus", "amount": 40},
         "effects": {
-          "damage": {"base": 30, "scales_with": "agility", "scaling": 2.0},
+          "damage": {"base": 14, "scales_with": "agility", "scaling": 0.8},
           "aoe": true
         },
         "tags": ["ranged", "aoe", "explosive"]
@@ -1094,7 +1148,7 @@
         "cooldown": 8,
         "cost": {"type": "focus", "amount": 25},
         "effects": {
-          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
+          "damage": {"base": 14, "scales_with": "agility", "scaling": 0.7},
           "debuff": {"type": "immobilize", "duration": 2}
         },
         "tags": ["control", "trap"]
@@ -1108,7 +1162,7 @@
         "cooldown": 7,
         "cost": {"type": "focus", "amount": 45},
         "effects": {
-          "damage": {"base": 25, "scales_with": "agility", "scaling": 1.8},
+          "damage": {"base": 16, "scales_with": "agility", "scaling": 0.8},
           "aoe": true
         },
         "tags": ["ranged", "aoe"]
@@ -1122,8 +1176,8 @@
         "cooldown": 3,
         "cost": {"type": "focus", "amount": 25},
         "effects": {
-          "damage": {"base": 10, "scales_with": "agility", "scaling": 1.0},
-          "dot": {"damage": 15, "scales_with": "agility", "scaling": 1.2, "duration": 5}
+          "damage": {"base": 12, "scales_with": "agility", "scaling": 0.6},
+          "dot": {"damage": 6, "scales_with": "agility", "scaling": 0.7, "duration": 5}
         },
         "tags": ["ranged", "poison", "dot"]
       },
@@ -1149,7 +1203,7 @@
         "cooldown": 6,
         "cost": {"type": "focus", "amount": 50},
         "effects": {
-          "damage": {"base": 15, "scales_with": "agility", "scaling": 1.5},
+          "damage": {"base": 11, "scales_with": "agility", "scaling": 0.6},
           "hits": 6,
           "random_targets": true
         },
@@ -1164,7 +1218,7 @@
         "cooldown": 7,
         "cost": {"type": "focus", "amount": 40},
         "effects": {
-          "damage": {"base": 40, "scales_with": "agility", "scaling": 2.5},
+          "damage": {"base": 22, "scales_with": "agility", "scaling": 1.1},
           "piercing": true,
           "aoe": true
         },
@@ -1206,7 +1260,7 @@
         "cooldown": 6,
         "cost": {"type": "focus", "amount": 40},
         "effects": {
-          "damage": {"base": 50, "scales_with": "agility", "scaling": 2.8},
+          "damage": {"base": 26, "scales_with": "agility", "scaling": 1.2},
           "conditional": {"target_hp_below": 0.35, "damage_multiplier": 2.0}
         },
         "tags": ["ranged", "execute"]
@@ -1233,8 +1287,8 @@
         "cooldown": 8,
         "cost": {"type": "focus", "amount": 35},
         "effects": {
-          "damage": {"base": 20, "scales_with": "agility", "scaling": 1.5},
-          "dot": {"damage": 20, "scales_with": "agility", "scaling": 1.8, "duration": 4},
+          "damage": {"base": 26, "scales_with": "agility", "scaling": 1.0},
+          "dot": {"damage": 8, "scales_with": "agility", "scaling": 0.9, "duration": 4},
           "element": "shadow"
         },
         "tags": ["ranged", "dot", "shadow"]
@@ -1261,7 +1315,7 @@
         "cooldown": 9,
         "cost": {"type": "focus", "amount": 30},
         "effects": {
-          "damage": {"base": 25, "scales_with": "agility", "scaling": 1.8},
+          "damage": {"base": 30, "scales_with": "agility", "scaling": 1.1},
           "stun": {"duration": 1},
           "mobility": {"type": "charge"}
         },

@@ -3,6 +3,7 @@ import useGameStore from './store/gameStore';
 import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
 import CharacterSheet from './components/Character/CharacterSheet';
+import AbilitiesMenu from './components/Character/AbilitiesMenu';
 import Inventory from './components/Inventory/Inventory';
 import CombatView from './components/Combat/CombatView';
 import QuestLog from './components/Quests/QuestLog';
@@ -113,6 +114,8 @@ function App() {
     switch (activeTab) {
       case 'character':
         return <CharacterSheet />;
+      case 'abilities':
+        return <AbilitiesMenu />;
       case 'inventory':
         return <Inventory />;
       case 'quests':

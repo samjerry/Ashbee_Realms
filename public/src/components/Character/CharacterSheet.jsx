@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sword, Shield, Zap, Wind, Heart, Star } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sword, Shield, Zap, Wind, Heart, Star, Book } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 // Force rebuild - fixed null safety issues
@@ -111,6 +111,9 @@ const CharacterSheet = () => {
         </div>
       </div>
       
+      {/* Equipped Abilities */}
+      <EquippedAbilitiesDisplay />
+      
       {/* Active Effects */}
       {player.activeEffects && player.activeEffects.length > 0 && (
         <div className="card p-6">
@@ -125,6 +128,55 @@ const CharacterSheet = () => {
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+const EquippedAbilitiesDisplay = () => {
+  const [equippedAbilities, setEquippedAbilities] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadEquippedAbilities();
+  }, []);
+
+  const loadEquippedAbilities = async () => {
+    try {
+      const response = await fetch('/api/abilities/equipped');
+      const data = await response.json();
+      setEquippedAbilities(data.abilities || []);
+    } catch (error) {
+      console.error('Failed to load equipped abilities:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading || equippedAbilities.length === 0) return null;
+
+  return (
+    <div className="card p-4 sm:p-6">
+      <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 flex items-center">
+        <Book size={24} className="mr-2" />
+        Equipped Abilities
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+        {equippedAbilities.map((ability, index) => (
+          <div key={index} className="bg-dark-900 border-2 border-primary-600 rounded-lg p-3 sm:p-4">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-bold text-white text-sm sm:text-base">{ability.name}</h3>
+              <Zap size={16} className="text-primary-500 flex-shrink-0" />
+            </div>
+            <p className="text-xs sm:text-sm text-gray-400 mb-2">{ability.description}</p>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-blue-400">CD: {ability.cooldown}T</span>
+              {ability.cost && ability.cost.type !== 'none' && (
+                <span className="text-yellow-400">{ability.cost.amount} {ability.cost.type}</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

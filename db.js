@@ -222,6 +222,10 @@ async function initPostgres() {
         -- Selected name color (for users with multiple roles)
         name_color TEXT DEFAULT NULL,
         
+        -- Abilities system
+        unlocked_abilities JSONB DEFAULT '[]',
+        equipped_abilities JSONB DEFAULT '[]',
+        
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         
@@ -538,6 +542,9 @@ async function loadPlayerProgress(playerId, channelName) {
     // Roles array and name color
     roles: typeof row.roles === 'string' ? JSON.parse(row.roles) : (row.roles || ['viewer']),
     nameColor: row.name_color || null,
+    // Abilities system
+    unlocked_abilities: typeof row.unlocked_abilities === 'string' ? JSON.parse(row.unlocked_abilities) : (row.unlocked_abilities || []),
+    equipped_abilities: typeof row.equipped_abilities === 'string' ? JSON.parse(row.equipped_abilities) : (row.equipped_abilities || []),
     updated_at: row.updated_at
   };
 }
