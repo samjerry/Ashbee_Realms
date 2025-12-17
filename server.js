@@ -19,6 +19,14 @@ const validation = require('./middleware/validation');
 const sanitization = require('./middleware/sanitization');
 const rateLimiter = require('./utils/rateLimiter');
 
+// Default game state values
+const DEFAULT_GAME_STATE = {
+  weather: 'Clear',
+  time_of_day: 'Day',
+  season: 'Spring',
+  game_mode: 'softcore'
+};
+
 const app = express();
 
 // Security headers with helmet
@@ -366,9 +374,19 @@ app.get('/auth/broadcaster/callback',
     
     req.session.user = { id: playerId, displayName: broadcasterName, twitchId: broadcasterId };
     req.session.isBroadcaster = true;
+    req.session.broadcasterChannel = channelName;
     
-    // Redirect to admin/setup page with success message
-    res.redirect('/adventure?broadcaster=authenticated');
+    // Check if game state has already been set up
+    const gameState = await db.getGameState(channelName);
+    
+    // If game state exists, go to adventure; otherwise go to setup
+    if (gameState) {
+      console.log(`✅ Game state already configured for ${channelName}, redirecting to adventure`);
+      res.redirect('/adventure?broadcaster=authenticated');
+    } else {
+      console.log(`📝 No game state found for ${channelName}, redirecting to setup`);
+      res.redirect('/setup');
+    }
   } catch (err) {
     console.error('❌ Broadcaster OAuth callback error:', err.response?.data || err.message);
     res.status(500).send(`Broadcaster authentication failed: ${err.response?.data?.message || err.message}`);
@@ -407,6 +425,97 @@ app.get('/auth/logout', (req, res) => {
     }
     res.redirect('/');
   });
+});
+
+/**
+ * GET /api/game-state
+ * Get game state for a channel (weather, time_of_day, season, game_mode)
+ */
+app.get('/api/game-state', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const channelName = req.query.channel;
+  if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
+
+  try {
+    let gameState = await db.getGameState(channelName.toLowerCase());
+    
+    // If no game state exists, return defaults
+    if (!gameState) {
+      gameState = {
+        channel_name: channelName.toLowerCase(),
+        ...DEFAULT_GAME_STATE
+      };
+    }
+    
+    res.json({ gameState });
+  } catch (error) {
+    console.error('Error getting game state:', error);
+    res.status(500).json({ error: 'Failed to get game state' });
+  }
+});
+
+/**
+ * POST /api/game-state
+ * Set game state for a channel (broadcaster only)
+ */
+app.post('/api/game-state',
+  rateLimiter.middleware('strict'),
+  async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  // Check if user is broadcaster
+  if (!req.session.isBroadcaster) {
+    return res.status(403).json({ error: 'Only the broadcaster can modify game state' });
+  }
+
+  const { channel, weather, time_of_day, season, game_mode } = req.body;
+  if (!channel) return res.status(400).json({ error: 'Channel parameter required' });
+
+  // Validate game_mode
+  if (game_mode && !['softcore', 'hardcore'].includes(game_mode)) {
+    return res.status(400).json({ error: 'game_mode must be either "softcore" or "hardcore"' });
+  }
+
+  // Validate other fields
+  const validWeather = ['Clear', 'Rain', 'Snow', 'Fog', 'Storm'];
+  const validTimeOfDay = ['Dawn', 'Day', 'Dusk', 'Night'];
+  const validSeason = ['Spring', 'Summer', 'Autumn', 'Winter'];
+
+  if (weather && !validWeather.includes(weather)) {
+    return res.status(400).json({ error: `Invalid weather. Must be one of: ${validWeather.join(', ')}` });
+  }
+  
+  if (time_of_day && !validTimeOfDay.includes(time_of_day)) {
+    return res.status(400).json({ error: `Invalid time_of_day. Must be one of: ${validTimeOfDay.join(', ')}` });
+  }
+  
+  if (season && !validSeason.includes(season)) {
+    return res.status(400).json({ error: `Invalid season. Must be one of: ${validSeason.join(', ')}` });
+  }
+
+  try {
+    // Get current game state or use defaults
+    let currentState = await db.getGameState(channel.toLowerCase()) || DEFAULT_GAME_STATE;
+
+    // Update only provided fields
+    const updatedState = {
+      weather: weather !== undefined ? weather : currentState.weather,
+      time_of_day: time_of_day !== undefined ? time_of_day : currentState.time_of_day,
+      season: season !== undefined ? season : currentState.season,
+      game_mode: game_mode !== undefined ? game_mode : currentState.game_mode
+    };
+
+    const gameState = await db.setGameState(channel.toLowerCase(), updatedState);
+    
+    console.log(`✅ Game state updated for ${channel}:`, updatedState);
+    res.json({ success: true, gameState });
+  } catch (error) {
+    console.error('Error setting game state:', error);
+    res.status(500).json({ error: 'Failed to set game state' });
+  }
 });
 
 app.get('/api/me', (req, res) => {
@@ -1740,7 +1849,7 @@ app.post('/api/progression/death', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  const { channel, isHardcore } = req.body;
+  const { channel } = req.body;
   if (!channel) return res.status(400).json({ error: 'Channel required' });
 
   try {
@@ -1749,11 +1858,21 @@ app.post('/api/progression/death', async (req, res) => {
       return res.status(404).json({ error: 'Character not found' });
     }
 
+    // Get game state to determine if hardcore mode is enabled
+    const gameState = await db.getGameState(channel.toLowerCase());
+    
+    // If no game state exists, default to softcore (safer default)
+    const isHardcore = gameState ? gameState.game_mode === 'hardcore' : false;
+    
+    if (!gameState) {
+      console.warn(`⚠️ No game state found for channel ${channel}, defaulting to softcore mode`);
+    }
+
     // Get permanent stats from database
     const permanentStats = await db.getPermanentStats(user.id) || {};
 
     const progressionMgr = new ProgressionManager();
-    const deathResult = progressionMgr.handleDeath(character, isHardcore || false, permanentStats);
+    const deathResult = progressionMgr.handleDeath(character, isHardcore, permanentStats);
 
     if (deathResult.characterDeleted) {
       // Save permanent stats and delete character
@@ -6149,6 +6268,25 @@ app.get('/', (req, res) => {
     return res.redirect('/adventure');
   }
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Setup route - broadcaster game setup (requires broadcaster auth)
+app.get('/setup', async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect('/');
+  }
+  
+  // Only broadcasters can access setup
+  if (!req.session.isBroadcaster) {
+    return res.redirect('/adventure');
+  }
+  
+  // Serve the setup page (same React app, will show setup component based on route)
+  if (process.env.NODE_ENV === 'production') {
+    res.sendFile(path.join(__dirname, 'public/dist/index.html'));
+  } else {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
 });
 
 // Adventure route - main game (requires auth)
