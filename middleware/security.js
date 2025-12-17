@@ -134,6 +134,17 @@ function sanitizeForLog(data) {
 }
 
 /**
+ * Sanitize user display name for logging to prevent log injection
+ */
+function sanitizeUserForLog(user) {
+  if (!user) return 'unknown';
+  const validator = require('validator');
+  const displayName = user.displayName || user.display_name || 'unknown';
+  // Escape HTML entities and limit length for logging
+  return validator.escape(validator.trim(displayName.substring(0, 50)));
+}
+
+/**
  * Suspicious activity detection
  * NOTE: Uses in-memory Map which will reset on server restart
  * For production with multiple instances, consider Redis or database-backed solution
@@ -205,5 +216,6 @@ module.exports = {
   validateCharacterOwnership,
   auditLog,
   sanitizeForLog,
+  sanitizeUserForLog,
   detectSuspiciousActivity
 };

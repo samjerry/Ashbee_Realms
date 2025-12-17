@@ -31,10 +31,16 @@ function sanitizeString(value) {
 
 /**
  * Character creation validation
+ * Valid character classes
  */
+const VALID_CHARACTER_CLASSES = [
+  'warrior', 'mage', 'ranger', 'cleric', 'rogue', 
+  'paladin', 'barbarian', 'monk', 'druid', 'bard'
+];
+
 const validateCharacterCreate = [
   body('channel').isString().trim().isLength({ min: 1, max: 50 }).escape(),
-  body('classType').isString().trim().isIn(['warrior', 'mage', 'ranger', 'cleric', 'rogue', 'paladin', 'barbarian', 'monk', 'druid', 'bard']),
+  body('classType').isString().trim().isIn(VALID_CHARACTER_CLASSES),
   body('nameColor').optional().isString().matches(/^#[0-9A-Fa-f]{6}$/),
   handleValidationErrors
 ];
@@ -98,7 +104,7 @@ const validateNameColor = [
 const validateOperatorCommand = [
   body('channel').isString().trim().isLength({ min: 1, max: 50 }).escape(),
   body('command').isString().trim().isLength({ min: 1, max: 50 })
-    .matches(/^[a-zA-Z]+$/), // Allow alphanumeric including camelCase
+    .matches(/^[a-zA-Z][a-zA-Z0-9]*$/), // Allow camelCase: letters followed by alphanumeric
   body('params').optional().isObject(),
   body('params.playerId').optional().isString().trim().isLength({ min: 1, max: 100 }),
   body('params.amount').optional().isInt({ min: -1000000, max: 1000000 }),

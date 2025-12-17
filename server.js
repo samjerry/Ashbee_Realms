@@ -21,13 +21,17 @@ const rateLimiter = require('./utils/rateLimiter');
 const app = express();
 
 // Security headers with helmet
+// CSP configuration based on environment
+const isProduction = process.env.NODE_ENV === 'production';
+const cspScriptSrc = isProduction 
+  ? ["'self'"] // Production: No unsafe-inline or unsafe-eval
+  : ["'self'", "'unsafe-inline'", "'unsafe-eval'"]; // Development only
+
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      // NOTE: unsafe-inline and unsafe-eval are ONLY for React development
-      // TODO: Remove these in production builds and use nonces/hashes
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Required for React dev
+      scriptSrc: cspScriptSrc,
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'", "wss:", "ws:"],
@@ -355,11 +359,11 @@ app.post('/api/player/progress',
       if (playerData.level !== undefined) {
         // Level can only increase by 1 at a time, and must be within valid range
         if (playerData.level < 1 || playerData.level > 100) {
-          console.warn(`[SECURITY] Invalid level attempt: ${playerData.level} for user ${user.displayName}`);
+          console.warn(`[SECURITY] Invalid level attempt: ${playerData.level} for user ${security.sanitizeUserForLog(user)}`);
           return res.status(400).json({ error: 'Invalid level value' });
         }
         if (playerData.level > currentProgress.level + 1) {
-          console.warn(`[SECURITY] Level jump detected for user ${user.displayName}: ${currentProgress.level} -> ${playerData.level}`);
+          console.warn(`[SECURITY] Level jump detected for user ${security.sanitizeUserForLog(user)}: ${currentProgress.level} -> ${playerData.level}`);
           return res.status(400).json({ error: 'Invalid level progression' });
         }
       }
@@ -367,18 +371,18 @@ app.post('/api/player/progress',
       // Validate gold changes
       if (playerData.gold !== undefined) {
         if (playerData.gold < 0 || playerData.gold > 100000000) {
-          console.warn(`[SECURITY] Invalid gold amount: ${playerData.gold} for user ${user.displayName}`);
+          console.warn(`[SECURITY] Invalid gold amount: ${playerData.gold} for user ${security.sanitizeUserForLog(user)}`);
           return res.status(400).json({ error: 'Invalid gold amount' });
         }
         // Allow spending (decrease) but validate large INCREASES
         const goldChange = playerData.gold - currentProgress.gold;
         if (goldChange > 100000) {
-          console.warn(`[SECURITY] Large gold increase detected for user ${user.displayName}: ${currentProgress.gold} -> ${playerData.gold}`);
+          console.warn(`[SECURITY] Large gold increase detected for user ${security.sanitizeUserForLog(user)}: ${currentProgress.gold} -> ${playerData.gold}`);
           return res.status(400).json({ error: 'Invalid gold increase - suspiciously large' });
         }
         // Validate spending doesn't exceed current gold (paranoid check)
         if (goldChange < 0 && playerData.gold < 0) {
-          console.warn(`[SECURITY] Negative gold after spending for user ${user.displayName}: ${playerData.gold}`);
+          console.warn(`[SECURITY] Negative gold after spending for user ${security.sanitizeUserForLog(user)}: ${playerData.gold}`);
           playerData.gold = 0; // Cap at 0
         }
       }
@@ -386,7 +390,7 @@ app.post('/api/player/progress',
       // Validate XP changes
       if (playerData.xp !== undefined) {
         if (playerData.xp < 0 || playerData.xp > 1000000000) {
-          console.warn(`[SECURITY] Invalid XP amount: ${playerData.xp} for user ${user.displayName}`);
+          console.warn(`[SECURITY] Invalid XP amount: ${playerData.xp} for user ${security.sanitizeUserForLog(user)}`);
           return res.status(400).json({ error: 'Invalid XP amount' });
         }
       }
@@ -394,13 +398,13 @@ app.post('/api/player/progress',
       // Validate HP
       if (playerData.hp !== undefined) {
         if (playerData.hp < 0 || playerData.hp > 1000000) {
-          console.warn(`[SECURITY] Invalid HP: ${playerData.hp} for user ${user.displayName}`);
+          console.warn(`[SECURITY] Invalid HP: ${playerData.hp} for user ${security.sanitizeUserForLog(user)}`);
           return res.status(400).json({ error: 'Invalid HP value' });
         }
         // HP can't exceed max_hp
         const maxHp = playerData.max_hp || currentProgress.max_hp;
         if (playerData.hp > maxHp) {
-          console.warn(`[SECURITY] HP > max_hp for user ${user.displayName}: ${playerData.hp} > ${maxHp}`);
+          console.warn(`[SECURITY] HP > max_hp for user ${security.sanitizeUserForLog(user)}: ${playerData.hp} > ${maxHp}`);
           playerData.hp = maxHp; // Cap at max
         }
       }
@@ -418,7 +422,7 @@ app.post('/api/player/progress',
         playerData.inventory = sanitization.sanitizeInventory(playerData.inventory);
         // Limit inventory size
         if (playerData.inventory.length > 1000) {
-          console.warn(`[SECURITY] Inventory size exceeded for user ${user.displayName}: ${playerData.inventory.length}`);
+          console.warn(`[SECURITY] Inventory size exceeded for user ${security.sanitizeUserForLog(user)}: ${playerData.inventory.length}`);
           playerData.inventory = playerData.inventory.slice(0, 1000);
         }
       }
@@ -918,7 +922,8 @@ app.post('/api/player/name-color',
       const validColors = roles.map(r => roleColors[r]);
       
       if (!validColors.includes(validatedColor)) {
-        console.warn(`[SECURITY] Invalid color selection attempt by ${user.displayName}: ${validatedColor} not in ${validColors}`);
+        // Sanitize display name for logging to prevent log injection
+        console.warn(`[SECURITY] Invalid color selection attempt by ${security.sanitizeUserForLog(user)}: ${validatedColor} not in ${validColors}`);
         return res.status(403).json({ error: 'Color not available for your roles' });
       }
       
