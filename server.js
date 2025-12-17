@@ -6089,6 +6089,8 @@ app.get('/api/operator/status', async (req, res) => {
     else if (permissionLevel === operatorMgr.PERMISSION_LEVELS.STREAMER) levelName = 'STREAMER';
     else if (permissionLevel === operatorMgr.PERMISSION_LEVELS.MODERATOR) levelName = 'MODERATOR';
 
+    console.log(`[OPERATOR STATUS] User: ${user.displayName}, Role: ${userRole}, Level: ${levelName} (${permissionLevel}), Commands: ${availableCommands.length}`);
+
     res.json({
       hasAccess,
       level: levelName,
@@ -6111,6 +6113,9 @@ app.get('/api/operator/commands', checkOperatorAccess, (req, res) => {
     const metadata = operatorMgr.getCommandMetadata();
     const availableCommands = operatorMgr.getAvailableCommands(req.operatorLevel);
     
+    console.log(`[OPERATOR] Commands requested by level ${req.operatorLevel}, role: ${req.operatorRole}`);
+    console.log(`[OPERATOR] Available commands:`, availableCommands);
+    
     // Filter metadata to only include available commands
     const filtered = {};
     for (const cmd of availableCommands) {
@@ -6119,6 +6124,7 @@ app.get('/api/operator/commands', checkOperatorAccess, (req, res) => {
       }
     }
 
+    console.log(`[OPERATOR] Filtered commands:`, Object.keys(filtered));
     res.json({ commands: filtered, level: req.operatorLevel });
   } catch (error) {
     console.error('Error fetching commands:', error);
