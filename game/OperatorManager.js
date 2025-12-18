@@ -125,6 +125,33 @@ class OperatorManager {
   }
 
   /**
+   * Helper: Get player ID from name or ID
+   * @param {string} playerNameOrId - Player name or ID
+   * @param {string} channelName - Channel name
+   * @param {object} db - Database instance
+   * @returns {Promise<string>} Player ID
+   */
+  async getPlayerIdFromName(playerNameOrId, channelName, db) {
+    // If it already looks like an ID (starts with 'twitch-'), return it
+    if (playerNameOrId.startsWith('twitch-')) {
+      return playerNameOrId;
+    }
+
+    // Otherwise, look up by name
+    const table = db.getPlayerTable(channelName);
+    const result = await db.query(
+      `SELECT player_id FROM ${table} WHERE LOWER(name) = LOWER($1) LIMIT 1`,
+      [playerNameOrId]
+    );
+
+    if (result.rows.length === 0) {
+      throw new Error(`Player '${playerNameOrId}' not found`);
+    }
+
+    return result.rows[0].player_id;
+  }
+
+  /**
    * Get all available commands for a permission level
    * @param {number} permissionLevel - User's permission level
    * @returns {array} List of available commands
@@ -159,12 +186,18 @@ class OperatorManager {
   /**
    * Execute: Give item to player
    */
-  async giveItem(targetPlayerId, channelName, itemId, quantity = 1, db) {
+  async giveItem(playerNameOrId, channelName, itemId, quantity = 1, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
-    const inventory = JSON.parse(progress.inventory || '[]');
+    let inventory;
+    try {
+      inventory = JSON.parse(progress.inventory || '[]');
+    } catch (e) {
+      inventory = progress.inventory ? progress.inventory.split(',').filter(Boolean) : [];
+    }
     
     // Add item to inventory
     for (let i = 0; i < quantity; i++) {
@@ -185,7 +218,8 @@ class OperatorManager {
   /**
    * Execute: Give gold to player
    */
-  async giveGold(targetPlayerId, channelName, amount, db) {
+  async giveGold(playerNameOrId, channelName, amount, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
@@ -206,7 +240,8 @@ class OperatorManager {
   /**
    * Execute: Give experience to player
    */
-  async giveExp(targetPlayerId, channelName, amount, db) {
+  async giveExp(playerNameOrId, channelName, amount, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
@@ -215,15 +250,15 @@ class OperatorManager {
     let newLevel = progress.level || 1;
     let xpToNext = progress.xp_to_next || GAME_CONSTANTS.BASE_XP_TO_NEXT;
 
-    // Simple level up logic (would use ProgressionManager in real implementation)
+    // Simple level up logic
     while (newXp >= xpToNext && newLevel < GAME_CONSTANTS.MAX_LEVEL) {
       newLevel++;
       xpToNext = Math.floor(xpToNext * GAME_CONSTANTS.XP_MULTIPLIER);
     }
 
     await db.query(
-      'UPDATE ${table} SET xp = $1, level = $2, xp_to_next = $3 WHERE player_id = $4 AND channel_name = $5',
-      [newXp, newLevel, xpToNext, targetPlayerId, channelName]
+      `UPDATE ${table} SET xp = $1, level = $2, xp_to_next = $3 WHERE player_id = $4`,
+      [newXp, newLevel, xpToNext, targetPlayerId]
     );
 
     return {
@@ -235,7 +270,8 @@ class OperatorManager {
   /**
    * Execute: Heal player to full HP
    */
-  async healPlayer(targetPlayerId, channelName, db) {
+  async healPlayer(playerNameOrId, channelName, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
@@ -254,12 +290,18 @@ class OperatorManager {
   /**
    * Execute: Remove item from player
    */
-  async removeItem(targetPlayerId, channelName, itemId, quantity = 1, db) {
+  async removeItem(playerNameOrId, channelName, itemId, quantity = 1, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
-    let inventory = JSON.parse(progress.inventory || '[]');
+    let inventory;
+    try {
+      inventory = JSON.parse(progress.inventory || '[]');
+    } catch (e) {
+      inventory = progress.inventory ? progress.inventory.split(',').filter(Boolean) : [];
+    }
     let removed = 0;
 
     // Remove items
@@ -272,8 +314,8 @@ class OperatorManager {
     }
 
     await db.query(
-      'UPDATE ${table} SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
-      [JSON.stringify(inventory), targetPlayerId, channelName]
+      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
+      [JSON.stringify(inventory), targetPlayerId]
     );
 
     return {
@@ -285,7 +327,8 @@ class OperatorManager {
   /**
    * Execute: Remove gold from player
    */
-  async removeGold(targetPlayerId, channelName, amount, db) {
+  async removeGold(playerNameOrId, channelName, amount, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
@@ -293,8 +336,8 @@ class OperatorManager {
     const newGold = Math.max(0, (progress.gold || 0) - amount);
 
     await db.query(
-      'UPDATE ${table} SET gold = $1 WHERE player_id = $2 AND channel_name = $3',
-      [newGold, targetPlayerId, channelName]
+      `UPDATE ${table} SET gold = $1 WHERE player_id = $2`,
+      [newGold, targetPlayerId]
     );
 
     return {
@@ -306,7 +349,9 @@ class OperatorManager {
   /**
    * Execute: Remove levels from player
    */
-  async removeLevel(targetPlayerId, channelName, levels, db) {
+  async removeLevel(playerNameOrId, channelName, levels, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -314,8 +359,8 @@ class OperatorManager {
     const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
 
     await db.query(
-      'UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3',
-      [newLevel, xpToNext, targetPlayerId, channelName]
+      `UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3`,
+      [newLevel, xpToNext, targetPlayerId]
     );
 
     return {
@@ -327,7 +372,9 @@ class OperatorManager {
   /**
    * Execute: Set player level
    */
-  async setPlayerLevel(targetPlayerId, channelName, level, db) {
+  async setPlayerLevel(playerNameOrId, channelName, level, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -335,8 +382,8 @@ class OperatorManager {
     const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
 
     await db.query(
-      'UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3',
-      [newLevel, xpToNext, targetPlayerId, channelName]
+      `UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3`,
+      [newLevel, xpToNext, targetPlayerId]
     );
 
     return {
@@ -348,13 +395,15 @@ class OperatorManager {
   /**
    * Execute: Teleport player to location
    */
-  async teleportPlayer(targetPlayerId, channelName, location, db) {
+  async teleportPlayer(playerNameOrId, channelName, location, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
     await db.query(
-      'UPDATE ${table} SET location = $1, in_combat = false, combat = NULL WHERE player_id = $2 AND channel_name = $3',
-      [location, targetPlayerId, channelName]
+      `UPDATE ${table} SET location = $1, in_combat = false, combat = NULL WHERE player_id = $2`,
+      [location, targetPlayerId]
     );
 
     return {
@@ -366,13 +415,15 @@ class OperatorManager {
   /**
    * Execute: Clear player inventory
    */
-  async clearInventory(targetPlayerId, channelName, db) {
+  async clearInventory(playerNameOrId, channelName, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
     await db.query(
-      'UPDATE ${table} SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
-      [JSON.stringify([]), targetPlayerId, channelName]
+      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
+      [JSON.stringify([]), targetPlayerId]
     );
 
     return {
@@ -455,7 +506,9 @@ class OperatorManager {
   /**
    * Execute: Spawn encounter for player
    */
-  async spawnEncounter(targetPlayerId, channelName, encounterId, db) {
+  async spawnEncounter(playerNameOrId, channelName, encounterId, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -467,8 +520,8 @@ class OperatorManager {
     };
 
     await db.query(
-      'UPDATE ${table} SET pending = $1 WHERE player_id = $2 AND channel_name = $3',
-      [JSON.stringify(pending), targetPlayerId, channelName]
+      `UPDATE ${table} SET pending = $1 WHERE player_id = $2`,
+      [JSON.stringify(pending), targetPlayerId]
     );
 
     return {
@@ -480,7 +533,9 @@ class OperatorManager {
   /**
    * Execute: Reset quest for player
    */
-  async resetQuest(targetPlayerId, channelName, questId, db) {
+  async resetQuest(playerNameOrId, channelName, questId, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -494,8 +549,8 @@ class OperatorManager {
     activeQuests = activeQuests.filter(q => q.id !== questId);
 
     await db.query(
-      'UPDATE ${table} SET active_quests = $1, completed_quests = $2 WHERE player_id = $3',
-      [JSON.stringify(activeQuests), JSON.stringify(completedQuests), targetPlayerId, channelName]
+      `UPDATE ${table} SET active_quests = $1, completed_quests = $2 WHERE player_id = $3`,
+      [JSON.stringify(activeQuests), JSON.stringify(completedQuests), targetPlayerId]
     );
 
     return {
@@ -525,7 +580,9 @@ class OperatorManager {
   /**
    * Execute: Set player stats
    */
-  async setPlayerStats(targetPlayerId, channelName, stats, db) {
+  async setPlayerStats(playerNameOrId, channelName, stats, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -550,10 +607,10 @@ class OperatorManager {
       throw new Error('No valid stats provided');
     }
 
-    params.push(targetPlayerId, channelName);
+    params.push(targetPlayerId);
     
     await db.query(
-      `UPDATE ${table} SET ${updates.join(', ')} WHERE player_id = $${paramIndex++} AND channel_name = $${paramIndex++}`,
+      `UPDATE ${table} SET ${updates.join(', ')} WHERE player_id = $${paramIndex}`,
       params
     );
 
@@ -566,7 +623,9 @@ class OperatorManager {
   /**
    * Execute: Give all items (debug command)
    */
-  async giveAllItems(targetPlayerId, channelName, db) {
+  async giveAllItems(playerNameOrId, channelName, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -581,8 +640,8 @@ class OperatorManager {
     inventory.push(...GAME_CONSTANTS.COMMON_ITEMS);
 
     await db.query(
-      'UPDATE ${table} SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
-      [JSON.stringify(inventory), targetPlayerId, channelName]
+      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
+      [JSON.stringify(inventory), targetPlayerId]
     );
 
     return {
@@ -594,7 +653,9 @@ class OperatorManager {
   /**
    * Execute: Unlock achievement
    */
-  async unlockAchievement(targetPlayerId, channelName, achievementId, db) {
+  async unlockAchievement(playerNameOrId, channelName, achievementId, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -604,8 +665,8 @@ class OperatorManager {
       unlockedAchievements.push(achievementId);
       
       await db.query(
-        'UPDATE ${table} SET unlocked_achievements = $1 WHERE player_id = $2 AND channel_name = $3',
-        [JSON.stringify(unlockedAchievements), targetPlayerId, channelName]
+        `UPDATE ${table} SET unlocked_achievements = $1 WHERE player_id = $2`,
+        [JSON.stringify(unlockedAchievements), targetPlayerId]
       );
       
       return {
@@ -623,7 +684,8 @@ class OperatorManager {
   /**
    * Execute: Delete character (CREATOR only)
    */
-  async deleteCharacter(targetPlayerId, channelName, db) {
+  async deleteCharacter(playerNameOrId, channelName, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -642,7 +704,8 @@ class OperatorManager {
   /**
    * Execute: Wipe progress (CREATOR only)
    */
-  async wipeProgress(targetPlayerId, channelName, db) {
+  async wipeProgress(playerNameOrId, channelName, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -652,7 +715,7 @@ class OperatorManager {
       `UPDATE ${table} SET 
         level = 1, 
         xp = 0, 
-        xp_to_next = 10, 
+        xp_to_next = 100, 
         gold = 0, 
         inventory = $1,
         equipped = $2,
@@ -663,7 +726,7 @@ class OperatorManager {
         hp = 100,
         max_hp = 100
       WHERE player_id = $3`,
-      [JSON.stringify(['Potion']), JSON.stringify({
+      [JSON.stringify(['Health Potion']), JSON.stringify({
         headgear: null, armor: null, legs: null, footwear: null,
         hands: null, cape: null, off_hand: null, amulet: null,
         ring1: null, ring2: null, belt: null, main_hand: null,
@@ -680,7 +743,8 @@ class OperatorManager {
   /**
    * Execute: Grant operator permissions (CREATOR only)
    */
-  async grantOperator(targetPlayerId, channelName, level, db) {
+  async grantOperator(playerNameOrId, channelName, level, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -713,7 +777,8 @@ class OperatorManager {
   /**
    * Execute: Revoke operator permissions (CREATOR only)
    */
-  async revokeOperator(targetPlayerId, channelName, db) {
+  async revokeOperator(playerNameOrId, channelName, db) {
+    const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -781,37 +846,41 @@ class OperatorManager {
         name: 'Give Item',
         description: 'Give an item to a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
-          { name: 'itemId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
+          { name: 'itemId', type: 'string', required: true, placeholder: 'Item name' },
           { name: 'quantity', type: 'number', default: 1 }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'PLAYER'
       },
       giveGold: {
         name: 'Give Gold',
         description: 'Give gold to a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'amount', type: 'number', required: true }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'ECONOMY'
       },
       giveExp: {
         name: 'Give Experience',
         description: 'Give experience points to a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'amount', type: 'number', required: true }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'PLAYER'
       },
       healPlayer: {
         name: 'Heal Player',
         description: 'Restore player to full HP',
         params: [
-          { name: 'playerId', type: 'string', required: true }
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'PLAYER'
       },
       changeWeather: {
         name: 'Change Weather',
@@ -819,7 +888,8 @@ class OperatorManager {
         params: [
           { name: 'weather', type: 'select', options: ['Clear', 'Rain', 'Storm', 'Snow', 'Fog'], required: true }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'WORLD'
       },
       changeTime: {
         name: 'Change Time',
@@ -827,25 +897,28 @@ class OperatorManager {
         params: [
           { name: 'time', type: 'select', options: ['Dawn', 'Day', 'Dusk', 'Night'], required: true }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'WORLD'
       },
       spawnEncounter: {
         name: 'Spawn Encounter',
         description: 'Force a specific encounter for a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'encounterId', type: 'string', required: true }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'WORLD'
       },
       teleportPlayer: {
         name: 'Teleport Player',
         description: 'Teleport player to a location',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'location', type: 'string', required: true }
         ],
-        level: 'MODERATOR'
+        level: 'MODERATOR',
+        category: 'PLAYER'
       },
 
       // Streamer commands
@@ -853,29 +926,32 @@ class OperatorManager {
         name: 'Remove Item',
         description: 'Remove an item from a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'itemId', type: 'string', required: true },
           { name: 'quantity', type: 'number', default: 1 }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
       removeGold: {
         name: 'Remove Gold',
         description: 'Remove gold from a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'amount', type: 'number', required: true }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'ECONOMY'
       },
       removeLevel: {
         name: 'Remove Level',
         description: 'Remove levels from a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'levels', type: 'number', required: true }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
       changeSeason: {
         name: 'Change Season',
@@ -883,33 +959,37 @@ class OperatorManager {
         params: [
           { name: 'season', type: 'select', options: ['Spring', 'Summer', 'Fall', 'Winter'], required: true }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'WORLD'
       },
       setPlayerLevel: {
         name: 'Set Player Level',
         description: 'Set player to a specific level',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'level', type: 'number', required: true }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
       clearInventory: {
         name: 'Clear Inventory',
         description: 'Remove all items from player inventory',
         params: [
-          { name: 'playerId', type: 'string', required: true }
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
       resetQuest: {
         name: 'Reset Quest',
         description: 'Reset a quest for a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'questId', type: 'string', required: true }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
       forceEvent: {
         name: 'Force Event',
@@ -917,33 +997,37 @@ class OperatorManager {
         params: [
           { name: 'eventId', type: 'string', required: true }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'WORLD'
       },
       setPlayerStats: {
         name: 'Set Player Stats',
         description: 'Set specific stats for a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
-          { name: 'stats', type: 'object', required: true }
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
+          { name: 'stats', type: 'object', required: true, placeholder: '{hp: 100, max_hp: 150, gold: 500}' }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
       giveAllItems: {
         name: 'Give All Items',
         description: 'Give player common items (debug)',
         params: [
-          { name: 'playerId', type: 'string', required: true }
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
       unlockAchievement: {
         name: 'Unlock Achievement',
         description: 'Unlock an achievement for a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'achievementId', type: 'string', required: true }
         ],
-        level: 'STREAMER'
+        level: 'STREAMER',
+        category: 'PLAYER'
       },
 
       // Creator commands (dangerous/system)
@@ -951,38 +1035,42 @@ class OperatorManager {
         name: 'Delete Character',
         description: '⚠️ DANGER: Permanently delete a player character',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'confirm', type: 'string', required: true, placeholder: 'Type DELETE to confirm' }
         ],
         level: 'CREATOR',
+        category: 'SYSTEM',
         dangerous: true
       },
       wipeProgress: {
         name: 'Wipe Progress',
         description: '⚠️ DANGER: Reset all progress for a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'confirm', type: 'string', required: true, placeholder: 'Type WIPE to confirm' }
         ],
         level: 'CREATOR',
+        category: 'SYSTEM',
         dangerous: true
       },
       grantOperator: {
         name: 'Grant Operator',
         description: 'Grant operator permissions to a player',
         params: [
-          { name: 'playerId', type: 'string', required: true },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
           { name: 'level', type: 'select', options: ['MODERATOR', 'STREAMER'], required: true }
         ],
-        level: 'CREATOR'
+        level: 'CREATOR',
+        category: 'SYSTEM'
       },
       revokeOperator: {
         name: 'Revoke Operator',
         description: 'Remove operator permissions from a player',
         params: [
-          { name: 'playerId', type: 'string', required: true }
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' }
         ],
-        level: 'CREATOR'
+        level: 'CREATOR',
+        category: 'SYSTEM'
       },
       systemBroadcast: {
         name: 'System Broadcast',
@@ -990,7 +1078,8 @@ class OperatorManager {
         params: [
           { name: 'message', type: 'text', required: true }
         ],
-        level: 'CREATOR'
+        level: 'CREATOR',
+        category: 'SYSTEM'
       },
       maintenanceMode: {
         name: 'Maintenance Mode',
@@ -998,7 +1087,8 @@ class OperatorManager {
         params: [
           { name: 'enabled', type: 'select', options: ['true', 'false'], required: true }
         ],
-        level: 'CREATOR'
+        level: 'CREATOR',
+        category: 'SYSTEM'
       }
     };
   }
