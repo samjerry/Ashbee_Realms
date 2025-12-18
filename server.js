@@ -6165,6 +6165,8 @@ app.post('/api/operator/execute',
     try {
       const { command, params } = req.body;
 
+      console.log(`[OPERATOR EXECUTE] User: ${req.session.user.displayName}, Command: ${command}, Params:`, params);
+
       if (!command) {
         return res.status(400).json({ error: 'Command is required' });
       }
@@ -6453,6 +6455,9 @@ app.post('/api/operator/execute',
 
       res.json(result);
     } catch (error) {
+      console.error('[OPERATOR EXECUTE ERROR]', error);
+      console.error('Error stack:', error.stack);
+      
       // Log failed action to audit log
       const channelName = req.channelName || req.body?.channel || 'unknown';
       const userId = req.session?.user?.id || 'unknown';

@@ -374,6 +374,32 @@ async function initPostgres() {
     END $$;
   `);
   
+  // Migration: Add maintenance_mode column to game_state table if it doesn't exist
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'game_state' AND column_name = 'maintenance_mode'
+      ) THEN
+        ALTER TABLE game_state ADD COLUMN maintenance_mode BOOLEAN DEFAULT false;
+      END IF;
+    END $$;
+  `);
+  
+  // Migration: Add last_broadcast column to game_state table if it doesn't exist
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'game_state' AND column_name = 'last_broadcast'
+      ) THEN
+        ALTER TABLE game_state ADD COLUMN last_broadcast TEXT DEFAULT NULL;
+      END IF;
+    END $$;
+  `);
+  
   console.log(`✅ Tables created/verified in ${Date.now() - tableStart}ms`);
   
   const tableTime = ((Date.now() - tableStart) / 1000).toFixed(2);
