@@ -160,6 +160,7 @@ class OperatorManager {
    * Execute: Give item to player
    */
   async giveItem(targetPlayerId, channelName, itemId, quantity = 1, db) {
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -171,8 +172,8 @@ class OperatorManager {
     }
 
     await db.query(
-      'UPDATE player_progress SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
-      [JSON.stringify(inventory), targetPlayerId, channelName]
+      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
+      [JSON.stringify(inventory), targetPlayerId]
     );
 
     return {
@@ -185,14 +186,15 @@ class OperatorManager {
    * Execute: Give gold to player
    */
   async giveGold(targetPlayerId, channelName, amount, db) {
+    const table = this.getTableName(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
     const newGold = (progress.gold || 0) + amount;
 
     await db.query(
-      'UPDATE player_progress SET gold = $1 WHERE player_id = $2 AND channel_name = $3',
-      [newGold, targetPlayerId, channelName]
+      `UPDATE ${table} SET gold = $1 WHERE player_id = $2`,
+      [newGold, targetPlayerId]
     );
 
     return {
@@ -205,6 +207,7 @@ class OperatorManager {
    * Execute: Give experience to player
    */
   async giveExp(targetPlayerId, channelName, amount, db) {
+    const table = this.getTableName(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -219,7 +222,7 @@ class OperatorManager {
     }
 
     await db.query(
-      'UPDATE player_progress SET xp = $1, level = $2, xp_to_next = $3 WHERE player_id = $4 AND channel_name = $5',
+      'UPDATE ${table} SET xp = $1, level = $2, xp_to_next = $3 WHERE player_id = $4 AND channel_name = $5',
       [newXp, newLevel, xpToNext, targetPlayerId, channelName]
     );
 
@@ -233,12 +236,13 @@ class OperatorManager {
    * Execute: Heal player to full HP
    */
   async healPlayer(targetPlayerId, channelName, db) {
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
     await db.query(
-      'UPDATE player_progress SET hp = max_hp WHERE player_id = $1 AND channel_name = $2',
-      [targetPlayerId, channelName]
+      `UPDATE ${table} SET hp = max_hp WHERE player_id = $1`,
+      [targetPlayerId]
     );
 
     return {
@@ -251,6 +255,7 @@ class OperatorManager {
    * Execute: Remove item from player
    */
   async removeItem(targetPlayerId, channelName, itemId, quantity = 1, db) {
+    const table = this.getTableName(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -267,7 +272,7 @@ class OperatorManager {
     }
 
     await db.query(
-      'UPDATE player_progress SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
+      'UPDATE ${table} SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
       [JSON.stringify(inventory), targetPlayerId, channelName]
     );
 
@@ -281,13 +286,14 @@ class OperatorManager {
    * Execute: Remove gold from player
    */
   async removeGold(targetPlayerId, channelName, amount, db) {
+    const table = this.getTableName(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
     const newGold = Math.max(0, (progress.gold || 0) - amount);
 
     await db.query(
-      'UPDATE player_progress SET gold = $1 WHERE player_id = $2 AND channel_name = $3',
+      'UPDATE ${table} SET gold = $1 WHERE player_id = $2 AND channel_name = $3',
       [newGold, targetPlayerId, channelName]
     );
 
@@ -308,7 +314,7 @@ class OperatorManager {
     const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
 
     await db.query(
-      'UPDATE player_progress SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3 AND channel_name = $4',
+      'UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3',
       [newLevel, xpToNext, targetPlayerId, channelName]
     );
 
@@ -329,7 +335,7 @@ class OperatorManager {
     const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
 
     await db.query(
-      'UPDATE player_progress SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3 AND channel_name = $4',
+      'UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3',
       [newLevel, xpToNext, targetPlayerId, channelName]
     );
 
@@ -347,7 +353,7 @@ class OperatorManager {
     if (!progress) throw new Error('Player not found');
 
     await db.query(
-      'UPDATE player_progress SET location = $1, in_combat = false, combat = NULL WHERE player_id = $2 AND channel_name = $3',
+      'UPDATE ${table} SET location = $1, in_combat = false, combat = NULL WHERE player_id = $2 AND channel_name = $3',
       [location, targetPlayerId, channelName]
     );
 
@@ -365,7 +371,7 @@ class OperatorManager {
     if (!progress) throw new Error('Player not found');
 
     await db.query(
-      'UPDATE player_progress SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
+      'UPDATE ${table} SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
       [JSON.stringify([]), targetPlayerId, channelName]
     );
 
@@ -461,7 +467,7 @@ class OperatorManager {
     };
 
     await db.query(
-      'UPDATE player_progress SET pending = $1 WHERE player_id = $2 AND channel_name = $3',
+      'UPDATE ${table} SET pending = $1 WHERE player_id = $2 AND channel_name = $3',
       [JSON.stringify(pending), targetPlayerId, channelName]
     );
 
@@ -488,7 +494,7 @@ class OperatorManager {
     activeQuests = activeQuests.filter(q => q.id !== questId);
 
     await db.query(
-      'UPDATE player_progress SET active_quests = $1, completed_quests = $2 WHERE player_id = $3 AND channel_name = $4',
+      'UPDATE ${table} SET active_quests = $1, completed_quests = $2 WHERE player_id = $3',
       [JSON.stringify(activeQuests), JSON.stringify(completedQuests), targetPlayerId, channelName]
     );
 
@@ -547,7 +553,7 @@ class OperatorManager {
     params.push(targetPlayerId, channelName);
     
     await db.query(
-      `UPDATE player_progress SET ${updates.join(', ')} WHERE player_id = $${paramIndex++} AND channel_name = $${paramIndex++}`,
+      `UPDATE ${table} SET ${updates.join(', ')} WHERE player_id = $${paramIndex++} AND channel_name = $${paramIndex++}`,
       params
     );
 
@@ -569,7 +575,7 @@ class OperatorManager {
     inventory.push(...GAME_CONSTANTS.COMMON_ITEMS);
 
     await db.query(
-      'UPDATE player_progress SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
+      'UPDATE ${table} SET inventory = $1 WHERE player_id = $2 AND channel_name = $3',
       [JSON.stringify(inventory), targetPlayerId, channelName]
     );
 
@@ -592,7 +598,7 @@ class OperatorManager {
       unlockedAchievements.push(achievementId);
       
       await db.query(
-        'UPDATE player_progress SET unlocked_achievements = $1 WHERE player_id = $2 AND channel_name = $3',
+        'UPDATE ${table} SET unlocked_achievements = $1 WHERE player_id = $2 AND channel_name = $3',
         [JSON.stringify(unlockedAchievements), targetPlayerId, channelName]
       );
       
@@ -993,3 +999,5 @@ class OperatorManager {
 }
 
 module.exports = OperatorManager;
+
+
