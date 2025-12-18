@@ -571,7 +571,13 @@ class OperatorManager {
     if (!progress) throw new Error('Player not found');
 
     // Use common items from constants
-    const inventory = JSON.parse(progress.inventory || '[]');
+    let inventory;
+    try {
+      inventory = JSON.parse(progress.inventory || '[]');
+    } catch (e) {
+      // Handle legacy comma-separated format
+      inventory = progress.inventory ? progress.inventory.split(',').filter(Boolean) : [];
+    }
     inventory.push(...GAME_CONSTANTS.COMMON_ITEMS);
 
     await db.query(
