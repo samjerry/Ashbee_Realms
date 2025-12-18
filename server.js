@@ -800,6 +800,12 @@ app.post('/api/player/progress',
       };
       
       await db.savePlayerProgress(user.id, channelName.toLowerCase(), mergedData);
+      
+      // Emit update
+      if (mergedData.name) {
+        socketHandler.emitPlayerUpdate(mergedData.name, channelName.toLowerCase(), mergedData);
+      }
+      
       res.json({ status: 'ok', message: 'Progress saved' });
     } catch (err) {
       console.error('Save progress error:', err);
@@ -945,6 +951,11 @@ app.get('/api/player/roles', async (req, res) => {
       playerData.roles = roles;
       await db.savePlayerProgress(user.id, channel, playerData);
       console.log(`✅ Persisted roles for ${displayName}:`, roles);
+      
+      // Emit update
+      if (playerData.name) {
+        socketHandler.emitPlayerUpdate(playerData.name, channel, { roles });
+      }
     }
     
     // Get the highest priority role as primary
@@ -1763,6 +1774,11 @@ app.post('/api/player/theme',
       playerData.theme = theme;
       await db.savePlayerProgress(user.id, channelName, playerData);
       
+      // Emit update
+      if (playerData.name) {
+        socketHandler.emitPlayerUpdate(playerData.name, channelName, { theme });
+      }
+      
       res.json({ success: true, theme });
     } catch (error) {
       console.error('Error updating theme:', error);
@@ -1801,6 +1817,11 @@ app.post('/api/action', async (req, res) => {
     
     // Save updated progress for this channel
     await db.savePlayerProgress(user.id, channelName, progress);
+    
+    // Emit update
+    if (progress.name) {
+      socketHandler.emitPlayerUpdate(progress.name, channelName, progress);
+    }
     
     return res.json({ 
       status: 'ok', 
@@ -2152,6 +2173,9 @@ async function handleCombatEnd(session, result) {
     // Save updated character
     const playerData = character.toObject();
     await db.savePlayerProgress(playerId, channelName, playerData);
+    
+    // Emit update for victory
+    socketHandler.emitPlayerUpdate(character.name, channelName, playerData);
   }
 
   if (result.defeat) {
@@ -2164,6 +2188,9 @@ async function handleCombatEnd(session, result) {
 
     const playerData = character.toObject();
     await db.savePlayerProgress(playerId, channelName, playerData);
+    
+    // Emit update for defeat
+    socketHandler.emitPlayerUpdate(character.name, channelName, playerData);
   }
 
   // Clear combat from session
@@ -2410,6 +2437,15 @@ app.post('/api/progression/add-xp',
 
     // Save updated character
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+    
+    // Emit update
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), {
+      level: character.level,
+      xp: character.xp,
+      xpToNext: character.xpToNext,
+      hp: character.hp,
+      maxHp: character.maxHp
+    });
 
     res.json({
       success: true,
@@ -3920,6 +3956,12 @@ app.post('/api/shop/buy', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit update
+      socketHandler.emitPlayerUpdate(character.name, channel, {
+        gold: character.gold,
+        inventory: character.inventory.getSummary()
+      });
     }
 
     res.json(result);
@@ -3950,6 +3992,12 @@ app.post('/api/shop/sell', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit update
+      socketHandler.emitPlayerUpdate(character.name, channel, {
+        gold: character.gold,
+        inventory: character.inventory.getSummary()
+      });
     }
 
     res.json(result);
