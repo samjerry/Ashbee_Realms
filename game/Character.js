@@ -508,6 +508,38 @@ class Character {
   }
 
   /**
+   * Export character data for frontend (camelCase fields)
+   * @returns {Object} Character data formatted for frontend
+   */
+  toFrontend() {
+    return {
+      name: this.name,
+      classType: this.classType,
+      level: this.level,
+      xp: this.xp,
+      xpToNext: this.xpToNext,
+      hp: this.hp,
+      maxHp: this.maxHp,
+      gold: this.gold,
+      location: this.location,
+      skillPoints: this.skillPoints,
+      legacyPoints: this.legacyPoints,
+      achievementPoints: this.achievementPoints,
+      inCombat: this.inCombat,
+      theme: this.theme,
+      roles: this.roles,
+      nameColor: this.nameColor,
+      selectedRoleBadge: this.selectedRoleBadge,
+      activeQuests: this.activeQuests,
+      completedQuests: this.completedQuests,
+      unlockedAchievements: this.unlockedAchievements,
+      activeTitle: this.activeTitle,
+      reputation: this.reputation,
+      craftingXP: this.craftingXP
+    };
+  }
+
+  /**
    * Create a new character from a class
    * @param {string} playerName - Player's display name
    * @param {string} classType - Class type (warrior, mage, rogue, cleric, ranger)

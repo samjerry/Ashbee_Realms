@@ -27,6 +27,41 @@ const DEFAULT_GAME_STATE = {
   game_mode: 'softcore'
 };
 
+/**
+ * Helper function to convert raw database data to frontend format (camelCase)
+ * @param {Object} rawData - Raw database data with snake_case fields
+ * @returns {Object} Frontend-formatted data with camelCase fields
+ */
+function convertToFrontendFormat(rawData) {
+  if (!rawData) return null;
+  
+  return {
+    name: rawData.name,
+    classType: rawData.type || rawData.classType,
+    level: rawData.level,
+    xp: rawData.xp,
+    xpToNext: rawData.xp_to_next || rawData.xpToNext,
+    hp: rawData.hp,
+    maxHp: rawData.max_hp || rawData.maxHp,
+    gold: rawData.gold,
+    location: rawData.location,
+    skillPoints: rawData.skill_points || rawData.skillPoints,
+    legacyPoints: rawData.legacy_points || rawData.legacyPoints,
+    achievementPoints: rawData.achievement_points || rawData.achievementPoints,
+    inCombat: rawData.in_combat || rawData.inCombat,
+    theme: rawData.theme,
+    roles: rawData.roles,
+    nameColor: rawData.nameColor || rawData.name_color,
+    selectedRoleBadge: rawData.selectedRoleBadge || rawData.selected_role_badge,
+    activeQuests: rawData.active_quests || rawData.activeQuests,
+    completedQuests: rawData.completed_quests || rawData.completedQuests,
+    unlockedAchievements: rawData.unlocked_achievements || rawData.unlockedAchievements,
+    activeTitle: rawData.active_title || rawData.activeTitle,
+    reputation: rawData.reputation,
+    craftingXP: rawData.crafting_xp || rawData.craftingXP
+  };
+}
+
 const app = express();
 
 // Security headers with helmet
@@ -801,9 +836,9 @@ app.post('/api/player/progress',
       
       await db.savePlayerProgress(user.id, channelName.toLowerCase(), mergedData);
       
-      // Emit update
+      // Emit update with properly formatted data
       if (mergedData.name) {
-        socketHandler.emitPlayerUpdate(mergedData.name, channelName.toLowerCase(), mergedData);
+        socketHandler.emitPlayerUpdate(mergedData.name, channelName.toLowerCase(), convertToFrontendFormat(mergedData));
       }
       
       res.json({ status: 'ok', message: 'Progress saved' });
@@ -1818,9 +1853,9 @@ app.post('/api/action', async (req, res) => {
     // Save updated progress for this channel
     await db.savePlayerProgress(user.id, channelName, progress);
     
-    // Emit update
+    // Emit update with properly formatted data
     if (progress.name) {
-      socketHandler.emitPlayerUpdate(progress.name, channelName, progress);
+      socketHandler.emitPlayerUpdate(progress.name, channelName, convertToFrontendFormat(progress));
     }
     
     return res.json({ 
@@ -2174,8 +2209,8 @@ async function handleCombatEnd(session, result) {
     const playerData = character.toObject();
     await db.savePlayerProgress(playerId, channelName, playerData);
     
-    // Emit update for victory
-    socketHandler.emitPlayerUpdate(character.name, channelName, playerData);
+    // Emit update for victory using frontend format
+    socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
   }
 
   if (result.defeat) {
@@ -2189,8 +2224,8 @@ async function handleCombatEnd(session, result) {
     const playerData = character.toObject();
     await db.savePlayerProgress(playerId, channelName, playerData);
     
-    // Emit update for defeat
-    socketHandler.emitPlayerUpdate(character.name, channelName, playerData);
+    // Emit update for defeat using frontend format
+    socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
   }
 
   // Clear combat from session
@@ -6550,16 +6585,14 @@ app.post('/api/operator/execute',
             ? sanitizedParams.playerId 
             : await operatorMgr.getPlayerIdFromName(sanitizedParams.playerId, req.channelName, db);
           
-          // Load fresh player data
-          const updatedPlayer = await db.loadPlayerProgress(targetPlayerId, req.channelName);
-          if (updatedPlayer) {
-            // Get the Twitch username from the session cache or by querying Twitch API
-            // For now, use the character name as the room identifier
-            // The frontend joins with player.username (character name), so this should work
-            const roomIdentifier = updatedPlayer.name;
+          // Load fresh player data using getCharacter to get proper camelCase fields
+          const character = await db.getCharacter(targetPlayerId, req.channelName);
+          if (character) {
+            // Use character name as room identifier (matches frontend socket join)
+            const roomIdentifier = character.name;
             
-            // Emit to the affected player's room
-            socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, updatedPlayer);
+            // Emit properly formatted player data to the affected player's room
+            socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, character.toFrontend());
             console.log(`[OPERATOR] Emitted update to room ${roomIdentifier}_${req.channelName} after ${sanitizedCommand}`);
           }
         } catch (err) {
