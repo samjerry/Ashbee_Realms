@@ -1770,7 +1770,7 @@ app.post('/api/player/role-display',
       // Emit websocket event for live update with complete player data
       const character = await db.getCharacter(user.id, channelName);
       if (character) {
-        socketHandler.emitPlayerUpdate(user.login || user.displayName, channelName, character.toFrontend());
+        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
       }
       
       res.json({ success: true, nameColor: validatedColor, selectedRoleBadge: selectedRoleBadge.toLowerCase() });
