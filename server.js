@@ -1426,7 +1426,7 @@ app.post('/api/player/create',
     const user = req.session.user;
     if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    const { channel, classType, nameColor } = req.body;
+    const { channel, classType, nameColor, selectedRoleBadge } = req.body;
     if (!channel || !classType) {
       return res.status(400).json({ error: 'Channel and classType required' });
     }
@@ -1442,6 +1442,12 @@ app.post('/api/player/create',
       if (!validatedColor) {
         return res.status(400).json({ error: 'Invalid color code format' });
       }
+    }
+    
+    // Validate selectedRoleBadge if provided
+    let validatedRoleBadge = null;
+    if (selectedRoleBadge && typeof selectedRoleBadge === 'string') {
+      validatedRoleBadge = selectedRoleBadge.toLowerCase();
     }
     
     try {
@@ -1520,6 +1526,17 @@ app.post('/api/player/create',
       // Apply roles to character
       character.roles = userRoles;
       console.log(`🎭 Assigned roles to ${characterName}:`, userRoles);
+      
+      // Set selectedRoleBadge - use validated one from frontend if provided and user has that role,
+      // otherwise use highest priority role
+      if (validatedRoleBadge && userRoles.includes(validatedRoleBadge)) {
+        character.selectedRoleBadge = validatedRoleBadge;
+        console.log(`🎯 Set selectedRoleBadge from frontend: ${validatedRoleBadge}`);
+      } else {
+        const primaryRole = db.ROLE_HIERARCHY.find(r => userRoles.includes(r)) || 'viewer';
+        character.selectedRoleBadge = primaryRole;
+        console.log(`🎯 Set selectedRoleBadge to highest priority role: ${primaryRole}`);
+      }
       
       // Save character with roles and color
       await db.saveCharacter(user.id, channelName, character);
