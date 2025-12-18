@@ -1197,6 +1197,9 @@ app.post('/api/player/equip',
       
       if (result.success) {
         await db.saveCharacter(user.id, channelName, character);
+        
+        // Emit websocket event for live update (equipment/stats changes)
+        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
       }
       
       res.json(result);
@@ -1236,6 +1239,9 @@ app.post('/api/player/unequip',
       
       if (result.success) {
         await db.saveCharacter(user.id, channelName, character);
+        
+        // Emit websocket event for live update (equipment/stats changes)
+        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
       }
       
       res.json(result);
@@ -1761,11 +1767,11 @@ app.post('/api/player/role-display',
       playerData.selectedRoleBadge = selectedRoleBadge.toLowerCase();
       await db.savePlayerProgress(user.id, channelName, playerData);
       
-      // Emit websocket event for live update
-      socketHandler.emitPlayerUpdate(user.login || user.displayName, channelName, {
-        nameColor: validatedColor,
-        selectedRoleBadge: selectedRoleBadge.toLowerCase()
-      });
+      // Emit websocket event for live update with complete player data
+      const character = await db.getCharacter(user.id, channelName);
+      if (character) {
+        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+      }
       
       res.json({ success: true, nameColor: validatedColor, selectedRoleBadge: selectedRoleBadge.toLowerCase() });
     } catch (error) {
@@ -3755,6 +3761,9 @@ app.post('/api/quests/complete', async (req, res) => {
 
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+    // Emit websocket event for live update (quest rewards: gold, xp, etc.)
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+
     res.json({
       success: true,
       quest: result.quest,
@@ -3992,11 +4001,8 @@ app.post('/api/shop/buy', async (req, res) => {
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
       
-      // Emit update
-      socketHandler.emitPlayerUpdate(character.name, channel, {
-        gold: character.gold,
-        inventory: character.inventory.getSummary()
-      });
+      // Emit update with complete player data
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
     }
 
     res.json(result);
@@ -4028,11 +4034,8 @@ app.post('/api/shop/sell', async (req, res) => {
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
       
-      // Emit update
-      socketHandler.emitPlayerUpdate(character.name, channel, {
-        gold: character.gold,
-        inventory: character.inventory.getSummary()
-      });
+      // Emit update with complete player data
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
     }
 
     res.json(result);
@@ -4063,6 +4066,9 @@ app.post('/api/consumable/use', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit websocket event for live update (hp/inventory changes)
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
     }
 
     res.json(result);
