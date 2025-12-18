@@ -6505,9 +6505,14 @@ app.post('/api/operator/execute',
           // Load fresh player data
           const updatedPlayer = await db.loadPlayerProgress(targetPlayerId, req.channelName);
           if (updatedPlayer) {
-            // Emit to the affected player
-            socketHandler.emitPlayerUpdate(updatedPlayer.name, req.channelName, updatedPlayer);
-            console.log(`[OPERATOR] Emitted update to ${updatedPlayer.name} after ${sanitizedCommand}`);
+            // Get the Twitch username from the session cache or by querying Twitch API
+            // For now, use the character name as the room identifier
+            // The frontend joins with player.username (character name), so this should work
+            const roomIdentifier = updatedPlayer.name;
+            
+            // Emit to the affected player's room
+            socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, updatedPlayer);
+            console.log(`[OPERATOR] Emitted update to room ${roomIdentifier}_${req.channelName} after ${sanitizedCommand}`);
           }
         } catch (err) {
           console.error('[OPERATOR] Failed to emit player update:', err);

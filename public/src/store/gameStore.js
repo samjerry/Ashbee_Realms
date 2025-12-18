@@ -367,6 +367,7 @@ const useGameStore = create((set, get) => ({
     
     // Player updates
     socket.on('player:update', (data) => {
+      console.log('👤 Player update received:', data);
       set((state) => ({ player: { ...state.player, ...data } }));
     });
     
