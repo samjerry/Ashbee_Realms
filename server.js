@@ -6487,6 +6487,60 @@ app.post('/api/operator/execute',
 
       console.log(`[OPERATOR] ${req.session.user.displayName} executed ${sanitizedCommand} in ${req.channelName}`);
 
+      // Emit websocket update for player-affecting commands
+      const playerCommands = [
+        'giveItem', 'giveGold', 'giveExp', 'healPlayer', 'removeItem', 
+        'removeGold', 'removeLevel', 'setPlayerLevel', 'teleportPlayer',
+        'clearInventory', 'resetQuest', 'setPlayerStats', 'giveAllItems',
+        'unlockAchievement', 'wipeProgress', 'grantOperator', 'revokeOperator'
+      ];
+
+      if (playerCommands.includes(sanitizedCommand) && sanitizedParams.playerId) {
+        try {
+          // Resolve player name to ID if needed
+          const targetPlayerId = sanitizedParams.playerId.startsWith('twitch-') 
+            ? sanitizedParams.playerId 
+            : await operatorMgr.getPlayerIdFromName(sanitizedParams.playerId, req.channelName, db);
+          
+          // Load fresh player data
+          const updatedPlayer = await db.loadPlayerProgress(targetPlayerId, req.channelName);
+          if (updatedPlayer) {
+            // Emit to the affected player
+            socketHandler.emitPlayerUpdate(updatedPlayer.name, req.channelName, updatedPlayer);
+            console.log(`[OPERATOR] Emitted update to ${updatedPlayer.name} after ${sanitizedCommand}`);
+          }
+        } catch (err) {
+          console.error('[OPERATOR] Failed to emit player update:', err);
+        }
+      }
+
+      // Emit global state updates for world commands
+      const worldCommands = ['changeWeather', 'changeTime', 'changeSeason', 'forceEvent', 'systemBroadcast', 'maintenanceMode'];
+      if (worldCommands.includes(sanitizedCommand)) {
+        try {
+          // Load game state and broadcast to all players in channel
+          const gameStateResult = await db.query(
+            'SELECT * FROM game_state WHERE channel_name = $1',
+            [req.channelName.toLowerCase()]
+          );
+          
+          if (gameStateResult.rows.length > 0) {
+            const gameState = gameStateResult.rows[0];
+            socketHandler.emitToChannel(req.channelName, 'gameState:update', {
+              weather: gameState.weather,
+              timeOfDay: gameState.time_of_day,
+              season: gameState.season,
+              activeEvent: gameState.active_event,
+              lastBroadcast: gameState.last_broadcast,
+              maintenanceMode: gameState.maintenance_mode
+            });
+            console.log(`[OPERATOR] Emitted game state update for ${sanitizedCommand}`);
+          }
+        } catch (err) {
+          console.error('[OPERATOR] Failed to emit game state update:', err);
+        }
+      }
+
       res.json(result);
     } catch (error) {
       console.error('[OPERATOR EXECUTE ERROR]', error);

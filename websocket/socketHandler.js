@@ -20,7 +20,11 @@ function initializeWebSocket(server) {
       const { player, channel } = data;
       const roomId = `${player}_${channel}`;
       socket.join(roomId);
-      console.log(`[WebSocket] ${player} joined room ${roomId}`);
+      
+      // Also join channel-wide room for global broadcasts
+      socket.join(`channel_${channel}`);
+      
+      console.log(`[WebSocket] ${player} joined room ${roomId} and channel_${channel}`);
       
       // Send current game state
       socket.emit('connected', { message: 'Connected to Ashbee Realms' });
@@ -31,7 +35,8 @@ function initializeWebSocket(server) {
       const { player, channel } = data;
       const roomId = `${player}_${channel}`;
       socket.leave(roomId);
-      console.log(`[WebSocket] ${player} left room ${roomId}`);
+      socket.leave(`channel_${channel}`);
+      console.log(`[WebSocket] ${player} left room ${roomId} and channel_${channel}`);
     });
     
     socket.on('disconnect', () => {
@@ -213,6 +218,13 @@ function getRoomCount(player, channel) {
   return room ? room.size : 0;
 }
 
+// Emit to all players in a channel
+function emitToChannel(channel, event, data) {
+  if (!io) return;
+  // Emit to channel-wide room (all players subscribed to this channel)
+  io.to(`channel_${channel}`).emit(event, data);
+}
+
 module.exports = {
   initializeWebSocket,
   emitPlayerUpdate,
@@ -236,6 +248,7 @@ module.exports = {
   emitFactionUpdate,
   emitStatusEffect,
   emitSeasonalEvent,
+  emitToChannel,
   getConnectedCount,
   getRoomCount
 };

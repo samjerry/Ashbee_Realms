@@ -10,6 +10,16 @@ const useGameStore = create((set, get) => ({
   isLoading: true,
   error: null,
   
+  // Game state (world)
+  gameState: {
+    weather: 'Clear',
+    timeOfDay: 'Day',
+    season: 'Spring',
+    activeEvent: null,
+    lastBroadcast: null,
+    maintenanceMode: false
+  },
+  
   // UI state
   activeTab: 'character',
   showCombat: false,
@@ -481,6 +491,18 @@ const useGameStore = create((set, get) => ({
     socket.on('season:event', (event) => {
       console.log('🎃 Seasonal event:', event);
       // TODO: Show seasonal event notification
+    });
+    
+    // Game state updates (from operator commands)
+    socket.on('gameState:update', (gameState) => {
+      console.log('🌍 Game state updated:', gameState);
+      set({ gameState });
+      
+      // Show notification if there's a broadcast
+      if (gameState.lastBroadcast) {
+        console.log('📢 System Broadcast:', gameState.lastBroadcast);
+        // TODO: Show toast notification with broadcast message
+      }
     });
   }
 }));
