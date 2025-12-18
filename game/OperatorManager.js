@@ -186,7 +186,7 @@ class OperatorManager {
    * Execute: Give gold to player
    */
   async giveGold(targetPlayerId, channelName, amount, db) {
-    const table = this.getTableName(channelName);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -207,7 +207,7 @@ class OperatorManager {
    * Execute: Give experience to player
    */
   async giveExp(targetPlayerId, channelName, amount, db) {
-    const table = this.getTableName(channelName);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -255,7 +255,7 @@ class OperatorManager {
    * Execute: Remove item from player
    */
   async removeItem(targetPlayerId, channelName, itemId, quantity = 1, db) {
-    const table = this.getTableName(channelName);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
@@ -286,7 +286,7 @@ class OperatorManager {
    * Execute: Remove gold from player
    */
   async removeGold(targetPlayerId, channelName, amount, db) {
-    const table = this.getTableName(channelName);
+    const table = db.getPlayerTable(channelName);
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
