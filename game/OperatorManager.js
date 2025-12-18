@@ -132,18 +132,27 @@ class OperatorManager {
   getAvailableCommands(permissionLevel) {
     const commands = [];
 
+    console.log(`[OperatorManager] Getting available commands for permission level: ${permissionLevel}`);
+    console.log(`[OperatorManager] MODERATOR level = ${this.PERMISSION_LEVELS.MODERATOR}`);
+    console.log(`[OperatorManager] STREAMER level = ${this.PERMISSION_LEVELS.STREAMER}`);
+    console.log(`[OperatorManager] CREATOR level = ${this.PERMISSION_LEVELS.CREATOR}`);
+
     if (permissionLevel >= this.PERMISSION_LEVELS.MODERATOR) {
+      console.log(`[OperatorManager] Adding MODERATOR commands:`, this.COMMANDS.MODERATOR);
       commands.push(...this.COMMANDS.MODERATOR);
     }
 
     if (permissionLevel >= this.PERMISSION_LEVELS.STREAMER) {
+      console.log(`[OperatorManager] Adding STREAMER commands:`, this.COMMANDS.STREAMER);
       commands.push(...this.COMMANDS.STREAMER);
     }
 
     if (permissionLevel >= this.PERMISSION_LEVELS.CREATOR) {
+      console.log(`[OperatorManager] Adding CREATOR commands:`, this.COMMANDS.CREATOR);
       commands.push(...this.COMMANDS.CREATOR);
     }
 
+    console.log(`[OperatorManager] Total commands available: ${commands.length}`, commands);
     return commands;
   }
 
