@@ -924,17 +924,27 @@ app.get('/api/player/roles', async (req, res) => {
     // Load player data to get their roles array
     const playerData = await db.loadPlayerProgress(user.id, channel);
     let roles = playerData?.roles || ['viewer'];
+    let rolesUpdated = false;
     
     // Check if this is MarrowOfAlbion (game creator) - add creator role if not present
     if (displayName.toLowerCase() === 'marrowofalbion' || displayName.toLowerCase() === 'marrowofalb1on') {
       if (!roles.includes('creator')) {
         roles = ['creator', ...roles.filter(r => r !== 'viewer')];
+        rolesUpdated = true;
       }
     }
     
     // Check if user is a beta tester - add tester role if not present
     if (db.isBetaTester(displayName) && !roles.includes('tester')) {
       roles = [...roles, 'tester'];
+      rolesUpdated = true;
+    }
+    
+    // Persist role changes to database
+    if (rolesUpdated && playerData) {
+      playerData.roles = roles;
+      await db.savePlayerProgress(user.id, channel, playerData);
+      console.log(`✅ Persisted roles for ${displayName}:`, roles);
     }
     
     // Get the highest priority role as primary
@@ -1643,8 +1653,32 @@ app.post('/api/player/role-display',
         return res.status(404).json({ error: 'Character not found' });
       }
       
+      // Sync roles (add creator/tester if applicable)
+      let roles = playerData.roles || ['viewer'];
+      const displayName = user.displayName || user.display_name || 'Adventurer';
+      let rolesUpdated = false;
+      
+      // Check if this is MarrowOfAlbion (game creator) - add creator role if not present
+      if (displayName.toLowerCase() === 'marrowofalbion' || displayName.toLowerCase() === 'marrowofalb1on') {
+        if (!roles.includes('creator')) {
+          roles = ['creator', ...roles.filter(r => r !== 'viewer')];
+          rolesUpdated = true;
+        }
+      }
+      
+      // Check if user is a beta tester - add tester role if not present
+      if (db.isBetaTester(displayName) && !roles.includes('tester')) {
+        roles = [...roles, 'tester'];
+        rolesUpdated = true;
+      }
+      
+      // Persist role changes
+      if (rolesUpdated) {
+        playerData.roles = roles;
+        console.log(`✅ Synced roles for ${displayName}:`, roles);
+      }
+      
       // Validate that the color and badge match one of their roles
-      const roles = playerData.roles || ['viewer'];
       const isCreator = roles.includes('creator');
       const validRoles = roles.map(r => r.toLowerCase());
       const validColors = roles.map(r => db.ROLE_COLORS[r]);
