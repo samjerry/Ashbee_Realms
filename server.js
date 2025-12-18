@@ -6025,8 +6025,10 @@ async function checkOperatorAccess(req, res, next) {
     return res.status(401).json({ error: 'Not logged in' });
   }
 
-  const { channel } = req.body || req.query;
+  // Get channel from either body (POST) or query (GET)
+  const channel = req.body?.channel || req.query?.channel;
   if (!channel) {
+    console.error('[OPERATOR] No channel provided. Body:', req.body, 'Query:', req.query);
     return res.status(400).json({ error: 'Channel parameter required' });
   }
 
