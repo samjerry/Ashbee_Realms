@@ -722,7 +722,10 @@ app.get('/api/player/progress', async (req, res) => {
       progress = await db.initializeNewPlayer(user.id, channelName.toLowerCase(), user.displayName, "Town Square", 100);
     }
 
-    res.json({ progress, channel: channelName });
+    // ADD channel to the progress object before returning (for backward compatibility)
+    progress.channel = channelName;
+
+    res.json({ progress, channel: channelName }); // Keep both for backward compatibility
   } catch (err) {
     console.error('Load progress error:', err);
     res.status(500).json({ error: 'Failed to load progress' });
