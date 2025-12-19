@@ -4308,8 +4308,7 @@
         ],
         "primary_type": "undead",
         "tags": [
-          "draining",
-          "undead"
+          "draining"
         ]
       },
       {
@@ -4417,9 +4416,7 @@
           "undead"
         ],
         "primary_type": "undead",
-        "tags": [
-          "undead"
-        ]
+        "tags": []
       },
       {
         "id": "gravekeeper",
@@ -4479,8 +4476,7 @@
         "primary_type": "undead",
         "tags": [
           "regenerating",
-          "ancient",
-          "undead"
+          "ancient"
         ]
       },
       {
@@ -4711,9 +4707,7 @@
           "undead"
         ],
         "primary_type": "undead",
-        "tags": [
-          "undead"
-        ]
+        "tags": []
       },
       {
         "id": "vengeful_spirit",
@@ -4820,9 +4814,7 @@
           "undead"
         ],
         "primary_type": "undead",
-        "tags": [
-          "undead"
-        ]
+        "tags": []
       }
     ],
     "rare": [
@@ -7876,8 +7868,7 @@
         "primary_type": "undead",
         "tags": [
           "regenerating",
-          "draining",
-          "undead"
+          "draining"
         ]
       },
       {
@@ -8120,8 +8111,7 @@
         ],
         "primary_type": "undead",
         "tags": [
-          "ice",
-          "undead"
+          "ice"
         ]
       },
       {
@@ -11279,8 +11269,7 @@
         "tags": [
           "ice",
           "regenerating",
-          "summoner",
-          "undead"
+          "summoner"
         ]
       },
       {
@@ -11551,8 +11540,7 @@
         "primary_type": "undead",
         "tags": [
           "ice",
-          "magical",
-          "undead"
+          "magical"
         ]
       },
       {
@@ -11751,7 +11739,6 @@
         "primary_type": "undead",
         "tags": [
           "regenerating",
-          "undead",
           "boss"
         ]
       }
@@ -14845,8 +14832,7 @@
         ],
         "primary_type": "undead",
         "tags": [
-          "magical",
-          "undead"
+          "magical"
         ]
       },
       {
@@ -15323,7 +15309,6 @@
         "tags": [
           "ice",
           "ancient",
-          "undead",
           "boss"
         ]
       },
@@ -15456,8 +15441,7 @@
         "primary_type": "undead",
         "tags": [
           "magical",
-          "draining",
-          "undead"
+          "draining"
         ]
       }
     ],
@@ -24138,8 +24122,7 @@
         ],
         "primary_type": "undead",
         "tags": [
-          "draining",
-          "undead"
+          "draining"
         ]
       },
       {
@@ -24209,9 +24192,7 @@
           "undead"
         ],
         "primary_type": "undead",
-        "tags": [
-          "undead"
-        ]
+        "tags": []
       },
       {
         "id": "infection_elemental",
@@ -24637,9 +24618,7 @@
           "undead"
         ],
         "primary_type": "undead",
-        "tags": [
-          "undead"
-        ]
+        "tags": []
       },
       {
         "id": "necromancer_supreme",

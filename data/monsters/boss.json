@@ -4139,8 +4139,7 @@
       ],
       "primary_type": "undead",
       "tags": [
-        "draining",
-        "undead"
+        "draining"
       ],
       "rarity": "boss",
       "description": "An undead dragon of terrible power",
@@ -4171,9 +4170,7 @@
         "undead"
       ],
       "primary_type": "undead",
-      "tags": [
-        "undead"
-      ],
+      "tags": [],
       "rarity": "boss",
       "description": "A massive undead abomination of decay",
       "biomes": [],
@@ -4353,9 +4350,7 @@
         "undead"
       ],
       "primary_type": "undead",
-      "tags": [
-        "undead"
-      ],
+      "tags": [],
       "rarity": "boss",
       "description": "An undead sorcerer commanding disease",
       "biomes": [],

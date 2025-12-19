@@ -1644,8 +1644,7 @@
       "primary_type": "undead",
       "tags": [
         "regenerating",
-        "draining",
-        "undead"
+        "draining"
       ],
       "rarity": "rare",
       "description": "An elegant undead noble with hypnotic crimson eyes",
@@ -1786,8 +1785,7 @@
       ],
       "primary_type": "undead",
       "tags": [
-        "ice",
-        "undead"
+        "ice"
       ],
       "rarity": "rare",
       "description": "An undead spirit of eternal winter",

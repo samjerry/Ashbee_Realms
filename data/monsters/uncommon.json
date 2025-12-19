@@ -1429,8 +1429,7 @@
       ],
       "primary_type": "undead",
       "tags": [
-        "draining",
-        "undead"
+        "draining"
       ],
       "rarity": "uncommon",
       "description": "A flesh-eating undead with an insatiable hunger",
@@ -1496,9 +1495,7 @@
         "undead"
       ],
       "primary_type": "undead",
-      "tags": [
-        "undead"
-      ],
+      "tags": [],
       "rarity": "uncommon",
       "description": "An undead spellcaster wielding dark magic",
       "biomes": [
@@ -1531,8 +1528,7 @@
       "primary_type": "undead",
       "tags": [
         "regenerating",
-        "ancient",
-        "undead"
+        "ancient"
       ],
       "rarity": "uncommon",
       "description": "An undead guardian bound to protect ancient tombs",
@@ -1662,9 +1658,7 @@
         "undead"
       ],
       "primary_type": "undead",
-      "tags": [
-        "undead"
-      ],
+      "tags": [],
       "rarity": "uncommon",
       "description": "An undead host of virulent disease",
       "biomes": [
@@ -1726,9 +1720,7 @@
         "undead"
       ],
       "primary_type": "undead",
-      "tags": [
-        "undead"
-      ],
+      "tags": [],
       "rarity": "uncommon",
       "description": "An armored undead soldier",
       "biomes": [

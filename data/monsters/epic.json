@@ -1610,8 +1610,7 @@
       "tags": [
         "ice",
         "regenerating",
-        "summoner",
-        "undead"
+        "summoner"
       ],
       "rarity": "epic",
       "description": "An undead sorcerer of terrible power, wrapped in tattered robes and wielding a staff of bones",
@@ -1760,8 +1759,7 @@
       "primary_type": "undead",
       "tags": [
         "ice",
-        "magical",
-        "undead"
+        "magical"
       ],
       "rarity": "epic",
       "description": "An undead sorcerer of ice magic",
@@ -1868,7 +1866,6 @@
       "primary_type": "undead",
       "tags": [
         "regenerating",
-        "undead",
         "boss"
       ],
       "rarity": "epic",

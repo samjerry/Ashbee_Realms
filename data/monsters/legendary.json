@@ -1535,8 +1535,7 @@
       ],
       "primary_type": "undead",
       "tags": [
-        "magical",
-        "undead"
+        "magical"
       ],
       "rarity": "legendary",
       "description": "A powerful undead sorcerer who has achieved immortality through dark magic",
@@ -1789,7 +1788,6 @@
       "tags": [
         "ice",
         "ancient",
-        "undead",
         "boss"
       ],
       "rarity": "legendary",
@@ -1861,8 +1859,7 @@
       "primary_type": "undead",
       "tags": [
         "magical",
-        "draining",
-        "undead"
+        "draining"
       ],
       "rarity": "legendary",
       "description": "A powerful undead sorcerer who achieved lichdom",
