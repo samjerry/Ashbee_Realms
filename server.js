@@ -3633,6 +3633,7 @@ app.post('/api/quests/accept', async (req, res) => {
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
     // Emit real-time quest update
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
     socketHandler.emitQuestUpdate(user.login || user.displayName, channel.toLowerCase());
     socketHandler.emitNotification(user.login || user.displayName, channel.toLowerCase(), {
       type: 'quest_accepted',
@@ -3697,6 +3698,7 @@ app.post('/api/quests/abandon', async (req, res) => {
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
     // Emit real-time quest update
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
     socketHandler.emitQuestUpdate(user.login || user.displayName, channel.toLowerCase());
 
     res.json({
@@ -3857,6 +3859,10 @@ app.post('/api/quests/abandon', async (req, res) => {
     character.activeQuests = activeQuests.filter(q => q.questId !== questId);
 
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit WebSocket update for quest abandonment
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+    socketHandler.emitQuestUpdate(character.name, channel.toLowerCase());
 
     res.json({
       success: true,
@@ -4637,6 +4643,12 @@ app.post('/api/achievements/check', async (req, res) => {
         activeTitle: character.activeTitle
       });
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for achievement unlocks
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      unlockResults.forEach(unlock => {
+        socketHandler.emitAchievementUnlocked(character.name, channel, unlock);
+      });
     }
 
     res.json({
@@ -4944,6 +4956,9 @@ app.post('/api/dungeons/exit', async (req, res) => {
     // Clear dungeon state
     await db.updateDungeonState(user.id, user.channel, null);
     await db.saveCharacter(user.id, user.channel, character);
+
+    // Emit WebSocket update for dungeon exit
+    socketHandler.emitPlayerUpdate(character.name, user.channel, character.toFrontend());
 
     res.json(result);
   } catch (error) {
@@ -6014,6 +6029,9 @@ app.post('/api/raids/buff/purchase', async (req, res) => {
     character.legacyPoints = legacyPoints - buff.cost;
     await db.saveCharacter(userId, channel, character);
 
+    // Emit WebSocket update for legacy points change
+    socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+
     // Apply buff to raid
     const result = raidMgr.purchaseRaidBuff(instanceId, userId, {
       type: buffType,
@@ -6094,6 +6112,10 @@ app.post('/api/redemptions/item', async (req, res) => {
       character.inventory.push(item);
       await db.saveCharacter(userId, channel, character);
 
+      // Emit WebSocket update for inventory change
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      socketHandler.emitInventoryUpdate(character.name, channel);
+
       // Announce in chat
       rawAnnounce(`🎁 ${player} redeemed Random Item and received ${item.name} (${item.rarity})!`, channel);
 
@@ -6148,6 +6170,10 @@ app.post('/api/redemptions/teleport', async (req, res) => {
     // Set new location
     character.location = targetBiome.name;
     await db.saveCharacter(userId, channel, character);
+
+    // Emit WebSocket update for location change
+    socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+    socketHandler.emitLocationChange(character.name, channel, character.location);
 
     // Announce in chat
     rawAnnounce(`🌀 ${player} redeemed Instant Travel and teleported to ${targetBiome.name}!`, channel);
@@ -6898,6 +6924,9 @@ app.post('/api/seasons/xp/add', async (req, res) => {
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
       
+      // Emit WebSocket update for season XP change
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      
       // Update season level leaderboard
       const progress = character.seasonProgress[seasonMgr.getActiveSeason()?.id];
       if (progress) {
@@ -6935,6 +6964,9 @@ app.post('/api/seasons/currency/add', async (req, res) => {
     
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for season currency change
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
       
       // Update currency leaderboard
       const progress = character.seasonProgress[seasonMgr.getActiveSeason()?.id];
@@ -6996,6 +7028,9 @@ app.post('/api/seasons/challenges/complete', async (req, res) => {
     
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for challenge completion
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
     }
     
     res.json(result);
