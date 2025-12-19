@@ -1657,7 +1657,7 @@
     {
       "id": "wailing_widow",
       "name": "The Wailing Widow",
-      "template": "beast_base",
+      "template": "undead_base",
       "rarity": "boss",
       "description": "A ghost bride searching for her lost love",
       "biomes": [],
@@ -1681,7 +1681,7 @@
     {
       "id": "headless_guardian",
       "name": "The Headless Guardian",
-      "template": "humanoid_base",
+      "template": "undead_base",
       "rarity": "boss",
       "description": "A decapitated knight still defending the ruins",
       "biomes": [],
@@ -1705,7 +1705,7 @@
     {
       "id": "cursed_librarian",
       "name": "Keeper of Forbidden Tomes",
-      "template": "humanoid_base",
+      "template": "undead_base",
       "rarity": "boss",
       "description": "A librarian cursed to guard dark knowledge forever",
       "biomes": [],
@@ -1729,7 +1729,7 @@
     {
       "id": "poltergeist_lord",
       "name": "Malevolent Poltergeist",
-      "template": "humanoid_base",
+      "template": "undead_base",
       "rarity": "boss",
       "description": "A powerful spirit that hurls objects with telekinetic force",
       "biomes": [],
@@ -1753,7 +1753,7 @@
     {
       "id": "mad_monk",
       "name": "Brother Mortus the Mad",
-      "template": "humanoid_base",
+      "template": "undead_base",
       "rarity": "boss",
       "description": "A monk driven insane by forbidden knowledge",
       "biomes": [],

@@ -625,7 +625,7 @@
     {
       "id": "broodmother",
       "name": "Arachna the Broodmother",
-      "template": "beast_base",
+      "template": "insectoid_base",
       "rarity": "boss",
       "description": "A massive spider that births countless offspring",
       "biomes": [],
@@ -649,7 +649,7 @@
     {
       "id": "widow_queen",
       "name": "Black Widow Queen",
-      "template": "beast_base",
+      "template": "insectoid_base",
       "rarity": "boss",
       "description": "A sleek black spider with lethal venom",
       "biomes": [],
@@ -673,7 +673,7 @@
     {
       "id": "crystal_spider",
       "name": "Shimmer the Crystal Spider",
-      "template": "beast_base",
+      "template": "insectoid_base",
       "rarity": "boss",
       "description": "A beautiful but deadly spider with crystalline carapace",
       "biomes": [],
@@ -697,7 +697,7 @@
     {
       "id": "web_weaver",
       "name": "Silkspinner the Weaver",
-      "template": "beast_base",
+      "template": "insectoid_base",
       "rarity": "boss",
       "description": "A spider capable of creating complex magical web patterns",
       "biomes": [],
@@ -721,7 +721,7 @@
     {
       "id": "web_spinner",
       "name": "Web Spinner",
-      "template": "beast_base",
+      "template": "insectoid_base",
       "rarity": "common",
       "description": "A smaller spider that creates sticky webs",
       "biomes": [

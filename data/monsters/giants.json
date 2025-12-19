@@ -562,7 +562,7 @@
     {
       "id": "troll_enforcer",
       "name": "Gruk the Troll Enforcer",
-      "template": "beast_base",
+      "template": "giant_base",
       "rarity": "boss",
       "description": "A massive troll hired to keep the goblins in line",
       "biomes": [],
