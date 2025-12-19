@@ -239,7 +239,7 @@ const useGameStore = create((set, get) => ({
   acceptQuest: async (questId) => {
     try {
       const player = get().player;
-      const channel = player?.username || player?.login;
+      const channel = player?.channel;
       
       await fetch('/api/quests/accept', {
         method: 'POST',
@@ -255,7 +255,7 @@ const useGameStore = create((set, get) => ({
   abandonQuest: async (questId) => {
     try {
       const player = get().player;
-      const channel = player?.username || player?.login;
+      const channel = player?.channel;
       
       await fetch('/api/quests/abandon', {
         method: 'POST',

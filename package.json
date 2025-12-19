@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "build": "rm -rf public/dist && cd public && npm install && npm run build",
+    "build": "rimraf public/dist && cd public && npm install && npm run build",
     "dev": "nodemon server.js",
     "get-bot-token": "node get-bot-token.js",
     "migrate": "node migrate-database.js",
@@ -28,5 +28,8 @@
     "socket.io": "^4.7.0",
     "tmi.js": "^1.8.5",
     "validator": "^13.15.23"
+  },
+  "devDependencies": {
+    "rimraf": "^6.1.2"
   }
 }

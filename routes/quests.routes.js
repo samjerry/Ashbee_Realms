@@ -134,6 +134,9 @@ router.post('/abandon', async (req, res) => {
 
   let { channel, questId } = req.body;
   
+  // Log the request for debugging
+  console.log('[Quest Abandon] Request:', { userId: user.id, channel, questId, body: req.body });
+  
   // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
     const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
@@ -141,16 +144,19 @@ router.post('/abandon', async (req, res) => {
   }
   
   if (!channel) {
+    console.log('[Quest Abandon] Error: No channel configured');
     return res.status(400).json({ error: 'No channel configured' });
   }
   
   if (!questId) {
+    console.log('[Quest Abandon] Error: Quest ID required');
     return res.status(400).json({ error: 'Quest ID required' });
   }
 
   try {
     const character = await db.getCharacter(user.id, channel.toLowerCase());
     if (!character) {
+      console.log('[Quest Abandon] Error: Character not found');
       return res.status(404).json({ error: 'Character not found' });
     }
 
@@ -159,6 +165,7 @@ router.post('/abandon', async (req, res) => {
     // Find and remove the quest
     const questIndex = activeQuests.findIndex(q => q.questId === questId);
     if (questIndex === -1) {
+      console.log('[Quest Abandon] Error: Quest not active. Active quests:', activeQuests.map(q => q.questId));
       return res.status(400).json({ error: 'Quest not active' });
     }
     
@@ -166,6 +173,8 @@ router.post('/abandon', async (req, res) => {
     character.activeQuests = activeQuests;
 
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    console.log('[Quest Abandon] Success: Quest abandoned', questId);
 
     // Emit real-time quest update
     socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
@@ -176,7 +185,7 @@ router.post('/abandon', async (req, res) => {
       message: 'Quest abandoned'
     });
   } catch (error) {
-    console.error('Error abandoning quest:', error);
+    console.error('[Quest Abandon] Error:', error);
     res.status(500).json({ error: 'Failed to abandon quest' });
   }
 });
