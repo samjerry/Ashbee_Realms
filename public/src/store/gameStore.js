@@ -98,9 +98,11 @@ const useGameStore = create((set, get) => ({
       
       const data = await response.json();
       set({ player: data, isLoading: false });
+      return true; // Indicate success
     } catch (error) {
       console.error('Failed to fetch player:', error);
       set({ error: error.message, isLoading: false });
+      return false; // Indicate failure
     }
   },
   
@@ -346,18 +348,33 @@ const useGameStore = create((set, get) => ({
   // WebSocket handlers
   setupSocketListeners: () => {
     const player = get().player;
-    const channel = player?.channel || 'default';
     
     // Use the character's username (character name) as the room identifier
     // This matches what the backend uses in socketHandler.emitPlayerUpdate()
     const playerIdentifier = player?.username;
+    const channel = player?.channel || 'default';
     
     if (!playerIdentifier) {
-      console.error('[WebSocket] Cannot join room: player username is undefined', player);
+      console.error('[WebSocket] Cannot join room: player username is undefined', { 
+        player,
+        hasChannel: !!player?.channel 
+      });
       return;
     }
     
-    console.log(`[WebSocket] Joining room: ${playerIdentifier}_${channel}`);
+    if (!player?.channel) {
+      console.warn('[WebSocket] ⚠️ Player channel not set, using default fallback.', {
+        playerChannel: player?.channel,
+        fallbackChannel: channel
+      });
+    }
+    
+    console.log(`[WebSocket] Joining room with:`, {
+      playerIdentifier,
+      channel,
+      roomId: `${playerIdentifier}_${channel}`
+    });
+    
     // Join player-specific room
     socket.emit('join', { player: playerIdentifier, channel });
     
