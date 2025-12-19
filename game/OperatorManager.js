@@ -492,25 +492,23 @@ class OperatorManager {
    */
   async spawnEncounter(playerNameOrId, channelName, encounterId, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
     // Mark player as having a pending encounter
-    const pending = {
+    character.pending = {
       type: 'forced_encounter',
       encounterId: encounterId,
       timestamp: Date.now()
     };
-
-    await db.query(
-      `UPDATE ${table} SET pending = $1 WHERE player_id = $2`,
-      [JSON.stringify(pending), targetPlayerId]
-    );
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Spawned encounter ${encounterId} for ${progress.name}`
+      message: `Spawned encounter ${encounterId} for ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -519,12 +517,11 @@ class OperatorManager {
    */
   async resetQuest(playerNameOrId, channelName, questId, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    let activeQuests = JSON.parse(progress.active_quests || '[]');
-    let completedQuests = JSON.parse(progress.completed_quests || '[]');
+    let activeQuests = character.activeQuests || [];
+    let completedQuests = character.completedQuests || [];
 
     // Remove from completed quests
     completedQuests = completedQuests.filter(q => q !== questId && q.id !== questId);
@@ -532,14 +529,16 @@ class OperatorManager {
     // Remove from active quests
     activeQuests = activeQuests.filter(q => q.id !== questId);
 
-    await db.query(
-      `UPDATE ${table} SET active_quests = $1, completed_quests = $2 WHERE player_id = $3`,
-      [JSON.stringify(activeQuests), JSON.stringify(completedQuests), targetPlayerId]
-    );
+    character.activeQuests = activeQuests;
+    character.completedQuests = completedQuests;
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Reset quest ${questId} for ${progress.name}`
+      message: `Reset quest ${questId} for ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -674,37 +673,50 @@ class OperatorManager {
    */
   async wipeProgress(playerNameOrId, channelName, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    const table = db.getPlayerTable(channelName);
-    // Reset to level 1 with fresh stats
-    await db.query(
-      `UPDATE ${table} SET 
-        level = 1, 
-        xp = 0, 
-        xp_to_next = 100, 
-        gold = 0, 
-        inventory = $1,
-        equipped = $2,
-        active_quests = '[]',
-        completed_quests = '[]',
-        unlocked_achievements = '[]',
-        stats = '{}',
-        hp = 100,
-        max_hp = 100
-      WHERE player_id = $3`,
-      [JSON.stringify(['Health Potion']), JSON.stringify({
-        headgear: null, armor: null, legs: null, footwear: null,
-        hands: null, cape: null, off_hand: null, amulet: null,
-        ring1: null, ring2: null, belt: null, main_hand: null,
-        relic1: null, relic2: null, relic3: null
-      }), targetPlayerId]
-    );
+    // Reset character to level 1 with fresh stats
+    character.level = 1;
+    character.xp = 0;
+    character.xpToNext = 100;
+    character.gold = 0;
+    character.hp = 100;
+    character.maxHp = 100;
+    character.activeQuests = [];
+    character.completedQuests = [];
+    character.unlockedAchievements = [];
+    character.stats = {
+      totalKills: 0,
+      bossKills: 0,
+      criticalHits: 0,
+      highestDamage: 0,
+      deaths: 0,
+      locationsVisited: [],
+      biomesVisited: [],
+      totalGoldEarned: 0,
+      totalGoldSpent: 0,
+      mysteriesSolved: 0
+    };
+    
+    // Reset inventory and equipment using Character classes
+    const InventoryManager = require('./InventoryManager');
+    const EquipmentManager = require('./EquipmentManager');
+    character.inventory = new InventoryManager(['Health Potion'], 30);
+    character.equipment = new EquipmentManager({
+      headgear: null, armor: null, legs: null, footwear: null,
+      hands: null, cape: null, off_hand: null, amulet: null,
+      ring1: null, ring2: null, belt: null, main_hand: null,
+      relic1: null, relic2: null, relic3: null
+    });
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Wiped all progress for ${progress.name}`
+      message: `Wiped all progress for ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -713,8 +725,8 @@ class OperatorManager {
    */
   async grantOperator(playerNameOrId, channelName, level, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
     const validLevels = ['moderator', 'streamer'];
     const normalizedLevel = level.toLowerCase();
@@ -724,21 +736,20 @@ class OperatorManager {
     }
 
     // Update roles array to include the new role
-    let roles = progress.roles || ['viewer'];
+    let roles = character.roles || ['viewer'];
     if (!roles.includes(normalizedLevel)) {
       roles.push(normalizedLevel);
       roles = roles.filter(r => r !== 'viewer'); // Remove viewer if they have operator role
+      character.roles = roles;
       
-      const table = db.getPlayerTable(channelName);
-      await db.query(
-        `UPDATE ${table} SET roles = $1 WHERE player_id = $2`,
-        [JSON.stringify(roles), targetPlayerId]
-      );
+      // Save using Character class
+      await db.saveCharacter(targetPlayerId, channelName, character);
     }
 
     return {
       success: true,
-      message: `Granted ${normalizedLevel} permissions to ${progress.name}`
+      message: `Granted ${normalizedLevel} permissions to ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -747,23 +758,22 @@ class OperatorManager {
    */
   async revokeOperator(playerNameOrId, channelName, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
     // Remove moderator and streamer roles
-    let roles = progress.roles || ['viewer'];
+    let roles = character.roles || ['viewer'];
     roles = roles.filter(r => r !== 'moderator' && r !== 'streamer');
     if (roles.length === 0) roles = ['viewer'];
-
-    const table = db.getPlayerTable(channelName);
-    await db.query(
-      `UPDATE ${table} SET roles = $1 WHERE player_id = $2`,
-      [JSON.stringify(roles), targetPlayerId]
-    );
+    character.roles = roles;
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Revoked operator permissions from ${progress.name}`
+      message: `Revoked operator permissions from ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
