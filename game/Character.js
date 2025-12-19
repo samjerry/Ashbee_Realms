@@ -512,30 +512,71 @@ class Character {
    * @returns {Object} Character data formatted for frontend
    */
   toFrontend() {
+    const finalStats = this.getFinalStats();
+    
     return {
+      // Basic info
       name: this.name,
+      username: this.name,
       classType: this.classType,
+      class: this.classType,
       level: this.level,
       xp: this.xp,
+      totalXp: this.xp,
       xpToNext: this.xpToNext,
+      
+      // Health & Resources
       hp: this.hp,
       maxHp: this.maxHp,
       gold: this.gold,
+      
+      // Combat Stats (from getFinalStats())
+      stats: {
+        attack: finalStats.attack,
+        defense: finalStats.defense,
+        magic: finalStats.magic,
+        agility: finalStats.agility,
+        strength: finalStats.strength,
+        critChance: finalStats.critChance,
+        dodgeChance: finalStats.dodgeChance,
+        blockChance: finalStats.blockChance
+      },
+      
+      // Equipment
+      equipment: this.equipment.toObject(),
+      
+      // Inventory
+      inventory: this.inventory.toArray(),
+      
+      // Location & State
       location: this.location,
+      inCombat: this.inCombat,
+      
+      // Progression
       skillPoints: this.skillPoints,
       legacyPoints: this.legacyPoints,
       achievementPoints: this.achievementPoints,
-      inCombat: this.inCombat,
-      theme: this.theme,
-      roles: this.roles,
-      nameColor: this.nameColor,
-      selectedRoleBadge: this.selectedRoleBadge,
+      deaths: this.stats?.deaths || 0,
+      playtime: this.playtime || 0,
+      
+      // Quests & Achievements
       activeQuests: this.activeQuests,
       completedQuests: this.completedQuests,
       unlockedAchievements: this.unlockedAchievements,
       activeTitle: this.activeTitle,
+      
+      // Reputation & Crafting
       reputation: this.reputation,
-      craftingXP: this.craftingXP
+      craftingXP: this.craftingXP,
+      
+      // Appearance & Roles
+      theme: this.theme,
+      roles: this.roles,
+      nameColor: this.nameColor,
+      selectedRoleBadge: this.selectedRoleBadge,
+      
+      // Active Effects
+      activeEffects: this.activeEffects || []
     };
   }
 
