@@ -98,9 +98,11 @@ const useGameStore = create((set, get) => ({
       
       const data = await response.json();
       set({ player: data, isLoading: false });
+      return true; // Indicate success
     } catch (error) {
       console.error('Failed to fetch player:', error);
       set({ error: error.message, isLoading: false });
+      return false; // Indicate failure
     }
   },
   
@@ -360,7 +362,7 @@ const useGameStore = create((set, get) => ({
       return;
     }
     
-    if (!channel || channel === 'default') {
+    if (channel === 'default') {
       console.warn('[WebSocket] ⚠️ Using default channel. Player channel may not be set correctly.', {
         playerChannel: player?.channel,
         fallbackChannel: channel

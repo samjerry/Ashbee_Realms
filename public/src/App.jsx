@@ -122,8 +122,12 @@ function App() {
     } else {
       // Initialize game by fetching player data first, then setting up sockets
       const initializeGame = async () => {
-        await fetchPlayer();
-        setupSocketListeners();
+        const success = await fetchPlayer();
+        if (success) {
+          setupSocketListeners();
+        } else {
+          console.error('[App] Failed to fetch player data. WebSocket setup skipped.');
+        }
       };
       initializeGame();
     }
