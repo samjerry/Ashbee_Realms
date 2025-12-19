@@ -1096,6 +1096,43 @@ app.get('/api/player/stats', async (req, res) => {
 });
 
 /**
+ * GET /api/inventory
+ * Get player inventory (alias for /api/player/inventory)
+ */
+app.get('/api/inventory', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  let { channel } = req.query;
+  
+  // If no channel specified, use the first channel from CHANNELS environment variable
+  if (!channel) {
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'No channel configured' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const inventory = character.inventory.getSummary();
+    res.json({ success: true, inventory });
+  } catch (error) {
+    console.error('Error fetching inventory:', error);
+    res.status(500).json({ error: 'Failed to fetch inventory' });
+  }
+});
+
+/**
  * GET /api/player/inventory
  * Get player inventory with item details
  */
@@ -1396,6 +1433,11 @@ app.post('/api/abilities/equip', async (req, res) => {
     // Check if in combat
     if (progress.in_combat) {
       return res.status(400).json({ error: 'Cannot change abilities during combat' });
+    }
+    
+    // Validate player class
+    if (!progress.type) {
+      return res.status(400).json({ error: 'Character class not set' });
     }
     
     // Load class abilities to check unlock requirements
@@ -2327,10 +2369,13 @@ app.get('/api/bestiary', async (req, res) => {
     if (!user) return res.status(401).json({ error: 'Not logged in' });
 
     const playerId = user.id;
-    const channelName = req.session.channelName;
-    if (!channelName) {
-      return res.status(400).json({ error: 'No channel selected' });
+    let { channel } = req.query;
+    
+    if (!channel) {
+      const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+      channel = CHANNELS[0] || 'default';
     }
+    const channelName = channel.toLowerCase();
 
     const playerData = await db.getPlayerProgress(playerId, channelName);
     if (!playerData) {
