@@ -524,6 +524,7 @@ class Character {
       xp: this.xp,
       totalXp: this.xp,
       xpToNext: this.xpToNext,
+      xpToNextLevel: this.xpToNext, // Alias for frontend compatibility
       
       // Health & Resources
       hp: this.hp,
