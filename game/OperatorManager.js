@@ -188,30 +188,21 @@ class OperatorManager {
    */
   async giveItem(playerNameOrId, channelName, itemId, quantity = 1, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    let inventory;
-    try {
-      inventory = JSON.parse(progress.inventory || '[]');
-    } catch (e) {
-      inventory = progress.inventory ? progress.inventory.split(',').filter(Boolean) : [];
+    // Use Character class method to add items to inventory
+    for (let i = 0; i < quantity; i++) {
+      character.addToInventory(itemId);
     }
     
-    // Add item to inventory
-    for (let i = 0; i < quantity; i++) {
-      inventory.push(itemId);
-    }
-
-    await db.query(
-      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
-      [JSON.stringify(inventory), targetPlayerId]
-    );
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Gave ${quantity}x ${itemId} to ${progress.name}`
+      message: `Gave ${quantity}x ${itemId} to ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -220,20 +211,19 @@ class OperatorManager {
    */
   async giveGold(playerNameOrId, channelName, amount, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    const newGold = (progress.gold || 0) + amount;
-
-    await db.query(
-      `UPDATE ${table} SET gold = $1 WHERE player_id = $2`,
-      [newGold, targetPlayerId]
-    );
+    // Use Character class method to ensure proper stat updates
+    character.addGold(amount);
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Gave ${amount} gold to ${progress.name} (now has ${newGold})`
+      message: `Gave ${amount} gold to ${character.name} (now has ${character.gold})`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -242,28 +232,20 @@ class OperatorManager {
    */
   async giveExp(playerNameOrId, channelName, amount, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    const newXp = (progress.xp || 0) + amount;
-    let newLevel = progress.level || 1;
-    let xpToNext = progress.xp_to_next || GAME_CONSTANTS.BASE_XP_TO_NEXT;
-
-    // Simple level up logic
-    while (newXp >= xpToNext && newLevel < GAME_CONSTANTS.MAX_LEVEL) {
-      newLevel++;
-      xpToNext = Math.floor(xpToNext * GAME_CONSTANTS.XP_MULTIPLIER);
-    }
-
-    await db.query(
-      `UPDATE ${table} SET xp = $1, level = $2, xp_to_next = $3 WHERE player_id = $4`,
-      [newXp, newLevel, xpToNext, targetPlayerId]
-    );
+    // Use Character class method for proper XP/level logic
+    const result = character.gainXP(amount);
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Gave ${amount} XP to ${progress.name} (Level ${newLevel})`
+      message: `Gave ${amount} XP to ${character.name} (Level ${character.level})`,
+      updatedCharacter: character.toFrontend(), // Return full updated data
+      leveledUp: result.leveledUp
     };
   }
 
@@ -272,18 +254,19 @@ class OperatorManager {
    */
   async healPlayer(playerNameOrId, channelName, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    await db.query(
-      `UPDATE ${table} SET hp = max_hp WHERE player_id = $1`,
-      [targetPlayerId]
-    );
+    // Use Character class method to heal
+    character.heal(character.maxHp);
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Healed ${progress.name} to full HP (${progress.max_hp})`
+      message: `Healed ${character.name} to full HP (${character.maxHp})`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -292,35 +275,23 @@ class OperatorManager {
    */
   async removeItem(playerNameOrId, channelName, itemId, quantity = 1, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    let inventory;
-    try {
-      inventory = JSON.parse(progress.inventory || '[]');
-    } catch (e) {
-      inventory = progress.inventory ? progress.inventory.split(',').filter(Boolean) : [];
-    }
+    // Use Character class method to remove items
     let removed = 0;
-
-    // Remove items
     for (let i = 0; i < quantity; i++) {
-      const index = inventory.indexOf(itemId);
-      if (index > -1) {
-        inventory.splice(index, 1);
-        removed++;
-      }
+      const result = character.removeFromInventory(itemId);
+      if (result.success) removed++;
     }
-
-    await db.query(
-      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
-      [JSON.stringify(inventory), targetPlayerId]
-    );
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Removed ${removed}x ${itemId} from ${progress.name}`
+      message: `Removed ${removed}x ${itemId} from ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -329,20 +300,20 @@ class OperatorManager {
    */
   async removeGold(playerNameOrId, channelName, amount, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    const newGold = Math.max(0, (progress.gold || 0) - amount);
-
-    await db.query(
-      `UPDATE ${table} SET gold = $1 WHERE player_id = $2`,
-      [newGold, targetPlayerId]
-    );
+    // Calculate new gold value (cannot go below 0)
+    const newGold = Math.max(0, character.gold - amount);
+    character.gold = newGold;
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Removed ${amount} gold from ${progress.name} (now has ${newGold})`
+      message: `Removed ${amount} gold from ${character.name} (now has ${newGold})`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -351,21 +322,26 @@ class OperatorManager {
    */
   async removeLevel(playerNameOrId, channelName, levels, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    const newLevel = Math.max(GAME_CONSTANTS.MIN_LEVEL, (progress.level || 1) - levels);
-    const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
-
-    await db.query(
-      `UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3`,
-      [newLevel, xpToNext, targetPlayerId]
-    );
+    const newLevel = Math.max(GAME_CONSTANTS.MIN_LEVEL, character.level - levels);
+    character.level = newLevel;
+    character.xp = 0;
+    character.xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
+    
+    // Recalculate max HP based on new level
+    const finalStats = character.getFinalStats();
+    character.maxHp = finalStats.maxHp;
+    character.hp = Math.min(character.hp, character.maxHp);
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Removed ${levels} levels from ${progress.name} (now level ${newLevel})`
+      message: `Removed ${levels} levels from ${character.name} (now level ${newLevel})`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -374,21 +350,26 @@ class OperatorManager {
    */
   async setPlayerLevel(playerNameOrId, channelName, level, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
     const newLevel = Math.max(GAME_CONSTANTS.MIN_LEVEL, Math.min(GAME_CONSTANTS.MAX_LEVEL, level));
-    const xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
-
-    await db.query(
-      `UPDATE ${table} SET level = $1, xp = 0, xp_to_next = $2 WHERE player_id = $3`,
-      [newLevel, xpToNext, targetPlayerId]
-    );
+    character.level = newLevel;
+    character.xp = 0;
+    character.xpToNext = Math.floor(GAME_CONSTANTS.BASE_XP_TO_NEXT * Math.pow(GAME_CONSTANTS.XP_MULTIPLIER, newLevel - 1));
+    
+    // Recalculate max HP based on new level
+    const finalStats = character.getFinalStats();
+    character.maxHp = finalStats.maxHp;
+    character.hp = character.maxHp; // Fully heal on level set
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Set ${progress.name} to level ${newLevel}`
+      message: `Set ${character.name} to level ${newLevel}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -397,18 +378,20 @@ class OperatorManager {
    */
   async teleportPlayer(playerNameOrId, channelName, location, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    await db.query(
-      `UPDATE ${table} SET location = $1, in_combat = false, combat = NULL WHERE player_id = $2`,
-      [location, targetPlayerId]
-    );
+    character.location = location;
+    character.inCombat = false;
+    character.combat = null;
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Teleported ${progress.name} to ${location}`
+      message: `Teleported ${character.name} to ${location}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -417,18 +400,19 @@ class OperatorManager {
    */
   async clearInventory(playerNameOrId, channelName, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    await db.query(
-      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
-      [JSON.stringify([]), targetPlayerId]
-    );
+    // Clear inventory using Character class
+    character.inventory = new (require('./InventoryManager'))([], 30);
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Cleared inventory for ${progress.name}`
+      message: `Cleared inventory for ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -582,41 +566,35 @@ class OperatorManager {
    */
   async setPlayerStats(playerNameOrId, channelName, stats, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    const updates = [];
-    const params = [];
-    let paramIndex = 1;
-
+    let updated = false;
+    
     if (stats.hp !== undefined) {
-      updates.push(`hp = $${paramIndex++}`);
-      params.push(Math.max(1, stats.hp));
+      character.hp = Math.max(1, stats.hp);
+      updated = true;
     }
     if (stats.max_hp !== undefined) {
-      updates.push(`max_hp = $${paramIndex++}`);
-      params.push(Math.max(10, stats.max_hp));
+      character.maxHp = Math.max(10, stats.max_hp);
+      updated = true;
     }
     if (stats.gold !== undefined) {
-      updates.push(`gold = $${paramIndex++}`);
-      params.push(Math.max(0, stats.gold));
+      character.gold = Math.max(0, stats.gold);
+      updated = true;
     }
 
-    if (updates.length === 0) {
+    if (!updated) {
       throw new Error('No valid stats provided');
     }
-
-    params.push(targetPlayerId);
     
-    await db.query(
-      `UPDATE ${table} SET ${updates.join(', ')} WHERE player_id = $${paramIndex}`,
-      params
-    );
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Updated stats for ${progress.name}`
+      message: `Updated stats for ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -625,28 +603,21 @@ class OperatorManager {
    */
   async giveAllItems(playerNameOrId, channelName, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    // Use common items from constants
-    let inventory;
-    try {
-      inventory = JSON.parse(progress.inventory || '[]');
-    } catch (e) {
-      // Handle legacy comma-separated format
-      inventory = progress.inventory ? progress.inventory.split(',').filter(Boolean) : [];
-    }
-    inventory.push(...GAME_CONSTANTS.COMMON_ITEMS);
-
-    await db.query(
-      `UPDATE ${table} SET inventory = $1 WHERE player_id = $2`,
-      [JSON.stringify(inventory), targetPlayerId]
-    );
+    // Add common items to inventory using Character class
+    GAME_CONSTANTS.COMMON_ITEMS.forEach(item => {
+      character.addToInventory(item);
+    });
+    
+    // Save using Character class
+    await db.saveCharacter(targetPlayerId, channelName, character);
 
     return {
       success: true,
-      message: `Gave ${GAME_CONSTANTS.COMMON_ITEMS.length} items to ${progress.name}`
+      message: `Gave ${GAME_CONSTANTS.COMMON_ITEMS.length} items to ${character.name}`,
+      updatedCharacter: character.toFrontend() // Return full updated data
     };
   }
 
@@ -655,28 +626,25 @@ class OperatorManager {
    */
   async unlockAchievement(playerNameOrId, channelName, achievementId, db) {
     const targetPlayerId = await this.getPlayerIdFromName(playerNameOrId, channelName, db);
-    const table = db.getPlayerTable(channelName);
-    const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
-    if (!progress) throw new Error('Player not found');
+    const character = await db.getCharacter(targetPlayerId, channelName);
+    if (!character) throw new Error('Player not found');
 
-    let unlockedAchievements = JSON.parse(progress.unlocked_achievements || '[]');
-    
-    if (!unlockedAchievements.includes(achievementId)) {
-      unlockedAchievements.push(achievementId);
+    if (!character.unlockedAchievements.includes(achievementId)) {
+      character.unlockedAchievements.push(achievementId);
       
-      await db.query(
-        `UPDATE ${table} SET unlocked_achievements = $1 WHERE player_id = $2`,
-        [JSON.stringify(unlockedAchievements), targetPlayerId]
-      );
+      // Save using Character class
+      await db.saveCharacter(targetPlayerId, channelName, character);
       
       return {
         success: true,
-        message: `Unlocked achievement ${achievementId} for ${progress.name}`
+        message: `Unlocked achievement ${achievementId} for ${character.name}`,
+        updatedCharacter: character.toFrontend() // Return full updated data
       };
     } else {
       return {
         success: true,
-        message: `${progress.name} already has achievement ${achievementId}`
+        message: `${character.name} already has achievement ${achievementId}`,
+        updatedCharacter: character.toFrontend() // Return full updated data
       };
     }
   }
