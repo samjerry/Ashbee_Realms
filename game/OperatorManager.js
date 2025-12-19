@@ -13,7 +13,9 @@ const GAME_CONSTANTS = {
   MIN_LEVEL: 1,
   BASE_XP_TO_NEXT: 100,
   XP_MULTIPLIER: 1.5,
-  COMMON_ITEMS: ['Health Potion', 'Mana Potion', 'Elixir', 'Phoenix Feather', 'Bread', 'Cheese']
+  COMMON_ITEMS: ['Health Potion', 'Mana Potion', 'Elixir', 'Phoenix Feather', 'Bread', 'Cheese'],
+  DEFAULT_INVENTORY_SIZE: 30,
+  DEFAULT_STARTING_ITEM: 'Health Potion'
 };
 
 class OperatorManager {
@@ -408,7 +410,7 @@ class OperatorManager {
     if (!character) throw new Error('Player not found');
 
     // Clear inventory using Character class
-    character.inventory = new InventoryManager([], 30);
+    character.inventory = new InventoryManager([], GAME_CONSTANTS.DEFAULT_INVENTORY_SIZE);
     
     // Save using Character class
     await db.saveCharacter(targetPlayerId, channelName, character);
@@ -704,7 +706,7 @@ class OperatorManager {
     };
     
     // Reset inventory and equipment using Character classes
-    character.inventory = new InventoryManager(['Health Potion'], 30);
+    character.inventory = new InventoryManager([GAME_CONSTANTS.DEFAULT_STARTING_ITEM], GAME_CONSTANTS.DEFAULT_INVENTORY_SIZE);
     character.equipment = new EquipmentManager({
       headgear: null, armor: null, legs: null, footwear: null,
       hands: null, cape: null, off_hand: null, amulet: null,

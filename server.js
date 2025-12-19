@@ -6710,7 +6710,12 @@ app.post('/api/operator/execute',
             // Emit properly formatted player data to the affected player's room
             socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, result.updatedCharacter);
             console.log(`[OPERATOR] Emitted update to room ${roomIdentifier}_${req.channelName} after ${sanitizedCommand}`);
-            console.log(`[OPERATOR] Updated data includes: gold=${result.updatedCharacter.gold}, hp=${result.updatedCharacter.hp}, level=${result.updatedCharacter.level}`);
+            console.log(
+              `[OPERATOR] Updated data includes:`,
+              `gold=${result.updatedCharacter.gold},`,
+              `hp=${result.updatedCharacter.hp},`,
+              `level=${result.updatedCharacter.level}`
+            );
           } else {
             // Fallback: if operator command didn't return updatedCharacter, load it manually
             console.warn('[OPERATOR] Command result did not include updatedCharacter, loading manually');
