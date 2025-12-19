@@ -1,0 +1,4775 @@
+{
+  "rarity": "boss",
+  "version": "1.0",
+  "count": 154,
+  "monsters": [
+    {
+      "id": "tunnel_horror",
+      "name": "The Tunnel Horror",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A nightmarish creature that dwells in the deepest goblin tunnels",
+      "biomes": [
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        9,
+        10
+      ],
+      "base_stats": {
+        "hp": 520,
+        "attack": 45,
+        "defense": 20,
+        "speed": 18,
+        "magic": 15
+      },
+      "abilities": [
+        "acid_spit",
+        "burrow",
+        "terrifying_shriek"
+      ],
+      "loot": "boss_tunnel_horror",
+      "template": "aberration_base"
+    },
+    {
+      "id": "nightmare_incarnate",
+      "name": "The Nightmare Incarnate",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "boss",
+      "description": "Fear given form, a being that feeds on terror itself",
+      "biomes": [
+        "obsidian_citadel"
+      ],
+      "level_range": [
+        39,
+        41
+      ],
+      "base_stats": {
+        "hp": 2700,
+        "attack": 98,
+        "defense": 48,
+        "speed": 42,
+        "magic": 108
+      },
+      "abilities": [
+        "terror_gaze",
+        "nightmare_realm",
+        "fear_feast"
+      ],
+      "loot": "boss_nightmare",
+      "template": "aberration_base"
+    },
+    {
+      "id": "abyss_walker",
+      "name": "The Nameless Horror",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "A being so ancient it has no name",
+      "biomes": [],
+      "level_range": [
+        52,
+        57
+      ],
+      "base_stats": {
+        "hp": 73575,
+        "attack": 2889,
+        "defense": 1839,
+        "speed": 436,
+        "magic": 3466
+      },
+      "abilities": [
+        "nameless_dread",
+        "abyss_gaze",
+        "forgotten_power"
+      ],
+      "loot": "boss_legendary",
+      "template": "aberration_base"
+    },
+    {
+      "id": "nightmare_patient",
+      "name": "Patient Zero",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The first victim of the asylum's dark experiments",
+      "biomes": [],
+      "level_range": [
+        17,
+        22
+      ],
+      "base_stats": {
+        "hp": 7800,
+        "attack": 390,
+        "defense": 195,
+        "speed": 156,
+        "magic": 468
+      },
+      "abilities": [
+        "split_personality",
+        "infectious_madness",
+        "reality_break"
+      ],
+      "loot": "boss_rare",
+      "template": "aberration_base"
+    },
+    {
+      "id": "mind_flayer_spawn",
+      "name": "The Whisper",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [
+        "psychic",
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "An aberration that feeds on sanity itself",
+      "biomes": [],
+      "level_range": [
+        18,
+        22
+      ],
+      "base_stats": {
+        "hp": 6600,
+        "attack": 480,
+        "defense": 165,
+        "speed": 160,
+        "magic": 576
+      },
+      "abilities": [
+        "mind_blast",
+        "psychic_drain",
+        "confusion"
+      ],
+      "loot": "boss_rare",
+      "template": "aberration_base"
+    },
+    {
+      "id": "straitjacket_horror",
+      "name": "The Bound One",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A creature so dangerous it must remain restrained",
+      "biomes": [],
+      "level_range": [
+        18,
+        22
+      ],
+      "base_stats": {
+        "hp": 8600,
+        "attack": 380,
+        "defense": 215,
+        "speed": 160,
+        "magic": 456
+      },
+      "abilities": [
+        "thrash",
+        "break_free",
+        "unstoppable_rage"
+      ],
+      "loot": "boss_rare",
+      "template": "aberration_base"
+    },
+    {
+      "id": "void_herald",
+      "name": "Herald of the Void",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A messenger from the space between spaces",
+      "biomes": [],
+      "level_range": [
+        18,
+        23
+      ],
+      "base_stats": {
+        "hp": 8200,
+        "attack": 451,
+        "defense": 205,
+        "speed": 164,
+        "magic": 541
+      },
+      "abilities": [
+        "void_bolt",
+        "null_zone",
+        "dimensional_rift"
+      ],
+      "loot": "boss_rare",
+      "template": "aberration_base"
+    },
+    {
+      "id": "voidborn_horror",
+      "name": "The Voidborn",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A creature native to the void itself",
+      "biomes": [],
+      "level_range": [
+        19,
+        23
+      ],
+      "base_stats": {
+        "hp": 8820,
+        "attack": 441,
+        "defense": 221,
+        "speed": 168,
+        "magic": 529
+      },
+      "abilities": [
+        "reality_tear",
+        "void_grasp",
+        "null_sphere"
+      ],
+      "loot": "boss_rare",
+      "template": "aberration_base"
+    },
+    {
+      "id": "dark_matter_beast",
+      "name": "Dark Matter Anomaly",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A living contradiction that shouldn't exist",
+      "biomes": [],
+      "level_range": [
+        19,
+        23
+      ],
+      "base_stats": {
+        "hp": 9240,
+        "attack": 399,
+        "defense": 231,
+        "speed": 168,
+        "magic": 479
+      },
+      "abilities": [
+        "gravity_well",
+        "mass_crush",
+        "dark_pulse"
+      ],
+      "loot": "boss_rare",
+      "template": "aberration_base"
+    },
+    {
+      "id": "the_kraken",
+      "name": "The Kraken",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [
+        "summoner"
+      ],
+      "rarity": "boss",
+      "description": "The legendary terror of the deep seas",
+      "biomes": [],
+      "level_range": [
+        30,
+        32
+      ],
+      "base_stats": {
+        "hp": 4620,
+        "attack": 1800,
+        "defense": 1848,
+        "speed": 1980,
+        "magic": 1980
+      },
+      "abilities": [
+        "ten_tentacles",
+        "storm_summon",
+        "ocean_wrath",
+        "legendary_beast"
+      ],
+      "loot": "boss_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "poseidon_herald",
+      "name": "Herald of Poseidon",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The voice of the sea god himself",
+      "biomes": [],
+      "level_range": [
+        34,
+        36
+      ],
+      "base_stats": {
+        "hp": 5016,
+        "attack": 1944,
+        "defense": 1944,
+        "speed": 2088,
+        "magic": 2160
+      },
+      "abilities": [
+        "divine_trident",
+        "earthquake",
+        "sea_god_blessing",
+        "tidal_command"
+      ],
+      "loot": "boss_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "hydra_ancient",
+      "name": "Ancient Hydra",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "boss",
+      "description": "A nine-headed serpent of legendary resilience",
+      "biomes": [],
+      "level_range": [
+        28,
+        30
+      ],
+      "base_stats": {
+        "hp": 5184,
+        "attack": 1620,
+        "defense": 1728,
+        "speed": 1728
+      },
+      "abilities": [
+        "regenerating_heads",
+        "nine_strikes",
+        "hydra_blood",
+        "immortal_serpent"
+      ],
+      "loot": "boss_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "scylla_reborn",
+      "name": "Scylla Reborn",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The six-headed sea monster of myth",
+      "biomes": [],
+      "level_range": [
+        32,
+        34
+      ],
+      "base_stats": {
+        "hp": 4752,
+        "attack": 1836,
+        "defense": 1836,
+        "speed": 1944,
+        "magic": 1728
+      },
+      "abilities": [
+        "six_heads",
+        "monster_reach",
+        "sailor_devourer",
+        "strait_guardian"
+      ],
+      "loot": "boss_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "tiamat_leviathan",
+      "name": "Tiamat's Leviathan",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The chaos dragon's greatest sea spawn",
+      "biomes": [],
+      "level_range": [
+        36,
+        38
+      ],
+      "base_stats": {
+        "hp": 5280,
+        "attack": 2016,
+        "defense": 1980,
+        "speed": 2124,
+        "magic": 2340
+      },
+      "abilities": [
+        "chaos_breath",
+        "dragon_tsunami",
+        "primordial_rage",
+        "tiamat_blessing"
+      ],
+      "loot": "boss_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "tidal_lord",
+      "name": "Thalassor the Tidal Lord",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient elemental that commands the seas",
+      "biomes": [],
+      "level_range": [
+        9,
+        14
+      ],
+      "base_stats": {
+        "hp": 3565,
+        "attack": 196,
+        "defense": 89,
+        "speed": 92
+      },
+      "abilities": [
+        "tidal_wave",
+        "whirlpool",
+        "water_prison"
+      ],
+      "loot": "boss_common",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "drowned_priest",
+      "name": "High Priest Aquilus",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [
+        "summoner"
+      ],
+      "rarity": "boss",
+      "description": "The drowned priest still performing dark rituals",
+      "biomes": [],
+      "level_range": [
+        10,
+        14
+      ],
+      "base_stats": {
+        "hp": 3360,
+        "attack": 228,
+        "defense": 84,
+        "speed": 96
+      },
+      "abilities": [
+        "drowning_curse",
+        "water_blast",
+        "summon_tide"
+      ],
+      "loot": "boss_common",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "coral_titan",
+      "name": "Coralox the Living Reef",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "boss",
+      "description": "A massive creature made of living coral",
+      "biomes": [],
+      "level_range": [
+        9,
+        14
+      ],
+      "base_stats": {
+        "hp": 4025,
+        "attack": 161,
+        "defense": 101,
+        "speed": 92,
+        "magic": 193
+      },
+      "abilities": [
+        "coral_spikes",
+        "reef_regeneration",
+        "calcify"
+      ],
+      "loot": "boss_common",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "seraphim_corrupted",
+      "name": "Azazel the Fallen Seraph",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "A six-winged angel corrupted by power",
+      "biomes": [],
+      "level_range": [
+        50,
+        59
+      ],
+      "base_stats": {
+        "hp": 70850,
+        "attack": 3107,
+        "defense": 1771,
+        "speed": 436,
+        "magic": 3728
+      },
+      "abilities": [
+        "holy_fire",
+        "wings_of_ruin",
+        "divine_corruption"
+      ],
+      "loot": "boss_legendary",
+      "template": "celestial_base"
+    },
+    {
+      "id": "throne_angel",
+      "name": "Uriel the Burning Throne",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "An angel of the highest choir, fallen to darkness",
+      "biomes": [],
+      "level_range": [
+        54,
+        59
+      ],
+      "base_stats": {
+        "hp": 81925,
+        "attack": 3051,
+        "defense": 2048,
+        "speed": 452,
+        "magic": 3661
+      },
+      "abilities": [
+        "throne_fire",
+        "celestial_storm",
+        "divine_retribution"
+      ],
+      "loot": "boss_legendary",
+      "template": "celestial_base"
+    },
+    {
+      "id": "lucifer_fallen",
+      "name": "Lucifer the Lightbringer",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The first and most powerful fallen angel",
+      "biomes": [],
+      "level_range": [
+        50,
+        59
+      ],
+      "base_stats": {
+        "hp": 76300,
+        "attack": 2998,
+        "defense": 1908,
+        "speed": 436
+      },
+      "abilities": [
+        "morning_star",
+        "fallen_grace",
+        "rebellious_light",
+        "pride"
+      ],
+      "loot": "boss_legendary",
+      "template": "celestial_base"
+    },
+    {
+      "id": "archangel_fallen",
+      "name": "Michael the Betrayer",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The greatest warrior angel, now fallen",
+      "biomes": [],
+      "level_range": [
+        52,
+        59
+      ],
+      "base_stats": {
+        "hp": 74925,
+        "attack": 3108,
+        "defense": 1873,
+        "speed": 444
+      },
+      "abilities": [
+        "holy_blade",
+        "angelic_wrath",
+        "divine_judgment"
+      ],
+      "loot": "boss_legendary",
+      "template": "celestial_base"
+    },
+    {
+      "id": "war_golem_prime",
+      "name": "War Golem Mark X",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The ultimate war machine",
+      "biomes": [],
+      "level_range": [
+        28,
+        34
+      ],
+      "base_stats": {
+        "hp": 24800,
+        "attack": 868,
+        "defense": 620,
+        "speed": 248
+      },
+      "abilities": [
+        "artillery_cannon",
+        "missile_barrage",
+        "shield_matrix"
+      ],
+      "loot": "boss_epic",
+      "template": "construct_base"
+    },
+    {
+      "id": "arcane_construct",
+      "name": "Magitek Destroyer",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A fusion of magic and machine",
+      "biomes": [],
+      "level_range": [
+        29,
+        34
+      ],
+      "base_stats": {
+        "hp": 21420,
+        "attack": 1040,
+        "defense": 536,
+        "speed": 252
+      },
+      "abilities": [
+        "arcane_cannon",
+        "energy_shield",
+        "overload"
+      ],
+      "loot": "boss_epic",
+      "template": "construct_base"
+    },
+    {
+      "id": "iron_golem_alpha",
+      "name": "Golem Prime",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The first and most powerful golem ever forged",
+      "biomes": [],
+      "level_range": [
+        17,
+        21
+      ],
+      "base_stats": {
+        "hp": 8550,
+        "attack": 361,
+        "defense": 214,
+        "speed": 152
+      },
+      "abilities": [
+        "metal_crush",
+        "magnetic_pull",
+        "repair_protocol"
+      ],
+      "loot": "boss_rare",
+      "template": "construct_base"
+    },
+    {
+      "id": "dimension_lord",
+      "name": "Cthulhu the Dreaming God",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "psychic",
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient being from another dimension",
+      "biomes": [],
+      "level_range": [
+        48,
+        55
+      ],
+      "base_stats": {
+        "hp": 59225,
+        "attack": 2627,
+        "defense": 1481,
+        "speed": 412
+      },
+      "abilities": [
+        "nightmare_realm",
+        "psychic_scream",
+        "dimensional_rift"
+      ],
+      "loot": "boss_legendary",
+      "template": "demon_base"
+    },
+    {
+      "id": "cherubim_dark",
+      "name": "Metatron the Dark Voice",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "The voice of god, now speaking blasphemy",
+      "biomes": [],
+      "level_range": [
+        52,
+        59
+      ],
+      "base_stats": {
+        "hp": 69375,
+        "attack": 3275,
+        "defense": 1734,
+        "speed": 444
+      },
+      "abilities": [
+        "word_of_power",
+        "divine_silence",
+        "unholy_proclamation"
+      ],
+      "loot": "boss_legendary",
+      "template": "demon_base"
+    },
+    {
+      "id": "primordial_one",
+      "name": "The First Being",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The entity that existed before existence",
+      "biomes": [],
+      "level_range": [
+        48,
+        57
+      ],
+      "base_stats": {
+        "hp": 68250,
+        "attack": 2730,
+        "defense": 1706,
+        "speed": 420
+      },
+      "abilities": [
+        "primordial_word",
+        "creation_unmaking",
+        "before_time",
+        "chaos_birth"
+      ],
+      "loot": "boss_legendary",
+      "template": "demon_base"
+    },
+    {
+      "id": "lord_of_shadows",
+      "name": "Umbranox, Lord of Eternal Night",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The source of all darkness, a being of pure shadow that devours light itself",
+      "biomes": [
+        "obsidian_citadel"
+      ],
+      "level_range": [
+        42,
+        45
+      ],
+      "base_stats": {
+        "hp": 3200,
+        "attack": 110,
+        "defense": 65,
+        "speed": 35,
+        "magic": 120
+      },
+      "abilities": [
+        "void_bolt",
+        "shadow_army",
+        "dark_embrace",
+        "reality_tear",
+        "eternal_night"
+      ],
+      "loot": "boss_lord_of_shadows",
+      "template": "demon_base"
+    },
+    {
+      "id": "demon_overlord",
+      "name": "Azaroth the Demon Overlord",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "fire",
+        "summoner",
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "A high-ranking demon general commanding legions of shadow",
+      "biomes": [
+        "obsidian_citadel"
+      ],
+      "level_range": [
+        43,
+        45
+      ],
+      "base_stats": {
+        "hp": 3100,
+        "attack": 108,
+        "defense": 62,
+        "speed": 30,
+        "magic": 98
+      },
+      "abilities": [
+        "infernal_strike",
+        "summon_demons",
+        "hellfire"
+      ],
+      "loot": "boss_demon_overlord",
+      "template": "demon_base"
+    },
+    {
+      "id": "pit_fiend",
+      "name": "Infernus the Pit Fiend",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "A general of the demon armies",
+      "biomes": [],
+      "level_range": [
+        27,
+        33
+      ],
+      "base_stats": {
+        "hp": 21000,
+        "attack": 990,
+        "defense": 525,
+        "speed": 240
+      },
+      "abilities": [
+        "flame_whip",
+        "fear_aura",
+        "teleport"
+      ],
+      "loot": "boss_epic",
+      "template": "demon_base"
+    },
+    {
+      "id": "succubus_queen",
+      "name": "Lilithara the Succubus Queen",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "A seductress who drains life force",
+      "biomes": [],
+      "level_range": [
+        28,
+        33
+      ],
+      "base_stats": {
+        "hp": 18910,
+        "attack": 1068,
+        "defense": 473,
+        "speed": 244
+      },
+      "abilities": [
+        "life_drain",
+        "charm",
+        "soul_kiss"
+      ],
+      "loot": "boss_epic",
+      "template": "demon_base"
+    },
+    {
+      "id": "balrog",
+      "name": "Gorathul the Balrog",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "A demon of shadow and flame",
+      "biomes": [],
+      "level_range": [
+        28,
+        33
+      ],
+      "base_stats": {
+        "hp": 22265,
+        "attack": 976,
+        "defense": 557,
+        "speed": 244
+      },
+      "abilities": [
+        "flame_sword",
+        "shadow_fire",
+        "demon_wings"
+      ],
+      "loot": "boss_epic",
+      "template": "demon_base"
+    },
+    {
+      "id": "asylum_demon",
+      "name": "Manifestation of Madness",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "psychic"
+      ],
+      "rarity": "boss",
+      "description": "The collective insanity given form",
+      "biomes": [],
+      "level_range": [
+        17,
+        22
+      ],
+      "base_stats": {
+        "hp": 7215,
+        "attack": 448,
+        "defense": 180,
+        "speed": 156
+      },
+      "abilities": [
+        "insanity_wave",
+        "hallucination",
+        "mind_shatter"
+      ],
+      "loot": "boss_rare",
+      "template": "demon_base"
+    },
+    {
+      "id": "demon_lord_baal",
+      "name": "Baal'thor the Demon Lord",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "fire",
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "A mighty demon lord leading the invasion",
+      "biomes": [],
+      "level_range": [
+        27,
+        33
+      ],
+      "base_stats": {
+        "hp": 22500,
+        "attack": 960,
+        "defense": 563,
+        "speed": 240
+      },
+      "abilities": [
+        "hellfire",
+        "demon_swarm",
+        "infernal_chains",
+        "corruption"
+      ],
+      "loot": "boss_epic",
+      "template": "demon_base"
+    },
+    {
+      "id": "magma_wyrm",
+      "name": "Infernus the Magma Wyrm",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A serpentine dragon of molten rock and flame",
+      "biomes": [
+        "deep_caverns"
+      ],
+      "level_range": [
+        26,
+        28
+      ],
+      "base_stats": {
+        "hp": 1550,
+        "attack": 78,
+        "defense": 42,
+        "speed": 28,
+        "magic": 88
+      },
+      "abilities": [
+        "lava_breath",
+        "molten_armor",
+        "tunnel_dive"
+      ],
+      "loot": "boss_magma_wyrm",
+      "template": "dragon_base"
+    },
+    {
+      "id": "tenebris_shadow_dragon",
+      "name": "Tenebris the Shadow Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A dragon born from pure darkness",
+      "biomes": [
+        "obsidian_citadel"
+      ],
+      "level_range": [
+        40,
+        42
+      ],
+      "base_stats": {
+        "hp": 2850,
+        "attack": 102,
+        "defense": 60,
+        "speed": 32,
+        "magic": 92
+      },
+      "abilities": [
+        "shadow_breath",
+        "dark_flight",
+        "fear_aura"
+      ],
+      "loot": "boss_shadow_dragon",
+      "template": "dragon_base"
+    },
+    {
+      "id": "leviathan_calf",
+      "name": "Young Leviathan",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A juvenile sea serpent of immense size",
+      "biomes": [],
+      "level_range": [
+        9,
+        14
+      ],
+      "base_stats": {
+        "hp": 3680,
+        "attack": 196,
+        "defense": 92,
+        "speed": 92
+      },
+      "abilities": [
+        "serpent_coil",
+        "water_breath",
+        "dive_strike"
+      ],
+      "loot": "boss_common",
+      "template": "dragon_base"
+    },
+    {
+      "id": "cosmic_dragon",
+      "name": "Bahamut the Cosmic Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A dragon born from the cosmos itself",
+      "biomes": [],
+      "level_range": [
+        48,
+        55
+      ],
+      "base_stats": {
+        "hp": 64375,
+        "attack": 2472,
+        "defense": 1609,
+        "speed": 412
+      },
+      "abilities": [
+        "cosmic_breath",
+        "star_fall",
+        "nebula_burst"
+      ],
+      "loot": "boss_legendary",
+      "template": "dragon_base"
+    },
+    {
+      "id": "chaos_serpent",
+      "name": "Apophis the Chaos Serpent",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The serpent of infinite chaos",
+      "biomes": [],
+      "level_range": [
+        48,
+        57
+      ],
+      "base_stats": {
+        "hp": 65625,
+        "attack": 2835,
+        "defense": 1641,
+        "speed": 420
+      },
+      "abilities": [
+        "chaos_breath",
+        "reality_consume",
+        "endless_coil"
+      ],
+      "loot": "boss_legendary",
+      "template": "dragon_base"
+    },
+    {
+      "id": "frost_wyrm",
+      "name": "Glacius the Frost Wyrm",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "boss",
+      "description": "A dragon of ice and eternal winter",
+      "biomes": [],
+      "level_range": [
+        26,
+        32
+      ],
+      "base_stats": {
+        "hp": 18850,
+        "attack": 928,
+        "defense": 471,
+        "speed": 232
+      },
+      "abilities": [
+        "frost_breath",
+        "ice_prison",
+        "blizzard"
+      ],
+      "loot": "boss_epic",
+      "template": "dragon_base"
+    },
+    {
+      "id": "storm_dragon",
+      "name": "Tempestus the Storm Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "lightning"
+      ],
+      "rarity": "boss",
+      "description": "A dragon wreathed in lightning and thunder",
+      "biomes": [],
+      "level_range": [
+        27,
+        32
+      ],
+      "base_stats": {
+        "hp": 18585,
+        "attack": 974,
+        "defense": 465,
+        "speed": 236
+      },
+      "abilities": [
+        "lightning_breath",
+        "storm_call",
+        "thunder_roar"
+      ],
+      "loot": "boss_epic",
+      "template": "dragon_base"
+    },
+    {
+      "id": "shadow_drake",
+      "name": "Tenebris the Shadow Drake",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A dragon born from darkness itself",
+      "biomes": [],
+      "level_range": [
+        27,
+        32
+      ],
+      "base_stats": {
+        "hp": 17700,
+        "attack": 1003,
+        "defense": 443,
+        "speed": 236
+      },
+      "abilities": [
+        "shadow_breath",
+        "darkness",
+        "phase_strike"
+      ],
+      "loot": "boss_epic",
+      "template": "dragon_base"
+    },
+    {
+      "id": "magma_serpent",
+      "name": "Ignathor the Magma Serpent",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "A serpent of pure molten rock",
+      "biomes": [],
+      "level_range": [
+        17,
+        21
+      ],
+      "base_stats": {
+        "hp": 7220,
+        "attack": 437,
+        "defense": 181,
+        "speed": 152
+      },
+      "abilities": [
+        "lava_spit",
+        "coil_burn",
+        "eruption"
+      ],
+      "loot": "boss_rare",
+      "template": "dragon_base"
+    },
+    {
+      "id": "ice_dragon_ancient",
+      "name": "Boreas the Frost Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "ice",
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient dragon of pure ice",
+      "biomes": [],
+      "level_range": [
+        37,
+        43
+      ],
+      "base_stats": {
+        "hp": 39200,
+        "attack": 1600,
+        "defense": 980,
+        "speed": 320
+      },
+      "abilities": [
+        "ice_breath",
+        "blizzard",
+        "frozen_aura"
+      ],
+      "loot": "boss_legendary",
+      "template": "dragon_base"
+    },
+    {
+      "id": "northern_hydra",
+      "name": "Nidhogg the Northern Hydra",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A multi-headed serpent of ice",
+      "biomes": [],
+      "level_range": [
+        39,
+        43
+      ],
+      "base_stats": {
+        "hp": 37720,
+        "attack": 1722,
+        "defense": 943,
+        "speed": 328
+      },
+      "abilities": [
+        "hydra_bite",
+        "regrow_heads",
+        "frozen_blood"
+      ],
+      "loot": "boss_legendary",
+      "template": "dragon_base"
+    },
+    {
+      "id": "crystal_titan",
+      "name": "Crystallis the Eternal Prism",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A massive elemental entity of pure crystal that refracts light into deadly beams",
+      "biomes": [
+        "deep_caverns"
+      ],
+      "level_range": [
+        25,
+        27
+      ],
+      "base_stats": {
+        "hp": 1600,
+        "attack": 75,
+        "defense": 55,
+        "speed": 15,
+        "magic": 95
+      },
+      "abilities": [
+        "prismatic_ray",
+        "crystal_nova",
+        "refraction",
+        "shatter"
+      ],
+      "loot": "boss_crystal_titan",
+      "template": "elemental_base"
+    },
+    {
+      "id": "earth_colossus",
+      "name": "Terragor the Earth Colossus",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A living mountain of stone and crystal",
+      "biomes": [
+        "deep_caverns"
+      ],
+      "level_range": [
+        22,
+        24
+      ],
+      "base_stats": {
+        "hp": 1400,
+        "attack": 68,
+        "defense": 65,
+        "speed": 10,
+        "magic": 35
+      },
+      "abilities": [
+        "earthquake",
+        "stone_barrage",
+        "armored_form"
+      ],
+      "loot": "boss_earth_colossus",
+      "template": "elemental_base"
+    },
+    {
+      "id": "crystal_archon",
+      "name": "Luminos the Crystal Archon",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient guardian of the crystal depths",
+      "biomes": [
+        "deep_caverns"
+      ],
+      "level_range": [
+        24,
+        26
+      ],
+      "base_stats": {
+        "hp": 1480,
+        "attack": 72,
+        "defense": 50,
+        "speed": 22,
+        "magic": 105
+      },
+      "abilities": [
+        "light_beam",
+        "crystal_prison",
+        "teleport"
+      ],
+      "loot": "boss_crystal_archon",
+      "template": "elemental_base"
+    },
+    {
+      "id": "clockwork_titan",
+      "name": "Chronos the Clockwork Titan",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A massive mechanical being powered by time magic",
+      "biomes": [],
+      "level_range": [
+        28,
+        34
+      ],
+      "base_stats": {
+        "hp": 23250,
+        "attack": 930,
+        "defense": 581,
+        "speed": 248,
+        "magic": 1116
+      },
+      "abilities": [
+        "temporal_bolt",
+        "rewind",
+        "time_stop"
+      ],
+      "loot": "boss_epic",
+      "template": "elemental_base"
+    },
+    {
+      "id": "iron_colossus",
+      "name": "Ironclad Behemoth",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "boss",
+      "description": "An unstoppable iron giant",
+      "biomes": [],
+      "level_range": [
+        29,
+        34
+      ],
+      "base_stats": {
+        "hp": 26775,
+        "attack": 819,
+        "defense": 669,
+        "speed": 252,
+        "magic": 983
+      },
+      "abilities": [
+        "seismic_stomp",
+        "iron_fist",
+        "fortress_mode"
+      ],
+      "loot": "boss_epic",
+      "template": "elemental_base"
+    },
+    {
+      "id": "earth_colossus_minor",
+      "name": "Stonefist the Unyielding",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A living mountain that cannot be moved",
+      "biomes": [],
+      "level_range": [
+        16,
+        21
+      ],
+      "base_stats": {
+        "hp": 9250,
+        "attack": 315,
+        "defense": 231,
+        "speed": 148,
+        "magic": 377
+      },
+      "abilities": [
+        "stone_skin",
+        "seismic_slam",
+        "boulder_toss"
+      ],
+      "loot": "boss_rare",
+      "template": "elemental_base"
+    },
+    {
+      "id": "flame_djinn",
+      "name": "Infernus the Flame Djinn",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "A powerful fire genie bound to the forge",
+      "biomes": [],
+      "level_range": [
+        16,
+        21
+      ],
+      "base_stats": {
+        "hp": 6660,
+        "attack": 444,
+        "defense": 167,
+        "speed": 148,
+        "magic": 533
+      },
+      "abilities": [
+        "fireball_barrage",
+        "flame_teleport",
+        "burning_wish"
+      ],
+      "loot": "boss_rare",
+      "template": "elemental_base"
+    },
+    {
+      "id": "entropy_elemental",
+      "name": "Entropy Incarnate",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A being of pure dissolution",
+      "biomes": [],
+      "level_range": [
+        18,
+        23
+      ],
+      "base_stats": {
+        "hp": 7380,
+        "attack": 492,
+        "defense": 185,
+        "speed": 164,
+        "magic": 590
+      },
+      "abilities": [
+        "decay_aura",
+        "disintegrate",
+        "entropy_wave"
+      ],
+      "loot": "boss_rare",
+      "template": "elemental_base"
+    },
+    {
+      "id": "blood_elemental",
+      "name": "Hemoglobin the Living Blood",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "boss",
+      "description": "Blood given sentience and malevolence",
+      "biomes": [],
+      "level_range": [
+        40,
+        45
+      ],
+      "base_stats": {
+        "hp": 36125,
+        "attack": 1955,
+        "defense": 903,
+        "speed": 340,
+        "magic": 2346
+      },
+      "abilities": [
+        "blood_wave",
+        "coagulate",
+        "arterial_spray"
+      ],
+      "loot": "boss_legendary",
+      "template": "elemental_base"
+    },
+    {
+      "id": "winter_queen",
+      "name": "Frostmourne the Winter Queen",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "boss",
+      "description": "The immortal ruler of eternal winter",
+      "biomes": [],
+      "level_range": [
+        37,
+        43
+      ],
+      "base_stats": {
+        "hp": 38000,
+        "attack": 1640,
+        "defense": 950,
+        "speed": 320,
+        "magic": 1968
+      },
+      "abilities": [
+        "ice_crown",
+        "frozen_tomb",
+        "winter_storm",
+        "absolute_zero"
+      ],
+      "loot": "boss_legendary",
+      "template": "elemental_base"
+    },
+    {
+      "id": "puck_the_trickster",
+      "name": "Puck the Trickster",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The greatest prankster of the fey realm",
+      "biomes": [],
+      "level_range": [
+        15,
+        17
+      ],
+      "base_stats": {
+        "hp": 900,
+        "attack": 385,
+        "defense": 180,
+        "speed": 650,
+        "magic": 520
+      },
+      "abilities": [
+        "mischief_aura",
+        "dimension_hop",
+        "illusion_storm"
+      ],
+      "loot": "boss_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "baba_yaga_aspect",
+      "name": "Baba Yaga's Shadow",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "summoner"
+      ],
+      "rarity": "boss",
+      "description": "A dark reflection of the legendary witch",
+      "biomes": [],
+      "level_range": [
+        25,
+        27
+      ],
+      "base_stats": {
+        "hp": 1680,
+        "attack": 780,
+        "defense": 360,
+        "speed": 780,
+        "magic": 1020
+      },
+      "abilities": [
+        "hex_mastery",
+        "cauldron_summon",
+        "hut_walk"
+      ],
+      "loot": "boss_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "oberon_herald",
+      "name": "Oberon's Herald",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The voice and will of the Fey King",
+      "biomes": [],
+      "level_range": [
+        30,
+        32
+      ],
+      "base_stats": {
+        "hp": 2040,
+        "attack": 960,
+        "defense": 420,
+        "speed": 880,
+        "magic": 1140
+      },
+      "abilities": [
+        "royal_decree",
+        "antler_crown",
+        "fey_storm"
+      ],
+      "loot": "boss_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "mab_manifestation",
+      "name": "Queen Mab Manifestation",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "boss",
+      "description": "An avatar of the Winter Queen herself",
+      "biomes": [],
+      "level_range": [
+        35,
+        37
+      ],
+      "base_stats": {
+        "hp": 2340,
+        "attack": 1080,
+        "defense": 480,
+        "speed": 960,
+        "magic": 1320
+      },
+      "abilities": [
+        "winter_court",
+        "eternal_frost",
+        "dream_weaving"
+      ],
+      "loot": "boss_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "fey_dragon",
+      "name": "Fey Dragon",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A dragon infused with pure fey magic",
+      "biomes": [],
+      "level_range": [
+        28,
+        30
+      ],
+      "base_stats": {
+        "hp": 2160,
+        "attack": 900,
+        "defense": 540,
+        "speed": 780,
+        "magic": 1080
+      },
+      "abilities": [
+        "prismatic_breath",
+        "phase_shift",
+        "charm_gaze"
+      ],
+      "loot": "boss_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "changeling_lord",
+      "name": "Changeling Lord",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "boss",
+      "description": "Master of the stolen children and shapeshifters",
+      "biomes": [],
+      "level_range": [
+        22,
+        24
+      ],
+      "base_stats": {
+        "hp": 1560,
+        "attack": 720,
+        "defense": 336,
+        "speed": 840,
+        "magic": 900
+      },
+      "abilities": [
+        "perfect_disguise",
+        "identity_theft",
+        "child_army"
+      ],
+      "loot": "boss_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "surtr_aspect",
+      "name": "Aspect of Surtr",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "fire",
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "A manifestation of the fire giant king",
+      "biomes": [],
+      "level_range": [
+        28,
+        30
+      ],
+      "base_stats": {
+        "hp": 3240,
+        "attack": 1350,
+        "defense": 1260,
+        "speed": 120,
+        "magic": 600
+      },
+      "abilities": [
+        "ragnarok_flame",
+        "twilight_sword",
+        "world_burning"
+      ],
+      "loot": "boss_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "thrym_herald",
+      "name": "Thrym the Frost King",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "ice",
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "The legendary king of frost giants",
+      "biomes": [],
+      "level_range": [
+        32,
+        34
+      ],
+      "base_stats": {
+        "hp": 3840,
+        "attack": 1500,
+        "defense": 1380,
+        "speed": 96
+      },
+      "abilities": [
+        "eternal_winter",
+        "frost_kingdom",
+        "ice_throne"
+      ],
+      "loot": "boss_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "ymir_fragment",
+      "name": "Fragment of Ymir",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A piece of the primordial giant from whom the world was made",
+      "biomes": [],
+      "level_range": [
+        36,
+        38
+      ],
+      "base_stats": {
+        "hp": 4200,
+        "attack": 1620,
+        "defense": 1500,
+        "speed": 84,
+        "magic": 720
+      },
+      "abilities": [
+        "creation_force",
+        "world_body",
+        "giant_ancestor"
+      ],
+      "loot": "boss_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "atlas_echo",
+      "name": "Echo of Atlas",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The burden-bearer, holding the weight of the world",
+      "biomes": [],
+      "level_range": [
+        34,
+        36
+      ],
+      "base_stats": {
+        "hp": 4560,
+        "attack": 1440,
+        "defense": 1680,
+        "speed": 72
+      },
+      "abilities": [
+        "world_bearer",
+        "crushing_weight",
+        "titan_endurance"
+      ],
+      "loot": "boss_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "troll_enforcer",
+      "name": "Gruk the Troll Enforcer",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "boss",
+      "description": "A massive troll hired to keep the goblins in line",
+      "biomes": [],
+      "level_range": [
+        8,
+        10
+      ],
+      "base_stats": {
+        "hp": 3150,
+        "attack": 126,
+        "defense": 79,
+        "speed": 72
+      },
+      "abilities": [
+        "crushing_blow",
+        "regeneration",
+        "enrage"
+      ],
+      "loot": "boss_common",
+      "template": "giant_base"
+    },
+    {
+      "id": "atlas_titan",
+      "name": "Atlas the World Bearer",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A titan who once held the world on his shoulders",
+      "biomes": [],
+      "level_range": [
+        36,
+        42
+      ],
+      "base_stats": {
+        "hp": 39000,
+        "attack": 1560,
+        "defense": 975,
+        "speed": 312,
+        "magic": 1872
+      },
+      "abilities": [
+        "world_crush",
+        "titan_roar",
+        "earthquake",
+        "mountain_throw"
+      ],
+      "loot": "boss_legendary",
+      "template": "giant_base"
+    },
+    {
+      "id": "frost_titan",
+      "name": "Ymir the Frost Titan",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "boss",
+      "description": "A titan of eternal ice and winter",
+      "biomes": [],
+      "level_range": [
+        36,
+        42
+      ],
+      "base_stats": {
+        "hp": 37050,
+        "attack": 1638,
+        "defense": 926,
+        "speed": 312,
+        "magic": 1966
+      },
+      "abilities": [
+        "glacial_fist",
+        "blizzard_breath",
+        "ice_age"
+      ],
+      "loot": "boss_legendary",
+      "template": "giant_base"
+    },
+    {
+      "id": "storm_titan",
+      "name": "Typhon the Storm Titan",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "lightning"
+      ],
+      "rarity": "boss",
+      "description": "A titan commanding storms and lightning",
+      "biomes": [],
+      "level_range": [
+        37,
+        42
+      ],
+      "base_stats": {
+        "hp": 35550,
+        "attack": 1738,
+        "defense": 889,
+        "speed": 316,
+        "magic": 2086
+      },
+      "abilities": [
+        "lightning_storm",
+        "hurricane_winds",
+        "thunder_clap"
+      ],
+      "loot": "boss_legendary",
+      "template": "giant_base"
+    },
+    {
+      "id": "fire_titan",
+      "name": "Prometheus the Fire Titan",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "The titan who stole fire from the gods",
+      "biomes": [],
+      "level_range": [
+        37,
+        42
+      ],
+      "base_stats": {
+        "hp": 36735,
+        "attack": 1699,
+        "defense": 918,
+        "speed": 316,
+        "magic": 2038
+      },
+      "abilities": [
+        "eternal_flame",
+        "inferno_strike",
+        "burning_world"
+      ],
+      "loot": "boss_legendary",
+      "template": "giant_base"
+    },
+    {
+      "id": "void_titan",
+      "name": "Cronus the Devourer",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A titan who consumes all things",
+      "biomes": [],
+      "level_range": [
+        38,
+        42
+      ],
+      "base_stats": {
+        "hp": 42000,
+        "attack": 1520,
+        "defense": 1050,
+        "speed": 320,
+        "magic": 1824
+      },
+      "abilities": [
+        "devour",
+        "time_stop",
+        "reality_rend"
+      ],
+      "loot": "boss_legendary",
+      "template": "giant_base"
+    },
+    {
+      "id": "goblin_chief",
+      "name": "Gutripper the Goblin Chief",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "summoner",
+        "leader"
+      ],
+      "rarity": "boss",
+      "description": "The cruel leader of the goblin tribe, wielding a jagged cleaver",
+      "biomes": [
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        8,
+        10
+      ],
+      "base_stats": {
+        "hp": 450,
+        "attack": 42,
+        "defense": 18,
+        "speed": 25,
+        "magic": 5
+      },
+      "abilities": [
+        "war_cry",
+        "summon_minions",
+        "berserker_rage"
+      ],
+      "loot": "boss_goblin_chief",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "warlord_snaggletooth",
+      "name": "Warlord Snaggletooth",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "A massive goblin warlord who earned his position through brutal combat",
+      "biomes": [
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        6,
+        8
+      ],
+      "base_stats": {
+        "hp": 380,
+        "attack": 38,
+        "defense": 15,
+        "speed": 22,
+        "magic": 3
+      },
+      "abilities": [
+        "heavy_strike",
+        "intimidate",
+        "rallying_cry"
+      ],
+      "loot": "boss_goblin_warlord",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "bandit_king",
+      "name": "Blackjack the Bandit King",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "leader"
+      ],
+      "rarity": "boss",
+      "description": "The ruthless leader of this outlaw band",
+      "biomes": [],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 2550,
+        "attack": 136,
+        "defense": 64,
+        "speed": 68
+      },
+      "abilities": [
+        "dual_wield",
+        "smoke_bomb",
+        "backstab"
+      ],
+      "loot": "boss_common",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "crossbow_master",
+      "name": "Hawkeye the Crossbow Master",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "poisonous",
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "A deadly marksman who never misses",
+      "biomes": [],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 2040,
+        "attack": 170,
+        "defense": 51,
+        "speed": 68
+      },
+      "abilities": [
+        "piercing_shot",
+        "poison_bolt",
+        "rapid_fire"
+      ],
+      "loot": "boss_common",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "rogue_assassin",
+      "name": "Silent Shade",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "boss",
+      "description": "A mysterious assassin employed by the bandits",
+      "biomes": [],
+      "level_range": [
+        7,
+        11
+      ],
+      "base_stats": {
+        "hp": 2340,
+        "attack": 171,
+        "defense": 59,
+        "speed": 72
+      },
+      "abilities": [
+        "vanish",
+        "critical_strike",
+        "poison"
+      ],
+      "loot": "boss_common",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "brute_enforcer",
+      "name": "Crusher the Brute",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "A hulking enforcer who keeps order through fear",
+      "biomes": [],
+      "level_range": [
+        7,
+        11
+      ],
+      "base_stats": {
+        "hp": 3060,
+        "attack": 135,
+        "defense": 77,
+        "speed": 72
+      },
+      "abilities": [
+        "power_slam",
+        "intimidate",
+        "thick_skin"
+      ],
+      "loot": "boss_common",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "pyromancer_bandit",
+      "name": "Ember the Pyromancer",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "boss",
+      "description": "A rogue mage who burns first and asks questions never",
+      "biomes": [],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 1955,
+        "attack": 179,
+        "defense": 49,
+        "speed": 68,
+        "magic": 214
+      },
+      "abilities": [
+        "fireball",
+        "flame_wall",
+        "explosive_trap"
+      ],
+      "loot": "boss_common",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "goblin_shaman",
+      "name": "Grimtooth the Shaman",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "lightning"
+      ],
+      "rarity": "boss",
+      "description": "A cunning goblin shaman who wields dark magic",
+      "biomes": [],
+      "level_range": [
+        7,
+        10
+      ],
+      "base_stats": {
+        "hp": 2125,
+        "attack": 153,
+        "defense": 53,
+        "speed": 68
+      },
+      "abilities": [
+        "hex_curse",
+        "healing_totem",
+        "lightning_bolt"
+      ],
+      "loot": "boss_common",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "storm_warden",
+      "name": "Voltaxus the Storm Warden",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "lightning",
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "An elemental lord of lightning and thunder",
+      "biomes": [],
+      "level_range": [
+        22,
+        30
+      ],
+      "base_stats": {
+        "hp": 14820,
+        "attack": 702,
+        "defense": 371,
+        "speed": 208
+      },
+      "abilities": [
+        "chain_lightning",
+        "thunderstorm",
+        "static_field",
+        "overcharge"
+      ],
+      "loot": "boss_epic",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "plague_doctor",
+      "name": "The Plague Doctor",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A twisted healer spreading disease instead of curing it",
+      "biomes": [],
+      "level_range": [
+        29,
+        35
+      ],
+      "base_stats": {
+        "hp": 20800,
+        "attack": 1088,
+        "defense": 520,
+        "speed": 256
+      },
+      "abilities": [
+        "plague_bomb",
+        "contagion",
+        "epidemic"
+      ],
+      "loot": "boss_epic",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "death_knight_plague",
+      "name": "Plaguelord Mortis",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A death knight spreading pestilence",
+      "biomes": [],
+      "level_range": [
+        31,
+        35
+      ],
+      "base_stats": {
+        "hp": 24750,
+        "attack": 1023,
+        "defense": 619,
+        "speed": 264
+      },
+      "abilities": [
+        "plague_strike",
+        "unholy_blight",
+        "army_of_decay"
+      ],
+      "loot": "boss_epic",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "doctor_malice",
+      "name": "Dr. Malice",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The asylum's head physician who experimented on patients",
+      "biomes": [],
+      "level_range": [
+        17,
+        22
+      ],
+      "base_stats": {
+        "hp": 6825,
+        "attack": 429,
+        "defense": 171,
+        "speed": 156
+      },
+      "abilities": [
+        "lobotomy",
+        "inject_madness",
+        "surgical_precision"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "forgemaster_pyros",
+      "name": "Forgemaster Pyros",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "A fire elemental lord who shapes metal with bare hands",
+      "biomes": [],
+      "level_range": [
+        16,
+        21
+      ],
+      "base_stats": {
+        "hp": 7770,
+        "attack": 389,
+        "defense": 194,
+        "speed": 148
+      },
+      "abilities": [
+        "molten_hammer",
+        "forge_nova",
+        "heat_wave"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "warchief_grimfang",
+      "name": "Warchief Grimfang",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "leader"
+      ],
+      "rarity": "boss",
+      "description": "The brutal leader of the orc horde",
+      "biomes": [],
+      "level_range": [
+        15,
+        20
+      ],
+      "base_stats": {
+        "hp": 7000,
+        "attack": 350,
+        "defense": 175,
+        "speed": 140
+      },
+      "abilities": [
+        "battle_roar",
+        "cleave",
+        "bloodlust"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "blademaster_korgath",
+      "name": "Blademaster Korgath",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A legendary orc swordsman with unmatched skill",
+      "biomes": [],
+      "level_range": [
+        16,
+        20
+      ],
+      "base_stats": {
+        "hp": 6300,
+        "attack": 414,
+        "defense": 158,
+        "speed": 144
+      },
+      "abilities": [
+        "whirlwind",
+        "mirror_image",
+        "blade_dance"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "shaman_zugthar",
+      "name": "Shaman Zugthar",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "lightning"
+      ],
+      "rarity": "boss",
+      "description": "An orc shaman channeling primal elemental fury",
+      "biomes": [],
+      "level_range": [
+        15,
+        19
+      ],
+      "base_stats": {
+        "hp": 5440,
+        "attack": 374,
+        "defense": 136,
+        "speed": 136
+      },
+      "abilities": [
+        "lightning_chain",
+        "earth_spike",
+        "ancestral_spirits"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "siege_breaker",
+      "name": "Goremaw the Siege Breaker",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A massive orc that destroys fortifications",
+      "biomes": [],
+      "level_range": [
+        17,
+        20
+      ],
+      "base_stats": {
+        "hp": 8325,
+        "attack": 333,
+        "defense": 208,
+        "speed": 148
+      },
+      "abilities": [
+        "demolish",
+        "fortified_skin",
+        "ground_pound"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "blood_champion",
+      "name": "Bloodaxe the Champion",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "Arena champion who has never lost a duel",
+      "biomes": [],
+      "level_range": [
+        16,
+        20
+      ],
+      "base_stats": {
+        "hp": 6840,
+        "attack": 378,
+        "defense": 171,
+        "speed": 144
+      },
+      "abilities": [
+        "execute",
+        "reckless_fury",
+        "battle_frenzy"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "void_sorcerer",
+      "name": "Nullmancer Vex",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "boss",
+      "description": "A mage who learned to harness the void",
+      "biomes": [],
+      "level_range": [
+        18,
+        23
+      ],
+      "base_stats": {
+        "hp": 6970,
+        "attack": 513,
+        "defense": 174,
+        "speed": 164,
+        "magic": 615
+      },
+      "abilities": [
+        "void_magic",
+        "anti_magic_field",
+        "nullification"
+      ],
+      "loot": "boss_rare",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "archmage_supreme",
+      "name": "Archmage Eternus",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "boss",
+      "description": "The most powerful mortal mage",
+      "biomes": [],
+      "level_range": [
+        40,
+        46
+      ],
+      "base_stats": {
+        "hp": 34400,
+        "attack": 2150,
+        "defense": 860,
+        "speed": 344,
+        "magic": 2580
+      },
+      "abilities": [
+        "arcane_barrage",
+        "time_warp",
+        "meteor_storm",
+        "spell_steal"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "chronomancer",
+      "name": "Tempus the Chronomancer",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A mage who controls time itself",
+      "biomes": [],
+      "level_range": [
+        40,
+        46
+      ],
+      "base_stats": {
+        "hp": 32250,
+        "attack": 2236,
+        "defense": 806,
+        "speed": 344,
+        "magic": 2683
+      },
+      "abilities": [
+        "time_stop",
+        "temporal_loop",
+        "future_sight"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "elementalist_lord",
+      "name": "Elementor Prime",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "Commands all elements simultaneously",
+      "biomes": [],
+      "level_range": [
+        41,
+        46
+      ],
+      "base_stats": {
+        "hp": 36105,
+        "attack": 2088,
+        "defense": 903,
+        "speed": 348
+      },
+      "abilities": [
+        "elemental_fury",
+        "prismatic_blast",
+        "elemental_shield"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "void_mage",
+      "name": "Nul the Void Mage",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "boss",
+      "description": "A mage who studied the void too deeply",
+      "biomes": [],
+      "level_range": [
+        42,
+        46
+      ],
+      "base_stats": {
+        "hp": 34320,
+        "attack": 2332,
+        "defense": 858,
+        "speed": 352,
+        "magic": 2798
+      },
+      "abilities": [
+        "void_erasure",
+        "anti_magic",
+        "reality_warp"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "blood_archbishop",
+      "name": "Cardinal Sanguis",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "boss",
+      "description": "The high priest of blood magic",
+      "biomes": [],
+      "level_range": [
+        39,
+        45
+      ],
+      "base_stats": {
+        "hp": 37800,
+        "attack": 1848,
+        "defense": 945,
+        "speed": 336
+      },
+      "abilities": [
+        "blood_sacrifice",
+        "crimson_nova",
+        "hemorrhage",
+        "transfusion"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "crimson_knight",
+      "name": "Sir Sanguine",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A knight corrupted by blood magic",
+      "biomes": [],
+      "level_range": [
+        40,
+        45
+      ],
+      "base_stats": {
+        "hp": 42500,
+        "attack": 1700,
+        "defense": 1063,
+        "speed": 340
+      },
+      "abilities": [
+        "blood_blade",
+        "life_tap",
+        "crimson_shield"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "hemomancer",
+      "name": "Vladislaus the Hemomancer",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A master of blood manipulation",
+      "biomes": [],
+      "level_range": [
+        41,
+        45
+      ],
+      "base_stats": {
+        "hp": 37840,
+        "attack": 1935,
+        "defense": 946,
+        "speed": 344,
+        "magic": 2322
+      },
+      "abilities": [
+        "blood_puppet",
+        "exsanguinate",
+        "blood_prison"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "ice_giant_king",
+      "name": "Fimbulvetr the Giant King",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "boss",
+      "description": "King of the ice giants",
+      "biomes": [],
+      "level_range": [
+        38,
+        43
+      ],
+      "base_stats": {
+        "hp": 41310,
+        "attack": 1539,
+        "defense": 1033,
+        "speed": 324
+      },
+      "abilities": [
+        "avalanche",
+        "ice_hammer",
+        "permafrost"
+      ],
+      "loot": "boss_legendary",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "swarm_tyrant",
+      "name": "Swarm Tyrant",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A hive mind controlling thousands of insects",
+      "biomes": [],
+      "level_range": [
+        22,
+        24
+      ],
+      "base_stats": {
+        "hp": 2160,
+        "attack": 1008,
+        "defense": 972,
+        "speed": 1080
+      },
+      "abilities": [
+        "swarm_form",
+        "thousand_bites",
+        "hive_consciousness"
+      ],
+      "loot": "boss_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "arachnid_empress",
+      "name": "Arachnid Empress",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "boss",
+      "description": "The mother of all spiders, weaver of fate",
+      "biomes": [],
+      "level_range": [
+        28,
+        30
+      ],
+      "base_stats": {
+        "hp": 3024,
+        "attack": 1350,
+        "defense": 1242,
+        "speed": 1350,
+        "magic": 1080
+      },
+      "abilities": [
+        "fate_web",
+        "spider_army",
+        "venom_mastery",
+        "silk_prison"
+      ],
+      "loot": "boss_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "mantis_god",
+      "name": "Mantis God",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A divine predator that reaps souls",
+      "biomes": [],
+      "level_range": [
+        32,
+        34
+      ],
+      "base_stats": {
+        "hp": 3456,
+        "attack": 1512,
+        "defense": 1296,
+        "speed": 1440,
+        "magic": 960
+      },
+      "abilities": [
+        "divine_strike",
+        "soul_harvest",
+        "predator_king",
+        "prayer_blade"
+      ],
+      "loot": "boss_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "hive_overmind",
+      "name": "Hive Overmind",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The collective consciousness of a billion insects",
+      "biomes": [],
+      "level_range": [
+        35,
+        37
+      ],
+      "base_stats": {
+        "hp": 3600,
+        "attack": 1620,
+        "defense": 1350,
+        "speed": 1530,
+        "magic": 1200
+      },
+      "abilities": [
+        "neural_network",
+        "swarm_planet",
+        "evolution_burst",
+        "collective_will"
+      ],
+      "loot": "boss_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "scarab_king",
+      "name": "Scarab King",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient beetle deity from forgotten tombs",
+      "biomes": [],
+      "level_range": [
+        26,
+        28
+      ],
+      "base_stats": {
+        "hp": 2808,
+        "attack": 1242,
+        "defense": 1188,
+        "speed": 1188,
+        "magic": 900
+      },
+      "abilities": [
+        "sacred_carapace",
+        "death_swarm",
+        "tomb_curse",
+        "beetle_legion"
+      ],
+      "loot": "boss_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "broodmother",
+      "name": "Arachna the Broodmother",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "boss",
+      "description": "A massive spider that births countless offspring",
+      "biomes": [],
+      "level_range": [
+        8,
+        13
+      ],
+      "base_stats": {
+        "hp": 3150,
+        "attack": 168,
+        "defense": 79,
+        "speed": 84
+      },
+      "abilities": [
+        "spawn_spiderlings",
+        "web_trap",
+        "poison_bite"
+      ],
+      "loot": "boss_common",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "widow_queen",
+      "name": "Black Widow Queen",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A sleek black spider with lethal venom",
+      "biomes": [],
+      "level_range": [
+        8,
+        13
+      ],
+      "base_stats": {
+        "hp": 2625,
+        "attack": 210,
+        "defense": 66,
+        "speed": 84
+      },
+      "abilities": [
+        "neurotoxin",
+        "web_cocoon",
+        "death_strike"
+      ],
+      "loot": "boss_common",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "crystal_spider",
+      "name": "Shimmer the Crystal Spider",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A beautiful but deadly spider with crystalline carapace",
+      "biomes": [],
+      "level_range": [
+        8,
+        13
+      ],
+      "base_stats": {
+        "hp": 2835,
+        "attack": 179,
+        "defense": 71,
+        "speed": 84
+      },
+      "abilities": [
+        "crystal_shard",
+        "reflect",
+        "prismatic_web"
+      ],
+      "loot": "boss_common",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "web_weaver",
+      "name": "Silkspinner the Weaver",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "boss",
+      "description": "A spider capable of creating complex magical web patterns",
+      "biomes": [],
+      "level_range": [
+        9,
+        13
+      ],
+      "base_stats": {
+        "hp": 2860,
+        "attack": 198,
+        "defense": 72,
+        "speed": 88
+      },
+      "abilities": [
+        "web_maze",
+        "silk_bind",
+        "pattern_magic"
+      ],
+      "loot": "boss_common",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "tarantula_king",
+      "name": "Fang the Tarantula King",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A hairy behemoth with crushing mandibles",
+      "biomes": [],
+      "level_range": [
+        9,
+        13
+      ],
+      "base_stats": {
+        "hp": 3740,
+        "attack": 165,
+        "defense": 94,
+        "speed": 88
+      },
+      "abilities": [
+        "crushing_bite",
+        "ground_shake",
+        "barbed_hairs"
+      ],
+      "loot": "boss_common",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "moon_beast_lord",
+      "name": "Moon Beast Lord",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [
+        "summoner",
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "A lycanthrope lord empowered by lunar magic",
+      "biomes": [],
+      "level_range": [
+        24,
+        26
+      ],
+      "base_stats": {
+        "hp": 3744,
+        "attack": 1404,
+        "defense": 1248,
+        "speed": 1560,
+        "magic": 1248
+      },
+      "abilities": [
+        "lunar_rage",
+        "moon_beam",
+        "pack_summoning",
+        "beast_king"
+      ],
+      "loot": "boss_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "fenrir_echo",
+      "name": "Echo of Fenrir",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A manifestation of the great wolf's hunger",
+      "biomes": [],
+      "level_range": [
+        30,
+        32
+      ],
+      "base_stats": {
+        "hp": 4680,
+        "attack": 1800,
+        "defense": 1560,
+        "speed": 1872,
+        "magic": 1560
+      },
+      "abilities": [
+        "god_devourer",
+        "binding_break",
+        "apocalypse_howl",
+        "fenrir_fury"
+      ],
+      "loot": "boss_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "amarok_reborn",
+      "name": "Amarok Reborn",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The giant wolf spirit of the northern wilds",
+      "biomes": [],
+      "level_range": [
+        28,
+        30
+      ],
+      "base_stats": {
+        "hp": 4464,
+        "attack": 1710,
+        "defense": 1488,
+        "speed": 1782
+      },
+      "abilities": [
+        "lone_hunter",
+        "spirit_wolf",
+        "frozen_fangs",
+        "northern_fury"
+      ],
+      "loot": "boss_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "hati_manifestation",
+      "name": "Manifestation of Hati",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The wolf that chases the moon across the sky",
+      "biomes": [],
+      "level_range": [
+        32,
+        34
+      ],
+      "base_stats": {
+        "hp": 4992,
+        "attack": 1872,
+        "defense": 1632,
+        "speed": 1968,
+        "magic": 1632
+      },
+      "abilities": [
+        "moon_chase",
+        "celestial_hunter",
+        "sky_runner",
+        "eternal_pursuit"
+      ],
+      "loot": "boss_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "beast_revelation",
+      "name": "The Beast of Revelation",
+      "types": [
+        "monstrosity"
+      ],
+      "primary_type": "monstrosity",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The ultimate evil prophesied in apocalypse",
+      "biomes": [],
+      "level_range": [
+        56,
+        60
+      ],
+      "base_stats": {
+        "hp": 92800,
+        "attack": 3364,
+        "defense": 2320,
+        "speed": 464
+      },
+      "abilities": [
+        "mark_of_beast",
+        "seven_heads",
+        "ten_horns",
+        "blasphemy"
+      ],
+      "loot": "boss_legendary",
+      "template": "beast_base"
+    },
+    {
+      "id": "leviathan_primordial",
+      "name": "Tiamat the Primordial Leviathan",
+      "types": [
+        "monstrosity"
+      ],
+      "primary_type": "monstrosity",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The mother of all monsters",
+      "biomes": [],
+      "level_range": [
+        50,
+        57
+      ],
+      "base_stats": {
+        "hp": 74900,
+        "attack": 2622,
+        "defense": 1873,
+        "speed": 428
+      },
+      "abilities": [
+        "spawn_monsters",
+        "hydra_heads",
+        "primordial_roar"
+      ],
+      "loot": "boss_legendary",
+      "template": "beast_base"
+    },
+    {
+      "id": "the_blob",
+      "name": "The Blob",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "boss",
+      "description": "An unstoppable mass of consuming slime",
+      "biomes": [],
+      "level_range": [
+        18,
+        20
+      ],
+      "base_stats": {
+        "hp": 2880,
+        "attack": 420,
+        "defense": 48,
+        "speed": 24
+      },
+      "abilities": [
+        "unstoppable_growth",
+        "consume_all",
+        "infinite_mass"
+      ],
+      "loot": "boss_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "core_ooze",
+      "name": "Core Ooze",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A slime from the planet's molten core",
+      "biomes": [],
+      "level_range": [
+        26,
+        28
+      ],
+      "base_stats": {
+        "hp": 4032,
+        "attack": 672,
+        "defense": 60,
+        "speed": 24
+      },
+      "abilities": [
+        "earth_core_heat",
+        "tectonic_movement",
+        "magma_generation"
+      ],
+      "loot": "boss_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "amalgam_horror",
+      "name": "Amalgam Horror",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A fusion of hundreds of different oozes",
+      "biomes": [],
+      "level_range": [
+        30,
+        32
+      ],
+      "base_stats": {
+        "hp": 4608,
+        "attack": 768,
+        "defense": 54,
+        "speed": 30,
+        "magic": 900
+      },
+      "abilities": [
+        "multi_form",
+        "ability_absorption",
+        "perfect_predator"
+      ],
+      "loot": "boss_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "juiblex_avatar",
+      "name": "Avatar of Juiblex",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "The demon lord of slimes made manifest",
+      "biomes": [],
+      "level_range": [
+        35,
+        37
+      ],
+      "base_stats": {
+        "hp": 5040,
+        "attack": 840,
+        "defense": 72,
+        "speed": 36,
+        "magic": 1320
+      },
+      "abilities": [
+        "faceless_god",
+        "slime_plague",
+        "demon_lord_power",
+        "corruption_absolute"
+      ],
+      "loot": "boss_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "forest_primal",
+      "name": "Forest Primal",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The oldest spirit of the primordial forest",
+      "biomes": [],
+      "level_range": [
+        26,
+        28
+      ],
+      "base_stats": {
+        "hp": 4368,
+        "attack": 896,
+        "defense": 1540,
+        "speed": 112,
+        "magic": 1232
+      },
+      "abilities": [
+        "ancient_forest",
+        "root_apocalypse",
+        "nature_fury",
+        "eternal_growth"
+      ],
+      "loot": "boss_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "world_tree_avatar",
+      "name": "World Tree Avatar",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "boss",
+      "description": "An avatar of Yggdrasil, the cosmic tree",
+      "biomes": [],
+      "level_range": [
+        34,
+        36
+      ],
+      "base_stats": {
+        "hp": 5544,
+        "attack": 1296,
+        "defense": 1848,
+        "speed": 144,
+        "magic": 1584
+      },
+      "abilities": [
+        "cosmic_roots",
+        "planar_shift",
+        "world_binding",
+        "immortal_tree"
+      ],
+      "loot": "boss_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "poison_titan",
+      "name": "Poison Titan",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "boss",
+      "description": "A colossal plant dripping with deadly toxins",
+      "biomes": [],
+      "level_range": [
+        30,
+        32
+      ],
+      "base_stats": {
+        "hp": 4896,
+        "attack": 1088,
+        "defense": 1672,
+        "speed": 128,
+        "magic": 1408
+      },
+      "abilities": [
+        "mega_poison",
+        "toxic_rain",
+        "venomous_thorns",
+        "plague_bringer"
+      ],
+      "loot": "boss_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "spore_overmind",
+      "name": "Spore Overmind",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The collective consciousness of all fungi",
+      "biomes": [],
+      "level_range": [
+        32,
+        34
+      ],
+      "base_stats": {
+        "hp": 5088,
+        "attack": 1152,
+        "defense": 1760,
+        "speed": 120,
+        "magic": 1496
+      },
+      "abilities": [
+        "global_spores",
+        "hive_infection",
+        "mycelial_network",
+        "fungal_god"
+      ],
+      "loot": "boss_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "crypt_lord",
+      "name": "Lord Mortis the Eternal",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "summoner",
+        "draining",
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient lich who refuses to rest, radiating necromantic power",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        15,
+        17
+      ],
+      "base_stats": {
+        "hp": 850,
+        "attack": 55,
+        "defense": 22,
+        "speed": 18,
+        "magic": 85
+      },
+      "abilities": [
+        "death_bolt",
+        "summon_undead",
+        "life_drain",
+        "soul_cage"
+      ],
+      "loot": "boss_crypt_lord",
+      "template": "undead_base"
+    },
+    {
+      "id": "deathknight_valdris",
+      "name": "Deathknight Valdris",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A fallen paladin who now serves death itself",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        12,
+        14
+      ],
+      "base_stats": {
+        "hp": 680,
+        "attack": 48,
+        "defense": 28,
+        "speed": 15,
+        "magic": 42
+      },
+      "abilities": [
+        "death_strike",
+        "unholy_aura",
+        "grave_召喚"
+      ],
+      "loot": "boss_deathknight",
+      "template": "undead_base"
+    },
+    {
+      "id": "banshee_queen",
+      "name": "Elara the Banshee Queen",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "A tormented queen whose wail can shatter souls",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        16,
+        18
+      ],
+      "base_stats": {
+        "hp": 780,
+        "attack": 52,
+        "defense": 18,
+        "speed": 45,
+        "magic": 68
+      },
+      "abilities": [
+        "banshee_wail",
+        "soul_drain",
+        "ethereal_form"
+      ],
+      "loot": "boss_banshee_queen",
+      "template": "undead_base"
+    },
+    {
+      "id": "flesh_golem",
+      "name": "Abomination Mk VII",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "boss",
+      "description": "A grotesque creation of stitched corpses and dark magic",
+      "biomes": [
+        "ancient_crypts"
+      ],
+      "level_range": [
+        14,
+        16
+      ],
+      "base_stats": {
+        "hp": 950,
+        "attack": 58,
+        "defense": 35,
+        "speed": 8,
+        "magic": 12
+      },
+      "abilities": [
+        "ground_slam",
+        "toxic_gas",
+        "regenerate"
+      ],
+      "loot": "boss_flesh_golem",
+      "template": "undead_base"
+    },
+    {
+      "id": "death_horseman",
+      "name": "Death, the Pale Rider",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The fourth horseman, Death itself",
+      "biomes": [],
+      "level_range": [
+        52,
+        60
+      ],
+      "base_stats": {
+        "hp": 84000,
+        "attack": 3360,
+        "defense": 2100,
+        "speed": 448
+      },
+      "abilities": [
+        "pale_horse",
+        "death_scythe",
+        "reaping",
+        "mortality"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "war_horseman",
+      "name": "War, the Red Rider",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The first horseman, bringer of conflict",
+      "biomes": [],
+      "level_range": [
+        52,
+        60
+      ],
+      "base_stats": {
+        "hp": 81200,
+        "attack": 3472,
+        "defense": 2030,
+        "speed": 448
+      },
+      "abilities": [
+        "war_cry",
+        "blood_frenzy",
+        "endless_conflict"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "famine_horseman",
+      "name": "Famine, the Black Rider",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "The third horseman, drainer of life",
+      "biomes": [],
+      "level_range": [
+        54,
+        60
+      ],
+      "base_stats": {
+        "hp": 76950,
+        "attack": 3648,
+        "defense": 1924,
+        "speed": 456
+      },
+      "abilities": [
+        "starvation",
+        "life_drain",
+        "resource_depletion"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "pestilence_horseman",
+      "name": "Pestilence, the White Rider",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The second horseman, spreader of plague",
+      "biomes": [],
+      "level_range": [
+        54,
+        60
+      ],
+      "base_stats": {
+        "hp": 79800,
+        "attack": 3477,
+        "defense": 1995,
+        "speed": 456
+      },
+      "abilities": [
+        "pandemic",
+        "plague_cloud",
+        "mass_infection"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "entropy_god",
+      "name": "The End of All Things",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The personification of universe's heat death",
+      "biomes": [],
+      "level_range": [
+        50,
+        55
+      ],
+      "base_stats": {
+        "hp": 68250,
+        "attack": 2468,
+        "defense": 1706,
+        "speed": 420
+      },
+      "abilities": [
+        "heat_death",
+        "entropy_wave",
+        "universal_decay"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "old_god",
+      "name": "Yogg-Saron the Old God",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining",
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient god of madness and death",
+      "biomes": [],
+      "level_range": [
+        50,
+        57
+      ],
+      "base_stats": {
+        "hp": 64200,
+        "attack": 2996,
+        "defense": 1605,
+        "speed": 428
+      },
+      "abilities": [
+        "sanity_drain",
+        "tentacle_storm",
+        "old_god_whispers"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "ancient_red_dragon",
+      "name": "Ignaroth the Ancient Red",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient red dragon with millennia of rage",
+      "biomes": [],
+      "level_range": [
+        26,
+        32
+      ],
+      "base_stats": {
+        "hp": 20300,
+        "attack": 870,
+        "defense": 508,
+        "speed": 232
+      },
+      "abilities": [
+        "dragon_breath",
+        "tail_sweep",
+        "wing_buffet",
+        "frightful_presence"
+      ],
+      "loot": "boss_epic",
+      "template": "undead_base"
+    },
+    {
+      "id": "elder_dracolich",
+      "name": "Morthanax the Dracolich",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining",
+        "undead"
+      ],
+      "rarity": "boss",
+      "description": "An undead dragon of terrible power",
+      "biomes": [],
+      "level_range": [
+        28,
+        32
+      ],
+      "base_stats": {
+        "hp": 20400,
+        "attack": 930,
+        "defense": 510,
+        "speed": 240,
+        "magic": 1116
+      },
+      "abilities": [
+        "necrotic_breath",
+        "raise_dead",
+        "soul_drain"
+      ],
+      "loot": "boss_epic",
+      "template": "undead_base"
+    },
+    {
+      "id": "rot_hulk",
+      "name": "Putrescene the Rot Hulk",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "undead"
+      ],
+      "rarity": "boss",
+      "description": "A massive undead abomination of decay",
+      "biomes": [],
+      "level_range": [
+        29,
+        35
+      ],
+      "base_stats": {
+        "hp": 26240,
+        "attack": 928,
+        "defense": 656,
+        "speed": 256
+      },
+      "abilities": [
+        "vomit_plague",
+        "death_grip",
+        "pestilence_aura"
+      ],
+      "loot": "boss_epic",
+      "template": "undead_base"
+    },
+    {
+      "id": "infection_elemental",
+      "name": "Living Plague",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "Disease given sentient form",
+      "biomes": [],
+      "level_range": [
+        30,
+        35
+      ],
+      "base_stats": {
+        "hp": 19500,
+        "attack": 1203,
+        "defense": 488,
+        "speed": 260
+      },
+      "abilities": [
+        "infectious_touch",
+        "viral_burst",
+        "mutation"
+      ],
+      "loot": "boss_epic",
+      "template": "undead_base"
+    },
+    {
+      "id": "vampire_count",
+      "name": "Count Bloodmire",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "An immortal vampire who feeds on the living",
+      "biomes": [],
+      "level_range": [
+        12,
+        20
+      ],
+      "base_stats": {
+        "hp": 6240,
+        "attack": 320,
+        "defense": 156,
+        "speed": 128
+      },
+      "abilities": [
+        "blood_drain",
+        "mist_form",
+        "charm",
+        "bat_swarm"
+      ],
+      "loot": "boss_rare",
+      "template": "undead_base"
+    },
+    {
+      "id": "vampire_progenitor",
+      "name": "Cain the First Vampire",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The original vampire, source of the bloodline",
+      "biomes": [],
+      "level_range": [
+        39,
+        45
+      ],
+      "base_stats": {
+        "hp": 39900,
+        "attack": 1806,
+        "defense": 998,
+        "speed": 336
+      },
+      "abilities": [
+        "primal_bite",
+        "blood_pool",
+        "immortal_form"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "archlich",
+      "name": "Vecna the Archlich",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "boss",
+      "description": "An ancient lich of terrible power",
+      "biomes": [],
+      "level_range": [
+        39,
+        44
+      ],
+      "base_stats": {
+        "hp": 35275,
+        "attack": 1951,
+        "defense": 882,
+        "speed": 332,
+        "magic": 2341
+      },
+      "abilities": [
+        "finger_of_death",
+        "time_stop",
+        "wish_perversion"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "pale_rider",
+      "name": "Death Incarnate",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "Death itself given physical form",
+      "biomes": [],
+      "level_range": [
+        40,
+        44
+      ],
+      "base_stats": {
+        "hp": 39900,
+        "attack": 1890,
+        "defense": 998,
+        "speed": 336
+      },
+      "abilities": [
+        "death_touch",
+        "reap_souls",
+        "inevitability"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "plague_lich",
+      "name": "Necronus the Plague Lich",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "undead"
+      ],
+      "rarity": "boss",
+      "description": "An undead sorcerer commanding disease",
+      "biomes": [],
+      "level_range": [
+        30,
+        35
+      ],
+      "base_stats": {
+        "hp": 22100,
+        "attack": 1138,
+        "defense": 553,
+        "speed": 260,
+        "magic": 1365
+      },
+      "abilities": [
+        "death_coil",
+        "plague_storm",
+        "raise_infected"
+      ],
+      "loot": "boss_epic",
+      "template": "undead_base"
+    },
+    {
+      "id": "necromancer_supreme",
+      "name": "Thanatos the Deathlord",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "boss",
+      "description": "Master of necromantic arts",
+      "biomes": [],
+      "level_range": [
+        41,
+        46
+      ],
+      "base_stats": {
+        "hp": 36975,
+        "attack": 2045,
+        "defense": 924,
+        "speed": 348
+      },
+      "abilities": [
+        "death_magic",
+        "soul_rend",
+        "undead_horde"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "frost_lich_lord",
+      "name": "Kel'thuzad the Frost Lich",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "boss",
+      "description": "A powerful lich commanding ice magic",
+      "biomes": [],
+      "level_range": [
+        38,
+        43
+      ],
+      "base_stats": {
+        "hp": 35640,
+        "attack": 1782,
+        "defense": 891,
+        "speed": 324,
+        "magic": 2138
+      },
+      "abilities": [
+        "frost_nova",
+        "ice_lance",
+        "glacial_prison"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "death_emperor",
+      "name": "Nagash the Death Emperor",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "boss",
+      "description": "The supreme lord of undeath",
+      "biomes": [],
+      "level_range": [
+        38,
+        44
+      ],
+      "base_stats": {
+        "hp": 43050,
+        "attack": 1722,
+        "defense": 1076,
+        "speed": 328
+      },
+      "abilities": [
+        "death_wave",
+        "soul_harvest",
+        "undead_legion",
+        "mortality_curse"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "vampire_lord_ancient",
+      "name": "Dracula the Ancient",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The progenitor of all vampires",
+      "biomes": [],
+      "level_range": [
+        38,
+        44
+      ],
+      "base_stats": {
+        "hp": 36900,
+        "attack": 1845,
+        "defense": 923,
+        "speed": 328
+      },
+      "abilities": [
+        "blood_god",
+        "mist_lord",
+        "vampire_swarm"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "bone_colossus",
+      "name": "Ossuary the Bone Lord",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A massive construct of countless bones",
+      "biomes": [],
+      "level_range": [
+        39,
+        44
+      ],
+      "base_stats": {
+        "hp": 45650,
+        "attack": 1577,
+        "defense": 1141,
+        "speed": 332
+      },
+      "abilities": [
+        "bone_prison",
+        "skeletal_army",
+        "death_rattle"
+      ],
+      "loot": "boss_legendary",
+      "template": "undead_base"
+    },
+    {
+      "id": "hrungnir_reborn",
+      "name": "Hrungnir Reborn",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The stone giant champion risen again",
+      "biomes": [],
+      "level_range": [
+        25,
+        27
+      ],
+      "base_stats": {
+        "hp": 3360,
+        "attack": 1275,
+        "defense": 1320,
+        "speed": 84
+      },
+      "abilities": [
+        "stone_heart",
+        "whetstone_head",
+        "grindstone_fists"
+      ],
+      "loot": "boss_giant",
+      "template": "undead_base"
+    },
+    {
+      "id": "void_wraith",
+      "name": "Nullifax the Void Wraith",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "A creature from the spaces between worlds",
+      "biomes": [
+        "obsidian_citadel"
+      ],
+      "level_range": [
+        38,
+        40
+      ],
+      "base_stats": {
+        "hp": 2600,
+        "attack": 95,
+        "defense": 55,
+        "speed": 38,
+        "magic": 115
+      },
+      "abilities": [
+        "void_rift",
+        "reality_drain",
+        "phase_shift"
+      ],
+      "loot": "boss_void_wraith",
+      "template": "demon_base"
+    },
+    {
+      "id": "wailing_widow",
+      "name": "The Wailing Widow",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "A ghost bride searching for her lost love",
+      "biomes": [],
+      "level_range": [
+        8,
+        12
+      ],
+      "base_stats": {
+        "hp": 2500,
+        "attack": 180,
+        "defense": 63,
+        "speed": 80
+      },
+      "abilities": [
+        "mournful_wail",
+        "life_drain",
+        "phase_through"
+      ],
+      "loot": "boss_common",
+      "template": "undead_base"
+    },
+    {
+      "id": "headless_guardian",
+      "name": "The Headless Guardian",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A decapitated knight still defending the ruins",
+      "biomes": [],
+      "level_range": [
+        7,
+        12
+      ],
+      "base_stats": {
+        "hp": 3040,
+        "attack": 143,
+        "defense": 76,
+        "speed": 76
+      },
+      "abilities": [
+        "blind_fury",
+        "unstoppable",
+        "spectral_slash"
+      ],
+      "loot": "boss_common",
+      "template": "undead_base"
+    },
+    {
+      "id": "cursed_librarian",
+      "name": "Keeper of Forbidden Tomes",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A librarian cursed to guard dark knowledge forever",
+      "biomes": [],
+      "level_range": [
+        8,
+        12
+      ],
+      "base_stats": {
+        "hp": 2600,
+        "attack": 190,
+        "defense": 65,
+        "speed": 80
+      },
+      "abilities": [
+        "tome_blast",
+        "silence",
+        "knowledge_overwhelm"
+      ],
+      "loot": "boss_common",
+      "template": "undead_base"
+    },
+    {
+      "id": "poltergeist_lord",
+      "name": "Malevolent Poltergeist",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "A powerful spirit that hurls objects with telekinetic force",
+      "biomes": [],
+      "level_range": [
+        7,
+        12
+      ],
+      "base_stats": {
+        "hp": 2280,
+        "attack": 190,
+        "defense": 57,
+        "speed": 76
+      },
+      "abilities": [
+        "telekinesis",
+        "possession",
+        "ethereal_form"
+      ],
+      "loot": "boss_common",
+      "template": "undead_base"
+    },
+    {
+      "id": "mad_monk",
+      "name": "Brother Mortus the Mad",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "boss",
+      "description": "A monk driven insane by forbidden knowledge",
+      "biomes": [],
+      "level_range": [
+        7,
+        12
+      ],
+      "base_stats": {
+        "hp": 2660,
+        "attack": 162,
+        "defense": 67,
+        "speed": 76
+      },
+      "abilities": [
+        "dark_prayer",
+        "spirit_drain",
+        "madness_aura"
+      ],
+      "loot": "boss_common",
+      "template": "undead_base"
+    },
+    {
+      "id": "sentinel_alpha",
+      "name": "Sentinel Protocol Alpha",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "boss",
+      "description": "The first and deadliest security construct",
+      "biomes": [],
+      "level_range": [
+        30,
+        34
+      ],
+      "base_stats": {
+        "hp": 23040,
+        "attack": 1024,
+        "defense": 576,
+        "speed": 256
+      },
+      "abilities": [
+        "laser_array",
+        "defense_protocol",
+        "self_destruct"
+      ],
+      "loot": "boss_epic",
+      "template": "undead_base"
+    }
+  ]
+}

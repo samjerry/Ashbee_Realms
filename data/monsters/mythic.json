@@ -1,0 +1,1249 @@
+{
+  "rarity": "mythic",
+  "version": "1.0",
+  "count": 36,
+  "monsters": [
+    {
+      "id": "the_nameless_one",
+      "name": "The Nameless One",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "An entity of pure chaos, constantly shifting between forms. Its very presence distorts reality.",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        35,
+        50
+      ],
+      "base_stats": {
+        "hp": 2000,
+        "attack": 70,
+        "defense": 50,
+        "speed": 25,
+        "magic": 80
+      },
+      "abilities": [
+        "reality_warp",
+        "void_blast",
+        "chaos_form",
+        "time_stop",
+        "omniscient_strike",
+        "dimension_shift"
+      ],
+      "loot": "mythic_nameless",
+      "template": "aberration_base"
+    },
+    {
+      "id": "outer_titan",
+      "name": "Outer Titan",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A cosmic being from beyond known space",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 3500,
+        "attack": 78,
+        "defense": 70,
+        "speed": 20,
+        "magic": 68
+      },
+      "abilities": [
+        "cosmic_power",
+        "intimidate"
+      ],
+      "loot": "mythic_titan",
+      "template": "aberration_base"
+    },
+    {
+      "id": "void_leviathan",
+      "name": "Void Leviathan",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A serpent of incomprehensible size from the void",
+      "biomes": [
+        "void_realm",
+        "deep_caverns",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        45,
+        50
+      ],
+      "base_stats": {
+        "hp": 3200,
+        "attack": 82,
+        "defense": 48,
+        "speed": 18,
+        "magic": 65
+      },
+      "abilities": [
+        "void_damage",
+        "intimidate"
+      ],
+      "loot": "mythic_leviathan",
+      "template": "aberration_base"
+    },
+    {
+      "id": "cosmic_horror",
+      "name": "Cosmic Horror",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "An entity whose true form drives mortals to madness",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 3000,
+        "attack": 75,
+        "defense": 52,
+        "speed": 24,
+        "magic": 78
+      },
+      "abilities": [
+        "madness",
+        "reality_distortion",
+        "infinite_eyes"
+      ],
+      "loot": "mythic_horror",
+      "template": "aberration_base"
+    },
+    {
+      "id": "astral_colossus",
+      "name": "Astral Colossus",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A titan from the astral plane",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        49,
+        50
+      ],
+      "base_stats": {
+        "hp": 5000,
+        "attack": 92,
+        "defense": 80,
+        "speed": 18,
+        "magic": 75
+      },
+      "abilities": [
+        "cosmic_power",
+        "intimidate"
+      ],
+      "loot": "mythic_colossus",
+      "template": "aberration_base"
+    },
+    {
+      "id": "king_in_yellow",
+      "name": "The King in Yellow",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "An unknowable entity from beyond reality",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        48,
+        50
+      ],
+      "base_stats": {
+        "hp": 3800,
+        "attack": 95,
+        "defense": 58,
+        "speed": 28,
+        "magic": 88
+      },
+      "abilities": [
+        "intimidate",
+        "reality_control"
+      ],
+      "loot": "mythic_king_yellow",
+      "template": "aberration_base"
+    },
+    {
+      "id": "azathoth_star_eater",
+      "name": "Azathoth the Star Eater",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The blind idiot god who dreams reality itself",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        58,
+        60
+      ],
+      "base_stats": {
+        "hp": 5500,
+        "attack": 785,
+        "defense": 445,
+        "speed": 625,
+        "magic": 595
+      },
+      "abilities": [
+        "reality_warp",
+        "cosmic_chaos",
+        "star_consumption",
+        "dream_reality",
+        "madness_aura"
+      ],
+      "loot": "mythic_aberration",
+      "template": "aberration_base"
+    },
+    {
+      "id": "nyarlathotep_void_god",
+      "name": "Nyarlathotep the Void God",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "mythic",
+      "description": "The crawling chaos, messenger of the outer gods",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        59,
+        60
+      ],
+      "base_stats": {
+        "hp": 6200,
+        "attack": 845,
+        "defense": 495,
+        "speed": 685,
+        "magic": 655
+      },
+      "abilities": [
+        "thousand_forms",
+        "void_mastery",
+        "sanity_drain",
+        "chaos_incarnate",
+        "reality_break"
+      ],
+      "loot": "mythic_aberration",
+      "template": "aberration_base"
+    },
+    {
+      "id": "oceanus_titan",
+      "name": "Oceanus the Titan",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The titan personification of the world ocean",
+      "biomes": [
+        "twilight_wetlands",
+        "void_realm"
+      ],
+      "level_range": [
+        44,
+        49
+      ],
+      "base_stats": {
+        "hp": 1320,
+        "attack": 495,
+        "defense": 462,
+        "speed": 528,
+        "magic": 660
+      },
+      "abilities": [
+        "titan_ocean",
+        "world_flood",
+        "primordial_water",
+        "river_father",
+        "titan_strength"
+      ],
+      "loot": "mythic_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "cthulhu_aspect",
+      "name": "Aspect of Cthulhu",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A fragment of the dreaming god beneath the waves",
+      "biomes": [
+        "void_realm",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 1380,
+        "attack": 525,
+        "defense": 483,
+        "speed": 555,
+        "magic": 720
+      },
+      "abilities": [
+        "eternal_dreamer",
+        "madness_aura",
+        "non_euclidean",
+        "great_old_one",
+        "death_throes"
+      ],
+      "loot": "mythic_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "dagon_avatar",
+      "name": "Avatar of Dagon",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The fish-god made manifest",
+      "biomes": [
+        "twilight_wetlands",
+        "void_realm"
+      ],
+      "level_range": [
+        42,
+        47
+      ],
+      "base_stats": {
+        "hp": 1287,
+        "attack": 467,
+        "defense": 440,
+        "speed": 495,
+        "magic": 627
+      },
+      "abilities": [
+        "deep_one_master",
+        "fish_god",
+        "hybrid_spawn",
+        "ocean_cult",
+        "primordial_fish"
+      ],
+      "loot": "mythic_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "eternal_phoenix",
+      "name": "Eternal Phoenix",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [
+        "fire",
+        "regenerating"
+      ],
+      "rarity": "mythic",
+      "description": "An immortal firebird that cannot truly die",
+      "biomes": [
+        "volcanic_peaks",
+        "ashen_barrens",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        44,
+        50
+      ],
+      "base_stats": {
+        "hp": 2800,
+        "attack": 68,
+        "defense": 55,
+        "speed": 30,
+        "magic": 72
+      },
+      "abilities": [
+        "immortality",
+        "fire_aura",
+        "regen"
+      ],
+      "loot": "mythic_phoenix",
+      "template": "celestial_base"
+    },
+    {
+      "id": "fallen_god",
+      "name": "Fallen God",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A deity cast down from the heavens",
+      "biomes": [
+        "void_realm",
+        "forsaken_ruins",
+        "ancient_crypts",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        48,
+        50
+      ],
+      "base_stats": {
+        "hp": 4000,
+        "attack": 70,
+        "defense": 68,
+        "speed": 22,
+        "magic": 85
+      },
+      "abilities": [
+        "divine_corruption",
+        "reality_control",
+        "immortality"
+      ],
+      "loot": "mythic_fallen_god",
+      "template": "celestial_base"
+    },
+    {
+      "id": "eclipsed_seraph",
+      "name": "Eclipsed Seraph",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "An angel consumed by darkness during a cosmic eclipse",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "frozen_wastes",
+        "volcanic_peaks"
+      ],
+      "level_range": [
+        48,
+        50
+      ],
+      "base_stats": {
+        "hp": 4200,
+        "attack": 85,
+        "defense": 65,
+        "speed": 26,
+        "magic": 82
+      },
+      "abilities": [
+        "divine_power",
+        "cosmic_power"
+      ],
+      "loot": "mythic_eclipsed",
+      "template": "celestial_base"
+    },
+    {
+      "id": "shadow_dragon",
+      "name": "Shadow Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A dragon born from the void itself",
+      "biomes": [
+        "void_realm",
+        "frozen_wastes",
+        "volcanic_peaks",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        42,
+        50
+      ],
+      "base_stats": {
+        "hp": 2500,
+        "attack": 72,
+        "defense": 52,
+        "speed": 22,
+        "magic": 70
+      },
+      "abilities": [
+        "void_breath",
+        "reality_rend",
+        "intimidate"
+      ],
+      "loot": "mythic_shadow_dragon",
+      "template": "dragon_base"
+    },
+    {
+      "id": "world_serpent",
+      "name": "World Serpent",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "poisonous",
+        "regenerating"
+      ],
+      "rarity": "mythic",
+      "description": "A serpent so large it encircles the world",
+      "biomes": [
+        "deep_caverns",
+        "frozen_wastes",
+        "volcanic_peaks"
+      ],
+      "level_range": [
+        47,
+        50
+      ],
+      "base_stats": {
+        "hp": 3400,
+        "attack": 80,
+        "defense": 62,
+        "speed": 20,
+        "magic": 70
+      },
+      "abilities": [
+        "world_ending",
+        "poison_mastery",
+        "colossal",
+        "regeneration"
+      ],
+      "loot": "mythic_serpent",
+      "template": "dragon_base"
+    },
+    {
+      "id": "primordial_dragon",
+      "name": "Primordial Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The first dragon, from which all others descended",
+      "biomes": [
+        "volcanic_peaks",
+        "deep_caverns",
+        "frozen_wastes",
+        "highland_reaches"
+      ],
+      "level_range": [
+        49,
+        50
+      ],
+      "base_stats": {
+        "hp": 4500,
+        "attack": 88,
+        "defense": 72,
+        "speed": 24,
+        "magic": 80
+      },
+      "abilities": [
+        "creation_breath",
+        "time_mastery",
+        "ancient_power"
+      ],
+      "loot": "mythic_primal_dragon",
+      "template": "dragon_base"
+    },
+    {
+      "id": "primordial_elemental",
+      "name": "Primordial Elemental",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The first and most powerful of all elementals",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes",
+        "highland_reaches",
+        "deep_caverns",
+        "ashen_barrens"
+      ],
+      "level_range": [
+        40,
+        50
+      ],
+      "base_stats": {
+        "hp": 2200,
+        "attack": 65,
+        "defense": 48,
+        "speed": 28,
+        "magic": 75
+      },
+      "abilities": [
+        "elemental_mastery",
+        "storm_call",
+        "earthquake"
+      ],
+      "loot": "mythic_primordial",
+      "template": "elemental_base"
+    },
+    {
+      "id": "leshy_ancient",
+      "name": "Ancient Leshy",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The oldest guardian spirit of the primordial forest",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        40,
+        45
+      ],
+      "base_stats": {
+        "hp": 750,
+        "attack": 202,
+        "defense": 105,
+        "speed": 165,
+        "magic": 195
+      },
+      "abilities": [
+        "forest_master",
+        "root_prison",
+        "nature_fury",
+        "wild_growth",
+        "animal_call"
+      ],
+      "loot": "mythic_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "fey_progenitor",
+      "name": "The First Fey",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "mythic",
+      "description": "The original spark of fey magic given form",
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 705,
+        "attack": 225,
+        "defense": 90,
+        "speed": 195,
+        "magic": 240
+      },
+      "abilities": [
+        "creation_spark",
+        "reality_weave",
+        "fey_ascension",
+        "primordial_magic",
+        "realm_walk"
+      ],
+      "loot": "mythic_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "grand_pixie_queen",
+      "name": "Grand Pixie Queen",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "mythic",
+      "description": "The matriarch of all pixie-kind, ancient beyond measure",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        38,
+        43
+      ],
+      "base_stats": {
+        "hp": 690,
+        "attack": 180,
+        "defense": 85,
+        "speed": 185,
+        "magic": 195
+      },
+      "abilities": [
+        "pixie_swarm",
+        "wish_granting",
+        "starlight_burst",
+        "eternal_youth"
+      ],
+      "loot": "mythic_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "primordial_titan",
+      "name": "Primordial Titan",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "One of the original titans who ruled before the gods",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        44,
+        49
+      ],
+      "base_stats": {
+        "hp": 2100,
+        "attack": 675,
+        "defense": 650,
+        "speed": 18
+      },
+      "abilities": [
+        "titan_reign",
+        "primordial_chaos",
+        "world_ending",
+        "divine_strength",
+        "immortal_body"
+      ],
+      "loot": "mythic_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "kronos_shadow",
+      "name": "Shadow of Kronos",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A dark reflection of the titan of time",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 2000,
+        "attack": 690,
+        "defense": 630,
+        "speed": 15,
+        "magic": 450
+      },
+      "abilities": [
+        "time_devour",
+        "titan_scythe",
+        "age_manipulation",
+        "inevitable_doom",
+        "father_of_gods"
+      ],
+      "loot": "mythic_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "utgard_loki",
+      "name": "Utgard-Loki",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "mythic",
+      "description": "The greatest of giant illusionists and tricksters",
+      "biomes": [
+        "void_realm",
+        "highland_reaches"
+      ],
+      "level_range": [
+        42,
+        47
+      ],
+      "base_stats": {
+        "hp": 1890,
+        "attack": 645,
+        "defense": 600,
+        "speed": 21,
+        "magic": 540
+      },
+      "abilities": [
+        "grand_illusion",
+        "giant_magic",
+        "reality_challenge",
+        "utgard_fortress"
+      ],
+      "loot": "mythic_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "jotun_progenitor",
+      "name": "The First Jotun",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The ancestral father of all giant-kind",
+      "biomes": [
+        "highland_reaches",
+        "void_realm"
+      ],
+      "level_range": [
+        48,
+        50
+      ],
+      "base_stats": {
+        "hp": 2200,
+        "attack": 720,
+        "defense": 690,
+        "speed": 12,
+        "magic": 360
+      },
+      "abilities": [
+        "giant_heritage",
+        "world_creation",
+        "elemental_mastery",
+        "primordial_giant",
+        "bloodline_king"
+      ],
+      "loot": "mythic_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "lolth_aspect",
+      "name": "Aspect of Lolth",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "mythic",
+      "description": "A manifestation of the demon queen of spiders",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        44,
+        49
+      ],
+      "base_stats": {
+        "hp": 1080,
+        "attack": 396,
+        "defense": 345,
+        "speed": 450,
+        "magic": 540
+      },
+      "abilities": [
+        "spider_goddess",
+        "web_of_chaos",
+        "demon_queen",
+        "drow_command",
+        "divine_venom"
+      ],
+      "loot": "mythic_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "progenitor_insect",
+      "name": "The Progenitor Insect",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The first insect from which all arthropods descended",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        42,
+        47
+      ],
+      "base_stats": {
+        "hp": 1053,
+        "attack": 385,
+        "defense": 360,
+        "speed": 428
+      },
+      "abilities": [
+        "genetic_memory",
+        "evolution_master",
+        "swarm_progenitor",
+        "chitin_perfection"
+      ],
+      "loot": "mythic_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "khepri_reborn",
+      "name": "Khepri Reborn",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The scarab god who rolls the sun across the sky",
+      "biomes": [
+        "volcanic_wastes",
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 1170,
+        "attack": 418,
+        "defense": 378,
+        "speed": 468,
+        "magic": 630
+      },
+      "abilities": [
+        "solar_roll",
+        "dawn_bringer",
+        "eternal_rebirth",
+        "sun_god",
+        "sacred_transformation"
+      ],
+      "loot": "mythic_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "hive_singularity",
+      "name": "Hive Singularity",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "psychic"
+      ],
+      "rarity": "mythic",
+      "description": "The ultimate evolution of collective consciousness",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        48,
+        50
+      ],
+      "base_stats": {
+        "hp": 1215,
+        "attack": 440,
+        "defense": 392,
+        "speed": 495,
+        "magic": 720
+      },
+      "abilities": [
+        "universal_mind",
+        "swarm_universe",
+        "perfect_colony",
+        "consciousness_ascension",
+        "hive_god"
+      ],
+      "loot": "mythic_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "fenrir_unleashed",
+      "name": "Fenrir Unleashed",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The great wolf freed from his chains, bringer of Ragnarok",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 1960,
+        "attack": 700,
+        "defense": 520,
+        "speed": 728,
+        "magic": 520
+      },
+      "abilities": [
+        "ragnarok_bringer",
+        "god_killer",
+        "chain_shattering",
+        "world_end",
+        "gleipnir_broken"
+      ],
+      "loot": "mythic_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "luna_incarnate",
+      "name": "Luna Incarnate",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The moon itself given flesh and fury",
+      "biomes": [
+        "void_realm",
+        "whispering_woods"
+      ],
+      "level_range": [
+        44,
+        49
+      ],
+      "base_stats": {
+        "hp": 1848,
+        "attack": 672,
+        "defense": 494,
+        "speed": 686,
+        "magic": 660
+      },
+      "abilities": [
+        "moon_goddess",
+        "tidal_command",
+        "lunar_transformation",
+        "eclipse_power",
+        "celestial_body"
+      ],
+      "loot": "mythic_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "first_shifter",
+      "name": "The First Shifter",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The original being to walk between human and beast",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        42,
+        47
+      ],
+      "base_stats": {
+        "hp": 1742,
+        "attack": 630,
+        "defense": 468,
+        "speed": 644,
+        "magic": 585
+      },
+      "abilities": [
+        "primal_curse",
+        "shape_mastery",
+        "beast_within",
+        "transformation_origin",
+        "dual_nature"
+      ],
+      "loot": "mythic_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "primordial_ooze",
+      "name": "Primordial Ooze",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The first living thing, the original cell from which all life emerged",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        42,
+        47
+      ],
+      "base_stats": {
+        "hp": 1890,
+        "attack": 199,
+        "defense": 13,
+        "speed": 9,
+        "magic": 360
+      },
+      "abilities": [
+        "genesis",
+        "life_absorption",
+        "perfect_adaptation",
+        "progenitor_cell",
+        "consume_world"
+      ],
+      "loot": "mythic_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "universal_solvent",
+      "name": "Universal Solvent",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "An ooze that can dissolve anything, even concepts and ideas",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        45,
+        50
+      ],
+      "base_stats": {
+        "hp": 2100,
+        "attack": 210,
+        "defense": 15,
+        "speed": 6,
+        "magic": 450
+      },
+      "abilities": [
+        "dissolve_all",
+        "reality_acid",
+        "concept_consumption",
+        "unstoppable_corrosion",
+        "entropy_incarnate"
+      ],
+      "loot": "mythic_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "yggdrasil_aspect",
+      "name": "Aspect of Yggdrasil",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "A fragment of the world tree's consciousness",
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "base_stats": {
+        "hp": 1960,
+        "attack": 560,
+        "defense": 616,
+        "speed": 28,
+        "magic": 720
+      },
+      "abilities": [
+        "nine_realms",
+        "cosmic_tree",
+        "fate_weaver",
+        "eternal_trunk",
+        "root_of_all"
+      ],
+      "loot": "mythic_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "gaea_bloom",
+      "name": "Gaea's Bloom",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "mythic",
+      "description": "The flower that births worlds",
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        44,
+        49
+      ],
+      "base_stats": {
+        "hp": 1848,
+        "attack": 532,
+        "defense": 588,
+        "speed": 24,
+        "magic": 660
+      },
+      "abilities": [
+        "creation_pollen",
+        "life_giver",
+        "world_seed",
+        "mother_earth",
+        "genesis_bloom"
+      ],
+      "loot": "mythic_plant",
+      "template": "plant_base"
+    }
+  ]
+}

@@ -8,6 +8,8 @@ class MonsterDataLoader {
     this.templates = null;
     this.lootTables = null;
     this.monsters = null;
+    this.typeTemplates = null;
+    this.allMonsters = [];
   }
 
   load() {
@@ -15,6 +17,12 @@ class MonsterDataLoader {
     this.abilities = this.loadJSON('monster_abilities.json').abilities;
     this.templates = this.loadJSON('monster_templates.json');
     this.lootTables = this.loadJSON('monster_loot.json').loot_tables;
+    
+    // Load type templates for stat calculations
+    const typeTemplatesPath = path.join(this.dataDir, 'monsters', 'type_templates.json');
+    if (fs.existsSync(typeTemplatesPath)) {
+      this.typeTemplates = JSON.parse(fs.readFileSync(typeTemplatesPath, 'utf-8'));
+    }
     
     // Try to load monsters from new folder structure first
     this.monsters = this.loadMonsters();
@@ -40,23 +48,45 @@ class MonsterDataLoader {
   loadMonstersFromFolders() {
     const monsters = [];
     const monstersPath = path.join(this.dataDir, 'monsters');
-    const creatureTypeFiles = [
-      'beasts.json', 'humanoids.json', 'undead.json', 'dragons.json', 
-      'demons.json', 'elementals.json', 'aberrations.json', 'constructs.json', 'celestials.json',
-      'fey.json', 'giants.json', 'oozes.json', 'insectoids.json', 
-      'aquatic.json', 'plants.json', 'lycanthropes.json', 'monstrosities.json', 'fiends.json'
-    ];
     
-    for (const file of creatureTypeFiles) {
+    // Try new rarity-based structure first
+    const rarityFiles = ['common.json', 'uncommon.json', 'rare.json', 'epic.json', 'legendary.json', 'mythic.json', 'boss.json'];
+    let loadedFromRarityFiles = false;
+    
+    for (const file of rarityFiles) {
       const filePath = path.join(monstersPath, file);
       
-      if (!fs.existsSync(filePath)) continue;
+      if (fs.existsSync(filePath)) {
+        loadedFromRarityFiles = true;
+        const rarityData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        
+        // Each file has { rarity, version, count, monsters: [...] }
+        if (rarityData.monsters && Array.isArray(rarityData.monsters)) {
+          monsters.push(...rarityData.monsters);
+        }
+      }
+    }
+    
+    // Fallback to old category-based structure if rarity files don't exist
+    if (!loadedFromRarityFiles) {
+      const creatureTypeFiles = [
+        'beasts.json', 'humanoids.json', 'undead.json', 'dragons.json', 
+        'demons.json', 'elementals.json', 'aberrations.json', 'constructs.json', 'celestials.json',
+        'fey.json', 'giants.json', 'oozes.json', 'insectoids.json', 
+        'aquatic.json', 'plants.json', 'lycanthropes.json', 'monstrosities.json', 'fiends.json'
+      ];
       
-      const creatureTypeData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-      
-      // Each file has { creature_type, count, monsters: [...] }
-      if (creatureTypeData.monsters && Array.isArray(creatureTypeData.monsters)) {
-        monsters.push(...creatureTypeData.monsters);
+      for (const file of creatureTypeFiles) {
+        const filePath = path.join(monstersPath, file);
+        
+        if (!fs.existsSync(filePath)) continue;
+        
+        const creatureTypeData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        
+        // Each file has { creature_type, count, monsters: [...] }
+        if (creatureTypeData.monsters && Array.isArray(creatureTypeData.monsters)) {
+          monsters.push(...creatureTypeData.monsters);
+        }
       }
     }
     
@@ -82,38 +112,59 @@ class MonsterDataLoader {
     this.monsters.forEach(monsterData => {
       const monster = this.buildMonster(monsterData);
       builtMonsters[monster.rarity].push(monster);
+      
+      // Store in allMonsters array for querying
+      this.allMonsters.push(monster);
     });
 
     return { monsters: builtMonsters };
   }
 
   buildMonster(data) {
-    // Get template
-    const template = this.templates.templates[data.template];
-    const rarityMod = this.templates.rarity_modifiers[data.rarity];
+    // Check if this is new format (has base_stats) or old format (has stats array)
+    let baseStats;
+    if (data.base_stats) {
+      // New format - use base_stats directly
+      baseStats = { ...data.base_stats };
+    } else if (data.stats && Array.isArray(data.stats)) {
+      // Old format - convert stats array to object
+      const [hp, attack, defense, agility] = data.stats;
+      const template = this.templates.templates[data.template];
+      const rarityMod = this.templates.rarity_modifiers[data.rarity];
+      const multiplier = rarityMod.stat_multiplier;
 
-    // Build stats object
-    const [hp, attack, defense, agility] = data.stats;
-    const multiplier = rarityMod.stat_multiplier;
+      baseStats = {
+        hp: Math.round(hp * multiplier * (template?.base_multipliers?.hp || 1.0)),
+        attack: Math.round(attack * multiplier * (template?.base_multipliers?.attack || 1.0)),
+        defense: Math.round(defense * multiplier * (template?.base_multipliers?.defense || 1.0)),
+        agility: Math.round(agility * multiplier * (template?.base_multipliers?.agility || 1.0))
+      };
 
-    // Apply template multipliers
-    const baseStats = {
-      hp: Math.round(hp * multiplier * (template.base_multipliers?.hp || 1.0)),
-      attack: Math.round(attack * multiplier * (template.base_multipliers?.attack || 1.0)),
-      defense: Math.round(defense * multiplier * (template.base_multipliers?.defense || 1.0)),
-      agility: Math.round(agility * multiplier * (template.base_multipliers?.agility || 1.0))
-    };
-
-    // Add magic stat if template has it or if data specifies it
-    if (data.magic) {
-      baseStats.magic = Math.round(data.magic * multiplier);
-    } else if (template.base_multipliers?.magic) {
-      baseStats.magic = Math.round(10 * multiplier * template.base_multipliers.magic);
+      // Add magic stat if template has it or if data specifies it
+      if (data.magic) {
+        baseStats.magic = Math.round(data.magic * multiplier);
+      } else if (template?.base_multipliers?.magic) {
+        baseStats.magic = Math.round(10 * multiplier * template.base_multipliers.magic);
+      }
+    } else {
+      // Fallback
+      baseStats = {
+        hp: 10,
+        attack: 5,
+        defense: 5,
+        agility: 5
+      };
     }
+    
+    // Calculate final stats with type modifiers if available
+    const finalStats = this.typeTemplates ? this.calculateMonsterStats(data, baseStats) : baseStats;
+    
+    // Get template if available
+    const template = data.template ? this.templates.templates[data.template] : null;
 
     // Build abilities array with full ability data
     const abilityList = [
-      ...(template.base_abilities || []),
+      ...(template?.base_abilities || []),
       ...(data.abilities || [])
     ];
     
@@ -142,22 +193,38 @@ class MonsterDataLoader {
     const lootTable = this.lootTables[data.loot] || { gold: [0, 0], items: [] };
 
     // Calculate XP
+    const rarityMod = this.templates.rarity_modifiers[data.rarity];
     const xp_reward = Math.round(rarityMod.xp_base * ((data.level_range[0] + data.level_range[1]) / 2));
 
-    return {
+    const monster = {
       id: data.id,
       name: data.name,
       rarity: data.rarity,
       description: data.description,
       biomes: data.biomes,
       level_range: data.level_range,
-      base_stats: baseStats,
+      base_stats: finalStats,
       loot_table: lootTable,
       xp_reward,
       passive_abilities: passiveAbilities,
-      active_abilities: activeAbilities,
-      creature_type: template.creature_type
+      active_abilities: activeAbilities
     };
+    
+    // Add types and primary_type if available (new format)
+    if (data.types) {
+      monster.types = data.types;
+      monster.primary_type = data.primary_type || data.types[0];
+    } else if (template?.creature_type) {
+      // Old format - get from template
+      monster.creature_type = template.creature_type;
+    }
+    
+    // Add tags if available
+    if (data.tags) {
+      monster.tags = data.tags;
+    }
+
+    return monster;
   }
 
   // Get monster by ID
@@ -188,6 +255,74 @@ class MonsterDataLoader {
   // Get monsters by rarity
   getMonstersByRarity(rarity) {
     return this.buildMonsters().monsters[rarity] || [];
+  }
+  
+  // Calculate final stats based on type modifiers
+  calculateMonsterStats(monster, baseStats) {
+    if (!monster.types || !this.typeTemplates) {
+      return baseStats;
+    }
+    
+    let finalStats = { ...baseStats };
+    let typeCount = monster.types.length;
+    
+    let avgModifiers = {
+      hp_multiplier: 0,
+      attack_multiplier: 0,
+      defense_multiplier: 0,
+      speed_multiplier: 0,
+      magic_bonus: 0
+    };
+    
+    for (let type of monster.types) {
+      let template = this.typeTemplates[type];
+      if (template && template.stat_modifiers) {
+        avgModifiers.hp_multiplier += template.stat_modifiers.hp_multiplier;
+        avgModifiers.attack_multiplier += template.stat_modifiers.attack_multiplier;
+        avgModifiers.defense_multiplier += template.stat_modifiers.defense_multiplier;
+        avgModifiers.speed_multiplier += template.stat_modifiers.speed_multiplier;
+        avgModifiers.magic_bonus += (template.stat_modifiers.magic_bonus || 0);
+      }
+    }
+    
+    for (let key in avgModifiers) {
+      if (key.includes('multiplier')) {
+        avgModifiers[key] = avgModifiers[key] / typeCount;
+      } else {
+        avgModifiers[key] = Math.floor(avgModifiers[key] / typeCount);
+      }
+    }
+    
+    finalStats.hp = Math.floor(finalStats.hp * avgModifiers.hp_multiplier);
+    finalStats.attack = Math.floor(finalStats.attack * avgModifiers.attack_multiplier);
+    finalStats.defense = Math.floor(finalStats.defense * avgModifiers.defense_multiplier);
+    finalStats.speed = Math.floor((finalStats.speed || finalStats.agility || 5) * avgModifiers.speed_multiplier);
+    finalStats.magic = (finalStats.magic || 0) + avgModifiers.magic_bonus;
+    
+    // Handle agility/speed compatibility
+    if (finalStats.agility !== undefined && finalStats.speed === undefined) {
+      finalStats.speed = finalStats.agility;
+    }
+    
+    return finalStats;
+  }
+
+  // Get monsters by type
+  getMonstersByType(type) {
+    return this.allMonsters.filter(m => m.types && m.types.includes(type));
+  }
+
+  // Get monsters by types (with requireAll option)
+  getMonstersByTypes(types, requireAll = false) {
+    if (requireAll) {
+      return this.allMonsters.filter(m => 
+        m.types && types.every(type => m.types.includes(type))
+      );
+    } else {
+      return this.allMonsters.filter(m => 
+        m.types && types.some(type => m.types.includes(type))
+      );
+    }
   }
 
   // Generate full monsters.json for backward compatibility

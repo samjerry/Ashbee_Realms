@@ -1,0 +1,189 @@
+{
+  "aberration": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.0,
+      "attack_multiplier": 1.1,
+      "defense_multiplier": 0.9,
+      "speed_multiplier": 1.0,
+      "magic_bonus": 15
+    },
+    "default_abilities": ["reality_distortion"],
+    "description": "Creatures from beyond reality"
+  },
+  "aquatic": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.2,
+      "attack_multiplier": 0.9,
+      "defense_multiplier": 1.1,
+      "speed_multiplier": 1.3,
+      "magic_bonus": 5
+    },
+    "default_abilities": ["water_breathing"],
+    "description": "Water-dwelling creatures"
+  },
+  "beast": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.1,
+      "attack_multiplier": 1.0,
+      "defense_multiplier": 1.0,
+      "speed_multiplier": 1.2,
+      "magic_bonus": 0
+    },
+    "default_abilities": [],
+    "description": "Natural animals and creatures"
+  },
+  "celestial": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.3,
+      "attack_multiplier": 1.2,
+      "defense_multiplier": 1.1,
+      "speed_multiplier": 1.1,
+      "magic_bonus": 30
+    },
+    "default_abilities": ["divine_power", "radiance"],
+    "description": "Holy beings from higher planes"
+  },
+  "construct": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.0,
+      "attack_multiplier": 0.9,
+      "defense_multiplier": 1.5,
+      "speed_multiplier": 0.8,
+      "magic_bonus": 10
+    },
+    "default_abilities": ["magic_resist"],
+    "description": "Artificial beings and golems"
+  },
+  "dragon": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.5,
+      "attack_multiplier": 1.4,
+      "defense_multiplier": 1.3,
+      "speed_multiplier": 1.2,
+      "magic_bonus": 25
+    },
+    "default_abilities": ["dragon_breath", "intimidate"],
+    "description": "Powerful reptilian creatures"
+  },
+  "elemental": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.2,
+      "attack_multiplier": 1.3,
+      "defense_multiplier": 0.8,
+      "speed_multiplier": 1.1,
+      "magic_bonus": 35
+    },
+    "default_abilities": ["elemental_immunity"],
+    "description": "Living manifestations of elements"
+  },
+  "fey": {
+    "stat_modifiers": {
+      "hp_multiplier": 0.8,
+      "attack_multiplier": 1.1,
+      "defense_multiplier": 0.9,
+      "speed_multiplier": 1.4,
+      "magic_bonus": 40
+    },
+    "default_abilities": ["fey_magic", "glamour"],
+    "description": "Magical beings from the feywild"
+  },
+  "fiend": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.1,
+      "attack_multiplier": 1.3,
+      "defense_multiplier": 0.8,
+      "speed_multiplier": 1.1,
+      "magic_bonus": 25
+    },
+    "default_abilities": ["intimidate", "dark_resistance"],
+    "description": "Evil outsiders from lower planes"
+  },
+  "giant": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.6,
+      "attack_multiplier": 1.3,
+      "defense_multiplier": 1.2,
+      "speed_multiplier": 0.7,
+      "magic_bonus": 5
+    },
+    "default_abilities": ["giant_strength"],
+    "description": "Huge humanoid creatures"
+  },
+  "humanoid": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.0,
+      "attack_multiplier": 1.0,
+      "defense_multiplier": 1.0,
+      "speed_multiplier": 1.0,
+      "magic_bonus": 0
+    },
+    "default_abilities": [],
+    "description": "Human-like creatures"
+  },
+  "insectoid": {
+    "stat_modifiers": {
+      "hp_multiplier": 0.9,
+      "attack_multiplier": 1.1,
+      "defense_multiplier": 1.2,
+      "speed_multiplier": 1.3,
+      "magic_bonus": 5
+    },
+    "default_abilities": ["chitin_armor"],
+    "description": "Giant insects and arachnids"
+  },
+  "lycanthrope": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.2,
+      "attack_multiplier": 1.3,
+      "defense_multiplier": 1.1,
+      "speed_multiplier": 1.2,
+      "magic_bonus": 10
+    },
+    "default_abilities": ["shapeshifter", "regeneration"],
+    "description": "Cursed shapeshifters"
+  },
+  "monstrosity": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.3,
+      "attack_multiplier": 1.2,
+      "defense_multiplier": 1.1,
+      "speed_multiplier": 1.0,
+      "magic_bonus": 15
+    },
+    "default_abilities": ["unnatural"],
+    "description": "Unnatural hybrid creatures"
+  },
+  "ooze": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.4,
+      "attack_multiplier": 0.7,
+      "defense_multiplier": 0.5,
+      "speed_multiplier": 0.6,
+      "magic_bonus": 0
+    },
+    "default_abilities": ["amorphous", "acid_touch"],
+    "description": "Gelatinous creatures"
+  },
+  "plant": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.3,
+      "attack_multiplier": 0.9,
+      "defense_multiplier": 1.2,
+      "speed_multiplier": 0.7,
+      "magic_bonus": 20
+    },
+    "default_abilities": ["photosynthesis", "root"],
+    "description": "Animated vegetation"
+  },
+  "undead": {
+    "stat_modifiers": {
+      "hp_multiplier": 1.1,
+      "attack_multiplier": 1.0,
+      "defense_multiplier": 0.9,
+      "speed_multiplier": 0.9,
+      "magic_bonus": 20
+    },
+    "default_abilities": ["undead_resilience", "life_drain"],
+    "description": "Reanimated dead creatures"
+  }
+}
