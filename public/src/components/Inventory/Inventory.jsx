@@ -31,7 +31,7 @@ const Inventory = () => {
     return item.type === filter;
   });
   
-  const itemTypes = ['all', 'weapon', 'armor', 'consumable', 'material', 'quest'];
+  const itemTypes = ['all', 'weapon', 'armor', 'consumable', 'material', 'quest', 'misc'];
 
   return (
     <div className="space-y-4 sm:space-y-6">

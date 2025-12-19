@@ -1,0 +1,493 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../db');
+const socketHandler = require('../websocket/socketHandler');
+const validation = require('../middleware/validation');
+const rateLimiter = require('../utils/rateLimiter');
+const security = require('../middleware/security');
+const sanitization = require('../middleware/sanitization');
+
+/**
+ * Helper function to convert player data to frontend format
+ */
+function convertToFrontendFormat(playerData) {
+  return {
+    name: playerData.name,
+    level: playerData.level,
+    xp: playerData.xp,
+    hp: playerData.hp,
+    maxHp: playerData.max_hp,
+    gold: playerData.gold,
+    location: playerData.location,
+    inventory: playerData.inventory,
+    equipped: playerData.equipped,
+    nameColor: playerData.nameColor,
+    roles: playerData.roles
+  };
+}
+
+/**
+ * GET /progress
+ * Get player progress data
+ */
+router.get('/progress', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+  const channelName = req.query.channel;
+  if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
+
+  try {
+    let progress = await db.loadPlayerProgress(user.id, channelName.toLowerCase());
+    
+    if (!progress) {
+      progress = await db.initializeNewPlayer(user.id, channelName.toLowerCase(), user.displayName, "Town Square", 100);
+    }
+
+    progress.channel = channelName;
+    res.json({ progress, channel: channelName });
+  } catch (err) {
+    console.error('Load progress error:', err);
+    res.status(500).json({ error: 'Failed to load progress' });
+  }
+});
+
+/**
+ * POST /progress
+ * Save player progress - WITH SERVER-SIDE VALIDATION
+ */
+router.post('/progress', 
+  rateLimiter.middleware('strict'),
+  security.auditLog('save_progress'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const channelName = req.body.channel || req.query.channel;
+    if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
+
+    try {
+      const playerData = req.body.progress || req.body;
+      
+      const currentProgress = await db.loadPlayerProgress(user.id, channelName.toLowerCase());
+      
+      if (!currentProgress) {
+        return res.status(404).json({ error: 'No character found. Please create a character first.' });
+      }
+      
+      // Validate level
+      if (playerData.level !== undefined) {
+        if (playerData.level < 1 || playerData.level > 100) {
+          console.warn(`[SECURITY] Invalid level attempt: ${playerData.level} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid level value' });
+        }
+        if (playerData.level > currentProgress.level + 1) {
+          console.warn(`[SECURITY] Level jump detected for user ${security.sanitizeUserForLog(user)}: ${currentProgress.level} -> ${playerData.level}`);
+          return res.status(400).json({ error: 'Invalid level progression' });
+        }
+      }
+      
+      // Validate gold changes
+      if (playerData.gold !== undefined) {
+        if (playerData.gold < 0 || playerData.gold > 100000000) {
+          console.warn(`[SECURITY] Invalid gold amount: ${playerData.gold} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid gold amount' });
+        }
+        const goldChange = playerData.gold - currentProgress.gold;
+        if (goldChange > 100000) {
+          console.warn(`[SECURITY] Large gold increase detected for user ${security.sanitizeUserForLog(user)}: ${currentProgress.gold} -> ${playerData.gold}`);
+          return res.status(400).json({ error: 'Invalid gold increase - suspiciously large' });
+        }
+        if (goldChange < 0 && playerData.gold < 0) {
+          console.warn(`[SECURITY] Negative gold after spending for user ${security.sanitizeUserForLog(user)}: ${playerData.gold}`);
+          playerData.gold = 0;
+        }
+      }
+      
+      // Validate XP changes
+      if (playerData.xp !== undefined) {
+        if (playerData.xp < 0 || playerData.xp > 1000000000) {
+          console.warn(`[SECURITY] Invalid XP amount: ${playerData.xp} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid XP amount' });
+        }
+      }
+      
+      // Validate HP
+      if (playerData.hp !== undefined) {
+        if (playerData.hp < 0 || playerData.hp > 1000000) {
+          console.warn(`[SECURITY] Invalid HP: ${playerData.hp} for user ${security.sanitizeUserForLog(user)}`);
+          return res.status(400).json({ error: 'Invalid HP value' });
+        }
+        const maxHp = playerData.max_hp || currentProgress.max_hp;
+        if (playerData.hp > maxHp) {
+          console.warn(`[SECURITY] HP > max_hp for user ${security.sanitizeUserForLog(user)}: ${playerData.hp} > ${maxHp}`);
+          playerData.hp = maxHp;
+        }
+      }
+      
+      // Sanitize string fields
+      if (playerData.name) {
+        playerData.name = sanitization.sanitizeCharacterName(playerData.name);
+      }
+      if (playerData.location) {
+        playerData.location = sanitization.sanitizeLocationName(playerData.location);
+      }
+      
+      // Sanitize inventory
+      if (playerData.inventory) {
+        playerData.inventory = sanitization.sanitizeInventory(playerData.inventory);
+        if (playerData.inventory.length > 1000) {
+          console.warn(`[SECURITY] Inventory size exceeded for user ${security.sanitizeUserForLog(user)}: ${playerData.inventory.length}`);
+          playerData.inventory = playerData.inventory.slice(0, 1000);
+        }
+      }
+      
+      // Sanitize equipment
+      if (playerData.equipped) {
+        playerData.equipped = sanitization.sanitizeEquipment(playerData.equipped);
+      }
+      
+      const mergedData = {
+        ...currentProgress,
+        ...playerData
+      };
+      
+      await db.savePlayerProgress(user.id, channelName.toLowerCase(), mergedData);
+      
+      if (mergedData.name) {
+        socketHandler.emitPlayerUpdate(mergedData.name, channelName.toLowerCase(), convertToFrontendFormat(mergedData));
+      }
+      
+      res.json({ status: 'ok', message: 'Progress saved' });
+    } catch (err) {
+      console.error('Save progress error:', err);
+      res.status(500).json({ error: 'Failed to save progress' });
+    }
+  });
+
+/**
+ * GET /channel
+ * Get the default channel for character creation
+ */
+router.get('/channel', (req, res) => {
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channel = CHANNELS[0] || 'default';
+  res.json({ channel });
+});
+
+/**
+ * GET /
+ * Get basic player information including theme, name color, and selected role badge
+ */
+router.get('/', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channelName = CHANNELS[0] || 'default';
+  
+  try {
+    const playerData = await db.loadPlayerProgress(user.id, channelName);
+    if (!playerData) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    res.json({
+      name: playerData.name,
+      nameColor: playerData.nameColor,
+      selectedRoleBadge: playerData.selectedRoleBadge,
+      theme: playerData.theme || 'crimson-knight',
+      roles: playerData.roles
+    });
+  } catch (error) {
+    console.error('Error fetching player:', error);
+    res.status(500).json({ error: 'Failed to fetch player data' });
+  }
+});
+
+/**
+ * GET /roles
+ * Get user's Twitch roles for display and color selection
+ */
+router.get('/roles', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+  const channel = CHANNELS[0] || 'default';
+  const displayName = user.displayName || user.display_name || 'Adventurer';
+  
+  try {
+    const playerData = await db.loadPlayerProgress(user.id, channel);
+    let roles = playerData?.roles || ['viewer'];
+    let rolesUpdated = false;
+    
+    if (displayName.toLowerCase() === 'marrowofalbion' || displayName.toLowerCase() === 'marrowofalb1on') {
+      if (!roles.includes('creator')) {
+        roles = ['creator', ...roles.filter(r => r !== 'viewer')];
+        rolesUpdated = true;
+      }
+    }
+    
+    if (db.isBetaTester(displayName) && !roles.includes('tester')) {
+      roles = [...roles, 'tester'];
+      rolesUpdated = true;
+    }
+    
+    if (rolesUpdated && playerData) {
+      playerData.roles = roles;
+      await db.savePlayerProgress(user.id, channel, playerData);
+      console.log(`✅ Persisted roles for ${displayName}:`, roles);
+      
+      if (playerData.name) {
+        socketHandler.emitPlayerUpdate(playerData.name, channel, { roles });
+      }
+    }
+    
+    const primaryRole = db.ROLE_HIERARCHY.find(r => roles.includes(r)) || 'viewer';
+    
+    let availableColors;
+    if (roles.includes('creator')) {
+      availableColors = db.ROLE_HIERARCHY.map(r => ({
+        role: r,
+        color: db.ROLE_COLORS[r] || db.ROLE_COLORS.viewer,
+        name: r.charAt(0).toUpperCase() + r.slice(1)
+      }));
+    } else {
+      availableColors = roles.map(r => ({
+        role: r,
+        color: db.ROLE_COLORS[r] || db.ROLE_COLORS.viewer,
+        name: r.charAt(0).toUpperCase() + r.slice(1)
+      }));
+    }
+    
+    console.log(`🎭 Roles API for ${displayName}:`, { roles, primaryRole });
+    
+    res.json({ 
+      primaryRole,
+      roles,
+      availableColors,
+      displayName: displayName
+    });
+  } catch (error) {
+    console.error('Error fetching user roles:', error);
+    res.status(500).json({ error: 'Failed to fetch roles' });
+  }
+});
+
+/**
+ * GET /stats
+ * Get detailed character stats breakdown and player data
+ */
+router.get('/stats', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  let { channel } = req.query;
+  
+  if (!channel) {
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'No channel configured' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const statsBreakdown = character.getStatsBreakdown();
+    const finalStats = character.getFinalStats();
+    
+    res.json({
+      username: character.name,
+      class: character.classData?.name || 'Unknown',
+      level: character.level,
+      xp: character.xp,
+      xpToNextLevel: character.xpToNext,
+      hp: character.hp,
+      maxHp: finalStats.maxHp,
+      mana: character.mana || 0,
+      maxMana: character.maxMana || 100,
+      gold: character.gold,
+      nameColor: character.nameColor || '#FFFFFF',
+      channel: channelName,
+      stats: {
+        attack: finalStats.attack,
+        defense: finalStats.defense,
+        magic: finalStats.magic,
+        agility: finalStats.agility,
+        strength: finalStats.strength,
+        critChance: parseFloat(finalStats.critChance) || 5,
+        dodgeChance: parseFloat(finalStats.dodgeChance) || 0,
+        blockChance: parseFloat(finalStats.blockChance) || 0
+      },
+      statsBreakdown: statsBreakdown
+    });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
+/**
+ * GET /inventory
+ * Get player inventory with item details
+ */
+router.get('/inventory', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  let { channel } = req.query;
+  
+  if (!channel) {
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'No channel configured' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const inventory = character.inventory.getSummary();
+    res.json({ success: true, inventory });
+  } catch (error) {
+    console.error('Error fetching inventory:', error);
+    res.status(500).json({ error: 'Failed to fetch inventory' });
+  }
+});
+
+/**
+ * GET /equipment
+ * Get player equipped items with details
+ */
+router.get('/equipment', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  let { channel } = req.query;
+  
+  if (!channel) {
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'No channel configured' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    const equipment = character.equipment.getSummary();
+    res.json({ success: true, equipment });
+  } catch (error) {
+    console.error('Error fetching equipment:', error);
+    res.status(500).json({ error: 'Failed to fetch equipment' });
+  }
+});
+
+/**
+ * POST /equip
+ * Equip an item from inventory - WITH VALIDATION
+ */
+router.post('/equip',
+  validation.validateEquipment,
+  rateLimiter.middleware('default'),
+  security.auditLog('equip_item'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { channel, itemId } = req.body;
+    if (!channel || !itemId) {
+      return res.status(400).json({ error: 'Channel and itemId required' });
+    }
+    
+    const channelName = channel.toLowerCase();
+    const sanitizedItemId = sanitization.sanitizeInput(itemId, { maxLength: 100 });
+    
+    try {
+      const character = await db.getCharacter(user.id, channelName);
+      
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      const result = character.equipItem(sanitizedItemId);
+      
+      if (result.success) {
+        await db.saveCharacter(user.id, channelName, character);
+        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error equipping item:', error);
+      res.status(500).json({ error: 'Failed to equip item' });
+    }
+  });
+
+/**
+ * POST /unequip
+ * Unequip an item to inventory - WITH VALIDATION
+ */
+router.post('/unequip',
+  validation.validateEquipment,
+  rateLimiter.middleware('default'),
+  security.auditLog('unequip_item'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { channel, slot } = req.body;
+    if (!channel || !slot) {
+      return res.status(400).json({ error: 'Channel and slot required' });
+    }
+    
+    const channelName = channel.toLowerCase();
+    
+    try {
+      const character = await db.getCharacter(user.id, channelName);
+      
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      const result = character.unequipItem(slot);
+      
+      if (result.success) {
+        await db.saveCharacter(user.id, channelName, character);
+        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error unequipping item:', error);
+      res.status(500).json({ error: 'Failed to unequip item' });
+    }
+  });
+
+module.exports = router;
