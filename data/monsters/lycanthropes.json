@@ -1,6 +1,6 @@
 {
   "creature_type": "lycanthropes",
-  "count": 20,
+  "count": 21,
   "monsters": [
     {
       "id": "wererat",
@@ -551,6 +551,34 @@
       ],
       "loot": "mythic_lycanthrope",
       "magic": 585
+    },
+    {
+      "id": "hybrid_horror",
+      "name": "Hybrid Horror",
+      "template": "lycanthrope_base",
+      "rarity": "epic",
+      "description": "A lycanthrope cursed with multiple animal forms",
+      "biomes": [
+        "cursed_swamp",
+        "void_realm"
+      ],
+      "level_range": [
+        24,
+        30
+      ],
+      "stats": [
+        468,
+        202,
+        140,
+        182
+      ],
+      "abilities": [
+        "multi_shift",
+        "chimeric_form",
+        "curse_fusion",
+        "unstable_transformation"
+      ],
+      "loot": "epic_lycanthrope"
     }
   ]
 }

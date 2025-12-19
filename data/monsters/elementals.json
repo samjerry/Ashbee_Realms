@@ -1,6 +1,6 @@
 {
   "creature_type": "elementals",
-  "count": 33,
+  "count": 27,
   "monsters": [
     {
       "id": "lightning_wisp",
@@ -334,31 +334,6 @@
       "magic": 105
     },
     {
-      "id": "coral_titan",
-      "name": "Coralox the Living Reef",
-      "template": "elemental_base",
-      "rarity": "boss",
-      "description": "A massive creature made of living coral",
-      "biomes": [],
-      "level_range": [
-        9,
-        14
-      ],
-      "stats": [
-        4025,
-        161,
-        101,
-        92
-      ],
-      "abilities": [
-        "coral_spikes",
-        "reef_regeneration",
-        "calcify"
-      ],
-      "loot": "boss_common",
-      "magic": 193
-    },
-    {
       "id": "clockwork_titan",
       "name": "Chronos the Clockwork Titan",
       "template": "elemental_base",
@@ -533,132 +508,6 @@
       ],
       "loot": "boss_legendary",
       "magic": 1968
-    },
-    {
-      "id": "atlas_titan",
-      "name": "Atlas the World Bearer",
-      "template": "elemental_base",
-      "rarity": "boss",
-      "description": "A titan who once held the world on his shoulders",
-      "biomes": [],
-      "level_range": [
-        36,
-        42
-      ],
-      "stats": [
-        39000,
-        1560,
-        975,
-        312
-      ],
-      "abilities": [
-        "world_crush",
-        "titan_roar",
-        "earthquake",
-        "mountain_throw"
-      ],
-      "loot": "boss_legendary",
-      "magic": 1872
-    },
-    {
-      "id": "frost_titan",
-      "name": "Ymir the Frost Titan",
-      "template": "elemental_base",
-      "rarity": "boss",
-      "description": "A titan of eternal ice and winter",
-      "biomes": [],
-      "level_range": [
-        36,
-        42
-      ],
-      "stats": [
-        37050,
-        1638,
-        926,
-        312
-      ],
-      "abilities": [
-        "glacial_fist",
-        "blizzard_breath",
-        "ice_age"
-      ],
-      "loot": "boss_legendary",
-      "magic": 1966
-    },
-    {
-      "id": "storm_titan",
-      "name": "Typhon the Storm Titan",
-      "template": "elemental_base",
-      "rarity": "boss",
-      "description": "A titan commanding storms and lightning",
-      "biomes": [],
-      "level_range": [
-        37,
-        42
-      ],
-      "stats": [
-        35550,
-        1738,
-        889,
-        316
-      ],
-      "abilities": [
-        "lightning_storm",
-        "hurricane_winds",
-        "thunder_clap"
-      ],
-      "loot": "boss_legendary",
-      "magic": 2086
-    },
-    {
-      "id": "fire_titan",
-      "name": "Prometheus the Fire Titan",
-      "template": "elemental_base",
-      "rarity": "boss",
-      "description": "The titan who stole fire from the gods",
-      "biomes": [],
-      "level_range": [
-        37,
-        42
-      ],
-      "stats": [
-        36735,
-        1699,
-        918,
-        316
-      ],
-      "abilities": [
-        "eternal_flame",
-        "inferno_strike",
-        "burning_world"
-      ],
-      "loot": "boss_legendary",
-      "magic": 2038
-    },
-    {
-      "id": "void_titan",
-      "name": "Cronus the Devourer",
-      "template": "elemental_base",
-      "rarity": "boss",
-      "description": "A titan who consumes all things",
-      "biomes": [],
-      "level_range": [
-        38,
-        42
-      ],
-      "stats": [
-        42000,
-        1520,
-        1050,
-        320
-      ],
-      "abilities": [
-        "devour",
-        "time_stop",
-        "reality_rend"
-      ],
-      "loot": "boss_legendary",
-      "magic": 1824
     },
     {
       "id": "ice_elemental",

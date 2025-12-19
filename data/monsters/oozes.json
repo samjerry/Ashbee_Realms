@@ -483,7 +483,7 @@
     {
       "id": "moss_slime",
       "name": "Moss Slime",
-      "template": "beast_base",
+      "template": "ooze_base",
       "rarity": "common",
       "description": "A gelatinous creature covered in moss and vegetation",
       "biomes": [
@@ -508,7 +508,7 @@
     {
       "id": "cave_slime",
       "name": "Cave Slime",
-      "template": "beast_base",
+      "template": "ooze_base",
       "rarity": "common",
       "description": "A translucent ooze that lurks in dark caves",
       "biomes": [

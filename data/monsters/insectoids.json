@@ -1,6 +1,6 @@
 {
   "creature_type": "insectoids",
-  "count": 23,
+  "count": 30,
   "monsters": [
     {
       "id": "giant_ant_worker",
@@ -621,6 +621,179 @@
       ],
       "loot": "mythic_insectoid",
       "magic": 720
+    },
+    {
+      "id": "broodmother",
+      "name": "Arachna the Broodmother",
+      "template": "beast_base",
+      "rarity": "boss",
+      "description": "A massive spider that births countless offspring",
+      "biomes": [],
+      "level_range": [
+        8,
+        13
+      ],
+      "stats": [
+        3150,
+        168,
+        79,
+        84
+      ],
+      "abilities": [
+        "spawn_spiderlings",
+        "web_trap",
+        "poison_bite"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "widow_queen",
+      "name": "Black Widow Queen",
+      "template": "beast_base",
+      "rarity": "boss",
+      "description": "A sleek black spider with lethal venom",
+      "biomes": [],
+      "level_range": [
+        8,
+        13
+      ],
+      "stats": [
+        2625,
+        210,
+        66,
+        84
+      ],
+      "abilities": [
+        "neurotoxin",
+        "web_cocoon",
+        "death_strike"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "crystal_spider",
+      "name": "Shimmer the Crystal Spider",
+      "template": "beast_base",
+      "rarity": "boss",
+      "description": "A beautiful but deadly spider with crystalline carapace",
+      "biomes": [],
+      "level_range": [
+        8,
+        13
+      ],
+      "stats": [
+        2835,
+        179,
+        71,
+        84
+      ],
+      "abilities": [
+        "crystal_shard",
+        "reflect",
+        "prismatic_web"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "web_weaver",
+      "name": "Silkspinner the Weaver",
+      "template": "beast_base",
+      "rarity": "boss",
+      "description": "A spider capable of creating complex magical web patterns",
+      "biomes": [],
+      "level_range": [
+        9,
+        13
+      ],
+      "stats": [
+        2860,
+        198,
+        72,
+        88
+      ],
+      "abilities": [
+        "web_maze",
+        "silk_bind",
+        "pattern_magic"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "web_spinner",
+      "name": "Web Spinner",
+      "template": "beast_base",
+      "rarity": "common",
+      "description": "A smaller spider that creates sticky webs",
+      "biomes": [
+        "deep_caverns",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "stats": [
+        35,
+        12,
+        4,
+        16
+      ],
+      "abilities": [
+        "web_shot"
+      ],
+      "loot": "common_beast"
+    },
+    {
+      "id": "tarantula_king",
+      "name": "Fang the Tarantula King",
+      "template": "humanoid_base",
+      "rarity": "boss",
+      "description": "A hairy behemoth with crushing mandibles",
+      "biomes": [],
+      "level_range": [
+        9,
+        13
+      ],
+      "stats": [
+        3740,
+        165,
+        94,
+        88
+      ],
+      "abilities": [
+        "crushing_bite",
+        "ground_shake",
+        "barbed_hairs"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "retriever",
+      "name": "Retriever",
+      "template": "demon_base",
+      "rarity": "legendary",
+      "description": "A demonic construct built like a spider for hunting",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        28,
+        34
+      ],
+      "stats": [
+        560,
+        260,
+        220,
+        220
+      ],
+      "abilities": [
+        "eye_rays",
+        "plane_shift",
+        "relentless_pursuit",
+        "construct_body"
+      ],
+      "loot": "legendary_insectoid",
+      "magic": 160
     }
   ]
 }

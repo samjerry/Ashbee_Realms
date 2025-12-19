@@ -1,6 +1,6 @@
 {
   "creature_type": "undead",
-  "count": 62,
+  "count": 68,
   "monsters": [
     {
       "id": "skeleton",
@@ -562,7 +562,7 @@
       "abilities": [
         "death_strike",
         "unholy_aura",
-        "grave_召喚"
+        "grave_\u53ec\u559a"
       ],
       "loot": "boss_deathknight",
       "magic": 42
@@ -1653,6 +1653,150 @@
       ],
       "loot": "legendary_humanoid",
       "magic": 195
+    },
+    {
+      "id": "wailing_widow",
+      "name": "The Wailing Widow",
+      "template": "beast_base",
+      "rarity": "boss",
+      "description": "A ghost bride searching for her lost love",
+      "biomes": [],
+      "level_range": [
+        8,
+        12
+      ],
+      "stats": [
+        2500,
+        180,
+        63,
+        80
+      ],
+      "abilities": [
+        "mournful_wail",
+        "life_drain",
+        "phase_through"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "headless_guardian",
+      "name": "The Headless Guardian",
+      "template": "humanoid_base",
+      "rarity": "boss",
+      "description": "A decapitated knight still defending the ruins",
+      "biomes": [],
+      "level_range": [
+        7,
+        12
+      ],
+      "stats": [
+        3040,
+        143,
+        76,
+        76
+      ],
+      "abilities": [
+        "blind_fury",
+        "unstoppable",
+        "spectral_slash"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "cursed_librarian",
+      "name": "Keeper of Forbidden Tomes",
+      "template": "humanoid_base",
+      "rarity": "boss",
+      "description": "A librarian cursed to guard dark knowledge forever",
+      "biomes": [],
+      "level_range": [
+        8,
+        12
+      ],
+      "stats": [
+        2600,
+        190,
+        65,
+        80
+      ],
+      "abilities": [
+        "tome_blast",
+        "silence",
+        "knowledge_overwhelm"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "poltergeist_lord",
+      "name": "Malevolent Poltergeist",
+      "template": "humanoid_base",
+      "rarity": "boss",
+      "description": "A powerful spirit that hurls objects with telekinetic force",
+      "biomes": [],
+      "level_range": [
+        7,
+        12
+      ],
+      "stats": [
+        2280,
+        190,
+        57,
+        76
+      ],
+      "abilities": [
+        "telekinesis",
+        "possession",
+        "ethereal_form"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "mad_monk",
+      "name": "Brother Mortus the Mad",
+      "template": "humanoid_base",
+      "rarity": "boss",
+      "description": "A monk driven insane by forbidden knowledge",
+      "biomes": [],
+      "level_range": [
+        7,
+        12
+      ],
+      "stats": [
+        2660,
+        162,
+        67,
+        76
+      ],
+      "abilities": [
+        "dark_prayer",
+        "spirit_drain",
+        "madness_aura"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "sentinel_alpha",
+      "name": "Sentinel Protocol Alpha",
+      "template": "undead_base",
+      "rarity": "boss",
+      "description": "The first and deadliest security construct",
+      "biomes": [],
+      "level_range": [
+        30,
+        34
+      ],
+      "stats": [
+        23040,
+        1024,
+        576,
+        256
+      ],
+      "abilities": [
+        "laser_array",
+        "defense_protocol",
+        "self_destruct"
+      ],
+      "loot": "boss_epic"
     }
   ]
 }

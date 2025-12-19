@@ -1,6 +1,6 @@
 {
   "creature_type": "giants",
-  "count": 21,
+  "count": 31,
   "monsters": [
     {
       "id": "hill_giant_youth",
@@ -8,9 +8,20 @@
       "template": "giant_base",
       "rarity": "common",
       "description": "A young hill giant learning the ways of raiding",
-      "biomes": ["highland_reaches", "forsaken_ruins"],
-      "level_range": [3, 7],
-      "stats": [40, 12, 8, 3]
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "stats": [
+        40,
+        12,
+        8,
+        3
+      ]
     },
     {
       "id": "ogre_brute",
@@ -18,10 +29,23 @@
       "template": "giant_base",
       "rarity": "common",
       "description": "A massive humanoid of limited intelligence but great strength",
-      "biomes": ["highland_reaches", "cursed_swamp"],
-      "level_range": [4, 8],
-      "stats": [45, 14, 10, 3],
-      "abilities": ["club_smash"],
+      "biomes": [
+        "highland_reaches",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        4,
+        8
+      ],
+      "stats": [
+        45,
+        14,
+        10,
+        3
+      ],
+      "abilities": [
+        "club_smash"
+      ],
       "loot": "common_giant"
     },
     {
@@ -30,10 +54,24 @@
       "template": "giant_base",
       "rarity": "uncommon",
       "description": "A two-headed giant with double the trouble",
-      "biomes": ["highland_reaches", "volcanic_wastes"],
-      "level_range": [8, 14],
-      "stats": [100, 35, 25, 4],
-      "abilities": ["double_strike", "independent_minds"],
+      "biomes": [
+        "highland_reaches",
+        "volcanic_wastes"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "stats": [
+        100,
+        35,
+        25,
+        4
+      ],
+      "abilities": [
+        "double_strike",
+        "independent_minds"
+      ],
       "loot": "uncommon_giant"
     },
     {
@@ -42,10 +80,24 @@
       "template": "giant_base",
       "rarity": "uncommon",
       "description": "A contemplative giant carved from living stone",
-      "biomes": ["highland_reaches", "forsaken_ruins"],
-      "level_range": [10, 16],
-      "stats": [140, 42, 40, 5],
-      "abilities": ["rock_throw", "stone_skin"],
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "stats": [
+        140,
+        42,
+        40,
+        5
+      ],
+      "abilities": [
+        "rock_throw",
+        "stone_skin"
+      ],
       "loot": "uncommon_giant"
     },
     {
@@ -54,10 +106,23 @@
       "template": "giant_base",
       "rarity": "uncommon",
       "description": "A battle-hardened warrior from the frozen wastes",
-      "biomes": ["frostspire_peaks"],
-      "level_range": [12, 18],
-      "stats": [160, 48, 38, 4],
-      "abilities": ["frost_weapon", "ice_armor"],
+      "biomes": [
+        "frostspire_peaks"
+      ],
+      "level_range": [
+        12,
+        18
+      ],
+      "stats": [
+        160,
+        48,
+        38,
+        4
+      ],
+      "abilities": [
+        "frost_weapon",
+        "ice_armor"
+      ],
       "loot": "uncommon_giant"
     },
     {
@@ -66,10 +131,25 @@
       "template": "giant_base",
       "rarity": "rare",
       "description": "A one-eyed giant with prophetic sight",
-      "biomes": ["highland_reaches", "forsaken_ruins"],
-      "level_range": [14, 20],
-      "stats": [240, 78, 60, 5],
-      "abilities": ["evil_eye", "giant_strength", "oracle_vision"],
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        14,
+        20
+      ],
+      "stats": [
+        240,
+        78,
+        60,
+        5
+      ],
+      "abilities": [
+        "evil_eye",
+        "giant_strength",
+        "oracle_vision"
+      ],
       "loot": "rare_giant"
     },
     {
@@ -78,10 +158,24 @@
       "template": "giant_base",
       "rarity": "rare",
       "description": "A master smith from the volcanic forges",
-      "biomes": ["volcanic_wastes"],
-      "level_range": [16, 22],
-      "stats": [280, 88, 70, 6],
-      "abilities": ["flame_strike", "forge_mastery", "burning_aura"],
+      "biomes": [
+        "volcanic_wastes"
+      ],
+      "level_range": [
+        16,
+        22
+      ],
+      "stats": [
+        280,
+        88,
+        70,
+        6
+      ],
+      "abilities": [
+        "flame_strike",
+        "forge_mastery",
+        "burning_aura"
+      ],
       "loot": "rare_giant"
     },
     {
@@ -90,10 +184,24 @@
       "template": "giant_base",
       "rarity": "rare",
       "description": "A noble giant dwelling in sky castles",
-      "biomes": ["frostspire_peaks"],
-      "level_range": [18, 24],
-      "stats": [300, 85, 65, 7],
-      "abilities": ["wind_control", "cloud_walk", "thunderbolt"],
+      "biomes": [
+        "frostspire_peaks"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        300,
+        85,
+        65,
+        7
+      ],
+      "abilities": [
+        "wind_control",
+        "cloud_walk",
+        "thunderbolt"
+      ],
       "loot": "rare_giant",
       "magic": 45
     },
@@ -103,10 +211,25 @@
       "template": "giant_base",
       "rarity": "epic",
       "description": "A twisted giant cursed with dark magic",
-      "biomes": ["void_realm", "cursed_swamp"],
-      "level_range": [22, 28],
-      "stats": [520, 165, 120, 6],
-      "abilities": ["evil_eye_curse", "warp_reality", "giant_madness"],
+      "biomes": [
+        "void_realm",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        22,
+        28
+      ],
+      "stats": [
+        520,
+        165,
+        120,
+        6
+      ],
+      "abilities": [
+        "evil_eye_curse",
+        "warp_reality",
+        "giant_madness"
+      ],
       "loot": "epic_giant",
       "magic": 80
     },
@@ -116,10 +239,25 @@
       "template": "giant_base",
       "rarity": "epic",
       "description": "A majestic giant who commands the tempest",
-      "biomes": ["frostspire_peaks"],
-      "level_range": [24, 30],
-      "stats": [560, 180, 140, 8],
-      "abilities": ["lightning_bolt", "storm_call", "wind_mastery", "thunder_slam"],
+      "biomes": [
+        "frostspire_peaks"
+      ],
+      "level_range": [
+        24,
+        30
+      ],
+      "stats": [
+        560,
+        180,
+        140,
+        8
+      ],
+      "abilities": [
+        "lightning_bolt",
+        "storm_call",
+        "wind_mastery",
+        "thunder_slam"
+      ],
       "loot": "epic_giant",
       "magic": 120
     },
@@ -129,10 +267,25 @@
       "template": "giant_base",
       "rarity": "epic",
       "description": "A titan as old and enduring as the mountains themselves",
-      "biomes": ["highland_reaches", "frostspire_peaks"],
-      "level_range": [26, 32],
-      "stats": [600, 172, 160, 6],
-      "abilities": ["avalanche", "earthquake", "mountain_stance"],
+      "biomes": [
+        "highland_reaches",
+        "frostspire_peaks"
+      ],
+      "level_range": [
+        26,
+        32
+      ],
+      "stats": [
+        600,
+        172,
+        160,
+        6
+      ],
+      "abilities": [
+        "avalanche",
+        "earthquake",
+        "mountain_stance"
+      ],
       "loot": "epic_giant"
     },
     {
@@ -141,10 +294,26 @@
       "template": "giant_base",
       "rarity": "legendary",
       "description": "Offspring of the primordial titans",
-      "biomes": ["void_realm", "volcanic_wastes"],
-      "level_range": [30, 36],
-      "stats": [1000, 320, 260, 10],
-      "abilities": ["titan_strength", "primordial_force", "world_shaker", "divine_resilience"],
+      "biomes": [
+        "void_realm",
+        "volcanic_wastes"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "stats": [
+        1000,
+        320,
+        260,
+        10
+      ],
+      "abilities": [
+        "titan_strength",
+        "primordial_force",
+        "world_shaker",
+        "divine_resilience"
+      ],
       "loot": "legendary_giant",
       "magic": 150
     },
@@ -154,10 +323,25 @@
       "template": "giant_base",
       "rarity": "legendary",
       "description": "An ancient lord of the sky realm",
-      "biomes": ["frostspire_peaks"],
-      "level_range": [32, 38],
-      "stats": [980, 305, 250, 12],
-      "abilities": ["sky_palace", "divine_wind", "weather_mastery", "cloud_form"],
+      "biomes": [
+        "frostspire_peaks"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "stats": [
+        980,
+        305,
+        250,
+        12
+      ],
+      "abilities": [
+        "sky_palace",
+        "divine_wind",
+        "weather_mastery",
+        "cloud_form"
+      ],
       "loot": "legendary_giant",
       "magic": 180
     },
@@ -168,9 +352,21 @@
       "rarity": "boss",
       "description": "A manifestation of the fire giant king",
       "biomes": [],
-      "level_range": [28, 30],
-      "stats": [3240, 1350, 1260, 120],
-      "abilities": ["ragnarok_flame", "twilight_sword", "world_burning"],
+      "level_range": [
+        28,
+        30
+      ],
+      "stats": [
+        3240,
+        1350,
+        1260,
+        120
+      ],
+      "abilities": [
+        "ragnarok_flame",
+        "twilight_sword",
+        "world_burning"
+      ],
       "loot": "boss_giant",
       "magic": 600
     },
@@ -181,9 +377,21 @@
       "rarity": "boss",
       "description": "The legendary king of frost giants",
       "biomes": [],
-      "level_range": [32, 34],
-      "stats": [3840, 1500, 1380, 96],
-      "abilities": ["eternal_winter", "frost_kingdom", "ice_throne"],
+      "level_range": [
+        32,
+        34
+      ],
+      "stats": [
+        3840,
+        1500,
+        1380,
+        96
+      ],
+      "abilities": [
+        "eternal_winter",
+        "frost_kingdom",
+        "ice_throne"
+      ],
       "loot": "boss_giant"
     },
     {
@@ -193,9 +401,21 @@
       "rarity": "boss",
       "description": "A piece of the primordial giant from whom the world was made",
       "biomes": [],
-      "level_range": [36, 38],
-      "stats": [4200, 1620, 1500, 84],
-      "abilities": ["creation_force", "world_body", "giant_ancestor"],
+      "level_range": [
+        36,
+        38
+      ],
+      "stats": [
+        4200,
+        1620,
+        1500,
+        84
+      ],
+      "abilities": [
+        "creation_force",
+        "world_body",
+        "giant_ancestor"
+      ],
       "loot": "boss_giant",
       "magic": 720
     },
@@ -206,9 +426,21 @@
       "rarity": "boss",
       "description": "The burden-bearer, holding the weight of the world",
       "biomes": [],
-      "level_range": [34, 36],
-      "stats": [4560, 1440, 1680, 72],
-      "abilities": ["world_bearer", "crushing_weight", "titan_endurance"],
+      "level_range": [
+        34,
+        36
+      ],
+      "stats": [
+        4560,
+        1440,
+        1680,
+        72
+      ],
+      "abilities": [
+        "world_bearer",
+        "crushing_weight",
+        "titan_endurance"
+      ],
       "loot": "boss_giant"
     },
     {
@@ -217,10 +449,26 @@
       "template": "giant_base",
       "rarity": "mythic",
       "description": "One of the original titans who ruled before the gods",
-      "biomes": ["void_realm"],
-      "level_range": [44, 49],
-      "stats": [2100, 675, 650, 18],
-      "abilities": ["titan_reign", "primordial_chaos", "world_ending", "divine_strength", "immortal_body"],
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        44,
+        49
+      ],
+      "stats": [
+        2100,
+        675,
+        650,
+        18
+      ],
+      "abilities": [
+        "titan_reign",
+        "primordial_chaos",
+        "world_ending",
+        "divine_strength",
+        "immortal_body"
+      ],
       "loot": "mythic_giant"
     },
     {
@@ -229,10 +477,26 @@
       "template": "giant_base",
       "rarity": "mythic",
       "description": "A dark reflection of the titan of time",
-      "biomes": ["void_realm"],
-      "level_range": [46, 50],
-      "stats": [2000, 690, 630, 15],
-      "abilities": ["time_devour", "titan_scythe", "age_manipulation", "inevitable_doom", "father_of_gods"],
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "stats": [
+        2000,
+        690,
+        630,
+        15
+      ],
+      "abilities": [
+        "time_devour",
+        "titan_scythe",
+        "age_manipulation",
+        "inevitable_doom",
+        "father_of_gods"
+      ],
       "loot": "mythic_giant",
       "magic": 450
     },
@@ -242,10 +506,26 @@
       "template": "giant_base",
       "rarity": "mythic",
       "description": "The greatest of giant illusionists and tricksters",
-      "biomes": ["void_realm", "highland_reaches"],
-      "level_range": [42, 47],
-      "stats": [1890, 645, 600, 21],
-      "abilities": ["grand_illusion", "giant_magic", "reality_challenge", "utgard_fortress"],
+      "biomes": [
+        "void_realm",
+        "highland_reaches"
+      ],
+      "level_range": [
+        42,
+        47
+      ],
+      "stats": [
+        1890,
+        645,
+        600,
+        21
+      ],
+      "abilities": [
+        "grand_illusion",
+        "giant_magic",
+        "reality_challenge",
+        "utgard_fortress"
+      ],
       "loot": "mythic_giant",
       "magic": 540
     },
@@ -255,12 +535,292 @@
       "template": "giant_base",
       "rarity": "mythic",
       "description": "The ancestral father of all giant-kind",
-      "biomes": ["highland_reaches", "void_realm"],
-      "level_range": [48, 50],
-      "stats": [2200, 720, 690, 12],
-      "abilities": ["giant_heritage", "world_creation", "elemental_mastery", "primordial_giant", "bloodline_king"],
+      "biomes": [
+        "highland_reaches",
+        "void_realm"
+      ],
+      "level_range": [
+        48,
+        50
+      ],
+      "stats": [
+        2200,
+        720,
+        690,
+        12
+      ],
+      "abilities": [
+        "giant_heritage",
+        "world_creation",
+        "elemental_mastery",
+        "primordial_giant",
+        "bloodline_king"
+      ],
       "loot": "mythic_giant",
       "magic": 360
+    },
+    {
+      "id": "troll_enforcer",
+      "name": "Gruk the Troll Enforcer",
+      "template": "beast_base",
+      "rarity": "boss",
+      "description": "A massive troll hired to keep the goblins in line",
+      "biomes": [],
+      "level_range": [
+        8,
+        10
+      ],
+      "stats": [
+        3150,
+        126,
+        79,
+        72
+      ],
+      "abilities": [
+        "crushing_blow",
+        "regeneration",
+        "enrage"
+      ],
+      "loot": "boss_common"
+    },
+    {
+      "id": "troll_berserker",
+      "name": "Troll Berserker",
+      "template": "humanoid_base",
+      "rarity": "rare",
+      "description": "A massive troll with regenerating flesh and immense strength",
+      "biomes": [
+        "whispering_woods",
+        "cursed_swamp",
+        "volcanic_peaks",
+        "highland_reaches",
+        "deep_caverns"
+      ],
+      "level_range": [
+        10,
+        15
+      ],
+      "stats": [
+        150,
+        20,
+        12,
+        3
+      ],
+      "abilities": [
+        "regenerate",
+        "smash",
+        "enrage"
+      ],
+      "loot": "humanoid_troll"
+    },
+    {
+      "id": "bridge_troll",
+      "name": "Bridge Troll",
+      "template": "humanoid_base",
+      "rarity": "rare",
+      "description": "A territorial troll that demands tribute from travelers",
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins",
+        "whispering_woods"
+      ],
+      "level_range": [
+        15,
+        20
+      ],
+      "stats": [
+        180,
+        23,
+        12,
+        4
+      ],
+      "abilities": [
+        "regeneration",
+        "slam"
+      ],
+      "loot": "humanoid_troll_boss"
+    },
+    {
+      "id": "hagmother",
+      "name": "Hagmother",
+      "template": "humanoid_base",
+      "rarity": "rare",
+      "description": "An ancient witch with dark powers",
+      "biomes": [
+        "cursed_swamp",
+        "forsaken_ruins",
+        "twilight_wetlands",
+        "whispering_woods"
+      ],
+      "level_range": [
+        15,
+        20
+      ],
+      "stats": [
+        175,
+        20,
+        10,
+        7
+      ],
+      "abilities": [
+        "intimidate",
+        "poison"
+      ],
+      "loot": "humanoid_hag",
+      "magic": 22
+    },
+    {
+      "id": "frost_jarl",
+      "name": "Frost Jarl",
+      "template": "humanoid_base",
+      "rarity": "epic",
+      "description": "A towering giant from the frozen wastes",
+      "biomes": [
+        "frozen_wastes",
+        "highland_reaches"
+      ],
+      "level_range": [
+        19,
+        25
+      ],
+      "stats": [
+        340,
+        29,
+        16,
+        6
+      ],
+      "abilities": [
+        "ice_armor",
+        "freeze"
+      ],
+      "loot": "humanoid_frost_giant",
+      "magic": 14
+    },
+    {
+      "id": "atlas_titan",
+      "name": "Atlas the World Bearer",
+      "template": "elemental_base",
+      "rarity": "boss",
+      "description": "A titan who once held the world on his shoulders",
+      "biomes": [],
+      "level_range": [
+        36,
+        42
+      ],
+      "stats": [
+        39000,
+        1560,
+        975,
+        312
+      ],
+      "abilities": [
+        "world_crush",
+        "titan_roar",
+        "earthquake",
+        "mountain_throw"
+      ],
+      "loot": "boss_legendary",
+      "magic": 1872
+    },
+    {
+      "id": "frost_titan",
+      "name": "Ymir the Frost Titan",
+      "template": "elemental_base",
+      "rarity": "boss",
+      "description": "A titan of eternal ice and winter",
+      "biomes": [],
+      "level_range": [
+        36,
+        42
+      ],
+      "stats": [
+        37050,
+        1638,
+        926,
+        312
+      ],
+      "abilities": [
+        "glacial_fist",
+        "blizzard_breath",
+        "ice_age"
+      ],
+      "loot": "boss_legendary",
+      "magic": 1966
+    },
+    {
+      "id": "storm_titan",
+      "name": "Typhon the Storm Titan",
+      "template": "elemental_base",
+      "rarity": "boss",
+      "description": "A titan commanding storms and lightning",
+      "biomes": [],
+      "level_range": [
+        37,
+        42
+      ],
+      "stats": [
+        35550,
+        1738,
+        889,
+        316
+      ],
+      "abilities": [
+        "lightning_storm",
+        "hurricane_winds",
+        "thunder_clap"
+      ],
+      "loot": "boss_legendary",
+      "magic": 2086
+    },
+    {
+      "id": "fire_titan",
+      "name": "Prometheus the Fire Titan",
+      "template": "elemental_base",
+      "rarity": "boss",
+      "description": "The titan who stole fire from the gods",
+      "biomes": [],
+      "level_range": [
+        37,
+        42
+      ],
+      "stats": [
+        36735,
+        1699,
+        918,
+        316
+      ],
+      "abilities": [
+        "eternal_flame",
+        "inferno_strike",
+        "burning_world"
+      ],
+      "loot": "boss_legendary",
+      "magic": 2038
+    },
+    {
+      "id": "void_titan",
+      "name": "Cronus the Devourer",
+      "template": "elemental_base",
+      "rarity": "boss",
+      "description": "A titan who consumes all things",
+      "biomes": [],
+      "level_range": [
+        38,
+        42
+      ],
+      "stats": [
+        42000,
+        1520,
+        1050,
+        320
+      ],
+      "abilities": [
+        "devour",
+        "time_stop",
+        "reality_rend"
+      ],
+      "loot": "boss_legendary",
+      "magic": 1824
     }
   ]
 }

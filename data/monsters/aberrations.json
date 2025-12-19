@@ -1,6 +1,6 @@
 {
   "creature_type": "aberrations",
-  "count": 33,
+  "count": 26,
   "monsters": [
     {
       "id": "void_stalker",
@@ -108,36 +108,6 @@
       ],
       "loot": "aberration_emperor",
       "magic": 56
-    },
-    {
-      "id": "kraken_priest",
-      "name": "Kraken Priest",
-      "template": "aberration_base",
-      "rarity": "legendary",
-      "description": "A cultist who has merged with an ancient kraken",
-      "biomes": [
-        "void_realm",
-        "cursed_swamp",
-        "twilight_wetlands",
-        "ancient_crypts",
-        "deep_caverns"
-      ],
-      "level_range": [
-        35,
-        43
-      ],
-      "stats": [
-        1150,
-        46,
-        36,
-        12
-      ],
-      "abilities": [
-        "intimidate",
-        "life_drain"
-      ],
-      "loot": "aberration_kraken",
-      "magic": 44
     },
     {
       "id": "the_nameless_one",
@@ -355,57 +325,6 @@
       ],
       "loot": "boss_nightmare",
       "magic": 108
-    },
-    {
-      "id": "star_eater",
-      "name": "Azathoth the Star Eater",
-      "template": "aberration_base",
-      "rarity": "boss",
-      "description": "A cosmic entity that devours stars",
-      "biomes": [],
-      "level_range": [
-        46,
-        55
-      ],
-      "stats": [
-        60600,
-        2525,
-        1515,
-        404
-      ],
-      "abilities": [
-        "cosmic_devour",
-        "supernova",
-        "black_hole",
-        "stellar_collapse"
-      ],
-      "loot": "boss_legendary",
-      "magic": 3030
-    },
-    {
-      "id": "void_god",
-      "name": "Nyarlathotep the Void God",
-      "template": "aberration_base",
-      "rarity": "boss",
-      "description": "The crawling chaos from beyond reality",
-      "biomes": [],
-      "level_range": [
-        46,
-        55
-      ],
-      "stats": [
-        55550,
-        2677,
-        1389,
-        404
-      ],
-      "abilities": [
-        "reality_distortion",
-        "maddening_truth",
-        "void_tentacles"
-      ],
-      "loot": "boss_legendary",
-      "magic": 3212
     },
     {
       "id": "abyss_walker",
@@ -768,120 +687,6 @@
       ],
       "loot": "mythic_aberration",
       "magic": 655
-    },
-    {
-      "id": "frostmourne_winter_queen",
-      "name": "Frostmourne the Winter Queen",
-      "template": "aberration_base",
-      "rarity": "legendary",
-      "description": "A cosmic entity of eternal winter and ice",
-      "biomes": [
-        "frozen_wastes",
-        "void_realm"
-      ],
-      "level_range": [
-        37,
-        43
-      ],
-      "stats": [
-        1350,
-        205,
-        175,
-        185
-      ],
-      "abilities": [
-        "eternal_winter",
-        "ice_queen",
-        "frozen_domain",
-        "absolute_zero"
-      ],
-      "loot": "legendary_aberration",
-      "magic": 165
-    },
-    {
-      "id": "aboleth",
-      "name": "Aboleth",
-      "template": "aquatic_base",
-      "rarity": "rare",
-      "description": "An ancient psychic aberration that enslaves minds",
-      "biomes": [
-        "twilight_wetlands",
-        "void_realm"
-      ],
-      "level_range": [
-        18,
-        24
-      ],
-      "stats": [
-        185,
-        72,
-        55,
-        62
-      ],
-      "abilities": [
-        "psychic_enslavement",
-        "mucus_cloud",
-        "ancient_knowledge"
-      ],
-      "loot": "rare_aquatic",
-      "magic": 92
-    },
-    {
-      "id": "elder_aboleth",
-      "name": "Elder Aboleth",
-      "template": "aquatic_base",
-      "rarity": "legendary",
-      "description": "An aboleth older than civilizations with godlike power",
-      "biomes": [
-        "twilight_wetlands",
-        "void_realm"
-      ],
-      "level_range": [
-        32,
-        38
-      ],
-      "stats": [
-        720,
-        312,
-        228,
-        260
-      ],
-      "abilities": [
-        "mass_domination",
-        "reality_manipulation",
-        "perfect_memory",
-        "enslaver_of_worlds"
-      ],
-      "loot": "legendary_aquatic",
-      "magic": 280
-    },
-    {
-      "id": "hybrid_horror",
-      "name": "Hybrid Horror",
-      "template": "lycanthrope_base",
-      "rarity": "epic",
-      "description": "A lycanthrope cursed with multiple animal forms",
-      "biomes": [
-        "cursed_swamp",
-        "void_realm"
-      ],
-      "level_range": [
-        24,
-        30
-      ],
-      "stats": [
-        468,
-        202,
-        140,
-        182
-      ],
-      "abilities": [
-        "multi_shift",
-        "chimeric_form",
-        "curse_fusion",
-        "unstable_transformation"
-      ],
-      "loot": "epic_lycanthrope"
     }
   ]
 }

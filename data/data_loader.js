@@ -44,7 +44,7 @@ class MonsterDataLoader {
       'beasts.json', 'humanoids.json', 'undead.json', 'dragons.json', 
       'demons.json', 'elementals.json', 'aberrations.json', 'constructs.json', 'celestials.json',
       'fey.json', 'giants.json', 'oozes.json', 'insectoids.json', 
-      'aquatic.json', 'plants.json', 'lycanthropes.json'
+      'aquatic.json', 'plants.json', 'lycanthropes.json', 'monstrosities.json', 'fiends.json'
     ];
     
     for (const file of creatureTypeFiles) {
