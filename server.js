@@ -1603,6 +1603,9 @@ app.post('/api/player/create',
       // Save character with roles and color
       await db.saveCharacter(user.id, channelName, character);
       
+      // Emit WebSocket update for new character creation
+      socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+      
       res.json({ 
         success: true, 
         message: `Created ${classType} character: ${characterName}`,
@@ -2546,6 +2549,9 @@ app.post('/api/progression/death', async (req, res) => {
     } else {
       // Save character with penalties
       await db.saveCharacter(user.id, channel.toLowerCase(), character);
+      
+      // Emit WebSocket update for death penalties
+      socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
     }
 
     res.json({
@@ -2579,6 +2585,9 @@ app.post('/api/progression/respawn', async (req, res) => {
     const respawnResult = progressionMgr.respawn(character);
 
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit WebSocket update for respawn
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
 
     res.json({
       success: true,
@@ -3002,6 +3011,10 @@ app.post('/api/status-effects/apply', async (req, res) => {
     // Save character state
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+    // Emit WebSocket update for status effect change
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+    socketHandler.emitStatusEffect(character.name, channel.toLowerCase(), result.effect);
+
     res.json({
       success: true,
       result,
@@ -3037,6 +3050,9 @@ app.post('/api/status-effects/cleanse', async (req, res) => {
 
     // Save character state
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit WebSocket update for status effect cleansing
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
 
     res.json({
       success: true,
@@ -3080,6 +3096,12 @@ app.post('/api/status-effects/dispel', async (req, res) => {
     // Save character state
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+    // Emit WebSocket update for combat state change
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+    socketHandler.emitCombatUpdate(character.name, channel.toLowerCase(), {
+      enemyEffects: character.combat.monster.statusEffects.getActiveEffects()
+    });
+
     res.json({
       success: true,
       removed: result.removed,
@@ -3116,6 +3138,9 @@ app.post('/api/status-effects/aura/add', async (req, res) => {
     // Save character state
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+    // Emit WebSocket update for aura addition
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+
     res.json({
       success: true,
       auraId: result.auraId,
@@ -3150,6 +3175,9 @@ app.post('/api/status-effects/aura/remove', async (req, res) => {
 
     // Save character state
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit WebSocket update for aura removal
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
 
     res.json({
       success: result.success,
@@ -3284,6 +3312,9 @@ app.post('/api/exploration/travel/start', async (req, res) => {
     character.travelState = result.travelState;
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+    // Emit WebSocket update for real-time travel state change
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+
     res.json({
       success: true,
       message: result.message,
@@ -3326,6 +3357,10 @@ app.post('/api/exploration/travel/advance', async (req, res) => {
       character.travelState = null;
       await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+      // Emit WebSocket update for location change
+      socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+      socketHandler.emitLocationChange(character.name, channel.toLowerCase(), character.location);
+
       return res.json({
         success: true,
         arrived: true,
@@ -3339,6 +3374,9 @@ app.post('/api/exploration/travel/advance', async (req, res) => {
       // Save state before encounter
       await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
+      // Emit WebSocket update for travel state change
+      socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+
       return res.json({
         success: true,
         arrived: false,
@@ -3350,6 +3388,9 @@ app.post('/api/exploration/travel/advance', async (req, res) => {
 
     // Continue travel
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit WebSocket update for travel progress
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
 
     res.json({
       success: true,
@@ -3389,6 +3430,9 @@ app.post('/api/exploration/travel/cancel', async (req, res) => {
 
     character.travelState = null;
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit WebSocket update for travel cancellation
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
 
     res.json({
       success: true,
@@ -3436,6 +3480,9 @@ app.post('/api/exploration/explore', async (req, res) => {
 
     // Save character state
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
+
+    // Emit WebSocket update for exploration results
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
 
     res.json({
       success: true,
@@ -4366,6 +4413,9 @@ app.post('/api/dialogue/start', async (req, res) => {
     // Save dialogue state
     await db.saveCharacter(userId, channel, character);
 
+    // Emit WebSocket update for dialogue state change
+    socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+
     res.json(result);
   } catch (error) {
     console.error('Error starting dialogue:', error);
@@ -4402,6 +4452,9 @@ app.post('/api/dialogue/choice', async (req, res) => {
 
     // Save dialogue state and any rewards/effects
     await db.saveCharacter(userId, channel, character);
+
+    // Emit WebSocket update for dialogue choice and potential rewards
+    socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
 
     res.json(result);
   } catch (error) {
@@ -4751,6 +4804,10 @@ app.post('/api/dungeons/start', async (req, res) => {
     await db.updateDungeonState(user.id, user.channel, character.dungeonState);
     await db.saveCharacter(user.id, user.channel, character);
 
+    // Emit WebSocket update for dungeon start
+    socketHandler.emitPlayerUpdate(character.name, user.channel, character.toFrontend());
+    socketHandler.emitDungeonProgress(character.name, user.channel, character.dungeonState);
+
     res.json(result);
   } catch (error) {
     console.error('Error starting dungeon:', error);
@@ -4784,6 +4841,10 @@ app.post('/api/dungeons/advance', async (req, res) => {
     // Save updated state
     await db.updateDungeonState(user.id, user.channel, character.dungeonState);
     await db.saveCharacter(user.id, user.channel, character);
+
+    // Emit WebSocket update for dungeon room advance
+    socketHandler.emitPlayerUpdate(character.name, user.channel, character.toFrontend());
+    socketHandler.emitDungeonProgress(character.name, user.channel, character.dungeonState);
 
     res.json(result);
   } catch (error) {
@@ -4847,6 +4908,12 @@ app.post('/api/dungeons/complete', async (req, res) => {
     }
     
     await db.saveCharacter(user.id, user.channel, character);
+
+    // Emit WebSocket update for dungeon completion (rewards, XP, gold)
+    socketHandler.emitPlayerUpdate(character.name, user.channel, character.toFrontend());
+    if (result.success) {
+      socketHandler.emitInventoryUpdate(character.name, user.channel);
+    }
 
     res.json(result);
   } catch (error) {
@@ -5269,6 +5336,10 @@ app.post('/api/enchanting/enchant', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for real-time inventory/gold changes
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      socketHandler.emitInventoryUpdate(character.name, channel);
     }
 
     res.json(result);
@@ -5301,6 +5372,10 @@ app.post('/api/enchanting/remove', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for real-time inventory changes
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      socketHandler.emitInventoryUpdate(character.name, channel);
     }
 
     res.json(result);
@@ -5333,6 +5408,10 @@ app.post('/api/enchanting/disenchant', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for real-time inventory changes
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      socketHandler.emitInventoryUpdate(character.name, channel);
     }
 
     res.json(result);
@@ -5417,6 +5496,10 @@ app.post('/api/crafting/craft', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for real-time inventory/gold changes
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      socketHandler.emitInventoryUpdate(character.name, channel);
     }
 
     res.json(result);
@@ -5449,6 +5532,10 @@ app.post('/api/crafting/salvage', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for real-time inventory changes
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
+      socketHandler.emitInventoryUpdate(character.name, channel);
     }
 
     res.json(result);
@@ -5509,6 +5596,9 @@ app.post('/api/crafting/discover', async (req, res) => {
 
     if (result.success) {
       await db.saveCharacter(userId, channel, character);
+      
+      // Emit WebSocket update for real-time recipe discovery
+      socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
     }
 
     res.json(result);
