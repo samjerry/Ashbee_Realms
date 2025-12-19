@@ -1,6 +1,6 @@
 {
   "creature_type": "constructs",
-  "count": 18,
+  "count": 17,
   "monsters": [
     {
       "id": "crystal_golem",
@@ -454,30 +454,6 @@
       ],
       "loot": "legendary_construct",
       "magic": 85
-    },
-    {
-      "id": "sentinel_alpha",
-      "name": "Sentinel Protocol Alpha",
-      "template": "undead_base",
-      "rarity": "boss",
-      "description": "The first and deadliest security construct",
-      "biomes": [],
-      "level_range": [
-        30,
-        34
-      ],
-      "stats": [
-        23040,
-        1024,
-        576,
-        256
-      ],
-      "abilities": [
-        "laser_array",
-        "defense_protocol",
-        "self_destruct"
-      ],
-      "loot": "boss_epic"
     }
   ]
 }

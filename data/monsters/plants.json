@@ -525,29 +525,33 @@
       "magic": 660
     },
     {
-      "id": "elder_treant",
-      "name": "Elder Treant",
-      "template": "beast_base",
-      "rarity": "uncommon",
-      "description": "A nature spirit bound to ancient trees",
+      "id": "zuggtmoy_aspect",
+      "name": "Aspect of Zuggtmoy",
+      "template": "plant_base",
+      "rarity": "legendary",
+      "description": "A manifestation of the fungal demon queen",
       "biomes": [
-        "whispering_woods"
+        "cursed_swamp",
+        "void_realm"
       ],
       "level_range": [
-        6,
-        12
+        32,
+        38
       ],
       "stats": [
-        52,
-        10,
-        4,
-        7
+        1200,
+        256,
+        320,
+        10
       ],
       "abilities": [
-        "regen"
+        "fungal_infestation",
+        "spore_plague",
+        "demon_queen",
+        "decay_mastery"
       ],
-      "loot": "beast_nature",
-      "magic": 14
+      "loot": "legendary_plant",
+      "magic": 280
     }
   ]
 }

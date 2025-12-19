@@ -1,6 +1,6 @@
 {
   "creature_type": "beasts",
-  "count": 26,
+  "count": 16,
   "monsters": [
     {
       "id": "forest_wolf",
@@ -342,36 +342,6 @@
       "loot": "beast_wolf_alpha"
     },
     {
-      "id": "chimera",
-      "name": "Chimera",
-      "template": "beast_base",
-      "rarity": "epic",
-      "description": "A three-headed beast of legend",
-      "biomes": [
-        "volcanic_peaks",
-        "ashen_barrens",
-        "highland_reaches",
-        "deep_caverns"
-      ],
-      "level_range": [
-        18,
-        24
-      ],
-      "stats": [
-        310,
-        26,
-        12,
-        9
-      ],
-      "abilities": [
-        "fire_breath",
-        "poison_tail",
-        "intimidate"
-      ],
-      "loot": "beast_chimera",
-      "magic": 18
-    },
-    {
       "id": "tempest_roc",
       "name": "Tempest Roc",
       "template": "beast_base",
@@ -429,248 +399,29 @@
       "magic": 8
     },
     {
-      "id": "troll_enforcer",
-      "name": "Gruk the Troll Enforcer",
+      "id": "elder_treant",
+      "name": "Elder Treant",
       "template": "beast_base",
-      "rarity": "boss",
-      "description": "A massive troll hired to keep the goblins in line",
-      "biomes": [],
+      "rarity": "uncommon",
+      "description": "A nature spirit bound to ancient trees",
+      "biomes": [
+        "whispering_woods"
+      ],
       "level_range": [
-        8,
-        10
-      ],
-      "stats": [
-        3150,
-        126,
-        79,
-        72
-      ],
-      "abilities": [
-        "crushing_blow",
-        "regeneration",
-        "enrage"
-      ],
-      "loot": "boss_common"
-    },
-    {
-      "id": "wailing_widow",
-      "name": "The Wailing Widow",
-      "template": "beast_base",
-      "rarity": "boss",
-      "description": "A ghost bride searching for her lost love",
-      "biomes": [],
-      "level_range": [
-        8,
+        6,
         12
       ],
       "stats": [
-        2500,
-        180,
-        63,
-        80
-      ],
-      "abilities": [
-        "mournful_wail",
-        "life_drain",
-        "phase_through"
-      ],
-      "loot": "boss_common"
-    },
-    {
-      "id": "broodmother",
-      "name": "Arachna the Broodmother",
-      "template": "beast_base",
-      "rarity": "boss",
-      "description": "A massive spider that births countless offspring",
-      "biomes": [],
-      "level_range": [
-        8,
-        13
-      ],
-      "stats": [
-        3150,
-        168,
-        79,
-        84
-      ],
-      "abilities": [
-        "spawn_spiderlings",
-        "web_trap",
-        "poison_bite"
-      ],
-      "loot": "boss_common"
-    },
-    {
-      "id": "widow_queen",
-      "name": "Black Widow Queen",
-      "template": "beast_base",
-      "rarity": "boss",
-      "description": "A sleek black spider with lethal venom",
-      "biomes": [],
-      "level_range": [
-        8,
-        13
-      ],
-      "stats": [
-        2625,
-        210,
-        66,
-        84
-      ],
-      "abilities": [
-        "neurotoxin",
-        "web_cocoon",
-        "death_strike"
-      ],
-      "loot": "boss_common"
-    },
-    {
-      "id": "crystal_spider",
-      "name": "Shimmer the Crystal Spider",
-      "template": "beast_base",
-      "rarity": "boss",
-      "description": "A beautiful but deadly spider with crystalline carapace",
-      "biomes": [],
-      "level_range": [
-        8,
-        13
-      ],
-      "stats": [
-        2835,
-        179,
-        71,
-        84
-      ],
-      "abilities": [
-        "crystal_shard",
-        "reflect",
-        "prismatic_web"
-      ],
-      "loot": "boss_common"
-    },
-    {
-      "id": "web_weaver",
-      "name": "Silkspinner the Weaver",
-      "template": "beast_base",
-      "rarity": "boss",
-      "description": "A spider capable of creating complex magical web patterns",
-      "biomes": [],
-      "level_range": [
-        9,
-        13
-      ],
-      "stats": [
-        2860,
-        198,
-        72,
-        88
-      ],
-      "abilities": [
-        "web_maze",
-        "silk_bind",
-        "pattern_magic"
-      ],
-      "loot": "boss_common"
-    },
-    {
-      "id": "beast_revelation",
-      "name": "The Beast of Revelation",
-      "template": "beast_base",
-      "rarity": "boss",
-      "description": "The ultimate evil prophesied in apocalypse",
-      "biomes": [],
-      "level_range": [
-        56,
-        60
-      ],
-      "stats": [
-        92800,
-        3364,
-        2320,
-        464
-      ],
-      "abilities": [
-        "mark_of_beast",
-        "seven_heads",
-        "ten_horns",
-        "blasphemy"
-      ],
-      "loot": "boss_legendary"
-    },
-    {
-      "id": "leviathan_primordial",
-      "name": "Tiamat the Primordial Leviathan",
-      "template": "beast_base",
-      "rarity": "boss",
-      "description": "The mother of all monsters",
-      "biomes": [],
-      "level_range": [
-        50,
-        57
-      ],
-      "stats": [
-        74900,
-        2622,
-        1873,
-        428
-      ],
-      "abilities": [
-        "spawn_monsters",
-        "hydra_heads",
-        "primordial_roar"
-      ],
-      "loot": "boss_legendary"
-    },
-    {
-      "id": "web_spinner",
-      "name": "Web Spinner",
-      "template": "beast_base",
-      "rarity": "common",
-      "description": "A smaller spider that creates sticky webs",
-      "biomes": [
-        "deep_caverns",
-        "cursed_swamp"
-      ],
-      "level_range": [
-        3,
+        52,
+        10,
+        4,
         7
       ],
-      "stats": [
-        35,
-        12,
-        4,
-        16
-      ],
       "abilities": [
-        "web_shot"
+        "regen"
       ],
-      "loot": "common_beast"
-    },
-    {
-      "id": "lava_beast",
-      "name": "Lava Beast",
-      "template": "beast_base",
-      "rarity": "rare",
-      "description": "A creature of living magma and flame",
-      "biomes": [
-        "volcanic_peaks"
-      ],
-      "level_range": [
-        14,
-        20
-      ],
-      "stats": [
-        200,
-        48,
-        24,
-        12
-      ],
-      "abilities": [
-        "molten_skin",
-        "lava_burst"
-      ],
-      "loot": "rare_beast",
-      "magic": 38
+      "loot": "beast_nature",
+      "magic": 14
     }
   ]
 }

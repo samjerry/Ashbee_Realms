@@ -1,6 +1,6 @@
 {
   "creature_type": "fey",
-  "count": 27,
+  "count": 24,
   "monsters": [
     {
       "id": "pixie",
@@ -8,10 +8,23 @@
       "template": "fey_base",
       "rarity": "common",
       "description": "A tiny winged fey creature that glows with magical light",
-      "biomes": ["whispering_woods", "twilight_wetlands"],
-      "level_range": [1, 4],
-      "stats": [15, 5, 2, 18],
-      "abilities": ["sparkle_dust"],
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        1,
+        4
+      ],
+      "stats": [
+        15,
+        5,
+        2,
+        18
+      ],
+      "abilities": [
+        "sparkle_dust"
+      ],
       "loot": "common_fey",
       "magic": 12
     },
@@ -21,10 +34,22 @@
       "template": "fey_base",
       "rarity": "common",
       "description": "A mischievous nature spirit with butterfly wings",
-      "biomes": ["whispering_woods"],
-      "level_range": [2, 5],
-      "stats": [18, 6, 2, 20],
-      "abilities": ["nature_bolt"],
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        2,
+        5
+      ],
+      "stats": [
+        18,
+        6,
+        2,
+        20
+      ],
+      "abilities": [
+        "nature_bolt"
+      ],
       "loot": "common_fey",
       "magic": 14
     },
@@ -34,10 +59,24 @@
       "template": "fey_base",
       "rarity": "uncommon",
       "description": "A floating ball of ghostly light that leads travelers astray",
-      "biomes": ["cursed_swamp", "twilight_wetlands"],
-      "level_range": [5, 10],
-      "stats": [35, 12, 4, 28],
-      "abilities": ["hypnotic_light", "shock"],
+      "biomes": [
+        "cursed_swamp",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "stats": [
+        35,
+        12,
+        4,
+        28
+      ],
+      "abilities": [
+        "hypnotic_light",
+        "shock"
+      ],
       "loot": "uncommon_fey",
       "magic": 24
     },
@@ -47,10 +86,23 @@
       "template": "fey_base",
       "rarity": "uncommon",
       "description": "A tree spirit bound to the ancient forest",
-      "biomes": ["whispering_woods"],
-      "level_range": [6, 12],
-      "stats": [55, 14, 8, 22],
-      "abilities": ["entangle", "bark_skin"],
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "stats": [
+        55,
+        14,
+        8,
+        22
+      ],
+      "abilities": [
+        "entangle",
+        "bark_skin"
+      ],
       "loot": "uncommon_fey",
       "magic": 26
     },
@@ -60,10 +112,24 @@
       "template": "fey_base",
       "rarity": "uncommon",
       "description": "A goat-legged fey creature fond of music and revelry",
-      "biomes": ["whispering_woods", "highland_reaches"],
-      "level_range": [7, 13],
-      "stats": [60, 18, 10, 25],
-      "abilities": ["pan_flute", "charge"],
+      "biomes": [
+        "whispering_woods",
+        "highland_reaches"
+      ],
+      "level_range": [
+        7,
+        13
+      ],
+      "stats": [
+        60,
+        18,
+        10,
+        25
+      ],
+      "abilities": [
+        "pan_flute",
+        "charge"
+      ],
       "loot": "uncommon_fey",
       "magic": 22
     },
@@ -73,10 +139,24 @@
       "template": "fey_base",
       "rarity": "rare",
       "description": "A vicious fey that dyes its cap in the blood of victims",
-      "biomes": ["cursed_swamp", "forsaken_ruins"],
-      "level_range": [12, 18],
-      "stats": [95, 42, 18, 38],
-      "abilities": ["blood_frenzy", "iron_boots"],
+      "biomes": [
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        12,
+        18
+      ],
+      "stats": [
+        95,
+        42,
+        18,
+        38
+      ],
+      "abilities": [
+        "blood_frenzy",
+        "iron_boots"
+      ],
       "loot": "rare_fey",
       "magic": 28
     },
@@ -86,10 +166,24 @@
       "template": "fey_base",
       "rarity": "rare",
       "description": "A water fey that lures travelers to watery graves",
-      "biomes": ["twilight_wetlands", "cursed_swamp"],
-      "level_range": [10, 16],
-      "stats": [80, 35, 15, 42],
-      "abilities": ["charm_song", "water_prison"],
+      "biomes": [
+        "twilight_wetlands",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "stats": [
+        80,
+        35,
+        15,
+        42
+      ],
+      "abilities": [
+        "charm_song",
+        "water_prison"
+      ],
       "loot": "rare_fey",
       "magic": 38
     },
@@ -99,10 +193,24 @@
       "template": "fey_base",
       "rarity": "rare",
       "description": "A fey spirit with a mournful wail that chills the soul",
-      "biomes": ["haunted_manor", "ancient_crypts"],
-      "level_range": [14, 20],
-      "stats": [105, 40, 12, 45],
-      "abilities": ["death_wail", "spectral_form"],
+      "biomes": [
+        "haunted_manor",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        14,
+        20
+      ],
+      "stats": [
+        105,
+        40,
+        12,
+        45
+      ],
+      "abilities": [
+        "death_wail",
+        "spectral_form"
+      ],
       "loot": "rare_fey",
       "magic": 48
     },
@@ -112,10 +220,25 @@
       "template": "fey_base",
       "rarity": "epic",
       "description": "A beautiful nature spirit of extraordinary power",
-      "biomes": ["whispering_woods", "twilight_wetlands"],
-      "level_range": [18, 24],
-      "stats": [160, 58, 28, 68],
-      "abilities": ["beguile", "nature_wrath", "healing_spring"],
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        18,
+        24
+      ],
+      "stats": [
+        160,
+        58,
+        28,
+        68
+      ],
+      "abilities": [
+        "beguile",
+        "nature_wrath",
+        "healing_spring"
+      ],
       "loot": "epic_fey",
       "magic": 72
     },
@@ -125,10 +248,24 @@
       "template": "fey_base",
       "rarity": "epic",
       "description": "A noble warrior of the fey courts",
-      "biomes": ["whispering_woods"],
-      "level_range": [20, 26],
-      "stats": [180, 72, 38, 62],
-      "abilities": ["fey_blade", "glamour", "wild_hunt"],
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        20,
+        26
+      ],
+      "stats": [
+        180,
+        72,
+        38,
+        62
+      ],
+      "abilities": [
+        "fey_blade",
+        "glamour",
+        "wild_hunt"
+      ],
       "loot": "epic_fey",
       "magic": 58
     },
@@ -138,10 +275,25 @@
       "template": "fey_base",
       "rarity": "epic",
       "description": "A master of illusions and mischief",
-      "biomes": ["whispering_woods", "void_realm"],
-      "level_range": [22, 28],
-      "stats": [170, 65, 32, 78],
-      "abilities": ["mass_illusion", "reality_twist", "polymorph"],
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        22,
+        28
+      ],
+      "stats": [
+        170,
+        65,
+        32,
+        78
+      ],
+      "abilities": [
+        "mass_illusion",
+        "reality_twist",
+        "polymorph"
+      ],
       "loot": "epic_fey",
       "magic": 88
     },
@@ -151,10 +303,26 @@
       "template": "fey_base",
       "rarity": "legendary",
       "description": "The king of the dark fey, lord of the Wild Hunt",
-      "biomes": ["whispering_woods", "cursed_swamp"],
-      "level_range": [28, 35],
-      "stats": [320, 125, 58, 105],
-      "abilities": ["wild_hunt_call", "fey_crown", "death_touch", "shadow_step"],
+      "biomes": [
+        "whispering_woods",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        28,
+        35
+      ],
+      "stats": [
+        320,
+        125,
+        58,
+        105
+      ],
+      "abilities": [
+        "wild_hunt_call",
+        "fey_crown",
+        "death_touch",
+        "shadow_step"
+      ],
       "loot": "legendary_fey",
       "magic": 118
     },
@@ -164,10 +332,25 @@
       "template": "fey_base",
       "rarity": "legendary",
       "description": "A manifestation of the Summer Queen's power",
-      "biomes": ["whispering_woods"],
-      "level_range": [30, 36],
-      "stats": [340, 118, 62, 112],
-      "abilities": ["summer_blessing", "fey_fire", "nature_command", "eternal_beauty"],
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "stats": [
+        340,
+        118,
+        62,
+        112
+      ],
+      "abilities": [
+        "summer_blessing",
+        "fey_fire",
+        "nature_command",
+        "eternal_beauty"
+      ],
       "loot": "legendary_fey",
       "magic": 135
     },
@@ -178,9 +361,21 @@
       "rarity": "boss",
       "description": "The greatest prankster of the fey realm",
       "biomes": [],
-      "level_range": [15, 17],
-      "stats": [900, 385, 180, 650],
-      "abilities": ["mischief_aura", "dimension_hop", "illusion_storm"],
+      "level_range": [
+        15,
+        17
+      ],
+      "stats": [
+        900,
+        385,
+        180,
+        650
+      ],
+      "abilities": [
+        "mischief_aura",
+        "dimension_hop",
+        "illusion_storm"
+      ],
       "loot": "boss_fey",
       "magic": 520
     },
@@ -191,9 +386,21 @@
       "rarity": "boss",
       "description": "A dark reflection of the legendary witch",
       "biomes": [],
-      "level_range": [25, 27],
-      "stats": [1680, 780, 360, 780],
-      "abilities": ["hex_mastery", "cauldron_summon", "hut_walk"],
+      "level_range": [
+        25,
+        27
+      ],
+      "stats": [
+        1680,
+        780,
+        360,
+        780
+      ],
+      "abilities": [
+        "hex_mastery",
+        "cauldron_summon",
+        "hut_walk"
+      ],
       "loot": "boss_fey",
       "magic": 1020
     },
@@ -204,9 +411,21 @@
       "rarity": "boss",
       "description": "The voice and will of the Fey King",
       "biomes": [],
-      "level_range": [30, 32],
-      "stats": [2040, 960, 420, 880],
-      "abilities": ["royal_decree", "antler_crown", "fey_storm"],
+      "level_range": [
+        30,
+        32
+      ],
+      "stats": [
+        2040,
+        960,
+        420,
+        880
+      ],
+      "abilities": [
+        "royal_decree",
+        "antler_crown",
+        "fey_storm"
+      ],
       "loot": "boss_fey",
       "magic": 1140
     },
@@ -217,9 +436,21 @@
       "rarity": "boss",
       "description": "An avatar of the Winter Queen herself",
       "biomes": [],
-      "level_range": [35, 37],
-      "stats": [2340, 1080, 480, 960],
-      "abilities": ["winter_court", "eternal_frost", "dream_weaving"],
+      "level_range": [
+        35,
+        37
+      ],
+      "stats": [
+        2340,
+        1080,
+        480,
+        960
+      ],
+      "abilities": [
+        "winter_court",
+        "eternal_frost",
+        "dream_weaving"
+      ],
       "loot": "boss_fey",
       "magic": 1320
     },
@@ -230,9 +461,21 @@
       "rarity": "boss",
       "description": "A dragon infused with pure fey magic",
       "biomes": [],
-      "level_range": [28, 30],
-      "stats": [2160, 900, 540, 780],
-      "abilities": ["prismatic_breath", "phase_shift", "charm_gaze"],
+      "level_range": [
+        28,
+        30
+      ],
+      "stats": [
+        2160,
+        900,
+        540,
+        780
+      ],
+      "abilities": [
+        "prismatic_breath",
+        "phase_shift",
+        "charm_gaze"
+      ],
       "loot": "boss_fey",
       "magic": 1080
     },
@@ -243,9 +486,21 @@
       "rarity": "boss",
       "description": "Master of the stolen children and shapeshifters",
       "biomes": [],
-      "level_range": [22, 24],
-      "stats": [1560, 720, 336, 840],
-      "abilities": ["perfect_disguise", "identity_theft", "child_army"],
+      "level_range": [
+        22,
+        24
+      ],
+      "stats": [
+        1560,
+        720,
+        336,
+        840
+      ],
+      "abilities": [
+        "perfect_disguise",
+        "identity_theft",
+        "child_army"
+      ],
       "loot": "boss_fey",
       "magic": 900
     },
@@ -255,38 +510,28 @@
       "template": "fey_base",
       "rarity": "mythic",
       "description": "The oldest guardian spirit of the primordial forest",
-      "biomes": ["whispering_woods"],
-      "level_range": [40, 45],
-      "stats": [750, 202, 105, 165],
-      "abilities": ["forest_master", "root_prison", "nature_fury", "wild_growth", "animal_call"],
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        40,
+        45
+      ],
+      "stats": [
+        750,
+        202,
+        105,
+        165
+      ],
+      "abilities": [
+        "forest_master",
+        "root_prison",
+        "nature_fury",
+        "wild_growth",
+        "animal_call"
+      ],
       "loot": "mythic_fey",
       "magic": 195
-    },
-    {
-      "id": "unseelie_court_lord",
-      "name": "Lord of the Unseelie Court",
-      "template": "fey_base",
-      "rarity": "mythic",
-      "description": "A primordial dark fey of terrible power",
-      "biomes": ["void_realm", "cursed_swamp"],
-      "level_range": [42, 47],
-      "stats": [735, 210, 98, 175],
-      "abilities": ["dark_covenant", "nightmare_realm", "soul_bargain", "eternal_curse", "shadow_fey"],
-      "loot": "mythic_fey",
-      "magic": 210
-    },
-    {
-      "id": "seelie_court_lady",
-      "name": "Lady of the Seelie Court",
-      "template": "fey_base",
-      "rarity": "mythic",
-      "description": "An ancient light fey of boundless beauty and cruelty",
-      "biomes": ["whispering_woods"],
-      "level_range": [44, 49],
-      "stats": [720, 195, 105, 180],
-      "abilities": ["radiant_beauty", "eternal_summer", "fey_blessing", "mass_charm", "time_loop"],
-      "loot": "mythic_fey",
-      "magic": 225
     },
     {
       "id": "fey_progenitor",
@@ -294,10 +539,27 @@
       "template": "fey_base",
       "rarity": "mythic",
       "description": "The original spark of fey magic given form",
-      "biomes": ["whispering_woods", "void_realm"],
-      "level_range": [46, 50],
-      "stats": [705, 225, 90, 195],
-      "abilities": ["creation_spark", "reality_weave", "fey_ascension", "primordial_magic", "realm_walk"],
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        46,
+        50
+      ],
+      "stats": [
+        705,
+        225,
+        90,
+        195
+      ],
+      "abilities": [
+        "creation_spark",
+        "reality_weave",
+        "fey_ascension",
+        "primordial_magic",
+        "realm_walk"
+      ],
       "loot": "mythic_fey",
       "magic": 240
     },
@@ -307,10 +569,25 @@
       "template": "fey_base",
       "rarity": "mythic",
       "description": "The matriarch of all pixie-kind, ancient beyond measure",
-      "biomes": ["whispering_woods"],
-      "level_range": [38, 43],
-      "stats": [690, 180, 85, 185],
-      "abilities": ["pixie_swarm", "wish_granting", "starlight_burst", "eternal_youth"],
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        38,
+        43
+      ],
+      "stats": [
+        690,
+        180,
+        85,
+        185
+      ],
+      "abilities": [
+        "pixie_swarm",
+        "wish_granting",
+        "starlight_burst",
+        "eternal_youth"
+      ],
       "loot": "mythic_fey",
       "magic": 195
     },
