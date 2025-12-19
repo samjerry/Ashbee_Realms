@@ -1124,8 +1124,12 @@ app.get('/api/inventory', async (req, res) => {
       return res.status(404).json({ error: 'Character not found' });
     }
     
-    const inventory = character.inventory.getSummary();
-    res.json({ success: true, inventory });
+    const inventorySummary = character.inventory.getSummary();
+    // Return items array for frontend compatibility
+    res.json({ 
+      items: inventorySummary.items,
+      equipment: character.equipment.toObject()
+    });
   } catch (error) {
     console.error('Error fetching inventory:', error);
     res.status(500).json({ error: 'Failed to fetch inventory' });
