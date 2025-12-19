@@ -257,8 +257,10 @@
         "cooldown": 12,
         "cost": {"type": "none"},
         "effects": {
-          "buff": {"stat": "cc_immunity", "duration": 2},
-          "buff": {"stat": "damage_reduction", "amount": 0.50, "duration": 2}
+          "buffs": [
+            {"stat": "cc_immunity", "duration": 2},
+            {"stat": "damage_reduction", "amount": 0.50, "duration": 2}
+          ]
         },
         "tags": ["defense", "ultimate"]
       }
@@ -699,8 +701,10 @@
         "cost": {"type": "energy", "amount": 50},
         "effects": {
           "cleanse": {"type": "all_debuffs"},
-          "buff": {"stat": "next_attack_crit", "duration": 1},
-          "buff": {"stat": "untargetable", "duration": 1}
+          "buffs": [
+            {"stat": "next_attack_crit", "duration": 1},
+            {"stat": "untargetable", "duration": 1}
+          ]
         },
         "tags": ["utility", "stealth"]
       },

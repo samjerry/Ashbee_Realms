@@ -105,6 +105,10 @@ class Character {
     
     // Active effects (buffs/debuffs)
     this.activeEffects = data.active_effects || [];
+    
+    // Abilities
+    this.equipped_abilities = data.equipped_abilities || [];
+    this.ability_cooldowns = data.ability_cooldowns || {};
 
     // Initialize managers
     this.equipment = new EquipmentManager(data.equipped || {});
@@ -501,7 +505,9 @@ class Character {
       selectedRoleBadge: this.selectedRoleBadge,
       theme: this.theme,
       bestiary: this.bestiary,
-      bestiary_unlocked: this.bestiaryUnlocked
+      bestiary_unlocked: this.bestiaryUnlocked,
+      equipped_abilities: this.equipped_abilities,
+      ability_cooldowns: this.ability_cooldowns
     };
   }
 
@@ -583,7 +589,11 @@ class Character {
       selectedRoleBadge: this.selectedRoleBadge,
       
       // Active Effects
-      activeEffects: this.activeEffects || []
+      activeEffects: this.activeEffects || [],
+      
+      // Abilities
+      equipped_abilities: this.equipped_abilities || [],
+      ability_cooldowns: this.ability_cooldowns || {}
     };
   }
 

@@ -127,19 +127,49 @@ const useGameStore = create((set, get) => ({
   
   performCombatAction: async (action) => {
     try {
-      const response = await fetch('/api/combat/action', {
+      let endpoint;
+      let body = {};
+      
+      // Determine which endpoint to call based on action type
+      if (action === 'attack') {
+        endpoint = '/api/combat/attack';
+      } else if (action === 'run') {
+        endpoint = '/api/combat/flee';
+      } else if (typeof action === 'object' && action.type === 'item') {
+        endpoint = '/api/combat/item';
+        body = { itemId: action.itemId };
+      } else if (typeof action === 'string') {
+        // Assume it's an ability ID
+        endpoint = '/api/combat/ability';
+        body = { abilityId: action };
+      } else {
+        console.error('Unknown combat action:', action);
+        return;
+      }
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action })
+        body: JSON.stringify(body)
       });
+      
       const result = await response.json();
       
       if (result.log) {
         result.log.forEach(msg => get().addCombatLog(msg));
       }
       
-      if (result.status === 'victory' || result.status === 'defeat') {
-        setTimeout(() => get().endCombat(), 3000);
+      // Update combat state
+      if (result.state) {
+        set({ combat: result });
+      }
+      
+      if (result.victory || result.defeat || result.fled) {
+        setTimeout(() => {
+          get().endCombat();
+          // Reload player data to get updated stats
+          get().fetchPlayer();
+        }, 3000);
       }
       
       return result;

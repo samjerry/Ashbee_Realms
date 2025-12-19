@@ -1398,9 +1398,31 @@ app.post('/api/abilities/equip', async (req, res) => {
       return res.status(400).json({ error: 'Cannot change abilities during combat' });
     }
     
+    // Load class abilities to check unlock requirements
+    const classAbilitiesData = require('./data/class_abilities.json');
+    const playerClass = progress.type.toLowerCase();
+    const classAbilities = classAbilitiesData.abilities[playerClass] || [];
+    const ability = classAbilities.find(a => a.id === abilityId);
+    
+    if (!ability) {
+      return res.status(404).json({ error: 'Ability not found for your class' });
+    }
+    
     // Check if ability is unlocked
-    const unlockedAbilities = progress.unlocked_abilities || [];
-    if (!unlockedAbilities.includes(abilityId)) {
+    let unlockedAbilities = progress.unlocked_abilities || [];
+    const playerLevel = progress.level || 1;
+    
+    // Auto-unlock level-based abilities
+    if (ability.unlock_type === 'level' && playerLevel >= ability.unlock_requirement) {
+      if (!unlockedAbilities.includes(abilityId)) {
+        unlockedAbilities.push(abilityId);
+        // Save the unlock immediately
+        await db.query(
+          `UPDATE ${db.getPlayerTable(channelName)} SET unlocked_abilities = $1 WHERE player_id = $2`,
+          [JSON.stringify(unlockedAbilities), user.id]
+        );
+      }
+    } else if (!unlockedAbilities.includes(abilityId)) {
       return res.status(403).json({ error: 'Ability not unlocked' });
     }
     
@@ -2097,6 +2119,48 @@ app.post('/api/combat/skill', async (req, res) => {
   } catch (error) {
     console.error('Combat skill error:', error);
     res.status(500).json({ error: 'Failed to use skill', details: error.message });
+  }
+});
+
+/**
+ * Perform combat action - Use Ability
+ * POST /api/combat/ability
+ * Body: { abilityId: string }
+ */
+app.post('/api/combat/ability', async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+
+    const { abilityId } = req.body;
+    if (!abilityId) {
+      return res.status(400).json({ error: 'abilityId is required' });
+    }
+
+    if (!req.session.combat) {
+      return res.status(400).json({ error: 'No active combat' });
+    }
+
+    const combat = req.session.combat.combatInstance;
+    const result = combat.playerUseAbility(abilityId);
+
+    // If combat ended, save results and clean up
+    if (result.victory || result.defeat) {
+      await handleCombatEnd(req.session, result);
+    } else {
+      await new Promise((resolve, reject) => {
+        req.session.save((err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    }
+
+    res.json(result);
+
+  } catch (error) {
+    console.error('Combat ability error:', error);
+    res.status(500).json({ error: 'Failed to use ability', details: error.message });
   }
 });
 

@@ -160,6 +160,190 @@ class Combat {
   }
 
   /**
+   * Use a class ability during combat
+   * @param {string} abilityId - Ability to use
+   * @returns {Object} Result of ability usage
+   */
+  playerUseAbility(abilityId) {
+    if (this.state !== Combat.STATES.IN_COMBAT) {
+      return { success: false, message: 'Combat is not active' };
+    }
+
+    if (this.currentActor !== 'player') {
+      return { success: false, message: 'Not your turn' };
+    }
+
+    // Load class abilities data
+    const classAbilitiesData = loadData('class_abilities');
+    const playerClass = this.character.type.toLowerCase();
+    const classAbilities = classAbilitiesData.abilities[playerClass] || [];
+    
+    // Find the ability
+    const ability = classAbilities.find(a => a.id === abilityId);
+    
+    if (!ability) {
+      return { success: false, message: 'Ability not found' };
+    }
+
+    // Check if ability is equipped
+    const equippedAbilities = this.character.equipped_abilities || [];
+    if (!equippedAbilities.includes(abilityId)) {
+      return { success: false, message: 'Ability not equipped' };
+    }
+
+    // Check cooldown
+    const abilityCooldowns = this.character.ability_cooldowns || {};
+    if (abilityCooldowns[abilityId] > 0) {
+      return { 
+        success: false, 
+        message: `${ability.name} on cooldown: ${abilityCooldowns[abilityId]} turns` 
+      };
+    }
+
+    // Check cost (if any)
+    if (ability.cost && ability.cost.type !== 'none') {
+      if (ability.cost.type === 'hp') {
+        const hpCost = ability.cost.amount;
+        if (this.character.current_hp <= hpCost) {
+          return { success: false, message: 'Not enough HP to use this ability' };
+        }
+        this.character.current_hp -= hpCost;
+        this.addLog(`${this.character.name} sacrifices ${hpCost} HP to use ${ability.name}!`);
+      }
+      // Add other cost types as needed (mp, stamina, etc.)
+    }
+
+    this.addLog(`${this.character.name} uses ${ability.name}!`);
+
+    // Apply ability effects
+    const effects = ability.effects;
+    
+    // Handle damage
+    if (effects.damage) {
+      const playerStats = this.character.getFinalStats();
+      let baseDamage = effects.damage.base || 0;
+      
+      // Apply stat scaling
+      if (effects.damage.scales_with) {
+        const scalingStat = playerStats[effects.damage.scales_with] || 10;
+        const scaling = effects.damage.scaling || 0.5;
+        baseDamage += scalingStat * scaling;
+      }
+      
+      // Check for AoE
+      if (effects.aoe) {
+        // In single-target combat, AoE just deals normal damage
+        this.addLog(`${ability.name} hits in a wide arc!`);
+      }
+      
+      const damage = this.calculateDamage(baseDamage, this.monster.defense || 0, 'player');
+      this.monster.current_hp -= damage.total;
+      this.addLog(`Deals ${damage.total} damage!${damage.critical ? ' CRITICAL HIT!' : ''}`);
+      
+      // Check for conditional damage multiplier
+      if (effects.conditional) {
+        const condition = effects.conditional;
+        if (condition.target_hp_below) {
+          const targetHpPercent = this.monster.current_hp / this.monster.max_hp;
+          if (targetHpPercent <= condition.target_hp_below) {
+            const bonusDamage = Math.floor(damage.total * (condition.damage_multiplier - 1));
+            this.monster.current_hp -= bonusDamage;
+            this.addLog(`EXECUTE! Bonus ${bonusDamage} damage on low HP target!`);
+          }
+        }
+      }
+      
+      // Check for victory
+      if (this.monster.current_hp <= 0) {
+        // Set cooldown before victory
+        if (!this.character.ability_cooldowns) this.character.ability_cooldowns = {};
+        this.character.ability_cooldowns[abilityId] = ability.cooldown || 0;
+        return this.handleVictory();
+      }
+    }
+    
+    // Handle healing
+    if (effects.heal) {
+      let healAmount = 0;
+      if (effects.heal.percent) {
+        healAmount = Math.floor(this.character.maxHp * effects.heal.percent);
+      } else if (effects.heal.amount) {
+        healAmount = effects.heal.amount;
+      }
+      
+      const oldHp = this.character.current_hp;
+      this.character.current_hp = Math.min(this.character.maxHp, this.character.current_hp + healAmount);
+      const actualHeal = this.character.current_hp - oldHp;
+      this.addLog(`${this.character.name} recovers ${actualHeal} HP!`);
+    }
+    
+    // Handle single buff
+    if (effects.buff) {
+      const buff = effects.buff;
+      const buffEffect = {
+        name: ability.name,
+        stat: buff.stat,
+        amount: buff.amount,
+        duration: buff.duration || 3,
+        type: 'buff'
+      };
+      
+      this.statusEffects.player.addEffect(buffEffect);
+      
+      if (buff.stat === 'damage_reduction') {
+        this.addLog(`${this.character.name} gains ${Math.floor(buff.amount * 100)}% damage reduction for ${buff.duration} turns!`);
+      } else {
+        this.addLog(`${this.character.name} gains +${buff.amount} ${buff.stat} for ${buff.duration} turns!`);
+      }
+    }
+    
+    // Handle multiple buffs (buffs array)
+    if (effects.buffs && Array.isArray(effects.buffs)) {
+      effects.buffs.forEach(buff => {
+        const buffEffect = {
+          name: ability.name,
+          stat: buff.stat,
+          amount: buff.amount,
+          duration: buff.duration || 3,
+          type: 'buff'
+        };
+        
+        this.statusEffects.player.addEffect(buffEffect);
+        
+        if (buff.stat === 'damage_reduction') {
+          this.addLog(`${this.character.name} gains ${Math.floor(buff.amount * 100)}% damage reduction for ${buff.duration} turns!`);
+        } else if (buff.stat === 'cc_immunity') {
+          this.addLog(`${this.character.name} is immune to crowd control for ${buff.duration} turns!`);
+        } else {
+          const amountText = buff.amount ? `+${buff.amount} ` : '';
+          this.addLog(`${this.character.name} gains ${amountText}${buff.stat} for ${buff.duration} turns!`);
+        }
+      });
+    }
+    
+    // Handle stun
+    if (effects.stun) {
+      const stunRoll = Math.random();
+      if (stunRoll < (effects.stun.chance || 1.0)) {
+        const stunEffect = {
+          name: 'Stunned',
+          duration: effects.stun.duration || 1,
+          type: 'stun'
+        };
+        this.statusEffects.monster.addEffect(stunEffect);
+        this.addLog(`${this.monster.name} is stunned for ${stunEffect.duration} turn(s)!`);
+      }
+    }
+
+    // Set cooldown
+    if (!this.character.ability_cooldowns) this.character.ability_cooldowns = {};
+    this.character.ability_cooldowns[abilityId] = ability.cooldown || 0;
+
+    this.endTurn();
+    return this.monsterTurn();
+  }
+
+  /**
    * Use an item during combat
    * @param {string} itemId - Item to use
    * @returns {Object} Result of item usage
@@ -571,8 +755,20 @@ class Combat {
    */
   endTurn() {
     // Reduce cooldowns
-    if (this.currentActor === 'player' && this.character.skill_cooldown > 0) {
-      this.character.skill_cooldown--;
+    if (this.currentActor === 'player') {
+      // Reduce skill cooldown
+      if (this.character.skill_cooldown > 0) {
+        this.character.skill_cooldown--;
+      }
+      
+      // Reduce ability cooldowns
+      if (this.character.ability_cooldowns) {
+        Object.keys(this.character.ability_cooldowns).forEach(abilityId => {
+          if (this.character.ability_cooldowns[abilityId] > 0) {
+            this.character.ability_cooldowns[abilityId]--;
+          }
+        });
+      }
     }
 
     if (this.currentActor === 'monster') {
