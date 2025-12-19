@@ -2024,7 +2024,8 @@
       "id": "troll_enforcer",
       "name": "Gruk the Troll Enforcer",
       "types": [
-        "giant"
+        "giant",
+        "monstrosity"
       ],
       "primary_type": "giant",
       "tags": [

@@ -28,6 +28,9 @@ const MULTI_TYPE_MAPPINGS = {
   'frost_troll': ['giant', 'monstrosity'],
   'war_troll': ['giant', 'monstrosity'],
   'troll_shaman': ['giant', 'monstrosity'],
+  'troll_enforcer': ['giant', 'monstrosity'],
+  'troll_berserker': ['giant', 'monstrosity'],
+  'bridge_troll': ['giant', 'monstrosity'],
   
   // Undead + Dragon
   'dracolich': ['undead', 'dragon'],

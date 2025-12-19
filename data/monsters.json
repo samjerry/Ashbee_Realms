@@ -6529,11 +6529,11 @@
           15
         ],
         "base_stats": {
-          "hp": 240,
-          "attack": 26,
-          "defense": 14,
+          "hp": 217,
+          "attack": 25,
+          "defense": 13,
           "speed": 2,
-          "magic": 5
+          "magic": 10
         },
         "loot_table": {
           "gold": [
@@ -6582,7 +6582,8 @@
           }
         ],
         "types": [
-          "giant"
+          "giant",
+          "monstrosity"
         ],
         "primary_type": "giant",
         "tags": [
@@ -6604,11 +6605,11 @@
           20
         ],
         "base_stats": {
-          "hp": 288,
-          "attack": 29,
-          "defense": 14,
-          "speed": 2,
-          "magic": 5
+          "hp": 261,
+          "attack": 28,
+          "defense": 13,
+          "speed": 3,
+          "magic": 10
         },
         "loot_table": {
           "gold": [
@@ -6647,7 +6648,8 @@
         ],
         "active_abilities": [],
         "types": [
-          "giant"
+          "giant",
+          "monstrosity"
         ],
         "primary_type": "giant",
         "tags": [
@@ -19802,11 +19804,11 @@
           10
         ],
         "base_stats": {
-          "hp": 5040,
-          "attack": 163,
-          "defense": 94,
-          "speed": 50,
-          "magic": 5
+          "hp": 4567,
+          "attack": 157,
+          "defense": 90,
+          "speed": 61,
+          "magic": 10
         },
         "loot_table": {
           "gold": [
@@ -19852,7 +19854,8 @@
           }
         ],
         "types": [
-          "giant"
+          "giant",
+          "monstrosity"
         ],
         "primary_type": "giant",
         "tags": [

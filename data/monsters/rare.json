@@ -937,7 +937,8 @@
       "id": "troll_berserker",
       "name": "Troll Berserker",
       "types": [
-        "giant"
+        "giant",
+        "monstrosity"
       ],
       "primary_type": "giant",
       "tags": [
@@ -974,7 +975,8 @@
       "id": "bridge_troll",
       "name": "Bridge Troll",
       "types": [
-        "giant"
+        "giant",
+        "monstrosity"
       ],
       "primary_type": "giant",
       "tags": [
