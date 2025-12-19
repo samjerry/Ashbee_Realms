@@ -99,6 +99,12 @@ class Character {
     // Bestiary tracking
     this.bestiary = data.bestiary || {};
     this.bestiaryUnlocked = data.bestiary_unlocked || false;
+    
+    // Playtime tracking
+    this.playtime = data.playtime || 0;
+    
+    // Active effects (buffs/debuffs)
+    this.activeEffects = data.active_effects || [];
 
     // Initialize managers
     this.equipment = new EquipmentManager(data.equipped || {});
