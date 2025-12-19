@@ -120,10 +120,13 @@ function App() {
       const newUrl = window.location.pathname;
       window.history.replaceState({}, '', newUrl);
     } else {
-      fetchPlayer();
+      // Initialize game by fetching player data first, then setting up sockets
+      const initializeGame = async () => {
+        await fetchPlayer();
+        setupSocketListeners();
+      };
+      initializeGame();
     }
-    
-    setupSocketListeners();
   }, []);
 
   const handleCharacterCreation = async (characterData) => {
