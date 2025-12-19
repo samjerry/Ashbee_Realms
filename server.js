@@ -6702,20 +6702,33 @@ app.post('/api/operator/execute',
 
       if (playerCommands.includes(sanitizedCommand) && sanitizedParams.playerId) {
         try {
-          // Resolve player name to ID if needed
-          const targetPlayerId = sanitizedParams.playerId.startsWith('twitch-') 
-            ? sanitizedParams.playerId 
-            : await operatorMgr.getPlayerIdFromName(sanitizedParams.playerId, req.channelName, db);
-          
-          // Load fresh player data using getCharacter to get proper camelCase fields
-          const character = await db.getCharacter(targetPlayerId, req.channelName);
-          if (character) {
-            // Use character name as room identifier (matches frontend socket join)
-            const roomIdentifier = character.name;
+          // Use the updated character data returned from the operator command
+          if (result.updatedCharacter) {
+            // Use the player name from the updated character as room identifier
+            const roomIdentifier = result.updatedCharacter.name;
             
             // Emit properly formatted player data to the affected player's room
-            socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, character.toFrontend());
+            socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, result.updatedCharacter);
             console.log(`[OPERATOR] Emitted update to room ${roomIdentifier}_${req.channelName} after ${sanitizedCommand}`);
+            console.log(
+              `[OPERATOR] Updated data includes:`,
+              `gold=${result.updatedCharacter.gold},`,
+              `hp=${result.updatedCharacter.hp},`,
+              `level=${result.updatedCharacter.level}`
+            );
+          } else {
+            // Fallback: if operator command didn't return updatedCharacter, load it manually
+            console.warn('[OPERATOR] Command result did not include updatedCharacter, loading manually');
+            const targetPlayerId = sanitizedParams.playerId.startsWith('twitch-') 
+              ? sanitizedParams.playerId 
+              : await operatorMgr.getPlayerIdFromName(sanitizedParams.playerId, req.channelName, db);
+            
+            const character = await db.getCharacter(targetPlayerId, req.channelName);
+            if (character) {
+              const roomIdentifier = character.name;
+              socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, character.toFrontend());
+              console.log(`[OPERATOR] Emitted fallback update to room ${roomIdentifier}_${req.channelName} after ${sanitizedCommand}`);
+            }
           }
         } catch (err) {
           console.error('[OPERATOR] Failed to emit player update:', err);
