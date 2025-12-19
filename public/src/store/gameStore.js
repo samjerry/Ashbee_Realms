@@ -366,11 +366,11 @@ const useGameStore = create((set, get) => ({
       console.log('Connected to game server');
       
       // Rejoin room on reconnect
-      const player = get().player;
-      if (player?.username) {
-        const channel = player?.channel || 'default';
-        console.log(`[WebSocket] Reconnecting to room: ${player.username}_${channel}`);
-        socket.emit('join', { player: player.username, channel });
+      const currentPlayer = get().player;
+      if (currentPlayer?.username) {
+        const channel = currentPlayer?.channel || 'default';
+        console.log(`[WebSocket] Reconnecting to room: ${currentPlayer.username}_${channel}`);
+        socket.emit('join', { player: currentPlayer.username, channel });
       }
     });
     
