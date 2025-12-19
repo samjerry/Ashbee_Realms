@@ -346,23 +346,47 @@ const useGameStore = create((set, get) => ({
   // WebSocket handlers
   setupSocketListeners: () => {
     const player = get().player;
-    const channel = player?.username || player?.login || 'default';
+    const channel = player?.channel || 'default';
     
+    // Use the character's username (character name) as the room identifier
+    // This matches what the backend uses in socketHandler.emitPlayerUpdate()
+    const playerIdentifier = player?.username;
+    
+    if (!playerIdentifier) {
+      console.error('[WebSocket] Cannot join room: player username is undefined', player);
+      return;
+    }
+    
+    console.log(`[WebSocket] Joining room: ${playerIdentifier}_${channel}`);
     // Join player-specific room
-    socket.emit('join', { player: player?.username || player?.login, channel });
+    socket.emit('join', { player: playerIdentifier, channel });
     
     socket.on('connect', () => {
       set({ connected: true });
       console.log('Connected to game server');
+      
       // Rejoin room on reconnect
-      if (player) {
-        socket.emit('join', { player: player.username || player.login, channel });
+      const currentPlayer = get().player;
+      if (currentPlayer?.username) {
+        const channel = currentPlayer?.channel || 'default';
+        console.log(`[WebSocket] Reconnecting to room: ${currentPlayer.username}_${channel}`);
+        socket.emit('join', { player: currentPlayer.username, channel });
       }
     });
     
     socket.on('disconnect', () => {
       set({ connected: false });
       console.log('Disconnected from game server');
+    });
+    
+    // Handle successful room join confirmation
+    socket.on('joined', (data) => {
+      console.log('[WebSocket] ✅ Successfully joined room:', data);
+    });
+    
+    // Handle WebSocket errors
+    socket.on('error', (error) => {
+      console.error('[WebSocket] ❌ Error:', error);
     });
     
     // Player updates

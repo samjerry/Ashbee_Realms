@@ -6706,16 +6706,29 @@ app.post('/api/operator/execute',
           if (result.updatedCharacter) {
             // Use the player name from the updated character as room identifier
             const roomIdentifier = result.updatedCharacter.name;
+            const roomId = `${roomIdentifier}_${req.channelName}`;
+            
+            // Check if anyone is actually in this room
+            const clientsInRoom = socketHandler.getRoomCount(roomIdentifier, req.channelName);
+            
+            console.log(`[OPERATOR] Attempting to emit to room: ${roomId}`);
+            console.log(`[OPERATOR] Clients in room: ${clientsInRoom}`);
+            console.log(`[OPERATOR] Character data being sent:`, {
+              name: result.updatedCharacter.name,
+              gold: result.updatedCharacter.gold,
+              level: result.updatedCharacter.level,
+              hp: result.updatedCharacter.hp,
+              xp: result.updatedCharacter.xp
+            });
             
             // Emit properly formatted player data to the affected player's room
             socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, result.updatedCharacter);
-            console.log(`[OPERATOR] Emitted update to room ${roomIdentifier}_${req.channelName} after ${sanitizedCommand}`);
-            console.log(
-              `[OPERATOR] Updated data includes:`,
-              `gold=${result.updatedCharacter.gold},`,
-              `hp=${result.updatedCharacter.hp},`,
-              `level=${result.updatedCharacter.level}`
-            );
+            
+            if (clientsInRoom === 0) {
+              console.warn(`[OPERATOR] ⚠️ No clients in room ${roomId}! Update may not be received.`);
+            } else {
+              console.log(`[OPERATOR] ✅ Successfully emitted update to ${clientsInRoom} client(s) in room ${roomId}`);
+            }
           } else {
             // Fallback: if operator command didn't return updatedCharacter, load it manually
             console.warn('[OPERATOR] Command result did not include updatedCharacter, loading manually');
@@ -6726,12 +6739,31 @@ app.post('/api/operator/execute',
             const character = await db.getCharacter(targetPlayerId, req.channelName);
             if (character) {
               const roomIdentifier = character.name;
+              const roomId = `${roomIdentifier}_${req.channelName}`;
+              const clientsInRoom = socketHandler.getRoomCount(roomIdentifier, req.channelName);
+              
+              console.log(`[OPERATOR] Fallback - Attempting to emit to room: ${roomId}`);
+              console.log(`[OPERATOR] Clients in room: ${clientsInRoom}`);
+              
               socketHandler.emitPlayerUpdate(roomIdentifier, req.channelName, character.toFrontend());
-              console.log(`[OPERATOR] Emitted fallback update to room ${roomIdentifier}_${req.channelName} after ${sanitizedCommand}`);
+              
+              if (clientsInRoom === 0) {
+                console.warn(`[OPERATOR] ⚠️ No clients in room ${roomId}! Update may not be received.`);
+              } else {
+                console.log(`[OPERATOR] ✅ Successfully emitted fallback update to ${clientsInRoom} client(s) in room ${roomId}`);
+              }
+            } else {
+              console.error(`[OPERATOR] ❌ Character not found for player ID: ${targetPlayerId}`);
             }
           }
         } catch (err) {
           console.error('[OPERATOR] Failed to emit player update:', err);
+          console.error('[OPERATOR] Error details:', {
+            command: sanitizedCommand,
+            playerId: sanitizedParams.playerId,
+            channel: req.channelName,
+            stack: err.stack
+          });
         }
       }
 

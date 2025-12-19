@@ -18,16 +18,35 @@ function initializeWebSocket(server) {
     // Join player room
     socket.on('join', (data) => {
       const { player, channel } = data;
+      
+      if (!player || !channel) {
+        console.error('[WebSocket] Invalid join data:', data);
+        socket.emit('error', { message: 'Player and channel are required to join' });
+        return;
+      }
+      
       const roomId = `${player}_${channel}`;
       socket.join(roomId);
       
       // Also join channel-wide room for global broadcasts
       socket.join(`channel_${channel}`);
       
-      console.log(`[WebSocket] ${player} joined room ${roomId} and channel_${channel}`);
+      // Get room size for debugging
+      const roomSize = io.sockets.adapter.rooms.get(roomId)?.size || 0;
+      
+      console.log(`[WebSocket] ✅ ${player} joined room ${roomId} (${roomSize} total clients)`);
+      console.log(`[WebSocket] Also joined channel_${channel}`);
       
       // Send current game state
       socket.emit('connected', { message: 'Connected to Ashbee Realms' });
+      
+      // Confirm join to client
+      socket.emit('joined', { 
+        room: roomId, 
+        player, 
+        channel,
+        timestamp: Date.now() 
+      });
     });
     
     // Leave player room
