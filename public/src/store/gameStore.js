@@ -362,8 +362,8 @@ const useGameStore = create((set, get) => ({
       return;
     }
     
-    if (channel === 'default') {
-      console.warn('[WebSocket] ⚠️ Using default channel. Player channel may not be set correctly.', {
+    if (!player?.channel) {
+      console.warn('[WebSocket] ⚠️ Player channel not set, using default fallback.', {
         playerChannel: player?.channel,
         fallbackChannel: channel
       });
