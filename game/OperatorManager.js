@@ -3,6 +3,10 @@
  * Manages operator commands and permissions for streamers and moderators
  */
 
+// Import required classes
+const InventoryManager = require('./InventoryManager');
+const EquipmentManager = require('./EquipmentManager');
+
 // Game constants (should match main game configuration)
 const GAME_CONSTANTS = {
   MAX_LEVEL: 100,
@@ -404,7 +408,7 @@ class OperatorManager {
     if (!character) throw new Error('Player not found');
 
     // Clear inventory using Character class
-    character.inventory = new (require('./InventoryManager'))([], 30);
+    character.inventory = new InventoryManager([], 30);
     
     // Save using Character class
     await db.saveCharacter(targetPlayerId, channelName, character);
@@ -700,8 +704,6 @@ class OperatorManager {
     };
     
     // Reset inventory and equipment using Character classes
-    const InventoryManager = require('./InventoryManager');
-    const EquipmentManager = require('./EquipmentManager');
     character.inventory = new InventoryManager(['Health Potion'], 30);
     character.equipment = new EquipmentManager({
       headgear: null, armor: null, legs: null, footwear: null,
