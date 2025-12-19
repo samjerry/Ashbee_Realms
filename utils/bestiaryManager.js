@@ -72,13 +72,26 @@ class BestiaryManager {
    */
   static getBestiaryEntries(bestiaryData) {
     const monstersData = loadData('monsters');
-    const monsters = monstersData.monsters || [];
+    const monstersObj = monstersData.monsters || {};
     
     // Create a map of all monsters
     const monsterMap = {};
-    monsters.forEach(monster => {
-      monsterMap[monster.id] = monster;
-    });
+    
+    // Handle both array and object formats
+    if (Array.isArray(monstersObj)) {
+      monstersObj.forEach(monster => {
+        monsterMap[monster.id] = monster;
+      });
+    } else {
+      // Object with rarity keys (common, uncommon, rare, etc.)
+      Object.values(monstersObj).forEach(rarityGroup => {
+        if (Array.isArray(rarityGroup)) {
+          rarityGroup.forEach(monster => {
+            monsterMap[monster.id] = monster;
+          });
+        }
+      });
+    }
     
     // Build bestiary entries
     const entries = [];

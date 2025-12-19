@@ -1349,10 +1349,8 @@ app.get('/api/abilities', async (req, res) => {
     
     // Save updated unlocked abilities if any were auto-unlocked
     if (unlockedAbilities.length > (progress.unlocked_abilities || []).length) {
-      await db.query(
-        `UPDATE ${db.getPlayerTable(channelName)} SET unlocked_abilities = $1 WHERE player_id = $2`,
-        [JSON.stringify(unlockedAbilities), user.id]
-      );
+      progress.unlocked_abilities = unlockedAbilities;
+      await db.savePlayerProgress(user.id, channelName, progress);
     }
     
     res.json({ 
@@ -1462,11 +1460,8 @@ app.post('/api/abilities/equip', async (req, res) => {
     if (ability.unlock_type === 'level' && playerLevel >= ability.unlock_requirement) {
       if (!unlockedAbilities.includes(abilityId)) {
         unlockedAbilities.push(abilityId);
-        // Save the unlock immediately
-        await db.query(
-          `UPDATE ${db.getPlayerTable(channelName)} SET unlocked_abilities = $1 WHERE player_id = $2`,
-          [JSON.stringify(unlockedAbilities), user.id]
-        );
+        // Update progress object
+        progress.unlocked_abilities = unlockedAbilities;
       }
     } else if (!unlockedAbilities.includes(abilityId)) {
       return res.status(403).json({ error: 'Ability not unlocked' });
@@ -1486,16 +1481,16 @@ app.post('/api/abilities/equip', async (req, res) => {
     
     // Equip the ability
     equippedAbilities.push(abilityId);
+    progress.equipped_abilities = equippedAbilities;
     
-    await db.query(
-      `UPDATE ${db.getPlayerTable(channelName)} SET equipped_abilities = $1 WHERE player_id = $2`,
-      [JSON.stringify(equippedAbilities), user.id]
-    );
+    // Save updated progress
+    await db.savePlayerProgress(user.id, channelName, progress);
     
     res.json({ success: true, equipped: equippedAbilities });
   } catch (error) {
     console.error('Error equipping ability:', error);
-    res.status(500).json({ error: 'Failed to equip ability' });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ error: 'Failed to equip ability', details: error.message });
   }
 });
 
@@ -1535,10 +1530,8 @@ app.post('/api/abilities/unequip', async (req, res) => {
     // Remove the ability
     equippedAbilities = equippedAbilities.filter(id => id !== abilityId);
     
-    await db.query(
-      `UPDATE ${db.getPlayerTable(channelName)} SET equipped_abilities = $1 WHERE player_id = $2`,
-      [JSON.stringify(equippedAbilities), user.id]
-    );
+    progress.equipped_abilities = equippedAbilities;
+    await db.savePlayerProgress(user.id, channelName, progress);
     
     res.json({ success: true, equipped: equippedAbilities });
   } catch (error) {
