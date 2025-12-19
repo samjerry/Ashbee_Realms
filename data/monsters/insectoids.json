@@ -746,7 +746,7 @@
     {
       "id": "tarantula_king",
       "name": "Fang the Tarantula King",
-      "template": "humanoid_base",
+      "template": "insectoid_base",
       "rarity": "boss",
       "description": "A hairy behemoth with crushing mandibles",
       "biomes": [],
@@ -770,7 +770,7 @@
     {
       "id": "retriever",
       "name": "Retriever",
-      "template": "demon_base",
+      "template": "insectoid_base",
       "rarity": "legendary",
       "description": "A demonic construct built like a spider for hunting",
       "biomes": [

@@ -527,7 +527,7 @@
     {
       "id": "zuggtmoy_aspect",
       "name": "Aspect of Zuggtmoy",
-      "template": "demon_base",
+      "template": "plant_base",
       "rarity": "legendary",
       "description": "A manifestation of the fungal demon queen",
       "biomes": [

@@ -518,7 +518,7 @@
     {
       "id": "tidal_lord",
       "name": "Thalassor the Tidal Lord",
-      "template": "humanoid_base",
+      "template": "aquatic_base",
       "rarity": "boss",
       "description": "An ancient elemental that commands the seas",
       "biomes": [],
@@ -542,7 +542,7 @@
     {
       "id": "drowned_priest",
       "name": "High Priest Aquilus",
-      "template": "humanoid_base",
+      "template": "aquatic_base",
       "rarity": "boss",
       "description": "The drowned priest still performing dark rituals",
       "biomes": [],
@@ -623,7 +623,7 @@
     {
       "id": "kraken_priest",
       "name": "Kraken Priest",
-      "template": "aberration_base",
+      "template": "aquatic_base",
       "rarity": "legendary",
       "description": "A cultist who has merged with an ancient kraken",
       "biomes": [
@@ -653,7 +653,7 @@
     {
       "id": "coral_titan",
       "name": "Coralox the Living Reef",
-      "template": "elemental_base",
+      "template": "aquatic_base",
       "rarity": "boss",
       "description": "A massive creature made of living coral",
       "biomes": [],

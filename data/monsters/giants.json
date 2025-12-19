@@ -586,7 +586,7 @@
     {
       "id": "troll_berserker",
       "name": "Troll Berserker",
-      "template": "humanoid_base",
+      "template": "giant_base",
       "rarity": "rare",
       "description": "A massive troll with regenerating flesh and immense strength",
       "biomes": [
@@ -616,7 +616,7 @@
     {
       "id": "bridge_troll",
       "name": "Bridge Troll",
-      "template": "humanoid_base",
+      "template": "giant_base",
       "rarity": "rare",
       "description": "A territorial troll that demands tribute from travelers",
       "biomes": [
@@ -643,7 +643,7 @@
     {
       "id": "hagmother",
       "name": "Hagmother",
-      "template": "humanoid_base",
+      "template": "giant_base",
       "rarity": "rare",
       "description": "An ancient witch with dark powers",
       "biomes": [
@@ -672,7 +672,7 @@
     {
       "id": "frost_jarl",
       "name": "Frost Jarl",
-      "template": "humanoid_base",
+      "template": "giant_base",
       "rarity": "epic",
       "description": "A towering giant from the frozen wastes",
       "biomes": [
@@ -699,7 +699,7 @@
     {
       "id": "atlas_titan",
       "name": "Atlas the World Bearer",
-      "template": "elemental_base",
+      "template": "giant_base",
       "rarity": "boss",
       "description": "A titan who once held the world on his shoulders",
       "biomes": [],
@@ -725,7 +725,7 @@
     {
       "id": "frost_titan",
       "name": "Ymir the Frost Titan",
-      "template": "elemental_base",
+      "template": "giant_base",
       "rarity": "boss",
       "description": "A titan of eternal ice and winter",
       "biomes": [],
@@ -750,7 +750,7 @@
     {
       "id": "storm_titan",
       "name": "Typhon the Storm Titan",
-      "template": "elemental_base",
+      "template": "giant_base",
       "rarity": "boss",
       "description": "A titan commanding storms and lightning",
       "biomes": [],
@@ -775,7 +775,7 @@
     {
       "id": "fire_titan",
       "name": "Prometheus the Fire Titan",
-      "template": "elemental_base",
+      "template": "giant_base",
       "rarity": "boss",
       "description": "The titan who stole fire from the gods",
       "biomes": [],
@@ -800,7 +800,7 @@
     {
       "id": "void_titan",
       "name": "Cronus the Devourer",
-      "template": "elemental_base",
+      "template": "giant_base",
       "rarity": "boss",
       "description": "A titan who consumes all things",
       "biomes": [],

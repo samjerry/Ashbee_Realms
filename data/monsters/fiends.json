@@ -5,7 +5,7 @@
     {
       "id": "dimension_lord",
       "name": "Cthulhu the Dreaming God",
-      "template": "humanoid_base",
+      "template": "demon_base",
       "rarity": "boss",
       "description": "An ancient being from another dimension",
       "biomes": [],
@@ -29,7 +29,7 @@
     {
       "id": "cherubim_dark",
       "name": "Metatron the Dark Voice",
-      "template": "humanoid_base",
+      "template": "demon_base",
       "rarity": "boss",
       "description": "The voice of god, now speaking blasphemy",
       "biomes": [],
@@ -53,7 +53,7 @@
     {
       "id": "primordial_one",
       "name": "The First Being",
-      "template": "humanoid_base",
+      "template": "demon_base",
       "rarity": "boss",
       "description": "The entity that existed before existence",
       "biomes": [],
