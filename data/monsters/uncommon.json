@@ -1,0 +1,1747 @@
+{
+  "rarity": "uncommon",
+  "version": "1.0",
+  "count": 54,
+  "monsters": [
+    {
+      "id": "deranged_patient",
+      "name": "Deranged Patient",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A maddened soul trapped in torment",
+      "biomes": [
+        "haunted_manor"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 125,
+        "attack": 32,
+        "defense": 12,
+        "speed": 22
+      },
+      "abilities": [
+        "frenzy",
+        "madness"
+      ],
+      "loot": "uncommon_aberration",
+      "template": "aberration_base"
+    },
+    {
+      "id": "giant_octopus",
+      "name": "Giant Octopus",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "An intelligent cephalopod with eight grasping tentacles",
+      "biomes": [
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 60,
+        "attack": 24,
+        "defense": 18,
+        "speed": 28,
+        "magic": 18
+      },
+      "abilities": [
+        "tentacle_grab",
+        "ink_cloud",
+        "camouflage"
+      ],
+      "loot": "uncommon_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "merfolk_warrior",
+      "name": "Merfolk Warrior",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "uncommon",
+      "description": "A skilled fighter from the underwater kingdoms",
+      "biomes": [
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 70,
+        "attack": 28,
+        "defense": 22,
+        "speed": 30,
+        "magic": 20
+      },
+      "abilities": [
+        "trident_mastery",
+        "water_jet"
+      ],
+      "loot": "uncommon_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "sea_serpent",
+      "name": "Sea Serpent",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A massive snake-like creature that terrorizes ships",
+      "biomes": [
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 85,
+        "attack": 32,
+        "defense": 20,
+        "speed": 26
+      },
+      "abilities": [
+        "constrict",
+        "capsizing_coil",
+        "salt_spray"
+      ],
+      "loot": "uncommon_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "sand_viper",
+      "name": "Sand Viper",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "uncommon",
+      "description": "A deadly serpent that burrows beneath the sand",
+      "biomes": [
+        "ashen_barrens"
+      ],
+      "level_range": [
+        6,
+        10
+      ],
+      "base_stats": {
+        "hp": 44,
+        "attack": 13,
+        "defense": 2,
+        "speed": 12
+      },
+      "abilities": [
+        "poison"
+      ],
+      "loot": "beast_viper",
+      "template": "beast_base"
+    },
+    {
+      "id": "wolf_matriarch",
+      "name": "Wolf Matriarch",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "The alpha female of a wolf pack, fierce and protective",
+      "biomes": [
+        "whispering_woods",
+        "highland_reaches",
+        "twilight_wetlands",
+        "ashen_barrens"
+      ],
+      "level_range": [
+        7,
+        12
+      ],
+      "base_stats": {
+        "hp": 68,
+        "attack": 15,
+        "defense": 5,
+        "speed": 10
+      },
+      "abilities": [
+        "pack_leader"
+      ],
+      "loot": "beast_alpha_wolf",
+      "template": "beast_base"
+    },
+    {
+      "id": "elder_treant",
+      "name": "Elder Treant",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [
+        "regenerating",
+        "ancient"
+      ],
+      "rarity": "uncommon",
+      "description": "A nature spirit bound to ancient trees",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 52,
+        "attack": 10,
+        "defense": 4,
+        "speed": 7,
+        "magic": 14
+      },
+      "abilities": [
+        "regen"
+      ],
+      "loot": "beast_nature",
+      "template": "beast_base"
+    },
+    {
+      "id": "automaton",
+      "name": "Automaton",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A mechanical construct powered by magic",
+      "biomes": [
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 140,
+        "attack": 30,
+        "defense": 24,
+        "speed": 12
+      },
+      "abilities": [
+        "mechanical_precision"
+      ],
+      "loot": "uncommon_construct",
+      "template": "construct_base"
+    },
+    {
+      "id": "wyrmling",
+      "name": "Wyrmling",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A young dragon, still learning to use its power",
+      "biomes": [
+        "highland_reaches",
+        "volcanic_peaks"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 110,
+        "attack": 24,
+        "defense": 15,
+        "speed": 12,
+        "magic": 18
+      },
+      "abilities": [
+        "bite",
+        "claw"
+      ],
+      "loot": "uncommon_dragon",
+      "template": "dragon_base"
+    },
+    {
+      "id": "lightning_wisp",
+      "name": "Lightning Wisp",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "lightning"
+      ],
+      "rarity": "uncommon",
+      "description": "A crackling ball of electrical energy",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        5,
+        9
+      ],
+      "base_stats": {
+        "hp": 35,
+        "attack": 16,
+        "defense": 2,
+        "speed": 10
+      },
+      "abilities": [
+        "shock",
+        "phase"
+      ],
+      "loot": "elemental_lightning",
+      "template": "elemental_base"
+    },
+    {
+      "id": "ice_sprite",
+      "name": "Ice Sprite",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "uncommon",
+      "description": "A tiny fey creature made of frost and ice",
+      "biomes": [
+        "frozen_wastes"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "base_stats": {
+        "hp": 40,
+        "attack": 12,
+        "defense": 4,
+        "speed": 8,
+        "magic": 14
+      },
+      "abilities": [
+        "freeze",
+        "ice_shield"
+      ],
+      "loot": "elemental_ice",
+      "template": "elemental_base"
+    },
+    {
+      "id": "flame_sprite",
+      "name": "Flame Sprite",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "uncommon",
+      "description": "A tiny fey creature wreathed in dancing flames",
+      "biomes": [
+        "volcanic_peaks"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 42,
+        "attack": 14,
+        "defense": 1,
+        "speed": 10,
+        "magic": 15
+      },
+      "abilities": [
+        "fire_aura",
+        "evasive"
+      ],
+      "loot": "elemental_fire",
+      "template": "elemental_base"
+    },
+    {
+      "id": "ice_elemental",
+      "name": "Ice Elemental",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "uncommon",
+      "description": "A being of frozen water and bitter cold",
+      "biomes": [
+        "frozen_wastes"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 95,
+        "attack": 28,
+        "defense": 12,
+        "speed": 18,
+        "magic": 32
+      },
+      "abilities": [
+        "frost_blast",
+        "ice_armor"
+      ],
+      "loot": "uncommon_elemental",
+      "template": "elemental_base"
+    },
+    {
+      "id": "water_elemental",
+      "name": "Water Elemental",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A flowing form of animated water",
+      "biomes": [
+        "twilight_wetlands",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        7,
+        13
+      ],
+      "base_stats": {
+        "hp": 85,
+        "attack": 24,
+        "defense": 10,
+        "speed": 20,
+        "magic": 28
+      },
+      "abilities": [
+        "water_jet",
+        "fluid_form"
+      ],
+      "loot": "uncommon_elemental",
+      "template": "elemental_base"
+    },
+    {
+      "id": "crystal_sprite",
+      "name": "Crystal Sprite",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A tiny fey creature made of living crystal",
+      "biomes": [
+        "deep_caverns"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 60,
+        "attack": 22,
+        "defense": 8,
+        "speed": 24,
+        "magic": 26
+      },
+      "abilities": [
+        "crystal_shard",
+        "refract"
+      ],
+      "loot": "uncommon_elemental",
+      "template": "elemental_base"
+    },
+    {
+      "id": "will_o_wisp",
+      "name": "Will-o'-Wisp",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "lightning"
+      ],
+      "rarity": "uncommon",
+      "description": "A floating ball of ghostly light that leads travelers astray",
+      "biomes": [
+        "cursed_swamp",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "base_stats": {
+        "hp": 35,
+        "attack": 12,
+        "defense": 4,
+        "speed": 28,
+        "magic": 24
+      },
+      "abilities": [
+        "hypnotic_light",
+        "shock"
+      ],
+      "loot": "uncommon_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "dryad",
+      "name": "Dryad",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "uncommon",
+      "description": "A tree spirit bound to the ancient forest",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 55,
+        "attack": 14,
+        "defense": 8,
+        "speed": 22,
+        "magic": 26
+      },
+      "abilities": [
+        "entangle",
+        "bark_skin"
+      ],
+      "loot": "uncommon_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "satyr",
+      "name": "Satyr",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A goat-legged fey creature fond of music and revelry",
+      "biomes": [
+        "whispering_woods",
+        "highland_reaches"
+      ],
+      "level_range": [
+        7,
+        13
+      ],
+      "base_stats": {
+        "hp": 60,
+        "attack": 18,
+        "defense": 10,
+        "speed": 25,
+        "magic": 22
+      },
+      "abilities": [
+        "pan_flute",
+        "charge"
+      ],
+      "loot": "uncommon_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "ettin",
+      "name": "Ettin",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "psychic"
+      ],
+      "rarity": "uncommon",
+      "description": "A two-headed giant with double the trouble",
+      "biomes": [
+        "highland_reaches",
+        "volcanic_wastes"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 100,
+        "attack": 35,
+        "defense": 25,
+        "speed": 4
+      },
+      "abilities": [
+        "double_strike",
+        "independent_minds"
+      ],
+      "loot": "uncommon_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "stone_giant",
+      "name": "Stone Giant",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A contemplative giant carved from living stone",
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 140,
+        "attack": 42,
+        "defense": 40,
+        "speed": 5
+      },
+      "abilities": [
+        "rock_throw",
+        "stone_skin"
+      ],
+      "loot": "uncommon_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "frost_giant_warrior",
+      "name": "Frost Giant Warrior",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "uncommon",
+      "description": "A battle-hardened warrior from the frozen wastes",
+      "biomes": [
+        "frostspire_peaks"
+      ],
+      "level_range": [
+        12,
+        18
+      ],
+      "base_stats": {
+        "hp": 160,
+        "attack": 48,
+        "defense": 38,
+        "speed": 4
+      },
+      "abilities": [
+        "frost_weapon",
+        "ice_armor"
+      ],
+      "loot": "uncommon_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "orc_warrior",
+      "name": "Orc Warrior",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A muscular green-skinned brute wielding a battle axe",
+      "biomes": [
+        "goblin_tunnels",
+        "volcanic_peaks",
+        "highland_reaches",
+        "ashen_barrens"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "base_stats": {
+        "hp": 60,
+        "attack": 14,
+        "defense": 8,
+        "speed": 4
+      },
+      "abilities": [
+        "cleave",
+        "roar"
+      ],
+      "loot": "humanoid_orc",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "dark_mage",
+      "name": "Dark Mage",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A hooded figure crackling with dark energy",
+      "biomes": [
+        "whispering_woods",
+        "cursed_swamp",
+        "void_realm"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 45,
+        "attack": 10,
+        "defense": 5,
+        "speed": 6,
+        "magic": 16
+      },
+      "abilities": [
+        "shadow_bolt",
+        "curse",
+        "teleport"
+      ],
+      "loot": "humanoid_mage",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "dark_elf",
+      "name": "Dark Elf",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "stealthy",
+        "magical"
+      ],
+      "rarity": "uncommon",
+      "description": "A shadowy elven warrior with deadly precision",
+      "biomes": [
+        "whispering_woods",
+        "forsaken_ruins",
+        "void_realm",
+        "deep_caverns",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 48,
+        "attack": 14,
+        "defense": 6,
+        "speed": 11
+      },
+      "abilities": [
+        "magic_arrow",
+        "stealth"
+      ],
+      "loot": "humanoid_dark_elf",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "goblin_captain",
+      "name": "Goblin Captain",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "leader"
+      ],
+      "rarity": "uncommon",
+      "description": "A cunning goblin commander who leads raiding parties",
+      "biomes": [
+        "goblin_tunnels",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        7,
+        13
+      ],
+      "base_stats": {
+        "hp": 72,
+        "attack": 16,
+        "defense": 6,
+        "speed": 9
+      },
+      "abilities": [
+        "command",
+        "rage"
+      ],
+      "loot": "humanoid_goblin_captain",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "kobold_warchief",
+      "name": "Kobold Warchief",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A rare brave kobold who leads his tribe",
+      "biomes": [
+        "deep_caverns",
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        7,
+        12
+      ],
+      "base_stats": {
+        "hp": 70,
+        "attack": 17,
+        "defense": 5,
+        "speed": 10
+      },
+      "abilities": [
+        "intimidate",
+        "pack_hunter"
+      ],
+      "loot": "humanoid_kobold_chief",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "goblin_warrior",
+      "name": "Goblin Warrior",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A goblin with actual combat training",
+      "biomes": [
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        4,
+        9
+      ],
+      "base_stats": {
+        "hp": 70,
+        "attack": 18,
+        "defense": 10,
+        "speed": 14
+      },
+      "abilities": [
+        "battle_frenzy"
+      ],
+      "loot": "uncommon_humanoid",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "orc_grunt",
+      "name": "Orc Grunt",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A common orc foot soldier",
+      "biomes": [
+        "highland_reaches",
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 95,
+        "attack": 22,
+        "defense": 15,
+        "speed": 8
+      },
+      "abilities": [
+        "rage"
+      ],
+      "loot": "uncommon_humanoid",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "dark_cultist",
+      "name": "Dark Cultist",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A zealot devoted to dark powers",
+      "biomes": [
+        "forsaken_ruins",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 55,
+        "attack": 12,
+        "defense": 8,
+        "speed": 14,
+        "magic": 35
+      },
+      "abilities": [
+        "dark_bolt",
+        "curse"
+      ],
+      "loot": "humanoid_uncommon",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "hobgoblin",
+      "name": "Hobgoblin",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A larger, more disciplined goblinoid warrior",
+      "biomes": [
+        "goblin_tunnels",
+        "iron_peaks"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "base_stats": {
+        "hp": 65,
+        "attack": 14,
+        "defense": 10,
+        "speed": 6
+      },
+      "abilities": [
+        "shield_bash",
+        "battle_cry"
+      ],
+      "loot": "humanoid_uncommon",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "bugbear",
+      "name": "Bugbear",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A large, hairy goblinoid known for stealth",
+      "biomes": [
+        "goblin_tunnels",
+        "whispering_woods"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "base_stats": {
+        "hp": 70,
+        "attack": 16,
+        "defense": 12,
+        "speed": 5
+      },
+      "abilities": [
+        "surprise_attack",
+        "brute_force"
+      ],
+      "loot": "humanoid_uncommon",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "giant_wasp",
+      "name": "Giant Wasp",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "An aggressive flying insect with a venomous stinger",
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 45,
+        "attack": 22,
+        "defense": 15,
+        "speed": 28
+      },
+      "abilities": [
+        "sting_paralysis",
+        "flight",
+        "swarm_call"
+      ],
+      "loot": "uncommon_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "giant_mantis",
+      "name": "Giant Mantis",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A deadly predator with razor-sharp forelimbs",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 55,
+        "attack": 28,
+        "defense": 18,
+        "speed": 32
+      },
+      "abilities": [
+        "mandible_strike",
+        "ambush",
+        "precision_cut"
+      ],
+      "loot": "uncommon_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "giant_scorpion",
+      "name": "Giant Scorpion",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "uncommon",
+      "description": "A heavily armored arachnid with a venomous tail",
+      "biomes": [
+        "volcanic_wastes",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 65,
+        "attack": 26,
+        "defense": 24,
+        "speed": 26
+      },
+      "abilities": [
+        "tail_sting",
+        "crushing_claws",
+        "venom"
+      ],
+      "loot": "uncommon_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "werewolf",
+      "name": "Werewolf",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A savage wolf-human hybrid cursed by the moon",
+      "biomes": [
+        "whispering_woods",
+        "highland_reaches"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 65,
+        "attack": 28,
+        "defense": 22,
+        "speed": 30
+      },
+      "abilities": [
+        "pack_tactics",
+        "savage_bite",
+        "wolf_form"
+      ],
+      "loot": "uncommon_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "wereboar",
+      "name": "Wereboar",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A stubborn and aggressive boar lycanthrope",
+      "biomes": [
+        "whispering_woods",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 75,
+        "attack": 32,
+        "defense": 28,
+        "speed": 24
+      },
+      "abilities": [
+        "relentless",
+        "gore_charge",
+        "boar_form"
+      ],
+      "loot": "uncommon_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "weretiger",
+      "name": "Weretiger",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A graceful and deadly feline lycanthrope",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 85,
+        "attack": 36,
+        "defense": 26,
+        "speed": 36
+      },
+      "abilities": [
+        "pounce",
+        "raking_claws",
+        "tiger_form"
+      ],
+      "loot": "uncommon_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "green_slime",
+      "name": "Green Slime",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A virulent ooze that turns flesh into more slime",
+      "biomes": [
+        "cursed_swamp",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 75,
+        "attack": 10,
+        "defense": 2,
+        "speed": 2
+      },
+      "abilities": [
+        "infectious_slime",
+        "split"
+      ],
+      "loot": "uncommon_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "ochre_jelly",
+      "name": "Ochre Jelly",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [
+        "lightning"
+      ],
+      "rarity": "uncommon",
+      "description": "A yellow-brown ooze immune to most forms of damage",
+      "biomes": [
+        "forsaken_ruins",
+        "volcanic_wastes"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 95,
+        "attack": 12,
+        "defense": 2,
+        "speed": 1
+      },
+      "abilities": [
+        "lightning_split",
+        "resistant_form"
+      ],
+      "loot": "uncommon_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "gelatinous_cube",
+      "name": "Gelatinous Cube",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A perfectly cubic transparent ooze that fills corridors",
+      "biomes": [
+        "forsaken_ruins",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 110,
+        "attack": 14,
+        "defense": 1,
+        "speed": 1
+      },
+      "abilities": [
+        "engulf",
+        "transparent",
+        "paralysis"
+      ],
+      "loot": "uncommon_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "spore_walker",
+      "name": "Spore Walker",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A fungal-infested host controlled by parasitic spores",
+      "biomes": [
+        "cursed_swamp",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        6,
+        12
+      ],
+      "base_stats": {
+        "hp": 70,
+        "attack": 12,
+        "defense": 15,
+        "speed": 3,
+        "magic": 8
+      },
+      "abilities": [
+        "spore_cloud",
+        "fungal_infection"
+      ],
+      "loot": "uncommon_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "shambling_mound",
+      "name": "Shambling Mound",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [
+        "lightning",
+        "regenerating",
+        "boss"
+      ],
+      "rarity": "uncommon",
+      "description": "A walking heap of rotting vegetation",
+      "biomes": [
+        "cursed_swamp",
+        "whispering_woods"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 85,
+        "attack": 14,
+        "defense": 18,
+        "speed": 3,
+        "magic": 10
+      },
+      "abilities": [
+        "lightning_absorption",
+        "engulf",
+        "regenerate"
+      ],
+      "loot": "uncommon_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "carnivorous_plant",
+      "name": "Carnivorous Plant",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A massive plant with snapping jaws",
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 95,
+        "attack": 18,
+        "defense": 20,
+        "speed": 2,
+        "magic": 6
+      },
+      "abilities": [
+        "bite_trap",
+        "digestive_acid",
+        "lure"
+      ],
+      "loot": "uncommon_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "zombie",
+      "name": "Zombie",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "uncommon",
+      "description": "A shambling corpse with rotting flesh",
+      "biomes": [
+        "ancient_crypts",
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 65,
+        "attack": 11,
+        "defense": 2,
+        "speed": 2
+      },
+      "abilities": [
+        "regen",
+        "disease"
+      ],
+      "loot": "undead_zombie",
+      "template": "undead_base"
+    },
+    {
+      "id": "ghoul",
+      "name": "Ghoul",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "uncommon",
+      "description": "A flesh-eating undead with an insatiable hunger",
+      "biomes": [
+        "ancient_crypts",
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 50,
+        "attack": 13,
+        "defense": 3,
+        "speed": 8
+      },
+      "abilities": [
+        "life_drain"
+      ],
+      "loot": "undead_ghoul",
+      "template": "undead_base"
+    },
+    {
+      "id": "shade",
+      "name": "Shade",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "stealthy"
+      ],
+      "rarity": "uncommon",
+      "description": "A living shadow that feeds on fear",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "forsaken_ruins",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        6,
+        11
+      ],
+      "base_stats": {
+        "hp": 38,
+        "attack": 10,
+        "defense": 1,
+        "speed": 13
+      },
+      "abilities": [
+        "stealth"
+      ],
+      "loot": "undead_shade",
+      "template": "undead_base"
+    },
+    {
+      "id": "bone_shaman",
+      "name": "Bone Shaman",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "An undead spellcaster wielding dark magic",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        7,
+        13
+      ],
+      "base_stats": {
+        "hp": 55,
+        "attack": 12,
+        "defense": 3,
+        "speed": 6,
+        "magic": 18
+      },
+      "abilities": [
+        "necromancy"
+      ],
+      "loot": "undead_shaman",
+      "template": "undead_base"
+    },
+    {
+      "id": "gravekeeper",
+      "name": "Gravekeeper",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "regenerating",
+        "ancient"
+      ],
+      "rarity": "uncommon",
+      "description": "An undead guardian bound to protect ancient tombs",
+      "biomes": [
+        "ancient_crypts",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 80,
+        "attack": 14,
+        "defense": 8,
+        "speed": 5
+      },
+      "abilities": [
+        "regen",
+        "intimidate"
+      ],
+      "loot": "undead_gravekeeper",
+      "template": "undead_base"
+    },
+    {
+      "id": "restless_spirit",
+      "name": "Restless Spirit",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A tormented ghost that wails in eternal anguish, unable to find peace",
+      "biomes": [
+        "ancient_crypts",
+        "haunted_manor",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 120,
+        "attack": 28,
+        "defense": 5,
+        "speed": 38,
+        "magic": 45
+      },
+      "abilities": [
+        "possess",
+        "terrifying_wail",
+        "ethereal"
+      ],
+      "loot": "undead_uncommon_plus",
+      "template": "undead_base"
+    },
+    {
+      "id": "phantom",
+      "name": "Phantom",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "uncommon",
+      "description": "A ghostly apparition that phases through walls",
+      "biomes": [
+        "ancient_crypts",
+        "haunted_manor"
+      ],
+      "level_range": [
+        8,
+        13
+      ],
+      "base_stats": {
+        "hp": 95,
+        "attack": 24,
+        "defense": 8,
+        "speed": 18
+      },
+      "abilities": [
+        "phase_shift",
+        "life_drain"
+      ],
+      "loot": "uncommon_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "plague_zombie",
+      "name": "Plague Zombie",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A diseased corpse that spreads infection",
+      "biomes": [
+        "cursed_swamp",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        8,
+        14
+      ],
+      "base_stats": {
+        "hp": 140,
+        "attack": 20,
+        "defense": 8,
+        "speed": 6
+      },
+      "abilities": [
+        "plague_bite",
+        "disease_aura"
+      ],
+      "loot": "uncommon_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "plague_carrier",
+      "name": "Plague Carrier",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "An undead host of virulent disease",
+      "biomes": [
+        "cursed_swamp",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        10,
+        16
+      ],
+      "base_stats": {
+        "hp": 165,
+        "attack": 24,
+        "defense": 10,
+        "speed": 8
+      },
+      "abilities": [
+        "plague_burst",
+        "infect"
+      ],
+      "loot": "uncommon_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "vengeful_spirit",
+      "name": "Vengeful Spirit",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "A ghost driven by rage and hatred",
+      "biomes": [
+        "haunted_manor",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        9,
+        14
+      ],
+      "base_stats": {
+        "hp": 105,
+        "attack": 28,
+        "defense": 10,
+        "speed": 20
+      },
+      "abilities": [
+        "possession",
+        "wail"
+      ],
+      "loot": "uncommon_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "skeleton_warrior",
+      "name": "Skeleton Warrior",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "uncommon",
+      "description": "An armored undead soldier",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        5,
+        10
+      ],
+      "base_stats": {
+        "hp": 85,
+        "attack": 20,
+        "defense": 16,
+        "speed": 10
+      },
+      "abilities": [
+        "undead_fortitude"
+      ],
+      "loot": "uncommon_humanoid",
+      "template": "undead_base"
+    }
+  ]
+}

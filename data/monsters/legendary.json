@@ -1,0 +1,1891 @@
+{
+  "rarity": "legendary",
+  "version": "1.0",
+  "count": 54,
+  "monsters": [
+    {
+      "id": "void_spawn",
+      "name": "Void Spawn",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "legendary",
+      "description": "An aberration from the space between realities",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        24,
+        32
+      ],
+      "base_stats": {
+        "hp": 600,
+        "attack": 38,
+        "defense": 22,
+        "speed": 18,
+        "magic": 42
+      },
+      "abilities": [
+        "void_magic",
+        "reality_tear",
+        "phase_shift"
+      ],
+      "loot": "aberration_void_spawn",
+      "template": "aberration_base"
+    },
+    {
+      "id": "starborn_horror",
+      "name": "Starborn Horror",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "An eldritch entity from beyond the stars",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        32,
+        40
+      ],
+      "base_stats": {
+        "hp": 1100,
+        "attack": 48,
+        "defense": 32,
+        "speed": 18,
+        "magic": 52
+      },
+      "abilities": [
+        "cosmic_power",
+        "phase_shift"
+      ],
+      "loot": "aberration_starborn",
+      "template": "aberration_base"
+    },
+    {
+      "id": "void_emperor",
+      "name": "Void Emperor",
+      "types": [
+        "aberration"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "The supreme ruler of the void realm",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        38,
+        46
+      ],
+      "base_stats": {
+        "hp": 1300,
+        "attack": 48,
+        "defense": 40,
+        "speed": 16,
+        "magic": 56
+      },
+      "abilities": [
+        "reality_control",
+        "void_mastery",
+        "dimension_rift"
+      ],
+      "loot": "aberration_emperor",
+      "template": "aberration_base"
+    },
+    {
+      "id": "leviathan",
+      "name": "Leviathan",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A primordial sea beast of colossal size",
+      "biomes": [
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "base_stats": {
+        "hp": 700,
+        "attack": 300,
+        "defense": 240,
+        "speed": 240,
+        "magic": 220
+      },
+      "abilities": [
+        "swallow_whole",
+        "tsunami_maker",
+        "deep_one",
+        "primal_roar"
+      ],
+      "loot": "legendary_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "charybdis_aspect",
+      "name": "Aspect of Charybdis",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A manifestation of the legendary whirlpool monster",
+      "biomes": [
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        34,
+        40
+      ],
+      "base_stats": {
+        "hp": 760,
+        "attack": 328,
+        "defense": 252,
+        "speed": 280,
+        "magic": 260
+      },
+      "abilities": [
+        "eternal_maelstrom",
+        "consume_sea",
+        "vortex_pull",
+        "ship_graveyard"
+      ],
+      "loot": "legendary_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "elder_aboleth",
+      "name": "Elder Aboleth",
+      "types": [
+        "aberration",
+        "aquatic"
+      ],
+      "primary_type": "aberration",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "An aboleth older than civilizations with godlike power",
+      "biomes": [
+        "twilight_wetlands",
+        "void_realm"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "base_stats": {
+        "hp": 720,
+        "attack": 312,
+        "defense": 228,
+        "speed": 260,
+        "magic": 280
+      },
+      "abilities": [
+        "mass_domination",
+        "reality_manipulation",
+        "perfect_memory",
+        "enslaver_of_worlds"
+      ],
+      "loot": "legendary_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "kraken_priest",
+      "name": "Kraken Priest",
+      "types": [
+        "aberration",
+        "aquatic"
+      ],
+      "primary_type": "aberration",
+      "tags": [
+        "draining",
+        "ancient"
+      ],
+      "rarity": "legendary",
+      "description": "A cultist who has merged with an ancient kraken",
+      "biomes": [
+        "void_realm",
+        "cursed_swamp",
+        "twilight_wetlands",
+        "ancient_crypts",
+        "deep_caverns"
+      ],
+      "level_range": [
+        35,
+        43
+      ],
+      "base_stats": {
+        "hp": 1150,
+        "attack": 46,
+        "defense": 36,
+        "speed": 12,
+        "magic": 44
+      },
+      "abilities": [
+        "intimidate",
+        "life_drain"
+      ],
+      "loot": "aberration_kraken",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "fallen_angel",
+      "name": "Fallen Angel",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A once-holy being corrupted by darkness",
+      "biomes": [
+        "void_realm",
+        "forsaken_ruins",
+        "ancient_crypts",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        28,
+        36
+      ],
+      "base_stats": {
+        "hp": 750,
+        "attack": 38,
+        "defense": 30,
+        "speed": 16,
+        "magic": 40
+      },
+      "abilities": [
+        "dark_wings",
+        "curse",
+        "intimidate"
+      ],
+      "loot": "celestial_fallen",
+      "template": "celestial_base"
+    },
+    {
+      "id": "angel_of_wrath",
+      "name": "Angel of Wrath",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A divine enforcer wielding righteous fury",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        30,
+        38
+      ],
+      "base_stats": {
+        "hp": 1000,
+        "attack": 52,
+        "defense": 38,
+        "speed": 20,
+        "magic": 45
+      },
+      "abilities": [
+        "divine_power",
+        "intimidate",
+        "immunity"
+      ],
+      "loot": "celestial_wrath",
+      "template": "celestial_base"
+    },
+    {
+      "id": "phoenix_lord",
+      "name": "Phoenix Lord",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "legendary",
+      "description": "An immortal firebird of legendary power",
+      "biomes": [
+        "volcanic_peaks",
+        "ashen_barrens"
+      ],
+      "level_range": [
+        32,
+        40
+      ],
+      "base_stats": {
+        "hp": 1050,
+        "attack": 50,
+        "defense": 28,
+        "speed": 20,
+        "magic": 46
+      },
+      "abilities": [
+        "rebirth",
+        "fire_mastery",
+        "immolate"
+      ],
+      "loot": "celestial_phoenix",
+      "template": "celestial_base"
+    },
+    {
+      "id": "light_seraph",
+      "name": "Light Seraph",
+      "types": [
+        "celestial"
+      ],
+      "primary_type": "celestial",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A celestial being of pure radiance",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        34,
+        42
+      ],
+      "base_stats": {
+        "hp": 1100,
+        "attack": 44,
+        "defense": 32,
+        "speed": 18,
+        "magic": 50
+      },
+      "abilities": [
+        "divine_power",
+        "light_mastery",
+        "purify"
+      ],
+      "loot": "celestial_seraph",
+      "template": "celestial_base"
+    },
+    {
+      "id": "titan_golem",
+      "name": "Titan Golem",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [
+        "regenerating",
+        "ancient"
+      ],
+      "rarity": "legendary",
+      "description": "A colossal construct of ancient magic and pure stone, towering stories high",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes",
+        "forsaken_ruins",
+        "highland_reaches",
+        "deep_caverns"
+      ],
+      "level_range": [
+        28,
+        38
+      ],
+      "base_stats": {
+        "hp": 1200,
+        "attack": 45,
+        "defense": 60,
+        "speed": 2,
+        "magic": 10
+      },
+      "abilities": [
+        "earthquake",
+        "stone_fist",
+        "fortress_stance",
+        "regenerate_armor"
+      ],
+      "loot": "construct_titan",
+      "template": "construct_base"
+    },
+    {
+      "id": "diamond_golem",
+      "name": "Diamond Golem",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "The rarest construct, forged from pure diamond",
+      "biomes": [
+        "deep_caverns"
+      ],
+      "level_range": [
+        30,
+        38
+      ],
+      "base_stats": {
+        "hp": 820,
+        "attack": 95,
+        "defense": 125,
+        "speed": 18
+      },
+      "abilities": [
+        "diamond_edge",
+        "unbreakable",
+        "prismatic_beam"
+      ],
+      "loot": "legendary_construct",
+      "template": "construct_base"
+    },
+    {
+      "id": "golem_prime",
+      "name": "Golem Prime",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "legendary",
+      "description": "The first and most powerful golem ever created",
+      "biomes": [
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        32,
+        34
+      ],
+      "base_stats": {
+        "hp": 950,
+        "attack": 115,
+        "defense": 145,
+        "speed": 25
+      },
+      "abilities": [
+        "adaptive_armor",
+        "power_core",
+        "system_overload",
+        "regenerate"
+      ],
+      "loot": "legendary_construct",
+      "template": "construct_base"
+    },
+    {
+      "id": "magitek_destroyer",
+      "name": "Magitek Destroyer",
+      "types": [
+        "construct"
+      ],
+      "primary_type": "construct",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "legendary",
+      "description": "A fusion of magic and technology, unstable and deadly",
+      "biomes": [
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        33,
+        34
+      ],
+      "base_stats": {
+        "hp": 1050,
+        "attack": 125,
+        "defense": 135,
+        "speed": 45,
+        "magic": 85
+      },
+      "abilities": [
+        "arcane_cannon",
+        "magic_surge",
+        "tech_overcharge",
+        "meltdown"
+      ],
+      "loot": "legendary_construct",
+      "template": "construct_base"
+    },
+    {
+      "id": "demon_prince",
+      "name": "Azmodan, Demon Prince",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "fire",
+        "summoner"
+      ],
+      "rarity": "legendary",
+      "description": "A towering demon wreathed in hellfire, with multiple horns and blazing eyes",
+      "biomes": [
+        "volcanic_peaks",
+        "void_realm",
+        "ancient_crypts",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        25,
+        35
+      ],
+      "base_stats": {
+        "hp": 800,
+        "attack": 50,
+        "defense": 35,
+        "speed": 15,
+        "magic": 45
+      },
+      "abilities": [
+        "hellfire",
+        "demon_strike",
+        "summon_imps",
+        "infernal_shield",
+        "chaos_bolt"
+      ],
+      "loot": "demon_prince",
+      "template": "demon_base"
+    },
+    {
+      "id": "archdemon",
+      "name": "Archdemon",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "legendary",
+      "description": "A demon lord commanding legions of the damned",
+      "biomes": [
+        "void_realm",
+        "volcanic_peaks",
+        "ashen_barrens",
+        "ancient_crypts",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        36,
+        44
+      ],
+      "base_stats": {
+        "hp": 1200,
+        "attack": 52,
+        "defense": 36,
+        "speed": 14,
+        "magic": 48
+      },
+      "abilities": [
+        "hell_portal",
+        "demon_army",
+        "curse_mastery"
+      ],
+      "loot": "demon_archdemon",
+      "template": "demon_base"
+    },
+    {
+      "id": "nightmare_lord",
+      "name": "Nightmare Lord",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A being that rules the realm of nightmares",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        36,
+        44
+      ],
+      "base_stats": {
+        "hp": 1250,
+        "attack": 54,
+        "defense": 38,
+        "speed": 20,
+        "magic": 52
+      },
+      "abilities": [
+        "intimidate",
+        "phase_shift"
+      ],
+      "loot": "demon_nightmare",
+      "template": "demon_base"
+    },
+    {
+      "id": "apocalypse_herald",
+      "name": "Apocalypse Herald",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A harbinger of the end of all things",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "base_stats": {
+        "hp": 880,
+        "attack": 135,
+        "defense": 72,
+        "speed": 48,
+        "magic": 125
+      },
+      "abilities": [
+        "apocalypse",
+        "doom_prophecy",
+        "end_times"
+      ],
+      "loot": "legendary_demon",
+      "template": "demon_base"
+    },
+    {
+      "id": "demon_lord_ultimate",
+      "name": "Supreme Demon Lord",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "legendary",
+      "description": "The ultimate demon, ruler of the abyss",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        52,
+        60
+      ],
+      "base_stats": {
+        "hp": 3500,
+        "attack": 525,
+        "defense": 345,
+        "speed": 495,
+        "magic": 475
+      },
+      "abilities": [
+        "abyssal_power",
+        "demon_form",
+        "hell_fire",
+        "soul_devour",
+        "demon_army"
+      ],
+      "loot": "legendary_demon",
+      "template": "demon_base"
+    },
+    {
+      "id": "draconic_warlock",
+      "name": "Draconic Warlock",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "legendary",
+      "description": "A dragon who has mastered forbidden magic",
+      "biomes": [
+        "void_realm",
+        "volcanic_peaks",
+        "frozen_wastes",
+        "deep_caverns"
+      ],
+      "level_range": [
+        30,
+        38
+      ],
+      "base_stats": {
+        "hp": 950,
+        "attack": 50,
+        "defense": 34,
+        "speed": 14,
+        "magic": 48
+      },
+      "abilities": [
+        "magic_damage",
+        "intimidate"
+      ],
+      "loot": "dragon_warlock",
+      "template": "dragon_base"
+    },
+    {
+      "id": "ancient_wyrm",
+      "name": "Ancient Wyrm",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "legendary",
+      "description": "A dragon of immense age and power",
+      "biomes": [
+        "volcanic_peaks",
+        "deep_caverns",
+        "frozen_wastes",
+        "highland_reaches"
+      ],
+      "level_range": [
+        28,
+        36
+      ],
+      "base_stats": {
+        "hp": 900,
+        "attack": 44,
+        "defense": 32,
+        "speed": 12,
+        "magic": 38
+      },
+      "abilities": [
+        "dragon_breath",
+        "ancient_magic",
+        "treasure_hoard"
+      ],
+      "loot": "dragon_wyrm",
+      "template": "dragon_base"
+    },
+    {
+      "id": "black_sun_dragon",
+      "name": "Black Sun Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A dragon that devours light itself",
+      "biomes": [
+        "void_realm",
+        "frozen_wastes",
+        "volcanic_peaks"
+      ],
+      "level_range": [
+        38,
+        46
+      ],
+      "base_stats": {
+        "hp": 1400,
+        "attack": 58,
+        "defense": 42,
+        "speed": 18,
+        "magic": 48
+      },
+      "abilities": [
+        "intimidate",
+        "ancient_wisdom"
+      ],
+      "loot": "dragon_black_sun",
+      "template": "dragon_base"
+    },
+    {
+      "id": "world_hydra",
+      "name": "World Hydra",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "legendary",
+      "description": "A many-headed serpent of world-ending size",
+      "biomes": [
+        "cursed_swamp",
+        "twilight_wetlands",
+        "deep_caverns"
+      ],
+      "level_range": [
+        40,
+        48
+      ],
+      "base_stats": {
+        "hp": 1500,
+        "attack": 48,
+        "defense": 44,
+        "speed": 14,
+        "magic": 40
+      },
+      "abilities": [
+        "regen",
+        "intimidate"
+      ],
+      "loot": "dragon_hydra",
+      "template": "dragon_base"
+    },
+    {
+      "id": "umbral_dragon",
+      "name": "Umbral Dragon",
+      "types": [
+        "dragon"
+      ],
+      "primary_type": "dragon",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A dragon of pure shadow and darkness",
+      "biomes": [
+        "void_realm",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        54,
+        60
+      ],
+      "base_stats": {
+        "hp": 2950,
+        "attack": 445,
+        "defense": 295,
+        "speed": 385,
+        "magic": 365
+      },
+      "abilities": [
+        "shadow_breath",
+        "darkness_aura",
+        "shadow_teleport",
+        "umbral_form"
+      ],
+      "loot": "legendary_dragon",
+      "template": "dragon_base"
+    },
+    {
+      "id": "tempest_sovereign",
+      "name": "Tempest Sovereign",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "The ultimate master of storms",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes",
+        "highland_reaches"
+      ],
+      "level_range": [
+        34,
+        42
+      ],
+      "base_stats": {
+        "hp": 1050,
+        "attack": 52,
+        "defense": 30,
+        "speed": 22,
+        "magic": 50
+      },
+      "abilities": [
+        "storm_call",
+        "intimidate"
+      ],
+      "loot": "elemental_sovereign",
+      "template": "elemental_base"
+    },
+    {
+      "id": "primordial",
+      "name": "Primordial",
+      "types": [
+        "elemental"
+      ],
+      "primary_type": "elemental",
+      "tags": [
+        "ancient"
+      ],
+      "rarity": "legendary",
+      "description": "An ancient elemental from the dawn of time",
+      "biomes": [
+        "volcanic_peaks",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        28,
+        35
+      ],
+      "base_stats": {
+        "hp": 780,
+        "attack": 125,
+        "defense": 65,
+        "speed": 45,
+        "magic": 110
+      },
+      "abilities": [
+        "primordial_fury",
+        "elemental_mastery"
+      ],
+      "loot": "legendary_elemental",
+      "template": "elemental_base"
+    },
+    {
+      "id": "erlking",
+      "name": "Erlking",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "legendary",
+      "description": "The king of the dark fey, lord of the Wild Hunt",
+      "biomes": [
+        "whispering_woods",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        28,
+        35
+      ],
+      "base_stats": {
+        "hp": 320,
+        "attack": 125,
+        "defense": 58,
+        "speed": 105,
+        "magic": 118
+      },
+      "abilities": [
+        "wild_hunt_call",
+        "fey_crown",
+        "death_touch",
+        "shadow_step"
+      ],
+      "loot": "legendary_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "titania_aspect",
+      "name": "Aspect of Titania",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "legendary",
+      "description": "A manifestation of the Summer Queen's power",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "base_stats": {
+        "hp": 340,
+        "attack": 118,
+        "defense": 62,
+        "speed": 112,
+        "magic": 135
+      },
+      "abilities": [
+        "summer_blessing",
+        "fey_fire",
+        "nature_command",
+        "eternal_beauty"
+      ],
+      "loot": "legendary_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "unseelie_lord",
+      "name": "Lord of the Unseelie Court",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "magical",
+        "summoner",
+        "boss"
+      ],
+      "rarity": "legendary",
+      "description": "The dark fey lord who rules the shadow court",
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        36,
+        38
+      ],
+      "base_stats": {
+        "hp": 1150,
+        "attack": 185,
+        "defense": 125,
+        "speed": 195,
+        "magic": 185
+      },
+      "abilities": [
+        "shadow_magic",
+        "fey_charm",
+        "court_summon",
+        "dark_blessing"
+      ],
+      "loot": "legendary_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "seelie_lady",
+      "name": "Lady of the Seelie Court",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "legendary",
+      "description": "The radiant fey queen of light and life",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        37,
+        38
+      ],
+      "base_stats": {
+        "hp": 1250,
+        "attack": 195,
+        "defense": 135,
+        "speed": 205,
+        "magic": 195
+      },
+      "abilities": [
+        "light_magic",
+        "nature_blessing",
+        "fey_transformation",
+        "radiant_court"
+      ],
+      "loot": "legendary_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "titan_spawn",
+      "name": "Titan Spawn",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "Offspring of the primordial titans",
+      "biomes": [
+        "void_realm",
+        "volcanic_wastes"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "base_stats": {
+        "hp": 1000,
+        "attack": 320,
+        "defense": 260,
+        "speed": 10,
+        "magic": 150
+      },
+      "abilities": [
+        "titan_strength",
+        "primordial_force",
+        "world_shaker",
+        "divine_resilience"
+      ],
+      "loot": "legendary_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "elder_cloud_giant",
+      "name": "Elder Cloud Giant",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [
+        "ancient",
+        "boss"
+      ],
+      "rarity": "legendary",
+      "description": "An ancient lord of the sky realm",
+      "biomes": [
+        "frostspire_peaks"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "base_stats": {
+        "hp": 980,
+        "attack": 305,
+        "defense": 250,
+        "speed": 12,
+        "magic": 180
+      },
+      "abilities": [
+        "sky_palace",
+        "divine_wind",
+        "weather_mastery",
+        "cloud_form"
+      ],
+      "loot": "legendary_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "formian_queen",
+      "name": "Formian Queen",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "The massive ruler of a formian hive",
+      "biomes": [
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "base_stats": {
+        "hp": 600,
+        "attack": 272,
+        "defense": 240,
+        "speed": 200,
+        "magic": 180
+      },
+      "abilities": [
+        "spawn_warriors",
+        "hive_command",
+        "pheromone_control",
+        "queen_dominance"
+      ],
+      "loot": "legendary_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "colossal_spider",
+      "name": "Colossal Spider",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "legendary",
+      "description": "A spider the size of a building",
+      "biomes": [
+        "whispering_woods",
+        "void_realm"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "base_stats": {
+        "hp": 620,
+        "attack": 280,
+        "defense": 230,
+        "speed": 240
+      },
+      "abilities": [
+        "mega_web",
+        "swarm_eggs",
+        "venom_tsunami",
+        "arachnid_lord"
+      ],
+      "loot": "legendary_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "retriever",
+      "name": "Retriever",
+      "types": [
+        "fiend",
+        "construct",
+        "insectoid"
+      ],
+      "primary_type": "fiend",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A demonic construct built like a spider for hunting",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        28,
+        34
+      ],
+      "base_stats": {
+        "hp": 560,
+        "attack": 260,
+        "defense": 220,
+        "speed": 220,
+        "magic": 160
+      },
+      "abilities": [
+        "eye_rays",
+        "plane_shift",
+        "relentless_pursuit",
+        "construct_body"
+      ],
+      "loot": "legendary_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "fenrir_spawn",
+      "name": "Spawn of Fenrir",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "Offspring of the great wolf that devours worlds",
+      "biomes": [
+        "void_realm",
+        "highland_reaches"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "base_stats": {
+        "hp": 880,
+        "attack": 392,
+        "defense": 260,
+        "speed": 338,
+        "magic": 260
+      },
+      "abilities": [
+        "world_eater",
+        "chain_breaker",
+        "ragnarok_howl",
+        "divine_beast"
+      ],
+      "loot": "legendary_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "lunar_sovereign",
+      "name": "Lunar Sovereign",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "legendary",
+      "description": "A werewolf king who commands the power of the moon",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "base_stats": {
+        "hp": 936,
+        "attack": 416,
+        "defense": 280,
+        "speed": 364,
+        "magic": 312
+      },
+      "abilities": [
+        "moon_mastery",
+        "lycanthrope_king",
+        "lunar_eclipse",
+        "silver_immunity"
+      ],
+      "loot": "legendary_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "primordial_shapeshifter",
+      "name": "Primordial Shapeshifter",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "The original cursed one from whom all lycanthropes descend",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        34,
+        40
+      ],
+      "base_stats": {
+        "hp": 1000,
+        "attack": 448,
+        "defense": 300,
+        "speed": 390,
+        "magic": 280
+      },
+      "abilities": [
+        "any_form",
+        "curse_origin",
+        "primal_rage",
+        "shapeshifter_god"
+      ],
+      "loot": "legendary_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "abyssal_ooze",
+      "name": "Abyssal Ooze",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A slime infused with void energy from beyond reality",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "base_stats": {
+        "hp": 1120,
+        "attack": 140,
+        "defense": 8,
+        "speed": 5,
+        "magic": 180
+      },
+      "abilities": [
+        "void_consumption",
+        "reality_dissolution",
+        "dimensional_split",
+        "entropy_aura"
+      ],
+      "loot": "legendary_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "juiblex_spawn",
+      "name": "Spawn of Juiblex",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "legendary",
+      "description": "A fragment of the demon lord of oozes",
+      "biomes": [
+        "void_realm",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "base_stats": {
+        "hp": 1200,
+        "attack": 152,
+        "defense": 6,
+        "speed": 4,
+        "magic": 200
+      },
+      "abilities": [
+        "faceless_lord",
+        "slime_mastery",
+        "corruption_wave",
+        "demon_ooze"
+      ],
+      "loot": "legendary_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "yggdrasil_sprout",
+      "name": "Yggdrasil Sprout",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A seedling of the world tree itself",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        30,
+        36
+      ],
+      "base_stats": {
+        "hp": 1120,
+        "attack": 240,
+        "defense": 308,
+        "speed": 12,
+        "magic": 252
+      },
+      "abilities": [
+        "world_root",
+        "planar_connection",
+        "cosmic_growth",
+        "eternal_life"
+      ],
+      "loot": "legendary_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "green_man",
+      "name": "The Green Man",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "The living embodiment of nature's wrath",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        34,
+        40
+      ],
+      "base_stats": {
+        "hp": 1280,
+        "attack": 272,
+        "defense": 332,
+        "speed": 14,
+        "magic": 308
+      },
+      "abilities": [
+        "nature_incarnate",
+        "wild_growth",
+        "season_change",
+        "forest_lord"
+      ],
+      "loot": "legendary_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "zuggtmoy_aspect",
+      "name": "Aspect of Zuggtmoy",
+      "types": [
+        "fiend",
+        "plant"
+      ],
+      "primary_type": "fiend",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "A manifestation of the fungal demon queen",
+      "biomes": [
+        "cursed_swamp",
+        "void_realm"
+      ],
+      "level_range": [
+        32,
+        38
+      ],
+      "base_stats": {
+        "hp": 1200,
+        "attack": 256,
+        "defense": 320,
+        "speed": 10,
+        "magic": 280
+      },
+      "abilities": [
+        "fungal_infestation",
+        "spore_plague",
+        "demon_queen",
+        "decay_mastery"
+      ],
+      "loot": "legendary_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "lich",
+      "name": "Lich",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "magical"
+      ],
+      "rarity": "legendary",
+      "description": "A powerful undead sorcerer who has achieved immortality through dark magic",
+      "biomes": [
+        "ancient_crypts",
+        "void_realm",
+        "frozen_wastes",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        26,
+        34
+      ],
+      "base_stats": {
+        "hp": 650,
+        "attack": 42,
+        "defense": 26,
+        "speed": 12,
+        "magic": 48
+      },
+      "abilities": [
+        "necromancy",
+        "death_magic",
+        "phase_shift"
+      ],
+      "loot": "undead_lich",
+      "template": "undead_base"
+    },
+    {
+      "id": "elder_lich",
+      "name": "Elder Lich",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "magical",
+        "ancient"
+      ],
+      "rarity": "legendary",
+      "description": "An ancient lich who has mastered time itself",
+      "biomes": [
+        "void_realm",
+        "ancient_crypts",
+        "forsaken_ruins",
+        "frozen_wastes"
+      ],
+      "level_range": [
+        30,
+        38
+      ],
+      "base_stats": {
+        "hp": 950,
+        "attack": 46,
+        "defense": 28,
+        "speed": 14,
+        "magic": 54
+      },
+      "abilities": [
+        "time_magic",
+        "soul_prison",
+        "undead_mastery"
+      ],
+      "loot": "undead_elder_lich",
+      "template": "undead_base"
+    },
+    {
+      "id": "dracula_ancient",
+      "name": "Dracula the Ancient",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "legendary",
+      "description": "The first and most powerful vampire",
+      "biomes": [
+        "void_realm",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        39,
+        45
+      ],
+      "base_stats": {
+        "hp": 1450,
+        "attack": 220,
+        "defense": 135,
+        "speed": 185,
+        "magic": 175
+      },
+      "abilities": [
+        "blood_drain",
+        "mist_form",
+        "vampire_lord",
+        "dominate"
+      ],
+      "loot": "legendary_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "vampire_ascendant",
+      "name": "Vampire Ascendant",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "magical",
+        "draining"
+      ],
+      "rarity": "legendary",
+      "description": "A vampire who has achieved ultimate power",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        39,
+        45
+      ],
+      "base_stats": {
+        "hp": 1380,
+        "attack": 210,
+        "defense": 125,
+        "speed": 175,
+        "magic": 165
+      },
+      "abilities": [
+        "blood_magic",
+        "crimson_storm",
+        "life_drain",
+        "immortal"
+      ],
+      "loot": "legendary_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "the_grim_reaper",
+      "name": "The Grim Reaper",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "Death incarnate, the harvester of souls",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        38,
+        44
+      ],
+      "base_stats": {
+        "hp": 1520,
+        "attack": 235,
+        "defense": 145,
+        "speed": 195,
+        "magic": 185
+      },
+      "abilities": [
+        "death_touch",
+        "soul_reap",
+        "inevitable",
+        "final_judgment"
+      ],
+      "loot": "legendary_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "shade_lord",
+      "name": "Shade Lord",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "legendary",
+      "description": "A master of shadows and darkness",
+      "biomes": [
+        "void_realm",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        54,
+        60
+      ],
+      "base_stats": {
+        "hp": 2850,
+        "attack": 425,
+        "defense": 285,
+        "speed": 385,
+        "magic": 375
+      },
+      "abilities": [
+        "shadow_merge",
+        "darkness_incarnate",
+        "life_drain",
+        "shadow_army"
+      ],
+      "loot": "legendary_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "night_king",
+      "name": "The Night King",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "ice"
+      ],
+      "rarity": "legendary",
+      "description": "The ruler of eternal darkness",
+      "biomes": [
+        "void_realm"
+      ],
+      "level_range": [
+        54,
+        60
+      ],
+      "base_stats": {
+        "hp": 3200,
+        "attack": 485,
+        "defense": 325,
+        "speed": 445,
+        "magic": 425
+      },
+      "abilities": [
+        "eternal_night",
+        "undead_command",
+        "ice_touch",
+        "winter_king"
+      ],
+      "loot": "legendary_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "thrym_frost_king",
+      "name": "Thrym the Frost King",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "ice",
+        "ancient",
+        "boss"
+      ],
+      "rarity": "legendary",
+      "description": "The ancient undead king of frost giants",
+      "biomes": [
+        "frozen_wastes",
+        "void_realm"
+      ],
+      "level_range": [
+        37,
+        43
+      ],
+      "base_stats": {
+        "hp": 1280,
+        "attack": 195,
+        "defense": 165,
+        "speed": 145,
+        "magic": 135
+      },
+      "abilities": [
+        "ice_storm",
+        "giant_strength",
+        "frost_armor",
+        "frozen_fury"
+      ],
+      "loot": "legendary_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "ymir_frost_titan",
+      "name": "Ymir the Frost Titan",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "legendary",
+      "description": "The primordial titan of ice, risen from death",
+      "biomes": [
+        "frozen_wastes",
+        "void_realm"
+      ],
+      "level_range": [
+        37,
+        43
+      ],
+      "base_stats": {
+        "hp": 1450,
+        "attack": 225,
+        "defense": 195,
+        "speed": 165,
+        "magic": 155
+      },
+      "abilities": [
+        "titan_rage",
+        "glacial_prison",
+        "fimbulwinter",
+        "unstoppable"
+      ],
+      "loot": "legendary_undead",
+      "template": "undead_base"
+    },
+    {
+      "id": "lich_lord",
+      "name": "Lich Lord",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [
+        "magical",
+        "draining"
+      ],
+      "rarity": "legendary",
+      "description": "A powerful undead sorcerer who achieved lichdom",
+      "biomes": [
+        "forsaken_ruins",
+        "void_realm"
+      ],
+      "level_range": [
+        40,
+        46
+      ],
+      "base_stats": {
+        "hp": 1200,
+        "attack": 185,
+        "defense": 78,
+        "speed": 165,
+        "magic": 195
+      },
+      "abilities": [
+        "death_magic",
+        "phylactery",
+        "soul_drain",
+        "time_stop"
+      ],
+      "loot": "legendary_humanoid",
+      "template": "humanoid_base"
+    }
+  ]
+}

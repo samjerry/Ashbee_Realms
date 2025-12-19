@@ -1,0 +1,1050 @@
+{
+  "rarity": "common",
+  "version": "1.0",
+  "count": 34,
+  "monsters": [
+    {
+      "id": "giant_crab",
+      "name": "Giant Crab",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "common",
+      "description": "A massive crustacean with powerful claws",
+      "biomes": [
+        "twilight_wetlands",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        2,
+        6
+      ],
+      "base_stats": {
+        "hp": 22,
+        "attack": 8,
+        "defense": 8,
+        "speed": 6
+      },
+      "abilities": [
+        "pincer_grip"
+      ],
+      "loot": "common_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "reef_shark",
+      "name": "Reef Shark",
+      "types": [
+        "aquatic"
+      ],
+      "primary_type": "aquatic",
+      "tags": [],
+      "rarity": "common",
+      "description": "A swift predator of coastal waters",
+      "biomes": [
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "base_stats": {
+        "hp": 26,
+        "attack": 10,
+        "defense": 6,
+        "speed": 12
+      },
+      "abilities": [
+        "blood_frenzy"
+      ],
+      "loot": "common_aquatic",
+      "template": "aquatic_base"
+    },
+    {
+      "id": "forest_wolf",
+      "name": "Forest Wolf",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [],
+      "rarity": "common",
+      "description": "A lean gray wolf with hungry eyes",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        1,
+        5
+      ],
+      "base_stats": {
+        "hp": 25,
+        "attack": 6,
+        "defense": 3,
+        "speed": 7
+      },
+      "abilities": [
+        "bite"
+      ],
+      "loot": "beast_common_plus",
+      "template": "beast_base"
+    },
+    {
+      "id": "giant_rat",
+      "name": "Giant Rat",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [],
+      "rarity": "common",
+      "description": "An abnormally large rat with diseased fur",
+      "biomes": [
+        "whispering_woods",
+        "goblin_tunnels",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        1,
+        4
+      ],
+      "base_stats": {
+        "hp": 15,
+        "attack": 5,
+        "defense": 1,
+        "speed": 10
+      },
+      "abilities": [
+        "bite",
+        "disease"
+      ],
+      "loot": "beast_common",
+      "template": "beast_base"
+    },
+    {
+      "id": "cave_bat",
+      "name": "Cave Bat",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [],
+      "rarity": "common",
+      "description": "A large bat with leathery wings and sharp fangs",
+      "biomes": [
+        "deep_caverns",
+        "goblin_tunnels",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        1,
+        3
+      ],
+      "base_stats": {
+        "hp": 12,
+        "attack": 4,
+        "defense": 0,
+        "speed": 12
+      },
+      "abilities": [
+        "evasive"
+      ],
+      "loot": "beast_tiny",
+      "template": "beast_base"
+    },
+    {
+      "id": "mud_crab",
+      "name": "Mud Crab",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [],
+      "rarity": "common",
+      "description": "A heavily armored crustacean covered in mud",
+      "biomes": [
+        "twilight_wetlands",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        1,
+        4
+      ],
+      "base_stats": {
+        "hp": 18,
+        "attack": 4,
+        "defense": 5,
+        "speed": 2
+      },
+      "abilities": [
+        "shell"
+      ],
+      "loot": "beast_shell",
+      "template": "beast_base"
+    },
+    {
+      "id": "wild_boar",
+      "name": "Wild Boar",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [],
+      "rarity": "common",
+      "description": "An aggressive boar with sharp tusks",
+      "biomes": [
+        "whispering_woods",
+        "highland_reaches"
+      ],
+      "level_range": [
+        2,
+        5
+      ],
+      "base_stats": {
+        "hp": 28,
+        "attack": 8,
+        "defense": 4,
+        "speed": 4
+      },
+      "abilities": [
+        "charge"
+      ],
+      "loot": "beast_meat",
+      "template": "beast_base"
+    },
+    {
+      "id": "plague_rat",
+      "name": "Plague Rat",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "common",
+      "description": "A diseased rat that spreads sickness with its bite",
+      "biomes": [
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        1,
+        4
+      ],
+      "base_stats": {
+        "hp": 12,
+        "attack": 4,
+        "defense": 0,
+        "speed": 11
+      },
+      "abilities": [
+        "poison"
+      ],
+      "loot": "beast_diseased",
+      "template": "beast_base"
+    },
+    {
+      "id": "giant_toad",
+      "name": "Giant Toad",
+      "types": [
+        "beast"
+      ],
+      "primary_type": "beast",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "common",
+      "description": "A massive amphibian with poisonous skin",
+      "biomes": [
+        "twilight_wetlands",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        3,
+        6
+      ],
+      "base_stats": {
+        "hp": 55,
+        "attack": 10,
+        "defense": 5,
+        "speed": 3
+      },
+      "abilities": [
+        "poison",
+        "intimidate"
+      ],
+      "loot": "beast_toad",
+      "template": "beast_base"
+    },
+    {
+      "id": "imp",
+      "name": "Imp",
+      "types": [
+        "fiend"
+      ],
+      "primary_type": "fiend",
+      "tags": [
+        "fire"
+      ],
+      "rarity": "common",
+      "description": "A small, mischievous fiend from the infernal planes",
+      "biomes": [
+        "volcanic_peaks",
+        "void_realm"
+      ],
+      "level_range": [
+        4,
+        9
+      ],
+      "base_stats": {
+        "hp": 55,
+        "attack": 18,
+        "defense": 8,
+        "speed": 16,
+        "magic": 20
+      },
+      "abilities": [
+        "fire_bolt"
+      ],
+      "loot": "common_demon",
+      "template": "demon_base"
+    },
+    {
+      "id": "pixie",
+      "name": "Pixie",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "common",
+      "description": "A tiny winged fey creature that glows with magical light",
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        1,
+        4
+      ],
+      "base_stats": {
+        "hp": 15,
+        "attack": 5,
+        "defense": 2,
+        "speed": 18,
+        "magic": 12
+      },
+      "abilities": [
+        "sparkle_dust"
+      ],
+      "loot": "common_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "sprite",
+      "name": "Sprite",
+      "types": [
+        "fey"
+      ],
+      "primary_type": "fey",
+      "tags": [],
+      "rarity": "common",
+      "description": "A mischievous nature spirit with butterfly wings",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        2,
+        5
+      ],
+      "base_stats": {
+        "hp": 18,
+        "attack": 6,
+        "defense": 2,
+        "speed": 20,
+        "magic": 14
+      },
+      "abilities": [
+        "nature_bolt"
+      ],
+      "loot": "common_fey",
+      "template": "fey_base"
+    },
+    {
+      "id": "hill_giant_youth",
+      "name": "Hill Giant Youth",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "common",
+      "description": "A young hill giant learning the ways of raiding",
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "base_stats": {
+        "hp": 40,
+        "attack": 12,
+        "defense": 8,
+        "speed": 3
+      },
+      "abilities": [],
+      "template": "giant_base"
+    },
+    {
+      "id": "ogre_brute",
+      "name": "Ogre Brute",
+      "types": [
+        "giant"
+      ],
+      "primary_type": "giant",
+      "tags": [],
+      "rarity": "common",
+      "description": "A massive humanoid of limited intelligence but great strength",
+      "biomes": [
+        "highland_reaches",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        4,
+        8
+      ],
+      "base_stats": {
+        "hp": 45,
+        "attack": 14,
+        "defense": 10,
+        "speed": 3
+      },
+      "abilities": [
+        "club_smash"
+      ],
+      "loot": "common_giant",
+      "template": "giant_base"
+    },
+    {
+      "id": "goblin_scout",
+      "name": "Goblin Scout",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A small green creature carrying a rusty dagger",
+      "biomes": [
+        "whispering_woods",
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        1,
+        6
+      ],
+      "base_stats": {
+        "hp": 20,
+        "attack": 8,
+        "defense": 2,
+        "speed": 8
+      },
+      "abilities": [
+        "stab",
+        "dodge"
+      ],
+      "loot": "humanoid_common",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "bandit",
+      "name": "Bandit",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [
+        "boss"
+      ],
+      "rarity": "common",
+      "description": "A desperate outlaw looking for easy prey",
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins",
+        "whispering_woods"
+      ],
+      "level_range": [
+        2,
+        5
+      ],
+      "base_stats": {
+        "hp": 24,
+        "attack": 7,
+        "defense": 3,
+        "speed": 6
+      },
+      "abilities": [
+        "ambush",
+        "coward"
+      ],
+      "loot": "humanoid_bandit",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "gnoll_scout",
+      "name": "Gnoll Scout",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A hyena-like humanoid with scavenging instincts",
+      "biomes": [
+        "highland_reaches",
+        "ashen_barrens"
+      ],
+      "level_range": [
+        2,
+        6
+      ],
+      "base_stats": {
+        "hp": 26,
+        "attack": 8,
+        "defense": 2,
+        "speed": 7
+      },
+      "abilities": [
+        "pack_hunter"
+      ],
+      "loot": "humanoid_gnoll",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "kobold",
+      "name": "Kobold",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A small reptilian humanoid with a cowardly nature",
+      "biomes": [
+        "deep_caverns",
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        1,
+        4
+      ],
+      "base_stats": {
+        "hp": 18,
+        "attack": 6,
+        "defense": 1,
+        "speed": 8
+      },
+      "abilities": [
+        "coward"
+      ],
+      "loot": "humanoid_kobold",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "goblin_brute",
+      "name": "Goblin Brute",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A larger, tougher goblin with crude armor",
+      "biomes": [
+        "goblin_tunnels",
+        "highland_reaches"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "base_stats": {
+        "hp": 62,
+        "attack": 12,
+        "defense": 8,
+        "speed": 5
+      },
+      "abilities": [
+        "intimidate"
+      ],
+      "loot": "humanoid_goblin_brute",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "bandit_archer",
+      "name": "Bandit Archer",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A skilled bowman who ambushes travelers",
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        3,
+        8
+      ],
+      "base_stats": {
+        "hp": 45,
+        "attack": 16,
+        "defense": 5,
+        "speed": 12
+      },
+      "abilities": [
+        "precise_shot"
+      ],
+      "loot": "common_humanoid",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "bandit_thug",
+      "name": "Bandit Thug",
+      "types": [
+        "humanoid"
+      ],
+      "primary_type": "humanoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A brutish criminal with a club",
+      "biomes": [
+        "highland_reaches",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        2,
+        7
+      ],
+      "base_stats": {
+        "hp": 60,
+        "attack": 14,
+        "defense": 8,
+        "speed": 6
+      },
+      "abilities": [
+        "power_strike"
+      ],
+      "loot": "common_humanoid",
+      "template": "humanoid_base"
+    },
+    {
+      "id": "giant_ant_worker",
+      "name": "Giant Ant Worker",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A horse-sized ant from a massive colony",
+      "biomes": [
+        "twilight_wetlands",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        1,
+        5
+      ],
+      "base_stats": {
+        "hp": 18,
+        "attack": 6,
+        "defense": 8,
+        "speed": 8
+      },
+      "abilities": [
+        "acid_spray"
+      ],
+      "loot": "common_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "giant_beetle",
+      "name": "Giant Beetle",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A massive beetle with an incredibly hard carapace",
+      "biomes": [
+        "whispering_woods",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        2,
+        6
+      ],
+      "base_stats": {
+        "hp": 20,
+        "attack": 7,
+        "defense": 10,
+        "speed": 6
+      },
+      "abilities": [
+        "shell_defense"
+      ],
+      "loot": "common_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "giant_spider",
+      "name": "Giant Spider",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [
+        "poisonous"
+      ],
+      "rarity": "common",
+      "description": "An eight-legged hunter that spins deadly webs",
+      "biomes": [
+        "whispering_woods",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "base_stats": {
+        "hp": 22,
+        "attack": 9,
+        "defense": 6,
+        "speed": 12
+      },
+      "abilities": [
+        "web_trap",
+        "poison_bite"
+      ],
+      "loot": "common_insectoid",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "web_spinner",
+      "name": "Web Spinner",
+      "types": [
+        "insectoid"
+      ],
+      "primary_type": "insectoid",
+      "tags": [],
+      "rarity": "common",
+      "description": "A smaller spider that creates sticky webs",
+      "biomes": [
+        "deep_caverns",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "base_stats": {
+        "hp": 35,
+        "attack": 12,
+        "defense": 4,
+        "speed": 16
+      },
+      "abilities": [
+        "web_shot"
+      ],
+      "loot": "common_beast",
+      "template": "insectoid_base"
+    },
+    {
+      "id": "wererat",
+      "name": "Wererat",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [],
+      "rarity": "common",
+      "description": "A cursed humanoid that transforms into a rat hybrid",
+      "biomes": [
+        "forsaken_ruins",
+        "cursed_swamp"
+      ],
+      "level_range": [
+        2,
+        6
+      ],
+      "base_stats": {
+        "hp": 26,
+        "attack": 8,
+        "defense": 6,
+        "speed": 10
+      },
+      "abilities": [
+        "disease_bite",
+        "rat_form"
+      ],
+      "loot": "common_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "werebat",
+      "name": "Werebat",
+      "types": [
+        "lycanthrope"
+      ],
+      "primary_type": "lycanthrope",
+      "tags": [
+        "draining"
+      ],
+      "rarity": "common",
+      "description": "A lycanthrope with the form of a giant bat",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "base_stats": {
+        "hp": 30,
+        "attack": 10,
+        "defense": 7,
+        "speed": 14
+      },
+      "abilities": [
+        "echolocation",
+        "flight",
+        "blood_drain"
+      ],
+      "loot": "common_lycanthrope",
+      "template": "lycanthrope_base"
+    },
+    {
+      "id": "slime_puddle",
+      "name": "Slime Puddle",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "common",
+      "description": "A small blob of acidic protoplasm",
+      "biomes": [
+        "cursed_swamp",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        1,
+        5
+      ],
+      "base_stats": {
+        "hp": 25,
+        "attack": 3,
+        "defense": 1,
+        "speed": 1
+      },
+      "abilities": [
+        "acid_touch"
+      ],
+      "loot": "common_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "gray_ooze",
+      "name": "Gray Ooze",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [],
+      "rarity": "common",
+      "description": "A corrosive mass that dissolves metal and stone",
+      "biomes": [
+        "forsaken_ruins",
+        "ancient_crypts"
+      ],
+      "level_range": [
+        3,
+        7
+      ],
+      "base_stats": {
+        "hp": 35,
+        "attack": 4,
+        "defense": 1,
+        "speed": 1
+      },
+      "abilities": [
+        "corrode_metal"
+      ],
+      "loot": "common_ooze",
+      "template": "ooze_base"
+    },
+    {
+      "id": "moss_slime",
+      "name": "Moss Slime",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "common",
+      "description": "A gelatinous creature covered in moss and vegetation",
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        2,
+        4
+      ],
+      "base_stats": {
+        "hp": 30,
+        "attack": 4,
+        "defense": 0,
+        "speed": 2
+      },
+      "abilities": [
+        "regen"
+      ],
+      "loot": "slime_common",
+      "template": "ooze_base"
+    },
+    {
+      "id": "cave_slime",
+      "name": "Cave Slime",
+      "types": [
+        "ooze"
+      ],
+      "primary_type": "ooze",
+      "tags": [
+        "regenerating"
+      ],
+      "rarity": "common",
+      "description": "A translucent ooze that lurks in dark caves",
+      "biomes": [
+        "deep_caverns",
+        "goblin_tunnels"
+      ],
+      "level_range": [
+        2,
+        5
+      ],
+      "base_stats": {
+        "hp": 25,
+        "attack": 4,
+        "defense": 0,
+        "speed": 3
+      },
+      "abilities": [
+        "regen"
+      ],
+      "loot": "slime_common",
+      "template": "ooze_base"
+    },
+    {
+      "id": "vine_creeper",
+      "name": "Vine Creeper",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "common",
+      "description": "An animated vine that grasps at passing creatures",
+      "biomes": [
+        "whispering_woods",
+        "twilight_wetlands"
+      ],
+      "level_range": [
+        1,
+        5
+      ],
+      "base_stats": {
+        "hp": 28,
+        "attack": 4,
+        "defense": 6,
+        "speed": 2,
+        "magic": 4
+      },
+      "abilities": [
+        "entangle"
+      ],
+      "loot": "common_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "thorn_bush",
+      "name": "Thorn Bush",
+      "types": [
+        "plant"
+      ],
+      "primary_type": "plant",
+      "tags": [],
+      "rarity": "common",
+      "description": "A mobile bush covered in painful thorns",
+      "biomes": [
+        "whispering_woods"
+      ],
+      "level_range": [
+        2,
+        6
+      ],
+      "base_stats": {
+        "hp": 32,
+        "attack": 5,
+        "defense": 7,
+        "speed": 2,
+        "magic": 3
+      },
+      "abilities": [
+        "thorn_spray"
+      ],
+      "loot": "common_plant",
+      "template": "plant_base"
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "types": [
+        "undead"
+      ],
+      "primary_type": "undead",
+      "tags": [],
+      "rarity": "common",
+      "description": "A reanimated pile of bones wielding rusted weapons",
+      "biomes": [
+        "ancient_crypts",
+        "forsaken_ruins"
+      ],
+      "level_range": [
+        2,
+        5
+      ],
+      "base_stats": {
+        "hp": 22,
+        "attack": 7,
+        "defense": 3,
+        "speed": 5
+      },
+      "abilities": [],
+      "loot": "undead_common",
+      "template": "undead_base"
+    }
+  ]
+}
