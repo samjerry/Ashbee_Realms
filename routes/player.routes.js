@@ -655,6 +655,118 @@ router.post('/unequip',
   });
 
 /**
+ * POST /role-display
+ * Update player's name color and selected role badge (must be from one of their available roles)
+ */
+router.post('/role-display',
+  rateLimiter.middleware('default'),
+  security.auditLog('update_role_display'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { nameColor, selectedRoleBadge } = req.body;
+    if (!nameColor || !selectedRoleBadge) {
+      return res.status(400).json({ error: 'nameColor and selectedRoleBadge required' });
+    }
+    
+    // Validate color format
+    const validatedColor = sanitization.sanitizeColorCode(nameColor);
+    if (!validatedColor) {
+      return res.status(400).json({ error: 'Invalid color code format' });
+    }
+    
+    // Validate role badge is a string
+    if (typeof selectedRoleBadge !== 'string') {
+      return res.status(400).json({ error: 'Invalid role badge format' });
+    }
+    
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    const channelName = CHANNELS[0] || 'default';
+    
+    try {
+      // Load player data
+      const playerData = await db.loadPlayerProgress(user.id, channelName);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      // Sync roles (add creator/tester if applicable)
+      let roles = playerData.roles || ['viewer'];
+      const displayName = user.displayName || user.display_name || 'Adventurer';
+      let rolesUpdated = false;
+      
+      // Check if this is MarrowOfAlbion (game creator) - add creator role if not present
+      if (GAME_CREATOR_USERNAMES.includes(displayName.toLowerCase())) {
+        if (!roles.includes('creator')) {
+          roles = ['creator', ...roles.filter(r => r !== 'viewer')];
+          rolesUpdated = true;
+        }
+      }
+      
+      // Check if user is a beta tester - add tester role if not present
+      if (db.isBetaTester(displayName) && !roles.includes('tester')) {
+        roles = [...roles, 'tester'];
+        rolesUpdated = true;
+      }
+      
+      // Persist role changes
+      if (rolesUpdated) {
+        playerData.roles = roles;
+        console.log(`✅ Synced roles for ${displayName}:`, roles);
+      }
+      
+      // Validate that the color and badge match one of their roles
+      const isCreator = roles.includes('creator');
+      const validRoles = roles.map(r => r.toLowerCase());
+      const validColors = roles.map(r => db.ROLE_COLORS[r]);
+      
+      // Creators can select any role appearance
+      if (!isCreator) {
+        if (!validColors.includes(validatedColor)) {
+          console.warn(`[SECURITY] Invalid color selection attempt by ${security.sanitizeUserForLog(user)}: ${validatedColor} not in ${validColors}`);
+          return res.status(403).json({ error: 'Color not available for your roles' });
+        }
+        
+        if (!validRoles.includes(selectedRoleBadge.toLowerCase())) {
+          console.warn(`[SECURITY] Invalid badge selection attempt by ${security.sanitizeUserForLog(user)}: ${selectedRoleBadge} not in ${validRoles}`);
+          return res.status(403).json({ error: 'Badge not available for your roles' });
+        }
+      } else {
+        // Validate creator is selecting a valid role that exists in the system
+        const allValidRoles = db.ROLE_HIERARCHY.map(r => r.toLowerCase());
+        const allValidColors = Object.values(db.ROLE_COLORS);
+        
+        if (!allValidColors.includes(validatedColor)) {
+          console.warn(`[SECURITY] Invalid color selection by creator ${security.sanitizeUserForLog(user)}: ${validatedColor}`);
+          return res.status(403).json({ error: 'Invalid color code' });
+        }
+        
+        if (!allValidRoles.includes(selectedRoleBadge.toLowerCase())) {
+          console.warn(`[SECURITY] Invalid badge selection by creator ${security.sanitizeUserForLog(user)}: ${selectedRoleBadge}`);
+          return res.status(403).json({ error: 'Invalid role badge' });
+        }
+      }
+      
+      // Update name color and selected role badge
+      playerData.nameColor = validatedColor;
+      playerData.selectedRoleBadge = selectedRoleBadge.toLowerCase();
+      await db.savePlayerProgress(user.id, channelName, playerData);
+      
+      // Emit websocket event for live update with complete player data
+      const character = await db.getCharacter(user.id, channelName);
+      if (character) {
+        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+      }
+      
+      res.json({ success: true, nameColor: validatedColor, selectedRoleBadge: selectedRoleBadge.toLowerCase() });
+    } catch (error) {
+      console.error('Error updating role display:', error);
+      res.status(500).json({ error: 'Failed to update role display' });
+    }
+  });
+
+/**
  * POST /theme
  * Update player's theme preference
  */
