@@ -482,6 +482,8 @@ router.get('/stats', async (req, res) => {
       maxMana: character.maxMana || 100,
       gold: character.gold,
       nameColor: character.nameColor || '#FFFFFF',
+      roles: character.roles || ['viewer'],
+      selectedRoleBadge: character.selectedRoleBadge || null,
       channel: channelName,
       stats: {
         attack: finalStats.attack,
