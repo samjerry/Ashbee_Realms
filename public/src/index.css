@@ -120,28 +120,33 @@
     @apply h-full bg-gradient-to-r from-green-600 to-green-500 transition-all duration-300;
   }
   
+  /* Rarity Colors - Based on specifications */
   .rarity-common {
-    @apply text-gray-400;
+    color: #B0B0B0;
   }
   
   .rarity-uncommon {
-    @apply text-green-400;
+    color: #2ECC71;
   }
   
   .rarity-rare {
-    @apply text-blue-400;
+    color: #3498DB;
   }
   
   .rarity-epic {
-    @apply text-purple-400;
+    color: #9B59B6;
   }
   
   .rarity-legendary {
-    @apply text-yellow-400;
+    color: #F1C40F;
   }
   
   .rarity-mythic {
-    @apply text-primary-400;
+    background: linear-gradient(135deg, #B11226 0%, #FF3B3B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
   }
   
   /* Safe area insets for notched devices */
