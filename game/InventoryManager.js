@@ -12,12 +12,13 @@ class InventoryManager {
    * @param {number} maxCapacity - Maximum inventory slots (default 30)
    */
   constructor(items = [], maxCapacity = 30) {
-    // Normalize items to support both old (string) and new (object) formats
-    this.items = Array.isArray(items) ? this._normalizeItems(items) : [];
     this.maxCapacity = maxCapacity;
     
-    // Cache for item data
+    // Cache for item data - must be initialized before normalizing items
     this._itemCache = new Map();
+    
+    // Normalize items to support both old (string) and new (object) formats
+    this.items = Array.isArray(items) ? this._normalizeItems(items) : [];
   }
 
   /**
@@ -82,8 +83,21 @@ class InventoryManager {
     const headgear = loadData('gear_headgear');
     const accessories = loadData('gear_accessories');
 
-    // Search in consumables
-    if (consumables && consumables.consumables) {
+    // Search in consumables from items.json
+    if (!item && items && items.consumables) {
+      for (const rarity of Object.keys(items.consumables)) {
+        if (Array.isArray(items.consumables[rarity])) {
+          const found = items.consumables[rarity].find(i => i.id === itemId);
+          if (found) {
+            item = found;
+            break;
+          }
+        }
+      }
+    }
+
+    // Search in consumables_extended
+    if (!item && consumables && consumables.consumables) {
       for (const rarity of Object.keys(consumables.consumables)) {
         const found = consumables.consumables[rarity].find(i => i.id === itemId);
         if (found) {
@@ -93,7 +107,7 @@ class InventoryManager {
       }
     }
 
-    // Search in basic items
+    // Search in basic items (quest items, crafting materials, etc.)
     if (!item && items && items.items) {
       for (const category of Object.keys(items.items)) {
         if (Array.isArray(items.items[category])) {
