@@ -237,6 +237,17 @@
         "value": 25,
         "stackable": true,
         "max_stack": 99
+      },
+      {
+        "id": "cursed_artifact_fragment",
+        "name": "Cursed Artifact Fragment",
+        "description": "A piece of a dark and ancient artifact radiating malevolent energy",
+        "rarity": "rare",
+        "tags": ["quest_item", "cursed", "artifact", "collectible"],
+        "quest_eligible": true,
+        "value": 75,
+        "stackable": true,
+        "max_stack": 20
       }
     ],
     "crafting_materials": [

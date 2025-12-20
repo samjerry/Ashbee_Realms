@@ -51,6 +51,12 @@ class InventoryManager {
    */
   _createItemInstance(itemId) {
     const itemData = this._getItemData(itemId);
+    
+    // Log warning if item data not found
+    if (!itemData) {
+      console.warn(`[InventoryManager] Item data not found for: ${itemId}. Creating instance with default values.`);
+    }
+    
     return {
       id: itemId,
       name: itemData?.name || itemId,
@@ -476,16 +482,25 @@ class InventoryManager {
     let taggedCount = 0;
     const timestamp = Date.now();
 
-    for (const item of this.items) {
+    for (let i = 0; i < this.items.length; i++) {
+      const item = this.items[i];
       const currentItemId = typeof item === 'string' ? item : item.id;
-      if (currentItemId === itemId && typeof item === 'object') {
+      
+      if (currentItemId === itemId) {
+        // Convert string to object if needed
+        if (typeof item === 'string') {
+          this.items[i] = this._createItemInstance(item);
+        }
+        
+        const itemObj = this.items[i];
+        
         // Check if quest tag already exists
-        const hasTag = item.quest_tags.some(tag => 
+        const hasTag = itemObj.quest_tags.some(tag => 
           tag.quest_id === questId && tag.player_id === playerId
         );
         
         if (!hasTag) {
-          item.quest_tags.push({
+          itemObj.quest_tags.push({
             quest_id: questId,
             player_id: playerId,
             tagged_at: timestamp
