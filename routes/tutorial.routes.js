@@ -12,6 +12,22 @@ const sanitization = require('../middleware/sanitization');
 const tutorialManager = new TutorialManager();
 
 /**
+ * Helper function to get channel from request
+ * @param {Object} req - Express request object
+ * @returns {string} Channel name
+ */
+function getChannel(req) {
+  let channel = req.body?.channel || req.query?.channel;
+  
+  if (!channel) {
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    channel = CHANNELS[0] || 'default';
+  }
+  
+  return channel;
+}
+
+/**
  * GET /tooltip/:id
  * Get tooltip information by ID
  */
@@ -54,13 +70,7 @@ router.get('/progress', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
   
-  let { channel } = req.query;
-  
-  // If no channel specified, use the first channel from CHANNELS environment variable
-  if (!channel) {
-    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-    channel = CHANNELS[0] || 'default';
-  }
+  const channel = getChannel(req);
   
   if (!channel) {
     return res.status(400).json({ error: 'No channel configured' });
@@ -112,13 +122,8 @@ router.post('/complete-step',
     const user = req.session.user;
     if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    let { channel, stepId } = req.body;
-    
-    // If no channel specified, use the first channel from CHANNELS environment variable
-    if (!channel) {
-      const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-      channel = CHANNELS[0] || 'default';
-    }
+    const channel = getChannel(req);
+    const { stepId } = req.body;
     
     if (!channel) {
       return res.status(400).json({ error: 'No channel configured' });
@@ -229,13 +234,7 @@ router.get('/current-step', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
   
-  let { channel } = req.query;
-  
-  // If no channel specified, use the first channel from CHANNELS environment variable
-  if (!channel) {
-    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-    channel = CHANNELS[0] || 'default';
-  }
+  const channel = getChannel(req);
   
   if (!channel) {
     return res.status(400).json({ error: 'No channel configured' });
@@ -265,7 +264,7 @@ router.get('/current-step', async (req, res) => {
         title: currentStep.title,
         instruction: currentStep.instruction,
         reward: currentStep.reward,
-        hint: currentStep.tip || null
+        tip: currentStep.tip || null
       }
     });
   } catch (error) {
@@ -288,13 +287,7 @@ router.post('/start',
     const user = req.session.user;
     if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    let { channel } = req.body;
-    
-    // If no channel specified, use the first channel from CHANNELS environment variable
-    if (!channel) {
-      const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-      channel = CHANNELS[0] || 'default';
-    }
+    const channel = getChannel(req);
     
     if (!channel) {
       return res.status(400).json({ error: 'No channel configured' });
@@ -349,13 +342,7 @@ router.post('/skip',
     const user = req.session.user;
     if (!user) return res.status(401).json({ error: 'Not logged in' });
     
-    let { channel } = req.body;
-    
-    // If no channel specified, use the first channel from CHANNELS environment variable
-    if (!channel) {
-      const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
-      channel = CHANNELS[0] || 'default';
-    }
+    const channel = getChannel(req);
     
     if (!channel) {
       return res.status(400).json({ error: 'No channel configured' });
