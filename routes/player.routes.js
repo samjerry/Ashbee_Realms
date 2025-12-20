@@ -8,6 +8,9 @@ const security = require('../middleware/security');
 const sanitization = require('../middleware/sanitization');
 const { fetchUserRolesFromTwitch } = require('../utils/twitchRoleChecker');
 
+// Game creator usernames
+const GAME_CREATOR_USERNAMES = ['marrowofalbion', 'marrowofalb1on'];
+
 /**
  * Helper function to convert player data to frontend format
  */
@@ -383,7 +386,7 @@ router.post('/create',
       const character = await db.createCharacter(user.id, channelName, characterName, classType);
       
       // Check if this is MarrowOfAlbion (game creator) and set creator role
-      if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
+      if (GAME_CREATOR_USERNAMES.includes(characterName.toLowerCase())) {
         userRoles = ['creator'];
         character.nameColor = validatedColor || '#FFD700'; // Default to gold for creator
         console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
