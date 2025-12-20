@@ -45,6 +45,7 @@ const raidsRoutes = require('./routes/raids.routes');
 const seasonsRoutes = require('./routes/seasons.routes');
 const operatorRoutes = require('./routes/operator.routes');
 const leaderboardsRoutes = require('./routes/leaderboards.routes');
+const tutorialRoutes = require('./routes/tutorial.routes');
 
 // Default game state values
 const DEFAULT_GAME_STATE = {
@@ -753,7 +754,8 @@ app.use('/api/raids', raidsRoutes);
 app.use('/api/seasons', seasonsRoutes);
 app.use('/api/operator', operatorRoutes);
 app.use('/api/leaderboards', leaderboardsRoutes);
-console.log('✅ Mounted 25 route modules for modular endpoint handling (100% complete)');
+app.use('/api/tutorial', tutorialRoutes);
+console.log('✅ Mounted 26 route modules for modular endpoint handling (100% complete)');
 // ==================== END ROUTE MODULES ====================
 
 // ==================== ROOT ROUTES ====================
