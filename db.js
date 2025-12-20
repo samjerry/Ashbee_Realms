@@ -445,6 +445,79 @@ async function initPostgres() {
   console.log(`✅ Database schema verified/created in ${tableTime}s`);
 
   db = pool;
+  
+  // Sync tester roles for existing characters
+  await syncTesterRoles();
+}
+
+/**
+ * Synchronize tester roles for all existing characters on deployment
+ * This ensures users added to TESTERS array get the role retroactively
+ */
+async function syncTesterRoles() {
+  if (!db) {
+    console.error('❌ Cannot sync tester roles: database not initialized');
+    return;
+  }
+  
+  if (BETA_TESTERS.length === 0) {
+    console.log('ℹ️ No beta testers configured, skipping role sync');
+    return;
+  }
+  
+  console.log('🔄 Syncing tester roles for existing characters...');
+  const syncStart = Date.now();
+  let totalUpdated = 0;
+  
+  try {
+    // Get list of channels from environment
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
+    
+    for (const channel of CHANNELS) {
+      const tableName = getPlayerTable(channel);
+      
+      // For each beta tester, check if they have a character and update their roles
+      for (const testerId of BETA_TESTERS) {
+        try {
+          // Query to find character by player_id
+          const result = await db.query(
+            `SELECT player_id, name, roles FROM ${tableName} WHERE player_id = $1`,
+            [testerId]
+          );
+          
+          if (result.rows.length > 0) {
+            const character = result.rows[0];
+            const currentRoles = character.roles || ['viewer'];
+            
+            // Check if tester role is already present
+            if (!currentRoles.includes('tester')) {
+              const updatedRoles = [...currentRoles, 'tester'];
+              
+              // Update the character's roles
+              await db.query(
+                `UPDATE ${tableName} SET roles = $1 WHERE player_id = $2`,
+                [JSON.stringify(updatedRoles), testerId]
+              );
+              
+              totalUpdated++;
+              console.log(`✅ Added tester role to ${character.name} in ${channel}`);
+            }
+          }
+        } catch (error) {
+          console.error(`Error syncing tester role for ${testerId} in ${channel}:`, error.message);
+        }
+      }
+    }
+    
+    const syncTime = ((Date.now() - syncStart) / 1000).toFixed(2);
+    if (totalUpdated > 0) {
+      console.log(`✅ Synced tester roles: ${totalUpdated} character(s) updated in ${syncTime}s`);
+    } else {
+      console.log(`✅ Tester role sync complete: no updates needed (${syncTime}s)`);
+    }
+  } catch (error) {
+    console.error('❌ Error during tester role sync:', error);
+  }
 }
 
 // Helper function to get channel-specific player table name
