@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const FactionManager = require('../game/FactionManager');
+const socketHandler = require('../websocket/socketHandler');
 
 const factionMgr = new FactionManager();
 
@@ -128,6 +129,9 @@ router.post('/:factionId/reputation', async (req, res) => {
 
     // Save updated reputation
     await db.updateReputation(userId, channel, character.reputation);
+
+    // Emit WebSocket update for real-time reputation change
+    socketHandler.emitPlayerUpdate(character.name, channel, character.toFrontend());
 
     res.json({ result });
   } catch (error) {
