@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const socketHandler = require('../websocket/socketHandler');
 
 /**
  * GET /
@@ -58,6 +59,13 @@ router.get('/', async (req, res) => {
     if (unlockedAbilities.length > (progress.unlocked_abilities || []).length) {
       progress.unlocked_abilities = unlockedAbilities;
       await db.savePlayerProgress(user.id, channelName, progress);
+      
+      // Emit WebSocket update for real-time frontend sync
+      if (progress.name) {
+        socketHandler.emitPlayerUpdate(progress.name, channelName, {
+          unlockedAbilities: progress.unlocked_abilities
+        });
+      }
     }
     
     res.json({ 
@@ -193,6 +201,13 @@ router.post('/equip', async (req, res) => {
     // Save updated progress
     await db.savePlayerProgress(user.id, channelName, progress);
     
+    // Emit WebSocket update for real-time frontend sync
+    if (progress.name) {
+      socketHandler.emitPlayerUpdate(progress.name, channelName, {
+        equippedAbilities: progress.equipped_abilities
+      });
+    }
+    
     res.json({ success: true, equipped: equippedAbilities });
   } catch (error) {
     console.error('Error equipping ability:', error);
@@ -239,6 +254,13 @@ router.post('/unequip', async (req, res) => {
     
     progress.equipped_abilities = equippedAbilities;
     await db.savePlayerProgress(user.id, channelName, progress);
+    
+    // Emit WebSocket update for real-time frontend sync
+    if (progress.name) {
+      socketHandler.emitPlayerUpdate(progress.name, channelName, {
+        equippedAbilities: progress.equipped_abilities
+      });
+    }
     
     res.json({ success: true, equipped: equippedAbilities });
   } catch (error) {
