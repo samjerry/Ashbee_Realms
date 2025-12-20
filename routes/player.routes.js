@@ -653,4 +653,53 @@ router.post('/unequip',
     }
   });
 
+/**
+ * POST /theme
+ * Update player's theme preference
+ */
+router.post('/theme',
+  rateLimiter.middleware('default'),
+  security.auditLog('update_theme'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { theme } = req.body;
+    if (!theme || typeof theme !== 'string') {
+      return res.status(400).json({ error: 'Theme required' });
+    }
+    
+    // Validate theme is one of the allowed themes
+    const validThemes = ['crimson-knight', 'lovecraftian', 'azure-mage', 'golden-paladin', 'shadow-assassin', 'frost-warden'];
+    if (!validThemes.includes(theme)) {
+      return res.status(400).json({ error: 'Invalid theme' });
+    }
+    
+    const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim()) : [];
+    const channelName = CHANNELS[0] || 'default';
+    
+    try {
+      // Load player data
+      const playerData = await db.loadPlayerProgress(user.id, channelName);
+      if (!playerData) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      // Update theme
+      playerData.theme = theme;
+      await db.savePlayerProgress(user.id, channelName, playerData);
+      
+      // Emit WebSocket update for realtime theme change
+      if (playerData.name) {
+        socketHandler.emitPlayerUpdate(playerData.name, channelName, { theme });
+      }
+      
+      console.log(`✅ Theme updated for ${user.displayName}: ${theme}`);
+      res.json({ success: true, theme });
+    } catch (error) {
+      console.error('Error updating theme:', error);
+      res.status(500).json({ error: 'Failed to update theme' });
+    }
+  });
+
 module.exports = router;

@@ -162,13 +162,22 @@ const SettingsModal = () => {
     // If theme is changed, also save to database
     if (key === 'theme') {
       try {
-        await fetch('/api/player/theme', {
+        const response = await fetch('/api/player/theme', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ theme: value })
         });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+          throw new Error(`Failed to save theme: ${errorData.error || response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Theme saved to database:', data.theme);
       } catch (err) {
         console.error('Failed to save theme to database:', err);
+        // TODO: Show toast notification to user
       }
     }
   };
