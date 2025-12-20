@@ -4,6 +4,7 @@ const db = require('../db');
 const OperatorManager = require('../game/OperatorManager');
 const validation = require('../middleware/validation');
 const security = require('../middleware/security');
+const socketHandler = require('../websocket/socketHandler');
 
 const operatorMgr = new OperatorManager();
 
@@ -175,6 +176,15 @@ router.post('/execute',
         params,
         result.success
       );
+
+      // Emit WebSocket update if command successfully updated a character
+      if (result.success && result.updatedCharacter) {
+        const characterName = result.updatedCharacter.name;
+        if (characterName) {
+          console.log(`[Operator] Emitting WebSocket update for ${characterName} in ${req.channelName}`);
+          socketHandler.emitPlayerUpdate(characterName, req.channelName, result.updatedCharacter);
+        }
+      }
 
       res.json(result);
     } catch (error) {
