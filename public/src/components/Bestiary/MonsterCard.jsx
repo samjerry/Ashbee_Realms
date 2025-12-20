@@ -1,19 +1,21 @@
 import React from 'react';
 import { Heart, Sword, Shield, MapPin } from 'lucide-react';
+import { getRarityTextClass } from '../../utils/rarityHelpers';
 
 const MonsterCard = ({ entry }) => {
   const { name, description, level_range, stats, rarity, encountered, defeated, encounter_count, defeat_count, icon } = entry;
 
-  // Determine rarity color
-  const rarityColors = {
-    common: 'text-gray-400 border-gray-600',
-    uncommon: 'text-green-400 border-green-600',
-    rare: 'text-blue-400 border-blue-600',
-    epic: 'text-purple-400 border-purple-600',
-    legendary: 'text-yellow-400 border-yellow-600'
+  // Determine rarity border color
+  const rarityBorderColors = {
+    common: 'border-[#B0B0B0]',
+    uncommon: 'border-[#2ECC71]',
+    rare: 'border-[#3498DB]',
+    epic: 'border-[#9B59B6]',
+    legendary: 'border-[#F1C40F]',
+    mythic: 'border-[#FF3B3B]'
   };
 
-  const rarityColor = rarityColors[rarity] || rarityColors.common;
+  const rarityBorderColor = rarityBorderColors[rarity] || rarityBorderColors.common;
 
   // Stats array format: [HP, Attack, Defense, Agility]
   const hp = stats?.[0] || 0;
@@ -21,7 +23,7 @@ const MonsterCard = ({ entry }) => {
   const defense = stats?.[2] || 0;
 
   return (
-    <div className={`bg-dark-800 rounded-lg border-2 ${rarityColor} p-4 hover:shadow-lg transition-all hover:scale-105`}>
+    <div className={`bg-dark-800 rounded-lg border-2 ${rarityBorderColor} p-4 hover:shadow-lg transition-all hover:scale-105`}>
       {/* Monster Icon/Image */}
       <div className="relative mb-3">
         <div className={`text-6xl text-center mb-2 ${!defeated ? 'grayscale opacity-50' : ''}`}>
@@ -53,7 +55,7 @@ const MonsterCard = ({ entry }) => {
         <div className="flex items-center gap-1 text-sm text-gray-400 mb-3">
           <span>Level {level_range[0]}-{level_range[1]}</span>
           <span className="mx-1">•</span>
-          <span className={rarityColor}>{rarity}</span>
+          <span className={getRarityTextClass(rarity)}>{rarity}</span>
         </div>
       )}
 

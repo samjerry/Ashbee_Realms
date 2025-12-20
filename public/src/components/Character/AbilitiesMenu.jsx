@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Zap, Lock, BookOpen, X, CheckCircle } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
+import { getRarityColor, getRarityTextClass, isMythicRarity } from '../../utils/rarityHelpers';
 
 const AbilitiesMenu = () => {
   const { player } = useGameStore();
@@ -130,7 +131,9 @@ const AbilitiesMenu = () => {
                 {ability ? (
                   <>
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-bold text-white">{ability.name}</h3>
+                      <h3 className={`font-bold ${ability.rarity ? getRarityTextClass(ability.rarity) : 'text-white'}`}>
+                        {ability.name}
+                      </h3>
                       <button
                         onClick={() => unequipAbility(ability.id)}
                         className="p-1 text-red-400 hover:text-red-300 transition-colors"
@@ -203,9 +206,22 @@ const AbilitiesMenu = () => {
                   </div>
                 )}
 
-                <h3 className={`font-bold mb-2 ${isLocked ? 'text-gray-500' : 'text-white'}`}>
+                <h3 className={`font-bold mb-2 ${
+                  isLocked 
+                    ? 'text-gray-500' 
+                    : ability.rarity 
+                    ? getRarityTextClass(ability.rarity)
+                    : 'text-white'
+                }`}>
                   {ability.name}
                 </h3>
+                
+                {/* Rarity Badge */}
+                {!isLocked && ability.rarity && (
+                  <div className={`text-xs font-semibold mb-2 ${getRarityTextClass(ability.rarity)}`}>
+                    {ability.rarity.charAt(0).toUpperCase() + ability.rarity.slice(1)}
+                  </div>
+                )}
                 
                 <p className={`text-sm mb-3 ${isLocked ? 'text-gray-600' : 'text-gray-400'}`}>
                   {ability.description}
@@ -283,7 +299,16 @@ const AbilitiesMenu = () => {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
           <div className="bg-dark-900 border border-dark-700 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-2xl font-bold text-white">{selectedAbility.name}</h2>
+              <div>
+                <h2 className={`text-2xl font-bold ${selectedAbility.rarity ? getRarityTextClass(selectedAbility.rarity) : 'text-white'}`}>
+                  {selectedAbility.name}
+                </h2>
+                {selectedAbility.rarity && (
+                  <p className={`text-sm mt-1 ${getRarityTextClass(selectedAbility.rarity)}`}>
+                    {selectedAbility.rarity.charAt(0).toUpperCase() + selectedAbility.rarity.slice(1)} Ability
+                  </p>
+                )}
+              </div>
               <button
                 onClick={() => setSelectedAbility(null)}
                 className="text-gray-400 hover:text-white transition-colors"

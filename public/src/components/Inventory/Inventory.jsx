@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Package, Trash2, ArrowUpCircle } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
+import { getRarityColor, getRarityTextClass } from '../../utils/rarityHelpers';
 
 const Inventory = () => {
   const { inventory, equipment, fetchInventory, equipItem } = useGameStore();
@@ -14,14 +15,14 @@ const Inventory = () => {
   // Default to empty array if inventory is undefined
   const safeInventory = inventory || [];
   
-  const getRarityColor = (rarity) => {
+  const getRarityBorderColor = (rarity) => {
     const colors = {
-      common: 'border-gray-500 bg-gray-900/50',
-      uncommon: 'border-green-500 bg-green-900/20',
-      rare: 'border-blue-500 bg-blue-900/20',
-      epic: 'border-purple-500 bg-purple-900/20',
-      legendary: 'border-yellow-500 bg-yellow-900/20',
-      mythic: 'border-red-500 bg-red-900/20',
+      common: 'border-[#B0B0B0] bg-gray-900/50',
+      uncommon: 'border-[#2ECC71] bg-green-900/20',
+      rare: 'border-[#3498DB] bg-blue-900/20',
+      epic: 'border-[#9B59B6] bg-purple-900/20',
+      legendary: 'border-[#F1C40F] bg-yellow-900/20',
+      mythic: 'border-[#FF3B3B] bg-red-900/20',
     };
     return colors[rarity] || colors.common;
   };
@@ -78,12 +79,12 @@ const Inventory = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedItem(item)}
-                    className={`aspect-square rounded-lg border-2 p-3 flex flex-col items-center justify-center transition-all hover:scale-105 ${getRarityColor(item.rarity)} ${
+                    className={`aspect-square rounded-lg border-2 p-3 flex flex-col items-center justify-center transition-all hover:scale-105 ${getRarityBorderColor(item.rarity)} ${
                       selectedItem?.id === item.id ? 'ring-2 ring-primary-500' : ''
                     }`}
                   >
                     <div className="text-3xl mb-2">{item.icon || '📦'}</div>
-                    <p className={`text-xs font-bold text-center rarity-${item.rarity}`}>
+                    <p className={`text-xs font-bold text-center ${getRarityTextClass(item.rarity)}`}>
                       {item.name}
                     </p>
                     {item.quantity > 1 && (
@@ -103,7 +104,7 @@ const Inventory = () => {
               <div className="space-y-4">
                 <div>
                   <div className="text-4xl mb-3 text-center">{selectedItem.icon || '📦'}</div>
-                  <h3 className={`text-2xl font-bold text-center rarity-${selectedItem.rarity}`}>
+                  <h3 className={`text-2xl font-bold text-center ${getRarityTextClass(selectedItem.rarity)}`}>
                     {selectedItem.name}
                   </h3>
                   <p className="text-center text-gray-400 capitalize">{selectedItem.type}</p>

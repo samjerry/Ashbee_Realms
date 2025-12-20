@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sword, Shield, Zap, Wind, Heart, Star, Book } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
+import { getRarityTextClass } from '../../utils/rarityHelpers';
 
 // Force rebuild - fixed null safety issues
 const CharacterSheet = () => {
@@ -101,7 +102,7 @@ const CharacterSheet = () => {
                 <p className="text-xs sm:text-sm text-gray-400 mb-2 capitalize">{slot}</p>
                 {item ? (
                   <div>
-                    <p className={`font-bold rarity-${item.rarity} text-sm sm:text-base`}>{item.name}</p>
+                    <p className={`font-bold text-sm sm:text-base ${getRarityTextClass(item.rarity)}`}>{item.name}</p>
                     <div className="mt-2 space-y-1 text-xs text-gray-400">
                       {item.stats && Object.entries(item.stats).map(([key, value]) => (
                         <p key={key}>+{value} {key}</p>
@@ -170,7 +171,9 @@ const EquippedAbilitiesDisplay = () => {
         {equippedAbilities.map((ability, index) => (
           <div key={index} className="bg-dark-900 border-2 border-primary-600 rounded-lg p-3 sm:p-4">
             <div className="flex items-start justify-between mb-2">
-              <h3 className="font-bold text-white text-sm sm:text-base">{ability.name}</h3>
+              <h3 className={`font-bold text-sm sm:text-base ${ability.rarity ? getRarityTextClass(ability.rarity) : 'text-white'}`}>
+                {ability.name}
+              </h3>
               <Zap size={16} className="text-primary-500 flex-shrink-0" />
             </div>
             <p className="text-xs sm:text-sm text-gray-400 mb-2">{ability.description}</p>

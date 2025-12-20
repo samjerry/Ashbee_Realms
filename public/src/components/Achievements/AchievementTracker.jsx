@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Trophy, Lock, CheckCircle } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
+import { getRarityTextClass } from '../../utils/rarityHelpers';
 
 const AchievementTracker = () => {
   const { achievements, fetchAchievements } = useGameStore();
@@ -9,13 +10,14 @@ const AchievementTracker = () => {
     fetchAchievements();
   }, []);
   
-  const getRarityColor = (rarity) => {
+  const getRarityBorderColor = (rarity) => {
     const colors = {
-      common: 'border-gray-500',
-      uncommon: 'border-green-500',
-      rare: 'border-blue-500',
-      epic: 'border-purple-500',
-      legendary: 'border-yellow-500',
+      common: 'border-[#B0B0B0]',
+      uncommon: 'border-[#2ECC71]',
+      rare: 'border-[#3498DB]',
+      epic: 'border-[#9B59B6]',
+      legendary: 'border-[#F1C40F]',
+      mythic: 'border-[#FF3B3B]',
     };
     return colors[rarity] || 'border-gray-700';
   };
@@ -76,7 +78,7 @@ const AchievementTracker = () => {
                   key={achievement.id}
                   className={`bg-dark-900 rounded-lg p-3 sm:p-4 border-2 ${
                     achievement.unlocked 
-                      ? getRarityColor(achievement.rarity)
+                      ? getRarityBorderColor(achievement.rarity)
                       : 'border-dark-700 opacity-60'
                   }`}
                 >
@@ -132,7 +134,7 @@ const AchievementTracker = () => {
                   )}
                   
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-dark-800">
-                    <span className={`text-xs font-bold uppercase rarity-${achievement.rarity}`}>
+                    <span className={`text-xs font-bold uppercase ${getRarityTextClass(achievement.rarity)}`}>
                       {achievement.rarity}
                     </span>
                     <span className="text-sm text-yellow-500">{achievement.points} pts</span>
