@@ -474,12 +474,14 @@ async function syncTesterRoles() {
     const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
     
     for (const channel of CHANNELS) {
+      // SECURITY: getPlayerTable() sanitizes channel name, removing all non-alphanumeric characters
+      // to prevent SQL injection. Table name format: players_{sanitized_channel}
       const tableName = getPlayerTable(channel);
       
       // For each beta tester, check if they have a character and update their roles
       for (const testerId of BETA_TESTERS) {
         try {
-          // Query to find character by player_id
+          // Query to find character by player_id (parameterized to prevent SQL injection)
           const result = await db.query(
             `SELECT player_id, name, roles FROM ${tableName} WHERE player_id = $1`,
             [testerId]
@@ -493,7 +495,7 @@ async function syncTesterRoles() {
             if (!currentRoles.includes('tester')) {
               const updatedRoles = [...currentRoles, 'tester'];
               
-              // Update the character's roles
+              // Update the character's roles (parameterized to prevent SQL injection)
               await db.query(
                 `UPDATE ${tableName} SET roles = $1 WHERE player_id = $2`,
                 [JSON.stringify(updatedRoles), testerId]
