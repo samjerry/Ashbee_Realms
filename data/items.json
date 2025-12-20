@@ -6,6 +6,7 @@
         "name": "Potion",
         "description": "A basic healing potion that restores 30 HP",
         "rarity": "common",
+        "tags": ["consumable", "healing"],
         "usage": {
           "type": "heal",
           "amount": 30,
@@ -49,6 +50,7 @@
         "name": "Health Potion",
         "description": "A quality potion that restores 80 HP",
         "rarity": "uncommon",
+        "tags": ["consumable", "healing", "magical"],
         "usage": {
           "type": "heal",
           "amount": 80,
@@ -166,6 +168,7 @@
         "name": "Ambrosia",
         "description": "Food of the gods. Fully restores HP and grants all stat bonuses (+20% all stats) for 10 turns",
         "rarity": "legendary",
+        "tags": ["consumable", "magical", "divine"],
         "usage": {
           "type": "full_buff",
           "heal_full": true,
@@ -175,6 +178,98 @@
         "value": 2500,
         "stackable": true,
         "max_stack": 5
+      }
+    ]
+  },
+  "items": {
+    "quest_items": [
+      {
+        "id": "goblin_ear",
+        "name": "Goblin Ear",
+        "description": "A trophy from a defeated goblin",
+        "rarity": "common",
+        "tags": ["quest_item", "trophy", "common"],
+        "quest_eligible": true,
+        "value": 5,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "goblin_war_plans",
+        "name": "Goblin War Plans",
+        "description": "Strategic plans detailing goblin raid routes",
+        "rarity": "uncommon",
+        "tags": ["quest_item", "document", "important"],
+        "quest_eligible": true,
+        "value": 50,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "wolf_pelt",
+        "name": "Wolf Pelt",
+        "description": "A thick fur pelt from a forest wolf",
+        "rarity": "common",
+        "tags": ["quest_item", "trophy", "crafting_material"],
+        "quest_eligible": true,
+        "value": 15,
+        "stackable": true,
+        "max_stack": 50
+      },
+      {
+        "id": "ancient_tome",
+        "name": "Ancient Tome",
+        "description": "A mysterious book filled with arcane knowledge",
+        "rarity": "rare",
+        "tags": ["quest_item", "magical", "knowledge"],
+        "quest_eligible": true,
+        "value": 200,
+        "stackable": false,
+        "max_stack": 1
+      },
+      {
+        "id": "crystal_shard",
+        "name": "Crystal Shard",
+        "description": "A fragment of a magical crystal",
+        "rarity": "uncommon",
+        "tags": ["quest_item", "magical", "collectible"],
+        "quest_eligible": true,
+        "value": 25,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "cursed_artifact_fragment",
+        "name": "Cursed Artifact Fragment",
+        "description": "A piece of a dark and ancient artifact radiating malevolent energy",
+        "rarity": "rare",
+        "tags": ["quest_item", "cursed", "artifact", "collectible"],
+        "quest_eligible": true,
+        "value": 75,
+        "stackable": true,
+        "max_stack": 20
+      }
+    ],
+    "crafting_materials": [
+      {
+        "id": "iron_ore",
+        "name": "Iron Ore",
+        "description": "Raw iron ore for crafting",
+        "rarity": "common",
+        "tags": ["crafting_material", "ore", "common"],
+        "value": 10,
+        "stackable": true,
+        "max_stack": 99
+      },
+      {
+        "id": "leather_scraps",
+        "name": "Leather Scraps",
+        "description": "Pieces of leather for crafting",
+        "rarity": "common",
+        "tags": ["crafting_material", "leather"],
+        "value": 5,
+        "stackable": true,
+        "max_stack": 99
       }
     ]
   }
