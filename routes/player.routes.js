@@ -6,6 +6,7 @@ const validation = require('../middleware/validation');
 const rateLimiter = require('../utils/rateLimiter');
 const security = require('../middleware/security');
 const sanitization = require('../middleware/sanitization');
+const { fetchUserRolesFromTwitch } = require('../utils/twitchRoleChecker');
 
 /**
  * Helper function to convert player data to frontend format
@@ -274,6 +275,165 @@ router.get('/roles', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch roles' });
   }
 });
+
+/**
+ * Helper function to determine if we should fetch roles from Twitch API
+ */
+function shouldFetchRolesFromTwitchAPI(existingRoles) {
+  // No existing roles - need to fetch
+  if (!existingRoles || existingRoles.length === 0) {
+    return true;
+  }
+  
+  // Only has 'viewer' role - may have higher roles to fetch
+  if (existingRoles.length === 1 && existingRoles[0] === 'viewer') {
+    return true;
+  }
+  
+  // Has other roles - use existing
+  return false;
+}
+
+/**
+ * POST /create
+ * Create a new character for the user in a specific channel
+ */
+router.post('/create',
+  validation.validateCharacterCreate,
+  rateLimiter.middleware('strict'),
+  security.auditLog('create_character'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { channel, classType, nameColor, selectedRoleBadge } = req.body;
+    if (!channel || !classType) {
+      return res.status(400).json({ error: 'Channel and classType required' });
+    }
+    
+    const channelName = channel.toLowerCase();
+    const rawCharacterName = user.displayName || user.display_name || 'Adventurer';
+    const characterName = sanitization.sanitizeCharacterName(rawCharacterName);
+    
+    // Validate nameColor if provided
+    let validatedColor = null;
+    if (nameColor) {
+      validatedColor = sanitization.sanitizeColorCode(nameColor);
+      if (!validatedColor) {
+        return res.status(400).json({ error: 'Invalid color code format' });
+      }
+    }
+    
+    // Validate selectedRoleBadge if provided
+    let validatedRoleBadge = null;
+    if (selectedRoleBadge && typeof selectedRoleBadge === 'string') {
+      validatedRoleBadge = selectedRoleBadge.toLowerCase();
+    }
+    
+    try {
+      // Check if character already exists
+      const existing = await db.getCharacter(user.id, channelName);
+      if (existing) {
+        return res.status(400).json({ error: 'Character already exists for this channel' });
+      }
+      
+      // Check if user has existing roles from previous activity (e.g., Twitch chat)
+      const existingProgress = await db.loadPlayerProgress(user.id, channelName);
+      let userRoles = existingProgress?.roles || null;
+      
+      // Try to fetch from Twitch API if we don't have accurate roles and broadcaster is authenticated
+      if (shouldFetchRolesFromTwitchAPI(userRoles)) {
+        const broadcasterAuth = await db.getBroadcasterAuth(channelName);
+        
+        if (broadcasterAuth && user.twitchId) {
+          console.log(`🔍 Fetching roles from Twitch API for ${characterName}`);
+          try {
+            const fetchedRoles = await fetchUserRolesFromTwitch(
+              broadcasterAuth.accessToken,
+              broadcasterAuth.broadcasterId,
+              user.twitchId,
+              characterName,
+              channelName
+            );
+            
+            if (fetchedRoles && fetchedRoles.length > 0) {
+              userRoles = fetchedRoles;
+              console.log(`✅ Fetched roles from Twitch API:`, userRoles);
+            } else {
+              userRoles = ['viewer'];
+            }
+          } catch (error) {
+            console.error('Failed to fetch roles from Twitch API:', error);
+            // Fall back to existing roles or viewer
+            userRoles = userRoles || ['viewer'];
+          }
+        } else {
+          // No broadcaster auth or twitchId - fall back to existing or viewer
+          userRoles = userRoles || ['viewer'];
+          if (!broadcasterAuth) {
+            console.log(`⚠️ Broadcaster not authenticated for channel ${channelName} - using fallback role detection`);
+          }
+        }
+      }
+      
+      // Ensure userRoles is never null
+      userRoles = userRoles || ['viewer'];
+      
+      // Create new character
+      const character = await db.createCharacter(user.id, channelName, characterName, classType);
+      
+      // Check if this is MarrowOfAlbion (game creator) and set creator role
+      if (characterName.toLowerCase() === 'marrowofalbion' || characterName.toLowerCase() === 'marrowofalb1on') {
+        userRoles = ['creator'];
+        character.nameColor = validatedColor || '#FFD700'; // Default to gold for creator
+        console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
+      } else {
+        // Check if user is a beta tester - add tester role if not already present
+        if (db.isBetaTester(characterName) && !userRoles.includes('tester')) {
+          userRoles = [...userRoles, 'tester'];
+          console.log('🧪 Beta tester detected - granting tester role');
+        }
+        
+        // Set appropriate default name color based on highest role if not provided
+        if (!validatedColor) {
+          const highestRole = db.ROLE_HIERARCHY.find(r => userRoles.includes(r)) || 'viewer';
+          character.nameColor = db.ROLE_COLORS[highestRole];
+        } else {
+          character.nameColor = validatedColor;
+        }
+      }
+      
+      // Apply roles to character
+      character.roles = userRoles;
+      console.log(`🎭 Assigned roles to ${characterName}:`, userRoles);
+      
+      // Set selectedRoleBadge - use validated one from frontend if provided and user has that role,
+      // otherwise use highest priority role
+      if (validatedRoleBadge && userRoles.includes(validatedRoleBadge)) {
+        character.selectedRoleBadge = validatedRoleBadge;
+        console.log(`🎯 Set selectedRoleBadge from frontend: ${validatedRoleBadge}`);
+      } else {
+        const primaryRole = db.ROLE_HIERARCHY.find(r => userRoles.includes(r)) || 'viewer';
+        character.selectedRoleBadge = primaryRole;
+        console.log(`🎯 Set selectedRoleBadge to highest priority role: ${primaryRole}`);
+      }
+      
+      // Save character with roles and color
+      await db.saveCharacter(user.id, channelName, character);
+      
+      // Emit WebSocket update for new character creation
+      socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+      
+      res.json({ 
+        success: true, 
+        message: `Created ${classType} character: ${characterName}`,
+        character: character.toDatabase()
+      });
+    } catch (error) {
+      console.error('Error creating character:', error);
+      res.status(500).json({ error: error.message || 'Failed to create character' });
+    }
+  });
 
 /**
  * GET /stats
