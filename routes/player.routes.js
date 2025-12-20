@@ -233,7 +233,8 @@ router.get('/roles', async (req, res) => {
       }
     }
     
-    if (db.isBetaTester(displayName) && !roles.includes('tester')) {
+    // Check if user is a beta tester using player ID (twitch-{id})
+    if (db.isBetaTester(user.id) && !roles.includes('tester')) {
       roles = [...roles, 'tester'];
       rolesUpdated = true;
     }
@@ -391,8 +392,8 @@ router.post('/create',
         character.nameColor = validatedColor || '#FFD700'; // Default to gold for creator
         console.log('🎮 Game creator MarrowOfAlbion detected - granting creator role');
       } else {
-        // Check if user is a beta tester - add tester role if not already present
-        if (db.isBetaTester(characterName) && !userRoles.includes('tester')) {
+        // Check if user is a beta tester using player ID (twitch-{id})
+        if (db.isBetaTester(user.id) && !userRoles.includes('tester')) {
           userRoles = [...userRoles, 'tester'];
           console.log('🧪 Beta tester detected - granting tester role');
         }
