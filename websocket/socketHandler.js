@@ -85,9 +85,7 @@ function getInitializationStatus() {
 // Helper function to check if WebSocket is ready
 function isWebSocketReady(eventName) {
   if (!io || !isInitialized) {
-    if (eventName) {
-      console.warn(`[WebSocket] ⚠️ Cannot emit ${eventName} - WebSocket not initialized`);
-    }
+    console.warn(`[WebSocket] ⚠️ Cannot emit ${eventName || 'event'} - WebSocket not initialized`);
     return false;
   }
   return true;
@@ -252,13 +250,13 @@ function emitSeasonalEvent(eventData) {
 
 // Get connected clients count
 function getConnectedCount() {
-  if (!io || !isInitialized) return 0;
+  if (!isWebSocketReady()) return 0;
   return io.engine.clientsCount;
 }
 
 // Get room participant count
 function getRoomCount(player, channel) {
-  if (!io || !isInitialized) return 0;
+  if (!isWebSocketReady()) return 0;
   const roomId = `${player}_${channel}`;
   const room = io.sockets.adapter.rooms.get(roomId);
   return room ? room.size : 0;

@@ -851,7 +851,7 @@ app.use('/api/seasons', seasonsRoutes);
 app.use('/api/operator', operatorRoutes);
 app.use('/api/leaderboards', leaderboardsRoutes);
 app.use('/api/tutorial', tutorialRoutes);
-console.log('✅ Mounted 25 route modules for modular endpoint handling (WebSocket ready)');
+console.log('✅ Route modules mounted and ready (WebSocket initialized)');
 // ==================== END ROUTE MODULES ====================
 
 // Serve static assets ONLY for authenticated routes
