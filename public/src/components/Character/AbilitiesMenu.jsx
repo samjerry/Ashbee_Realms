@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Zap, Lock, BookOpen, X, CheckCircle } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
-import { getRarityColor, getRarityTextClass, isMythicRarity } from '../../utils/rarityHelpers';
+import { getRarityTextClass } from '../../utils/rarityHelpers';
 
 const AbilitiesMenu = () => {
   const { player } = useGameStore();
