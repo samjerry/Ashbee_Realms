@@ -722,41 +722,14 @@ app.post('/api/game-state',
   }
 });
 
+// ==================== API ROUTES (Pre-WebSocket) ====================
+// Mount auth routes early (before WebSocket) since they don't emit events
+app.use('/api/auth', authRoutes);
+
 app.get('/api/me', (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
   res.json({ user: req.session.user });
 });
-
-// ==================== MOUNT ROUTE MODULES ====================
-// Modularized routes for better maintainability and organization
-app.use('/api/auth', authRoutes);
-app.use('/api/classes', classesRoutes);
-app.use('/api/abilities', abilitiesRoutes);
-app.use('/api/combat', combatRoutes);
-app.use('/api/bestiary', bestiaryRoutes);
-app.use('/api/quests', questsRoutes);
-app.use('/api/progression', progressionRoutes);
-app.use('/api/passives', passivesRoutes);
-app.use('/api/player', playerRoutes);
-app.use('/api/shop', shopRoutes);
-app.use('/api/items', itemsRoutes);
-app.use('/api/inventory', inventoryRoutes);
-app.use('/api/exploration', explorationRoutes);
-app.use('/api/npcs', npcsRoutes);
-app.use('/api/dialogue', dialogueRoutes);
-app.use('/api/achievements', achievementsRoutes);
-app.use('/api/dungeons', dungeonsRoutes);
-app.use('/api/factions', factionsRoutes);
-app.use('/api/status-effects', statusEffectsRoutes);
-app.use('/api/crafting', craftingRoutes);
-app.use('/api/enchanting', enchantingRoutes);
-app.use('/api/raids', raidsRoutes);
-app.use('/api/seasons', seasonsRoutes);
-app.use('/api/operator', operatorRoutes);
-app.use('/api/leaderboards', leaderboardsRoutes);
-app.use('/api/tutorial', tutorialRoutes);
-console.log('✅ Mounted 26 route modules for modular endpoint handling (100% complete)');
-// ==================== END ROUTE MODULES ====================
 
 // ==================== ROOT ROUTES ====================
 
@@ -833,6 +806,54 @@ app.get('/adventure', async (req, res) => {
   }
 });
 
+// ==================== START HTTP SERVER ====================
+const PORT = process.env.PORT || 3000;
+const HOST = '0.0.0.0'; // Listen on all interfaces for Docker/Railway
+const server = app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server running on ${HOST}:${PORT}`);
+  console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
+  if (process.env.NODE_ENV === 'production') {
+    console.log('✅ Serving React frontend from /public/dist');
+  }
+});
+
+// ==================== INITIALIZE WEBSOCKET ====================
+// CRITICAL: Initialize WebSocket BEFORE mounting route modules
+// This ensures all route handlers can successfully emit events
+const io = socketHandler.initializeWebSocket(server);
+console.log('🔌 WebSocket server initialized and ready for route handlers');
+
+// ==================== MOUNT ROUTE MODULES ====================
+// Modularized routes for better maintainability and organization
+// NOW MOUNTED AFTER WebSocket initialization to ensure emit functions work
+app.use('/api/classes', classesRoutes);
+app.use('/api/abilities', abilitiesRoutes);
+app.use('/api/combat', combatRoutes);
+app.use('/api/bestiary', bestiaryRoutes);
+app.use('/api/quests', questsRoutes);
+app.use('/api/progression', progressionRoutes);
+app.use('/api/passives', passivesRoutes);
+app.use('/api/player', playerRoutes);
+app.use('/api/shop', shopRoutes);
+app.use('/api/items', itemsRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/exploration', explorationRoutes);
+app.use('/api/npcs', npcsRoutes);
+app.use('/api/dialogue', dialogueRoutes);
+app.use('/api/achievements', achievementsRoutes);
+app.use('/api/dungeons', dungeonsRoutes);
+app.use('/api/factions', factionsRoutes);
+app.use('/api/status-effects', statusEffectsRoutes);
+app.use('/api/crafting', craftingRoutes);
+app.use('/api/enchanting', enchantingRoutes);
+app.use('/api/raids', raidsRoutes);
+app.use('/api/seasons', seasonsRoutes);
+app.use('/api/operator', operatorRoutes);
+app.use('/api/leaderboards', leaderboardsRoutes);
+app.use('/api/tutorial', tutorialRoutes);
+console.log('✅ Route modules mounted and ready (WebSocket initialized)');
+// ==================== END ROUTE MODULES ====================
+
 // Serve static assets ONLY for authenticated routes
 // This middleware only serves assets (JS/CSS) not HTML files
 if (process.env.NODE_ENV === 'production') {
@@ -858,20 +879,6 @@ if (process.env.NODE_ENV === 'production') {
     next();
   }, express.static(path.join(__dirname, 'public/node_modules')));
 }
-
-const PORT = process.env.PORT || 3000;
-const HOST = '0.0.0.0'; // Listen on all interfaces for Docker/Railway
-const server = app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server running on ${HOST}:${PORT}`);
-  console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
-  if (process.env.NODE_ENV === 'production') {
-    console.log('✅ Serving React frontend from /public/dist');
-  }
-});
-
-// Initialize WebSocket server
-const io = socketHandler.initializeWebSocket(server);
-console.log('🔌 WebSocket server initialized');
 
 // Global error handlers
 process.on('uncaughtException', (error) => {
