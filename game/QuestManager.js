@@ -431,6 +431,100 @@ class QuestManager {
       updates
     };
   }
+
+  /**
+   * Tag items in inventory when a quest is accepted
+   * @param {Object} character - Character object with inventory
+   * @param {string} questId - Quest ID
+   * @param {string} playerId - Player ID
+   * @returns {Object} Tagging result
+   */
+  tagItemsForQuest(character, questId, playerId) {
+    const quest = this.getQuest(questId);
+    if (!quest) {
+      return { success: false, error: 'Quest not found' };
+    }
+
+    const taggedItems = [];
+    let totalTagged = 0;
+
+    // Find all collect_item objectives with tag_item_for_quest flag
+    quest.objectives.forEach(objective => {
+      if (objective.type === 'collect_item' && objective.tag_item_for_quest) {
+        const itemId = objective.target;
+        const tagged = character.inventory.addQuestTag(itemId, questId, playerId);
+        if (tagged > 0) {
+          taggedItems.push({
+            itemId,
+            count: tagged
+          });
+          totalTagged += tagged;
+        }
+      }
+    });
+
+    return {
+      success: true,
+      taggedItems,
+      totalTagged
+    };
+  }
+
+  /**
+   * Remove quest tags when quest is completed, failed, or abandoned
+   * @param {Object} character - Character object with inventory
+   * @param {string} questId - Quest ID
+   * @returns {Object} Removal result
+   */
+  removeQuestTags(character, questId) {
+    const untagged = character.inventory.removeQuestTag(questId);
+    return {
+      success: true,
+      untagged
+    };
+  }
+
+  /**
+   * Check if items need to be tagged when picked up
+   * @param {Object} character - Character object
+   * @param {string} itemId - Item that was picked up
+   * @param {string} playerId - Player ID
+   * @returns {Object} Auto-tag result
+   */
+  autoTagItemOnPickup(character, itemId, playerId) {
+    const taggedQuests = [];
+    
+    // Check all active quests
+    if (character.activeQuests && Array.isArray(character.activeQuests)) {
+      character.activeQuests.forEach(questState => {
+        const quest = this.getQuest(questState.questId);
+        if (!quest) return;
+
+        // Check if this quest has collect_item objectives with tag_item_for_quest
+        quest.objectives.forEach(objective => {
+          if (objective.type === 'collect_item' && 
+              objective.tag_item_for_quest && 
+              objective.target === itemId) {
+            // Tag the item
+            const tagged = character.inventory.addQuestTag(itemId, questState.questId, playerId);
+            if (tagged > 0) {
+              taggedQuests.push({
+                questId: questState.questId,
+                questName: quest.name,
+                itemId,
+                count: tagged
+              });
+            }
+          }
+        });
+      });
+    }
+
+    return {
+      success: true,
+      taggedQuests
+    };
+  }
 }
 
 module.exports = QuestManager;

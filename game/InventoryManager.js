@@ -8,15 +8,54 @@ const { loadData } = require('../data/data_loader');
 class InventoryManager {
   /**
    * Create a new InventoryManager
-   * @param {Array<string>} items - Array of item IDs
+   * @param {Array<string|Object>} items - Array of item IDs or item instances
    * @param {number} maxCapacity - Maximum inventory slots (default 30)
    */
   constructor(items = [], maxCapacity = 30) {
-    this.items = Array.isArray(items) ? [...items] : [];
+    // Normalize items to support both old (string) and new (object) formats
+    this.items = Array.isArray(items) ? this._normalizeItems(items) : [];
     this.maxCapacity = maxCapacity;
     
     // Cache for item data
     this._itemCache = new Map();
+  }
+
+  /**
+   * Normalize items array to support both string IDs and item instances
+   * @param {Array<string|Object>} items - Raw items array
+   * @returns {Array<Object>} Normalized item instances
+   * @private
+   */
+  _normalizeItems(items) {
+    return items.map(item => {
+      if (typeof item === 'string') {
+        // Old format - convert to item instance
+        return this._createItemInstance(item);
+      } else if (typeof item === 'object' && item !== null) {
+        // New format - ensure quest_tags array exists
+        return {
+          ...item,
+          quest_tags: item.quest_tags || []
+        };
+      }
+      return this._createItemInstance('unknown_item');
+    });
+  }
+
+  /**
+   * Create an item instance from an item ID
+   * @param {string} itemId - Item ID
+   * @returns {Object} Item instance
+   * @private
+   */
+  _createItemInstance(itemId) {
+    const itemData = this._getItemData(itemId);
+    return {
+      id: itemId,
+      name: itemData?.name || itemId,
+      tags: itemData?.tags || [], // Global tags from item data
+      quest_tags: [] // Player-specific quest tags
+    };
   }
 
   /**
@@ -134,10 +173,10 @@ class InventoryManager {
       return { success: false, message: "Invalid item ID." };
     }
 
-    const item = this._getItemData(itemId);
+    const itemData = this._getItemData(itemId);
     
     // If item data not found, still allow adding (might be a quest item or special item)
-    const isStackable = item?.stackable || false;
+    const isStackable = itemData?.stackable || false;
 
     for (let i = 0; i < quantity; i++) {
       // Check capacity
@@ -149,12 +188,12 @@ class InventoryManager {
         };
       }
 
-      // For stackable items, just add to the array (stacking handled by count)
-      // For non-stackable, add individual entries
-      this.items.push(itemId);
+      // Create item instance with global tags from item data
+      const itemInstance = this._createItemInstance(itemId);
+      this.items.push(itemInstance);
     }
 
-    const itemName = item?.name || itemId;
+    const itemName = itemData?.name || itemId;
     const message = quantity > 1 
       ? `Added ${quantity}x ${itemName} to inventory.`
       : `Added ${itemName} to inventory.`;
@@ -196,14 +235,16 @@ class InventoryManager {
     // Remove the specified quantity
     let removed = 0;
     for (let i = this.items.length - 1; i >= 0 && removed < quantity; i--) {
-      if (this.items[i] === itemId) {
+      const item = this.items[i];
+      const currentItemId = typeof item === 'string' ? item : item.id;
+      if (currentItemId === itemId) {
         this.items.splice(i, 1);
         removed++;
       }
     }
 
-    const item = this._getItemData(itemId);
-    const itemName = item?.name || itemId;
+    const itemData = this._getItemData(itemId);
+    const itemName = itemData?.name || itemId;
     const message = quantity > 1
       ? `Removed ${quantity}x ${itemName} from inventory.`
       : `Removed ${itemName} from inventory.`;
@@ -221,7 +262,10 @@ class InventoryManager {
    * @returns {boolean}
    */
   hasItem(itemId) {
-    return this.items.includes(itemId);
+    return this.items.some(item => {
+      const currentItemId = typeof item === 'string' ? item : item.id;
+      return currentItemId === itemId;
+    });
   }
 
   /**
@@ -230,7 +274,10 @@ class InventoryManager {
    * @returns {number} Count of item in inventory
    */
   getItemCount(itemId) {
-    return this.items.filter(id => id === itemId).length;
+    return this.items.filter(item => {
+      const currentItemId = typeof item === 'string' ? item : item.id;
+      return currentItemId === itemId;
+    }).length;
   }
 
   /**
@@ -241,28 +288,37 @@ class InventoryManager {
     const itemMap = new Map();
 
     // Count items
-    for (const itemId of this.items) {
+    for (const item of this.items) {
+      const itemId = typeof item === 'string' ? item : item.id;
       if (itemMap.has(itemId)) {
-        itemMap.set(itemId, itemMap.get(itemId) + 1);
+        const existing = itemMap.get(itemId);
+        existing.count++;
+        // Merge quest tags from all instances
+        if (typeof item === 'object' && item.quest_tags) {
+          item.quest_tags.forEach(tag => {
+            if (!existing.quest_tags.some(t => t.quest_id === tag.quest_id)) {
+              existing.quest_tags.push(tag);
+            }
+          });
+        }
       } else {
-        itemMap.set(itemId, 1);
+        const itemData = this._getItemData(itemId);
+        itemMap.set(itemId, {
+          id: itemId,
+          name: itemData?.name || itemId,
+          count: 1,
+          rarity: itemData?.rarity || 'common',
+          type: itemData?.slot ? 'equipment' : (itemData?.usage ? 'consumable' : 'misc'),
+          value: itemData?.value || 0,
+          stackable: itemData?.stackable || false,
+          tags: itemData?.tags || [], // Global tags
+          quest_tags: typeof item === 'object' && item.quest_tags ? [...item.quest_tags] : []
+        });
       }
     }
 
     // Build result array
-    const result = [];
-    for (const [itemId, count] of itemMap.entries()) {
-      const itemData = this._getItemData(itemId);
-      result.push({
-        id: itemId,
-        name: itemData?.name || itemId,
-        count: count,
-        rarity: itemData?.rarity || 'common',
-        type: itemData?.slot ? 'equipment' : (itemData?.usage ? 'consumable' : 'misc'),
-        value: itemData?.value || 0,
-        stackable: itemData?.stackable || false
-      });
-    }
+    const result = Array.from(itemMap.values());
 
     // Sort by rarity, then name
     const rarityOrder = { legendary: 0, epic: 1, rare: 2, uncommon: 3, common: 4 };
@@ -324,10 +380,11 @@ class InventoryManager {
   getTotalValue() {
     let total = 0;
 
-    for (const itemId of this.items) {
-      const item = this._getItemData(itemId);
-      if (item && item.value) {
-        total += item.value;
+    for (const item of this.items) {
+      const itemId = typeof item === 'string' ? item : item.id;
+      const itemData = this._getItemData(itemId);
+      if (itemData && itemData.value) {
+        total += itemData.value;
       }
     }
 
@@ -382,11 +439,207 @@ class InventoryManager {
     const items = this.getItemsWithCounts();
     this.items = [];
     
-    for (const item of items) {
-      for (let i = 0; i < item.count; i++) {
-        this.items.push(item.id);
+    for (const itemInfo of items) {
+      for (let i = 0; i < itemInfo.count; i++) {
+        // Recreate instances preserving quest tags
+        const instance = this._createItemInstance(itemInfo.id);
+        if (itemInfo.quest_tags && itemInfo.quest_tags.length > 0) {
+          instance.quest_tags = [...itemInfo.quest_tags];
+        }
+        this.items.push(instance);
       }
     }
+  }
+
+  /**
+   * Add a quest tag to all instances of an item
+   * @param {string} itemId - Item ID to tag
+   * @param {string} questId - Quest ID
+   * @param {string} playerId - Player ID
+   * @returns {number} Number of items tagged
+   */
+  addQuestTag(itemId, questId, playerId) {
+    let taggedCount = 0;
+    const timestamp = Date.now();
+
+    for (const item of this.items) {
+      const currentItemId = typeof item === 'string' ? item : item.id;
+      if (currentItemId === itemId && typeof item === 'object') {
+        // Check if quest tag already exists
+        const hasTag = item.quest_tags.some(tag => 
+          tag.quest_id === questId && tag.player_id === playerId
+        );
+        
+        if (!hasTag) {
+          item.quest_tags.push({
+            quest_id: questId,
+            player_id: playerId,
+            tagged_at: timestamp
+          });
+          taggedCount++;
+        }
+      }
+    }
+
+    return taggedCount;
+  }
+
+  /**
+   * Remove quest tags from all items for a specific quest
+   * @param {string} questId - Quest ID
+   * @returns {number} Number of items untagged
+   */
+  removeQuestTag(questId) {
+    let untaggedCount = 0;
+
+    for (const item of this.items) {
+      if (typeof item === 'object' && item.quest_tags) {
+        const initialLength = item.quest_tags.length;
+        item.quest_tags = item.quest_tags.filter(tag => tag.quest_id !== questId);
+        if (item.quest_tags.length < initialLength) {
+          untaggedCount++;
+        }
+      }
+    }
+
+    return untaggedCount;
+  }
+
+  /**
+   * Get all items tagged for a specific quest
+   * @param {string} questId - Quest ID
+   * @returns {Array<Object>} Items tagged for the quest
+   */
+  getItemsByQuestTag(questId) {
+    const itemMap = new Map();
+
+    for (const item of this.items) {
+      if (typeof item === 'object' && item.quest_tags) {
+        const hasQuestTag = item.quest_tags.some(tag => tag.quest_id === questId);
+        if (hasQuestTag) {
+          if (itemMap.has(item.id)) {
+            itemMap.get(item.id).count++;
+          } else {
+            const itemData = this._getItemData(item.id);
+            itemMap.set(item.id, {
+              id: item.id,
+              name: itemData?.name || item.id,
+              count: 1,
+              tags: item.tags || [],
+              quest_tags: item.quest_tags.filter(tag => tag.quest_id === questId)
+            });
+          }
+        }
+      }
+    }
+
+    return Array.from(itemMap.values());
+  }
+
+  /**
+   * Get all items with a specific global tag
+   * @param {string} tag - Global tag to search for
+   * @returns {Array<Object>} Items with the tag
+   */
+  getItemsByTag(tag) {
+    const itemMap = new Map();
+
+    for (const item of this.items) {
+      const itemId = typeof item === 'string' ? item : item.id;
+      const tags = typeof item === 'object' ? item.tags : [];
+      
+      if (tags.includes(tag)) {
+        if (itemMap.has(itemId)) {
+          itemMap.get(itemId).count++;
+        } else {
+          const itemData = this._getItemData(itemId);
+          itemMap.set(itemId, {
+            id: itemId,
+            name: itemData?.name || itemId,
+            count: 1,
+            tags: tags
+          });
+        }
+      }
+    }
+
+    return Array.from(itemMap.values());
+  }
+
+  /**
+   * Clear all quest tags for a specific quest
+   * @param {string} questId - Quest ID
+   * @returns {number} Number of items affected
+   */
+  clearQuestTags(questId) {
+    return this.removeQuestTag(questId);
+  }
+
+  /**
+   * Get all quest items (items with any quest tags)
+   * @returns {Array<Object>} Quest items
+   */
+  getQuestItems() {
+    const itemMap = new Map();
+
+    for (const item of this.items) {
+      if (typeof item === 'object' && item.quest_tags && item.quest_tags.length > 0) {
+        if (itemMap.has(item.id)) {
+          itemMap.get(item.id).count++;
+          // Merge unique quest tags
+          item.quest_tags.forEach(tag => {
+            const existing = itemMap.get(item.id).quest_tags;
+            if (!existing.some(t => t.quest_id === tag.quest_id && t.player_id === tag.player_id)) {
+              existing.push(tag);
+            }
+          });
+        } else {
+          const itemData = this._getItemData(item.id);
+          itemMap.set(item.id, {
+            id: item.id,
+            name: itemData?.name || item.id,
+            count: 1,
+            tags: item.tags || [],
+            quest_tags: [...item.quest_tags]
+          });
+        }
+      }
+    }
+
+    return Array.from(itemMap.values());
+  }
+
+  /**
+   * Check if an item is tagged for any quest
+   * @param {string} itemId - Item ID
+   * @returns {boolean} True if tagged for any quest
+   */
+  isQuestItem(itemId) {
+    return this.items.some(item => {
+      const currentItemId = typeof item === 'string' ? item : item.id;
+      return currentItemId === itemId && 
+             typeof item === 'object' && 
+             item.quest_tags && 
+             item.quest_tags.length > 0;
+    });
+  }
+
+  /**
+   * Get all quests that need a specific item
+   * @param {string} itemId - Item ID
+   * @returns {Array<string>} Quest IDs
+   */
+  getQuestsForItem(itemId) {
+    const questIds = new Set();
+
+    for (const item of this.items) {
+      const currentItemId = typeof item === 'string' ? item : item.id;
+      if (currentItemId === itemId && typeof item === 'object' && item.quest_tags) {
+        item.quest_tags.forEach(tag => questIds.add(tag.quest_id));
+      }
+    }
+
+    return Array.from(questIds);
   }
 
   /**
@@ -399,10 +652,10 @@ class InventoryManager {
 
   /**
    * Import inventory data from database
-   * @param {Array<string>} items - Array of item IDs
+   * @param {Array<string|Object>} items - Array of item IDs or item instances
    */
   fromArray(items) {
-    this.items = Array.isArray(items) ? [...items] : [];
+    this.items = Array.isArray(items) ? this._normalizeItems(items) : [];
     this._itemCache.clear(); // Clear cache on import
   }
 

@@ -87,6 +87,7 @@
             "type": "collect_item",
             "target": "goblin_war_plans",
             "count": 1,
+            "tag_item_for_quest": true,
             "description": "Retrieve the Goblin War Plans"
           }
         ],
@@ -119,6 +120,7 @@
             "type": "collect_item",
             "target": "cursed_artifact_fragment",
             "count": 5,
+            "tag_item_for_quest": true,
             "description": "Collect 5 Cursed Artifact Fragments"
           },
           {
