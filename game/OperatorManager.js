@@ -1074,6 +1074,280 @@ class OperatorManager {
       }
     };
   }
+
+  /**
+   * Execute operator command
+   * Central dispatcher method that routes commands to appropriate handlers
+   * @param {string} command - Command name
+   * @param {object} params - Command parameters
+   * @param {string} channelName - Channel name
+   * @param {string} operatorName - Name of operator executing command
+   * @param {number} permissionLevel - Operator's permission level
+   * @returns {Promise<object>} Result object with success/error properties
+   */
+  async executeCommand(command, params, channelName, operatorName, permissionLevel) {
+    try {
+      // Validate permission level
+      if (!this.canExecuteCommand(command, permissionLevel)) {
+        return {
+          success: false,
+          error: 'Insufficient permissions for this command'
+        };
+      }
+
+      // Get database instance
+      const db = require('../db');
+
+      // Route command to appropriate handler
+      let result;
+      switch (command) {
+        // MODERATOR level commands
+        case 'giveItem':
+          result = await this.giveItem(
+            params.playerId,
+            channelName,
+            params.itemId,
+            params.quantity || 1,
+            db
+          );
+          break;
+
+        case 'giveGold':
+          result = await this.giveGold(
+            params.playerId,
+            channelName,
+            params.amount,
+            db
+          );
+          break;
+
+        case 'giveExp':
+          result = await this.giveExp(
+            params.playerId,
+            channelName,
+            params.amount,
+            db
+          );
+          break;
+
+        case 'healPlayer':
+          result = await this.healPlayer(
+            params.playerId,
+            channelName,
+            db
+          );
+          break;
+
+        case 'changeWeather':
+          result = await this.changeWeather(
+            channelName,
+            params.weather,
+            db
+          );
+          break;
+
+        case 'changeTime':
+          result = await this.changeTime(
+            channelName,
+            params.time,
+            db
+          );
+          break;
+
+        case 'spawnEncounter':
+          result = await this.spawnEncounter(
+            params.playerId,
+            channelName,
+            params.encounterId,
+            db
+          );
+          break;
+
+        case 'teleportPlayer':
+          result = await this.teleportPlayer(
+            params.playerId,
+            channelName,
+            params.location,
+            db
+          );
+          break;
+
+        // STREAMER level commands
+        case 'removeItem':
+          result = await this.removeItem(
+            params.playerId,
+            channelName,
+            params.itemId,
+            params.quantity || 1,
+            db
+          );
+          break;
+
+        case 'removeGold':
+          result = await this.removeGold(
+            params.playerId,
+            channelName,
+            params.amount,
+            db
+          );
+          break;
+
+        case 'removeLevel':
+          result = await this.removeLevel(
+            params.playerId,
+            channelName,
+            params.levels,
+            db
+          );
+          break;
+
+        case 'changeSeason':
+          result = await this.changeSeason(
+            channelName,
+            params.season,
+            db
+          );
+          break;
+
+        case 'setPlayerLevel':
+          result = await this.setPlayerLevel(
+            params.playerId,
+            channelName,
+            params.level,
+            db
+          );
+          break;
+
+        case 'clearInventory':
+          result = await this.clearInventory(
+            params.playerId,
+            channelName,
+            db
+          );
+          break;
+
+        case 'resetQuest':
+          result = await this.resetQuest(
+            params.playerId,
+            channelName,
+            params.questId,
+            db
+          );
+          break;
+
+        case 'forceEvent':
+          result = await this.forceEvent(
+            channelName,
+            params.eventId,
+            db
+          );
+          break;
+
+        case 'setPlayerStats':
+          result = await this.setPlayerStats(
+            params.playerId,
+            channelName,
+            params.stats,
+            db
+          );
+          break;
+
+        case 'giveAllItems':
+          result = await this.giveAllItems(
+            params.playerId,
+            channelName,
+            db
+          );
+          break;
+
+        case 'unlockAchievement':
+          result = await this.unlockAchievement(
+            params.playerId,
+            channelName,
+            params.achievementId,
+            db
+          );
+          break;
+
+        // CREATOR level commands
+        case 'deleteCharacter':
+          if (params.confirm !== 'DELETE') {
+            return {
+              success: false,
+              error: 'Confirmation required: type DELETE to confirm'
+            };
+          }
+          result = await this.deleteCharacter(
+            params.playerId,
+            channelName,
+            db
+          );
+          break;
+
+        case 'wipeProgress':
+          if (params.confirm !== 'WIPE') {
+            return {
+              success: false,
+              error: 'Confirmation required: type WIPE to confirm'
+            };
+          }
+          result = await this.wipeProgress(
+            params.playerId,
+            channelName,
+            db
+          );
+          break;
+
+        case 'grantOperator':
+          result = await this.grantOperator(
+            params.playerId,
+            channelName,
+            params.level,
+            db
+          );
+          break;
+
+        case 'revokeOperator':
+          result = await this.revokeOperator(
+            params.playerId,
+            channelName,
+            db
+          );
+          break;
+
+        case 'systemBroadcast':
+          result = await this.systemBroadcast(
+            channelName,
+            params.message,
+            db
+          );
+          break;
+
+        case 'maintenanceMode':
+          result = await this.maintenanceMode(
+            channelName,
+            params.enabled === 'true' || params.enabled === true,
+            db
+          );
+          break;
+
+        default:
+          return {
+            success: false,
+            error: `Unknown command: ${command}`
+          };
+      }
+
+      return result;
+
+    } catch (error) {
+      console.error(`[OperatorManager] Error executing command ${command}:`, error);
+      return {
+        success: false,
+        error: error.message || 'An error occurred while executing the command'
+      };
+    }
+  }
 }
 
 module.exports = OperatorManager;
