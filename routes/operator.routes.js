@@ -5,6 +5,7 @@ const OperatorManager = require('../game/OperatorManager');
 const validation = require('../middleware/validation');
 const security = require('../middleware/security');
 const socketHandler = require('../websocket/socketHandler');
+const data = require('../data/data');
 
 const operatorMgr = new OperatorManager();
 

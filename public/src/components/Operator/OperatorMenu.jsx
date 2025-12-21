@@ -140,7 +140,6 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
   const loadCommands = async () => {
     try {
       const response = await axios.get(`/api/operator/commands?channel=${channelName}`);
-      console.log('Loaded commands:', response.data); // Debug log
       setCommands(response.data.commands);
     } catch (error) {
       console.error('Failed to load commands:', error);
@@ -353,7 +352,6 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
       }
     });
 
-    console.log('Grouped commands:', grouped); // Debug log
     return grouped;
   };
 
@@ -361,7 +359,6 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
   const filterCommandsByCategory = (commandsList) => {
     if (selectedCategory === 'ALL') return commandsList;
     const filtered = commandsList.filter(cmd => categorizeCommand(cmd.name, cmd.data) === selectedCategory);
-    console.log(`Filtered ${commandsList.length} commands to ${filtered.length} for category ${selectedCategory}`); // Debug log
     return filtered;
   };
 
@@ -903,7 +900,15 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                                       )}
                                       {ach.rewards && (
                                         <div className="text-xs text-blue-400 mt-1">
-                                          Rewards: {JSON.stringify(ach.rewards)}
+                                          Rewards: {
+                                            Object.entries(ach.rewards).map(([key, value]) => {
+                                              if (key === 'title') return `Title: ${value}`;
+                                              if (key === 'gold') return `${value} Gold`;
+                                              if (key === 'xp') return `${value} XP`;
+                                              if (key === 'items') return `Items: ${Array.isArray(value) ? value.join(', ') : value}`;
+                                              return `${key}: ${value}`;
+                                            }).join(' • ')
+                                          }
                                         </div>
                                       )}
                                     </button>
