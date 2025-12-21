@@ -16,6 +16,7 @@ class MapKnowledgeManager {
    * @returns {Object} Initial map knowledge state
    */
   static initializeMapKnowledge() {
+    const now = new Date().toISOString();
     return {
       discovered_regions: ['town_square'], // Town square is always known
       explored_sublocations: {
@@ -24,10 +25,10 @@ class MapKnowledgeManager {
       visited_coordinates: [[5, 5]], // Town square at center (legacy)
       discovered_coordinates: [[5, 5]], // Grid coordinates discovered
       discovery_timestamp: {
-        'town_square': new Date().toISOString(),
-        '5,5': new Date().toISOString()
+        'town_square': now,
+        '5,5': now
       },
-      exploration_percentage: 5.0 // 1 out of 20 biomes = 5%
+      exploration_percentage: 0 // Will be calculated when needed
     };
   }
 
