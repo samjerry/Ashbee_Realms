@@ -19,13 +19,15 @@ const ItemsMenu = ({ state, onUseItem, onBack, inventory, disabled }) => {
       consumables.forEach(item => {
         if (itemMap.has(item.id)) {
           const existing = itemMap.get(item.id);
-          existing.quantity += 1;
+          // If item has quantity property, use it; otherwise count as 1
+          const itemQty = item.quantity || 1;
+          existing.quantity += itemQty;
         } else {
           itemMap.set(item.id, {
             id: item.id,
             name: item.name || item.id,
             description: item.description || item.effect || 'Consumable item',
-            quantity: 1,
+            quantity: item.quantity || 1,
             icon: getItemIcon(item)
           });
         }

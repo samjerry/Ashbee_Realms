@@ -559,6 +559,7 @@ const useGameStore = create((set, get) => ({
       const currentTimer = get().statusNotificationTimer;
       if (currentTimer) {
         clearTimeout(currentTimer);
+        set({ statusNotificationTimer: null });
       }
       
       // Set new notification

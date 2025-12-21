@@ -158,6 +158,16 @@ class Character {
   }
 
   /**
+   * Ensure mana is initialized (for backwards compatibility with old characters)
+   * @private
+   */
+  _ensureManaInitialized() {
+    if (this.mana === undefined || this.maxMana === undefined) {
+      this._initializeMana();
+    }
+  }
+
+  /**
    * Getter for current_hp (alias for hp for Combat compatibility)
    */
   get current_hp() {
@@ -489,9 +499,7 @@ class Character {
    * @returns {Object} Result { success, message }
    */
   consumeMana(amount) {
-    if (this.mana === undefined) {
-      this._initializeMana();
-    }
+    this._ensureManaInitialized();
     
     if (this.mana < amount) {
       return {
@@ -514,9 +522,7 @@ class Character {
    * @returns {number} Actual amount restored
    */
   restoreMana(amount) {
-    if (this.mana === undefined || this.maxMana === undefined) {
-      this._initializeMana();
-    }
+    this._ensureManaInitialized();
     
     const oldMana = this.mana;
     this.mana = Math.min(this.mana + amount, this.maxMana);
