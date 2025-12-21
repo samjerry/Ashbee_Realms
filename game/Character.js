@@ -656,9 +656,11 @@ class Character {
     if (classData.starting_equipment) {
       if (classData.starting_equipment.main_hand) {
         equipped.main_hand = classData.starting_equipment.main_hand;
+        startingInventory.push(classData.starting_equipment.main_hand); // Add to inventory
       }
       if (classData.starting_equipment.armor) {
         equipped.armor = classData.starting_equipment.armor;
+        startingInventory.push(classData.starting_equipment.armor); // Add to inventory
       }
     }
 

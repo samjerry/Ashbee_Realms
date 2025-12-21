@@ -28,7 +28,20 @@ const CharacterSheet = () => {
   ];
   
   const equipment = player.equipment || {};
-  const slots = ['weapon', 'armor', 'helmet', 'accessory'];
+  const slots = [
+    { key: 'main_hand', label: 'Main Hand' },
+    { key: 'off_hand', label: 'Off Hand' },
+    { key: 'armor', label: 'Armor' },
+    { key: 'helmet', label: 'Helmet' },
+    { key: 'legs', label: 'Legs' },
+    { key: 'boots', label: 'Boots' },
+    { key: 'hands', label: 'Gloves' },
+    { key: 'cape', label: 'Cape' },
+    { key: 'amulet', label: 'Amulet' },
+    { key: 'ring1', label: 'Ring 1' },
+    { key: 'ring2', label: 'Ring 2' },
+    { key: 'belt', label: 'Belt' }
+  ];
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -94,12 +107,12 @@ const CharacterSheet = () => {
       {/* Equipment */}
       <div className="card p-4 sm:p-6">
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Equipment</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
           {slots.map((slot) => {
-            const item = equipment[slot];
+            const item = equipment[slot.key];
             return (
-              <div key={slot} className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700">
-                <p className="text-xs sm:text-sm text-gray-400 mb-2 capitalize">{slot}</p>
+              <div key={slot.key} className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700">
+                <p className="text-xs sm:text-sm text-gray-400 mb-2">{slot.label}</p>
                 {item ? (
                   <div>
                     <p className={`font-bold text-sm sm:text-base ${getRarityTextClass(item.rarity)}`}>{item.name}</p>
