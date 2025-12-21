@@ -103,9 +103,10 @@ class CharacterInitializer {
       return {
         max_hp: 100,
         strength: 1,
-        defense: 1,
-        magic: 1,
-        agility: 1
+        dexterity: 1,
+        constitution: 1,
+        intelligence: 1,
+        wisdom: 1
       };
     }
     
@@ -124,9 +125,10 @@ class CharacterInitializer {
       return {
         hp_per_level: 10,
         strength_per_level: 1,
-        defense_per_level: 1,
-        magic_per_level: 1,
-        agility_per_level: 1
+        dexterity_per_level: 1,
+        constitution_per_level: 1,
+        intelligence_per_level: 1,
+        wisdom_per_level: 1
       };
     }
     
@@ -203,9 +205,10 @@ class CharacterInitializer {
       is_player: true,
       base_stats: {
         strength: startingStats.strength,
-        defense: startingStats.defense,
-        magic: startingStats.magic,
-        agility: startingStats.agility
+        dexterity: startingStats.dexterity,
+        constitution: startingStats.constitution,
+        intelligence: startingStats.intelligence,
+        wisdom: startingStats.wisdom
       }
     };
   }
@@ -234,9 +237,10 @@ class CharacterInitializer {
         level,
         hp: Math.floor(startingStats.max_hp + (growth.hp_per_level || 10) * levelDiff),
         strength: Math.floor(startingStats.strength + (growth.strength_per_level || 0) * levelDiff),
-        defense: Math.floor(startingStats.defense + (growth.defense_per_level || 0) * levelDiff),
-        magic: Math.floor(startingStats.magic + (growth.magic_per_level || 0) * levelDiff),
-        agility: Math.floor(startingStats.agility + (growth.agility_per_level || 0) * levelDiff)
+        dexterity: Math.floor(startingStats.dexterity + (growth.dexterity_per_level || 0) * levelDiff),
+        constitution: Math.floor(startingStats.constitution + (growth.constitution_per_level || 0) * levelDiff),
+        intelligence: Math.floor(startingStats.intelligence + (growth.intelligence_per_level || 0) * levelDiff),
+        wisdom: Math.floor(startingStats.wisdom + (growth.wisdom_per_level || 0) * levelDiff)
       });
     }
     
@@ -289,16 +293,18 @@ class CharacterInitializer {
     const strengths = [];
     
     if (startingStats.max_hp > 100) strengths.push("High HP");
-    if (startingStats.strength >= 5) strengths.push("High Strength");
-    if (startingStats.defense >= 4) strengths.push("High Defense");
-    if (startingStats.magic >= 5) strengths.push("High Magic");
-    if (startingStats.agility >= 5) strengths.push("High Agility");
+    if (startingStats.strength >= 7) strengths.push("High Strength");
+    if (startingStats.dexterity >= 7) strengths.push("High Dexterity");
+    if (startingStats.constitution >= 7) strengths.push("High Constitution");
+    if (startingStats.intelligence >= 7) strengths.push("High Intelligence");
+    if (startingStats.wisdom >= 7) strengths.push("High Wisdom");
     
-    if (growth.hp_per_level >= 10) strengths.push("Great HP Growth");
+    if (growth.hp_per_level >= 9) strengths.push("Great HP Growth");
     if (growth.strength_per_level >= 1.5) strengths.push("Great STR Growth");
-    if (growth.defense_per_level >= 1.0) strengths.push("Great DEF Growth");
-    if (growth.magic_per_level >= 1.5) strengths.push("Great MAG Growth");
-    if (growth.agility_per_level >= 1.5) strengths.push("Great AGI Growth");
+    if (growth.dexterity_per_level >= 1.5) strengths.push("Great DEX Growth");
+    if (growth.constitution_per_level >= 1.5) strengths.push("Great CON Growth");
+    if (growth.intelligence_per_level >= 1.5) strengths.push("Great INT Growth");
+    if (growth.wisdom_per_level >= 1.5) strengths.push("Great WIS Growth");
     
     return strengths;
   }

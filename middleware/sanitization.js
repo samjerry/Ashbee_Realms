@@ -298,7 +298,10 @@ function sanitizePlayerStats(stats) {
   }
 
   const validStats = [
-    'attack', 'defense', 'magic', 'agility', 'strength',
+    // New 5-stat system
+    'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom',
+    // Derived/legacy stats
+    'attack', 'defense', 'magic', 'agility',
     'hp', 'maxHp', 'max_hp', 'mana', 'maxMana', 'max_mana',
     'critChance', 'dodgeChance', 'blockChance'
   ];
