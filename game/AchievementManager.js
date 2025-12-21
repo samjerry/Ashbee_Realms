@@ -243,6 +243,11 @@ class AchievementManager {
         required = criteria.count === 'all' ? 10 : criteria.count; // Assuming 10 mysteries
         break;
         
+      case 'regions_discovered':
+        current = character.mapKnowledge?.discovered_regions?.length || 0;
+        required = criteria.count;
+        break;
+        
       case 'all_factions_exalted':
         const exaltedFactions = Object.values(character.reputation || {}).filter(rep => rep >= 21000).length;
         current = exaltedFactions;
@@ -311,6 +316,7 @@ class AchievementManager {
       'damage_dealt': ['single_hit_damage'],
       'survival': ['survive_lethal'],
       'location_change': ['locations_visited', 'all_biomes_visited'],
+      'region_discovered': ['regions_discovered'],
       'quest_complete': ['quests_completed', 'all_main_quests'],
       'item_acquired': ['legendary_items'],
       'gold_gained': ['gold_accumulated'],
