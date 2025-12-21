@@ -158,6 +158,27 @@ class Character {
   }
 
   /**
+   * Getter for current_hp (alias for hp for Combat compatibility)
+   */
+  get current_hp() {
+    return this.hp;
+  }
+
+  /**
+   * Setter for current_hp (alias for hp for Combat compatibility)
+   */
+  set current_hp(value) {
+    this.hp = value;
+  }
+
+  /**
+   * Getter for max_hp (alias for maxHp for Combat compatibility)
+   */
+  get max_hp() {
+    return this.maxHp;
+  }
+
+  /**
    * Calculate base stats from class and level
    * @returns {Object} Base stats object
    */
@@ -779,6 +800,15 @@ class Character {
     };
 
     return new Character(characterData);
+  }
+
+  /**
+   * Create Character instance from database object
+   * @param {Object} data - Character data from database
+   * @returns {Character} Character instance
+   */
+  static fromObject(data) {
+    return new Character(data);
   }
 }
 
