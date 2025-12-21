@@ -100,6 +100,9 @@ class Character {
     this.bestiary = data.bestiary || {};
     this.bestiaryUnlocked = data.bestiary_unlocked || false;
     
+    // Map knowledge tracking (fog of war system)
+    this.mapKnowledge = data.map_knowledge || null;
+    
     // Playtime tracking
     this.playtime = data.playtime || 0;
     
@@ -507,7 +510,8 @@ class Character {
       bestiary: this.bestiary,
       bestiary_unlocked: this.bestiaryUnlocked,
       equipped_abilities: this.equipped_abilities,
-      ability_cooldowns: this.ability_cooldowns
+      ability_cooldowns: this.ability_cooldowns,
+      map_knowledge: this.mapKnowledge
     };
   }
 
@@ -648,6 +652,11 @@ class Character {
       startingInventory.push(...classStartingItems[classType]);
     }
 
+    // Initialize map knowledge with town_square discovered
+    const MapKnowledgeManager = require('./MapKnowledgeManager');
+    const mapManager = new MapKnowledgeManager();
+    const initialMapKnowledge = mapManager.initializeMapKnowledge();
+
     const characterData = {
       name: playerName,
       type: classType,
@@ -664,7 +673,8 @@ class Character {
       combat: null,
       skill_cd: 0,
       step: 0,
-      pending: null
+      pending: null,
+      map_knowledge: initialMapKnowledge
     };
 
     return new Character(characterData);

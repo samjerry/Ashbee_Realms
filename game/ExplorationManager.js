@@ -6,6 +6,7 @@
 
 const { loadData } = require('../data/data_loader');
 const TimeEffectsCalculator = require('./TimeEffectsCalculator');
+const MapKnowledgeManager = require('./MapKnowledgeManager');
 
 class ExplorationManager {
   constructor() {
@@ -14,6 +15,7 @@ class ExplorationManager {
     this.events = loadData('events')?.events || {};
     this.monsters = loadData('monsters')?.monsters || {};
     this.timeEffects = new TimeEffectsCalculator();
+    this.mapKnowledge = new MapKnowledgeManager();
   }
 
   /**
@@ -506,6 +508,66 @@ class ExplorationManager {
       movesCompleted: travelState.movesCompleted,
       movesTotal: travelState.movesTotal,
       movesRemaining: travelState.movesTotal - travelState.movesCompleted
+    };
+  }
+
+  /**
+   * Update map knowledge when a character arrives at a new location
+   * @param {Object} character - Character instance
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} coordinates - Grid coordinates [x, y] (optional)
+   * @returns {Object} Discovery result with achievements
+   */
+  updateMapKnowledge(character, biomeId, coordinates = null) {
+    // Initialize map knowledge if not present
+    if (!character.mapKnowledge) {
+      character.mapKnowledge = this.mapKnowledge.initializeMapKnowledge();
+    }
+
+    // Discover the region
+    const discovery = this.mapKnowledge.discoverRegion(
+      character.mapKnowledge,
+      biomeId,
+      coordinates
+    );
+
+    // Update character's map knowledge
+    character.mapKnowledge = discovery.mapKnowledge;
+
+    // Check for achievements
+    const achievements = this.mapKnowledge.checkDiscoveryAchievements(character.mapKnowledge);
+
+    return {
+      isNewDiscovery: discovery.isNew,
+      region: discovery.region,
+      achievements: achievements,
+      stats: this.mapKnowledge.getDiscoveryStats(character.mapKnowledge)
+    };
+  }
+
+  /**
+   * Explore a sublocation within a region
+   * @param {Object} character - Character instance
+   * @param {string} regionId - Region identifier
+   * @param {string} sublocationId - Sublocation identifier
+   * @returns {Object} Exploration result
+   */
+  exploreSublocation(character, regionId, sublocationId) {
+    // Initialize map knowledge if not present
+    if (!character.mapKnowledge) {
+      character.mapKnowledge = this.mapKnowledge.initializeMapKnowledge();
+    }
+
+    const exploration = this.mapKnowledge.exploreSublocation(
+      character.mapKnowledge,
+      regionId,
+      sublocationId
+    );
+
+    character.mapKnowledge = exploration.mapKnowledge;
+
+    return {
+      isNewExploration: exploration.isNew
     };
   }
 }
