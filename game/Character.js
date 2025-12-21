@@ -31,6 +31,11 @@ class Character {
     this.xpToNext = data.xp_to_next || 10;
     this.hp = data.hp;
     this.maxHp = data.max_hp;
+    
+    // Mana system - initialize from data or calculate default
+    this.mana = data.mana;
+    this.maxMana = data.max_mana;
+    
     this.gold = data.gold || 0;
     this.location = data.location || "Town Square";
     this.inCombat = data.in_combat || false;
@@ -121,6 +126,11 @@ class Character {
     // Load class data
     this.classData = null;
     this._loadClassData();
+    
+    // Initialize mana if not set (for existing characters)
+    if (this.mana === undefined || this.maxMana === undefined) {
+      this._initializeMana();
+    }
   }
 
   /**
@@ -132,6 +142,19 @@ class Character {
     if (classes && classes.classes && classes.classes[this.classType]) {
       this.classData = classes.classes[this.classType];
     }
+  }
+
+  /**
+   * Initialize mana based on intelligence and class
+   * @private
+   */
+  _initializeMana() {
+    const baseStats = this.getBaseStats();
+    const intelligence = baseStats.intelligence || 10;
+    
+    // Base mana calculation: 50 + (intelligence * 5)
+    this.maxMana = 50 + (intelligence * 5);
+    this.mana = this.maxMana;
   }
 
   /**
@@ -440,6 +463,46 @@ class Character {
   }
 
   /**
+   * Consume mana for abilities
+   * @param {number} amount - Amount of mana to consume
+   * @returns {Object} Result { success, message }
+   */
+  consumeMana(amount) {
+    if (this.mana === undefined) {
+      this._initializeMana();
+    }
+    
+    if (this.mana < amount) {
+      return {
+        success: false,
+        message: `Not enough mana. Need ${amount}, have ${this.mana}`
+      };
+    }
+    
+    this.mana -= amount;
+    return {
+      success: true,
+      consumed: amount,
+      remaining: this.mana
+    };
+  }
+
+  /**
+   * Restore mana
+   * @param {number} amount - Amount of mana to restore
+   * @returns {number} Actual amount restored
+   */
+  restoreMana(amount) {
+    if (this.mana === undefined || this.maxMana === undefined) {
+      this._initializeMana();
+    }
+    
+    const oldMana = this.mana;
+    this.mana = Math.min(this.mana + amount, this.maxMana);
+    return this.mana - oldMana;
+  }
+
+  /**
    * Take damage
    * @param {number} amount - Amount of damage
    * @returns {Object} Damage result
@@ -503,6 +566,8 @@ class Character {
       xp_to_next: this.xpToNext,
       hp: this.hp,
       max_hp: this.maxHp,
+      mana: this.mana,
+      max_mana: this.maxMana,
       gold: this.gold,
       location: this.location,
       inventory: this.inventory.toArray(),
@@ -565,6 +630,8 @@ class Character {
       // Health & Resources
       hp: this.hp,
       maxHp: this.maxHp,
+      mana: this.mana !== undefined ? this.mana : 0,
+      maxMana: this.maxMana !== undefined ? this.maxMana : 0,
       gold: this.gold,
       
       // Combat Stats (from getFinalStats())
@@ -685,6 +752,10 @@ class Character {
     const MapKnowledgeManager = require('./MapKnowledgeManager');
     const initialMapKnowledge = MapKnowledgeManager.initializeMapKnowledge();
 
+    // Calculate starting mana based on intelligence
+    const startingIntelligence = startingStats.intelligence || 10;
+    const startingMaxMana = 50 + (startingIntelligence * 5);
+
     const characterData = {
       name: playerName,
       type: classType,
@@ -693,6 +764,8 @@ class Character {
       xp_to_next: 10,
       hp: startingStats.max_hp,
       max_hp: startingStats.max_hp,
+      mana: startingMaxMana,
+      max_mana: startingMaxMana,
       gold: 50, // Starting gold
       location: location,
       inventory: startingInventory,
