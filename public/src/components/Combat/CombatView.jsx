@@ -5,6 +5,8 @@ import MonsterDisplay from './MonsterDisplay';
 import ActionMenu from './ActionMenu';
 import FightSubmenu from './FightSubmenu';
 import ItemsMenu from './ItemsMenu';
+import ManaBar from './ManaBar';
+import StatusEffectDisplay from './StatusEffectDisplay';
 import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
 
 const CombatView = () => {
@@ -13,9 +15,15 @@ const CombatView = () => {
   
   if (!combat || !player) return null;
   
-  const { monster, playerHp } = combat;
+  const { monster, playerHp, player: combatPlayer } = combat;
   const safeCombatLog = combatLog || [];
   const playerHpPercent = (playerHp / (player.maxHp || 100)) * 100;
+  
+  // Get mana and status effects from combat state or player data
+  const playerMana = combatPlayer?.mana ?? player.mana ?? 0;
+  const playerMaxMana = combatPlayer?.max_mana ?? player.maxMana ?? 0;
+  const playerStatusEffects = combatPlayer?.status_effects || [];
+  const monsterStatusEffects = monster?.status_effects || [];
 
   // Get HP bar color based on percentage
   const getHpBarColor = (percent) => {
@@ -101,6 +109,14 @@ const CombatView = () => {
                   />
                 </div>
               </div>
+
+              {/* Mana Bar */}
+              {playerMaxMana > 0 && (
+                <ManaBar current={playerMana} max={playerMaxMana} size="md" />
+              )}
+
+              {/* Status Effects */}
+              <StatusEffectDisplay effects={playerStatusEffects} target="player" />
               
               <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
                 <div className="bg-dark-800 rounded p-2 border border-dark-700">

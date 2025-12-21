@@ -1,4 +1,5 @@
 import React from 'react';
+import StatusEffectDisplay from './StatusEffectDisplay';
 
 const MonsterDisplay = ({ monster }) => {
   if (!monster) return null;
@@ -39,8 +40,11 @@ const MonsterDisplay = ({ monster }) => {
         </div>
       </div>
 
+      {/* Status Effects */}
+      <StatusEffectDisplay effects={monster.status_effects || []} target="monster" />
+
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
+      <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm mt-3">
         <div className="bg-dark-800 rounded p-2 border border-dark-700">
           <p className="text-gray-400">Attack</p>
           <p className="text-white font-bold text-base sm:text-lg">{monster.attack}</p>
@@ -50,23 +54,6 @@ const MonsterDisplay = ({ monster }) => {
           <p className="text-white font-bold text-base sm:text-lg">{monster.defense}</p>
         </div>
       </div>
-
-      {/* Status Effects (if any) */}
-      {monster.status_effects && monster.status_effects.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-dark-700">
-          <p className="text-xs text-gray-400 mb-2">Status Effects:</p>
-          <div className="flex flex-wrap gap-1">
-            {monster.status_effects.map((effect, index) => (
-              <span
-                key={index}
-                className="text-xs px-2 py-1 bg-purple-900/50 border border-purple-700 rounded text-purple-300"
-              >
-                {effect.name}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,36 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, FlaskConical } from 'lucide-react';
 
 const ItemsMenu = ({ state, onUseItem, onBack, inventory, disabled }) => {
+  const [usableItems, setUsableItems] = useState([]);
+
+  useEffect(() => {
+    if (state === 'items' && inventory) {
+      // Filter inventory for consumable items
+      const consumables = inventory.filter(item => {
+        // Check if item has consumable tag or is a known consumable type
+        const tags = item.tags || [];
+        return tags.includes('consumable') || tags.includes('healing') || 
+               item.type === 'health' || item.type === 'mana' || item.type === 'buff';
+      });
+
+      // Group by item ID and count quantities
+      const itemMap = new Map();
+      consumables.forEach(item => {
+        if (itemMap.has(item.id)) {
+          const existing = itemMap.get(item.id);
+          existing.quantity += 1;
+        } else {
+          itemMap.set(item.id, {
+            id: item.id,
+            name: item.name || item.id,
+            description: item.description || item.effect || 'Consumable item',
+            quantity: 1,
+            icon: getItemIcon(item)
+          });
+        }
+      });
+
+      setUsableItems(Array.from(itemMap.values()));
+    }
+  }, [state, inventory]);
+
+  const getItemIcon = (item) => {
+    const tags = item.tags || [];
+    if (tags.includes('healing') || item.type === 'health') return '🧪';
+    if (item.type === 'mana' || item.id?.includes('mana')) return '💙';
+    if (item.type === 'buff') return '⚗️';
+    if (tags.includes('food')) return '🍞';
+    return '🔮';
+  };
+
   if (state !== 'items') {
     return null;
   }
-
-  // TODO: Replace with actual inventory consumables from player data
-  // For now, using mock data for UI demonstration
-  const usableItems = [
-    {
-      id: 'health_potion',
-      name: 'Health Potion',
-      description: 'Restores 50 HP',
-      quantity: 3,
-      icon: '🧪'
-    },
-    {
-      id: 'mana_potion',
-      name: 'Mana Potion',
-      description: 'Restores 30 MP',
-      quantity: 2,
-      icon: '💙'
-    },
-    {
-      id: 'stamina_elixir',
-      name: 'Stamina Elixir',
-      description: 'Removes debuffs',
-      quantity: 1,
-      icon: '⚗️'
-    }
-  ];
 
   return (
     <div className="space-y-3">
