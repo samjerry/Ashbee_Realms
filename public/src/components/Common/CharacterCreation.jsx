@@ -1,5 +1,5 @@
 /**
- * CharacterCreation. jsx
+ * CharacterCreation.jsx
  * Interactive character creation flow for new players
  */
 
@@ -19,7 +19,7 @@ export default function CharacterCreation({ onComplete }) {
     setIsLoading(true);
     fetch('/api/player/roles')
       .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch roles');
+        if (! res.ok) throw new Error('Failed to fetch roles');
         return res.json();
       })
       .then(data => {
@@ -78,12 +78,12 @@ export default function CharacterCreation({ onComplete }) {
   // Helper function to render stars with filled and empty versions
   const renderStars = (filledCount, maxStars = 10) => {
     const filled = '⭐'.repeat(filledCount);
-    const empty = '☆'.repeat(maxStars - filledCount);
+    const empty = '⭐'.repeat(maxStars - filledCount);
     return (
-      <>
-        <span className="text-yellow-400">{filled}</span>
-        <span className="text-gray-600">{empty}</span>
-      </>
+      <span className="whitespace-nowrap">
+        <span style={{ filter: 'none' }}>{filled}</span>
+        <span style={{ opacity: 0.2, filter: 'grayscale(100%)' }}>{empty}</span>
+      </span>
     );
   };
 
@@ -123,7 +123,7 @@ export default function CharacterCreation({ onComplete }) {
     {
       id: 'rogue',
       name: 'Rogue',
-      icon: Wind,
+      icon:  Wind,
       color: 'purple',
       description: 'Swift assassins with exceptional dexterity and finesse',
       stats: { 
@@ -158,7 +158,7 @@ export default function CharacterCreation({ onComplete }) {
       icon: Star,
       color: 'yellow',
       description: 'Skilled hunters with ranged weapons and high dexterity',
-      stats: { 
+      stats:  { 
         strength: 3, 
         dexterity: 9, 
         constitution: 6, 
@@ -206,7 +206,7 @@ export default function CharacterCreation({ onComplete }) {
   };
 
   const selectedColorClasses = {
-    red: 'border-red-400 bg-red-800/40 ring-2 ring-red-400',
+    red:  'border-red-400 bg-red-800/40 ring-2 ring-red-400',
     blue: 'border-blue-400 bg-blue-800/40 ring-2 ring-blue-400',
     purple: 'border-purple-400 bg-purple-800/40 ring-2 ring-purple-400',
     green: 'border-green-400 bg-green-800/40 ring-2 ring-green-400',
@@ -276,7 +276,7 @@ export default function CharacterCreation({ onComplete }) {
           <div className="p-4 bg-gray-800 border border-gray-700 rounded-lg">
             {displayName ?  (
               <div className="flex items-center gap-2">
-                <span className="text-gray-400 text-sm">Name: </span>
+                <span className="text-gray-400 text-sm">Name:</span>
                 <span className="font-semibold flex items-center gap-1 text-xl" style={{ color: getRoleColor(selectedRoleBadge) }}>
                   {(() => {
                     const RoleIcon = getRoleIcon(selectedRoleBadge);
@@ -295,9 +295,9 @@ export default function CharacterCreation({ onComplete }) {
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">Select Your Class</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {classes.map((classInfo) => {
-              const Icon = classInfo. icon;
-              const isSelected = selectedClass === classInfo.id;
+            {classes. map((classInfo) => {
+              const Icon = classInfo.icon;
+              const isSelected = selectedClass === classInfo. id;
               
               return (
                 <button
@@ -319,23 +319,23 @@ export default function CharacterCreation({ onComplete }) {
                   <div className="space-y-1 text-xs mb-3">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Strength (STR):</span>
-                      <span className="text-red-400">{renderStars(classInfo.stats. strength)}</span>
+                      <span>{renderStars(classInfo.stats. strength)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Dexterity (DEX):</span>
-                      <span className="text-green-400">{renderStars(classInfo.stats.dexterity)}</span>
+                      <span>{renderStars(classInfo. stats.dexterity)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Constitution (CON):</span>
-                      <span className="text-blue-400">{renderStars(classInfo.stats.constitution)}</span>
+                      <span>{renderStars(classInfo.stats. constitution)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Intelligence (INT):</span>
-                      <span className="text-purple-400">{renderStars(classInfo.stats.intelligence)}</span>
+                      <span>{renderStars(classInfo. stats.intelligence)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Wisdom (WIS):</span>
-                      <span className="text-yellow-400">{renderStars(classInfo.stats.wisdom)}</span>
+                      <span>{renderStars(classInfo.stats.wisdom)}</span>
                     </div>
                   </div>
                   
@@ -362,7 +362,7 @@ export default function CharacterCreation({ onComplete }) {
             disabled={!selectedClass}
             className={`px-8 py-4 rounded-lg text-lg font-bold transition-all ${
               selectedClass
-                ?  'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'
+                ? 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'
                 : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
           >
