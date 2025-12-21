@@ -119,7 +119,7 @@ export default function CharacterCreation({ onComplete }) {
     {
       id: 'ranger',
       name: 'Ranger',
-      icon: Shield,
+      icon: Star,
       color: 'yellow',
       description: 'Skilled hunters with ranged weapons and nature magic',
       stats: { attack: '⭐⭐⭐', defense: '⭐⭐⭐', magic: '⭐⭐', agility: '⭐⭐⭐⭐' },
