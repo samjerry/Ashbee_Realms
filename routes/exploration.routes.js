@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const ExplorationManager = require('../game/ExplorationManager');
+const MapKnowledgeManager = require('../game/MapKnowledgeManager');
 const socketHandler = require('../websocket/socketHandler');
 
 /**
@@ -101,14 +102,49 @@ router.post('/travel/start', async (req, res) => {
     }
 
     const explorationMgr = new ExplorationManager();
-    const result = explorationMgr.startTravel(character, destination);
-
-    if (result.success) {
-      await db.saveCharacter(user.id, channel.toLowerCase(), character);
-      socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+    
+    // For now, instant travel - update location directly
+    const biome = explorationMgr.getBiome(destination);
+    if (!biome) {
+      return res.status(404).json({ error: 'Invalid destination' });
     }
+    
+    // Update character location
+    character.location = destination;
+    
+    // Update map knowledge
+    const mapKnowledgeMgr = new MapKnowledgeManager();
+    if (!character.mapKnowledge) {
+      character.mapKnowledge = mapKnowledgeMgr.initializeMapKnowledge();
+    }
+    
+    // Get coordinates from world_grid.json
+    const { loadData } = require('../data/data_loader');
+    const worldGrid = loadData('world_grid');
+    const coords = worldGrid?.biome_coordinates?.[destination];
+    
+    if (coords) {
+      // Discover the region with coordinates
+      const discovery = mapKnowledgeMgr.discoverRegion(
+        character.mapKnowledge,
+        destination,
+        [coords.x, coords.y]
+      );
+      character.mapKnowledge = discovery.mapKnowledge;
+    }
+    
+    await db.updateCharacter(user.id, channel.toLowerCase(), { 
+      location: character.location,
+      map_knowledge: character.mapKnowledge
+    });
+    
+    socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
 
-    res.json(result);
+    res.json({
+      success: true,
+      message: `Traveled to ${biome.name}`,
+      location: biome
+    });
   } catch (error) {
     console.error('Error starting travel:', error);
     res.status(500).json({ error: 'Failed to start travel' });

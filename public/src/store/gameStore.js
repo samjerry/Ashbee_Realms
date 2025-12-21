@@ -321,6 +321,28 @@ const useGameStore = create((set, get) => ({
     }
   },
   
+  fetchMapKnowledge: async () => {
+    try {
+      const player = get().player;
+      const channel = player?.channel;
+      
+      if (!channel) return;
+      
+      const response = await fetch(`/api/map/knowledge?channel=${channel}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch map knowledge');
+      }
+      
+      const data = await response.json();
+      set({ 
+        mapKnowledge: data.mapKnowledge,
+        mapDiscoveryStats: data.stats
+      });
+    } catch (error) {
+      console.error('Failed to fetch map knowledge:', error);
+    }
+  },
+  
   travelTo: async (locationId) => {
     try {
       await fetch('/api/exploration/travel/start', {

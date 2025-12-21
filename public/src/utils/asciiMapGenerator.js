@@ -3,7 +3,7 @@
  * Utilities for generating ASCII art and grid-based text map visualizations
  */
 
-import worldGrid from '../../../data/world_grid.json';
+import worldGrid from '../data/world_grid.json';
 
 /**
  * Get danger level color class for Tailwind
