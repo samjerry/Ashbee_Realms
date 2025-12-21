@@ -254,4 +254,296 @@ router.get('/audit-log', checkOperatorAccess, async (req, res) => {
   }
 });
 
+/**
+ * GET /data/items
+ * Get all available items (consumables and gear) for item selection
+ */
+router.get('/data/items', checkOperatorAccess, (req, res) => {
+  try {
+    const data = require('../data/data');
+    const consumables = data.getItems();
+    const gear = data.getGear();
+    
+    // Organize items by category and rarity
+    const organized = {
+      consumables: consumables,
+      weapons: gear.main_hand || {},
+      armor: gear.armor || {},
+      headgear: gear.headgear || {},
+      accessories: {}
+    };
+    
+    // Merge accessories
+    if (gear.ring) organized.accessories.rings = gear.ring;
+    if (gear.amulet) organized.accessories.amulets = gear.amulet;
+    if (gear.belt) organized.accessories.belts = gear.belt;
+    if (gear.trinket) organized.accessories.trinkets = gear.trinket;
+    if (gear.relic) organized.accessories.relics = gear.relic;
+    
+    res.json({ items: organized });
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).json({ error: 'Failed to fetch items' });
+  }
+});
+
+/**
+ * GET /data/player-inventory
+ * Get a specific player's inventory with item details
+ */
+router.get('/data/player-inventory', checkOperatorAccess, async (req, res) => {
+  try {
+    const { playerId } = req.query;
+    if (!playerId) {
+      return res.status(400).json({ error: 'playerId is required' });
+    }
+    
+    const character = await db.getCharacter(playerId, req.channelName);
+    if (!character) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    // Get inventory with detailed item information
+    const data = require('../data/data');
+    const inventory = character.inventory || [];
+    
+    // Count items and get details
+    const itemCounts = {};
+    inventory.forEach(itemId => {
+      itemCounts[itemId] = (itemCounts[itemId] || 0) + 1;
+    });
+    
+    const inventoryDetails = Object.entries(itemCounts).map(([itemId, quantity]) => {
+      // Try to find item in consumables first
+      let itemData = data.getItemById(itemId);
+      
+      // If not found, try gear
+      if (!itemData) {
+        itemData = data.getGearById(itemId);
+      }
+      
+      return {
+        id: itemId,
+        quantity,
+        name: itemData?.name || itemId,
+        rarity: itemData?.rarity || 'common',
+        description: itemData?.description || '',
+        stats: itemData?.stats || null
+      };
+    });
+    
+    res.json({ 
+      inventory: inventoryDetails,
+      playerName: character.name
+    });
+  } catch (error) {
+    console.error('Error fetching player inventory:', error);
+    res.status(500).json({ error: 'Failed to fetch player inventory' });
+  }
+});
+
+/**
+ * GET /data/player-quests
+ * Get a specific player's active and completed quests
+ */
+router.get('/data/player-quests', checkOperatorAccess, async (req, res) => {
+  try {
+    const { playerId } = req.query;
+    if (!playerId) {
+      return res.status(400).json({ error: 'playerId is required' });
+    }
+    
+    const character = await db.getCharacter(playerId, req.channelName);
+    if (!character) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    const data = require('../data/data');
+    const allQuests = data.getQuests();
+    
+    const activeQuests = (character.active_quests || []).map(questId => {
+      let questData = null;
+      // Find quest in all categories
+      for (const category in allQuests) {
+        const found = allQuests[category].find(q => q.id === questId);
+        if (found) {
+          questData = found;
+          break;
+        }
+      }
+      
+      return {
+        id: questId,
+        name: questData?.name || questId,
+        type: questData?.chapter ? 'Main Story' : 'Side Quest',
+        status: 'active'
+      };
+    });
+    
+    const completedQuests = (character.completed_quests || []).map(questId => {
+      let questData = null;
+      for (const category in allQuests) {
+        const found = allQuests[category].find(q => q.id === questId);
+        if (found) {
+          questData = found;
+          break;
+        }
+      }
+      
+      return {
+        id: questId,
+        name: questData?.name || questId,
+        type: questData?.chapter ? 'Main Story' : 'Side Quest',
+        status: 'completed'
+      };
+    });
+    
+    res.json({ 
+      quests: [...activeQuests, ...completedQuests],
+      playerName: character.name
+    });
+  } catch (error) {
+    console.error('Error fetching player quests:', error);
+    res.status(500).json({ error: 'Failed to fetch player quests' });
+  }
+});
+
+/**
+ * GET /data/achievements
+ * Get all available achievements
+ */
+router.get('/data/achievements', checkOperatorAccess, (req, res) => {
+  try {
+    const data = require('../data/data');
+    const achievements = data.getAchievements();
+    
+    // Flatten achievements from all categories
+    const allAchievements = [];
+    for (const category in achievements) {
+      achievements[category].forEach(ach => {
+        allAchievements.push({
+          id: ach.id,
+          name: ach.name,
+          description: ach.description,
+          icon: ach.icon,
+          rarity: ach.rarity,
+          category,
+          rewards: ach.rewards
+        });
+      });
+    }
+    
+    res.json({ achievements: allAchievements });
+  } catch (error) {
+    console.error('Error fetching achievements:', error);
+    res.status(500).json({ error: 'Failed to fetch achievements' });
+  }
+});
+
+/**
+ * GET /data/locations
+ * Get all valid teleport locations from biomes
+ */
+router.get('/data/locations', checkOperatorAccess, (req, res) => {
+  try {
+    const data = require('../data/data');
+    const biomes = data.getBiomes();
+    
+    // Organize locations by biome
+    const locations = [];
+    for (const biomeId in biomes) {
+      const biome = biomes[biomeId];
+      
+      // Add main biome location
+      locations.push({
+        id: biomeId,
+        name: biome.name,
+        biome: biome.name,
+        type: 'biome'
+      });
+      
+      // Add sub-locations
+      if (biome.sub_locations) {
+        biome.sub_locations.forEach(subLoc => {
+          locations.push({
+            id: subLoc.id,
+            name: subLoc.name,
+            biome: biome.name,
+            type: 'location',
+            description: subLoc.description
+          });
+        });
+      }
+    }
+    
+    res.json({ locations });
+  } catch (error) {
+    console.error('Error fetching locations:', error);
+    res.status(500).json({ error: 'Failed to fetch locations' });
+  }
+});
+
+/**
+ * GET /data/encounters
+ * Get all available random encounters
+ */
+router.get('/data/encounters', checkOperatorAccess, (req, res) => {
+  try {
+    const data = require('../data/data');
+    const encounters = data.getRandomEncounters();
+    
+    // Convert encounters object to array
+    const encounterList = [];
+    for (const encounterId in encounters) {
+      const encounter = encounters[encounterId];
+      encounterList.push({
+        id: encounterId,
+        name: encounter.name,
+        type: encounter.type,
+        rarity: encounter.rarity,
+        description: encounter.description
+      });
+    }
+    
+    res.json({ encounters: encounterList });
+  } catch (error) {
+    console.error('Error fetching encounters:', error);
+    res.status(500).json({ error: 'Failed to fetch encounters' });
+  }
+});
+
+/**
+ * GET /data/player-stats
+ * Get a specific player's current stats (gold, XP, level, etc.)
+ */
+router.get('/data/player-stats', checkOperatorAccess, async (req, res) => {
+  try {
+    const { playerId } = req.query;
+    if (!playerId) {
+      return res.status(400).json({ error: 'playerId is required' });
+    }
+    
+    const character = await db.getCharacter(playerId, req.channelName);
+    if (!character) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    res.json({ 
+      stats: {
+        name: character.name,
+        level: character.level,
+        xp: character.xp,
+        xpToNext: character.xpToNext || character.xp_to_next,
+        gold: character.gold,
+        hp: character.hp,
+        maxHp: character.maxHp || character.max_hp,
+        location: character.location
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching player stats:', error);
+    res.status(500).json({ error: 'Failed to fetch player stats' });
+  }
+});
+
 module.exports = router;
