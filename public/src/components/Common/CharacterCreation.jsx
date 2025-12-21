@@ -93,13 +93,13 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Warrior',
       icon: Sword,
       color: 'red',
-      description: 'Masters of melee combat with high strength and constitution',
+      description: 'Battle-hardened veterans forged in the crucible of war. Warriors command the frontlines with unmatched strength and endurance, wielding steel with devastating precision while shrugging off blows that would fell lesser combatants.',
       stats: { 
-        strength: 10, 
+        strength: 9, 
         dexterity: 3, 
         constitution: 8, 
         intelligence: 1, 
-        wisdom: 3 
+        wisdom: 4 
       },
       playstyle: 'Tank and deal massive physical damage',
       startingGear: 'Iron Sword, Leather Armor, Wooden Shield'
@@ -109,13 +109,13 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Mage',
       icon: Sparkles,
       color: 'blue',
-      description: 'Wielders of arcane forces with devastating magical abilities',
+      description: 'Scholars of the arcane arts who bend reality itself to their will. Though physically frail, mages command devastating elemental forces and reality-warping spells that can obliterate enemies from afar with overwhelming magical power.',
       stats: { 
         strength: 1, 
         dexterity: 3, 
         constitution: 4, 
-        intelligence: 10, 
-        wisdom: 7 
+        intelligence: 9, 
+        wisdom: 8 
       },
       playstyle: 'Cast powerful spells from range',
       startingGear:  'Wooden Staff, Apprentice Robes, Mana Crystal'
@@ -125,11 +125,11 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Rogue',
       icon:  Knife,
       color: 'purple',
-      description: 'Swift assassins with exceptional dexterity and finesse',
+      description: 'Masters of shadow and subterfuge who strike with lethal precision. These deadly assassins rely on lightning-fast reflexes, cunning tactics, and devastating critical strikes to eliminate their foes before they even know danger lurks.',
       stats: { 
         strength: 4, 
-        dexterity: 10, 
-        constitution: 5, 
+        dexterity: 9, 
+        constitution: 6, 
         intelligence: 3, 
         wisdom: 3 
       },
@@ -141,13 +141,13 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Cleric',
       icon:  Heart,
       color: 'white',
-      description: 'Holy warriors blessed with divine wisdom and healing power',
+      description: 'Chosen vessels of divine grace who channel sacred power to protect and preserve life. Clerics serve as beacons of hope on the battlefield, mending grievous wounds while smiting the wicked with holy righteousness.',
       stats: { 
         strength: 4, 
         dexterity: 3, 
-        constitution: 6, 
-        intelligence: 4, 
-        wisdom: 10 
+        constitution: 7, 
+        intelligence: 2, 
+        wisdom: 9 
       },
       playstyle: 'Support with healing and buffs',
       startingGear: 'Mace, Chainmail, Holy Symbol'
@@ -157,13 +157,13 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Ranger',
       icon: Target,
       color: 'green',
-      description: 'Skilled hunters with ranged weapons and high dexterity',
+      description: 'Elite wilderness scouts and master archers who never miss their mark. Rangers blend deadly accuracy with survival instincts honed in the wild, tracking prey with patience before unleashing a devastating volley of arrows.',
       stats:  { 
-        strength: 5, 
+        strength: 3, 
         dexterity: 9, 
         constitution: 5, 
         intelligence: 3, 
-        wisdom: 6 
+        wisdom: 5 
       },
       playstyle: 'Balanced combat and utility',
       startingGear:  'Longbow, Leather Armor, Quiver of Arrows'
@@ -173,13 +173,13 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Paladin',
       icon:  Shield,
       color: 'yellow',
-      description: 'Holy knights who blend combat prowess with divine magic (Requested by PalaJen)',
+      description: 'Righteous champions sworn to uphold justice and defend the innocent. These holy knights unite martial excellence with divine magic, standing as unbreakable bulwarks while healing allies and smiting evil with sacred fury. (Requested by PalaJen)',
       stats: { 
         strength: 6, 
         dexterity: 1, 
-        constitution: 10, 
+        constitution: 8, 
         intelligence: 3, 
-        wisdom: 8 
+        wisdom: 7 
       },
       playstyle: 'Tank, heal, and smite with holy power',
       startingGear: 'Iron Mace, Chainmail Vest, Holy Symbol'
