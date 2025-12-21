@@ -292,25 +292,14 @@ class ShopManager {
    * @param {number} quantity - Quantity to add
    */
   addItemToInventory(character, itemId, quantity) {
-    if (!character.inventory) {
-      character.inventory = [];
+    // Ensure inventory is an InventoryManager instance
+    const InventoryManager = require('./InventoryManager');
+    if (!character.inventory || !(character.inventory instanceof InventoryManager)) {
+      character.inventory = new InventoryManager([], 30);
     }
 
-    // Check if item already exists (stackable)
-    const existingItem = character.inventory.find(item => item.id === itemId);
-
-    if (existingItem) {
-      existingItem.quantity += quantity;
-    } else {
-      const itemData = this.getItemData(itemId);
-      character.inventory.push({
-        id: itemId,
-        name: itemData?.name || itemId,
-        quantity: quantity,
-        rarity: itemData?.rarity || 'common',
-        type: itemData?.type || 'item'
-      });
-    }
+    // Use InventoryManager's addItem method instead of manual array manipulation
+    return character.inventory.addItem(itemId, quantity);
   }
 
   /**
