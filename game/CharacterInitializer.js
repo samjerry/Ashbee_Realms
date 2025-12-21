@@ -22,6 +22,7 @@ class CharacterInitializer {
       name: cls.name,
       description: cls.description,
       startingStats: cls.starting_stats,
+      base_stats: cls.starting_stats, // For frontend compatibility
       specialAbility: cls.special_ability?.name
     }));
   }

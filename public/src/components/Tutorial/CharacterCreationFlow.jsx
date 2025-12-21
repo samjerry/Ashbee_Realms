@@ -199,12 +199,24 @@ const CharacterCreationFlow = ({ onComplete, onSkip }) => {
                         <span className="text-white font-medium">{classOption.base_stats.hp}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Attack:</span>
-                        <span className="text-white font-medium">{classOption.base_stats.attack}</span>
+                        <span className="text-gray-500">Strength:</span>
+                        <span className="text-red-400 font-medium">{classOption.base_stats.strength || 'N/A'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-500">Defense:</span>
-                        <span className="text-white font-medium">{classOption.base_stats.defense}</span>
+                        <span className="text-gray-500">Dexterity:</span>
+                        <span className="text-green-400 font-medium">{classOption.base_stats.dexterity || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Constitution:</span>
+                        <span className="text-blue-400 font-medium">{classOption.base_stats.constitution || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Intelligence:</span>
+                        <span className="text-purple-400 font-medium">{classOption.base_stats.intelligence || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Wisdom:</span>
+                        <span className="text-yellow-400 font-medium">{classOption.base_stats.wisdom || 'N/A'}</span>
                       </div>
                     </div>
                   </button>
