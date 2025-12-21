@@ -119,12 +119,22 @@ export default function CharacterCreation({ onComplete }) {
     {
       id: 'ranger',
       name: 'Ranger',
-      icon: Shield,
+      icon: Star,
       color: 'yellow',
       description: 'Skilled hunters with ranged weapons and nature magic',
       stats: { attack: '⭐⭐⭐', defense: '⭐⭐⭐', magic: '⭐⭐', agility: '⭐⭐⭐⭐' },
       playstyle: 'Balanced combat and utility',
       startingGear: 'Longbow, Leather Armor, Quiver of Arrows'
+    },
+    {
+      id: 'paladin',
+      name: 'Paladin',
+      icon: Shield,
+      color: 'yellow',
+      description: 'Holy knights who blend combat prowess with divine magic (Requested by PalaJen)',
+      stats: { attack: '⭐⭐⭐⭐', defense: '⭐⭐⭐⭐⭐', magic: '⭐⭐⭐', agility: '⭐⭐' },
+      playstyle: 'Tank, heal, and smite with holy power',
+      startingGear: 'Iron Mace, Chainmail Vest, Holy Symbol'
     }
   ];
 
