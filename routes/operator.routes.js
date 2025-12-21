@@ -307,8 +307,12 @@ router.get('/data/player-inventory', checkOperatorAccess, async (req, res) => {
     // Get inventory with detailed item information
     const data = require('../data/data');
     // Ensure inventory is always an array - check for InventoryManager object first
-    let inventory = character.inventory?.items || character.inventory || [];
-    if (!Array.isArray(inventory)) {
+    let inventory;
+    if (character.inventory?.items && Array.isArray(character.inventory.items)) {
+      inventory = character.inventory.items;
+    } else if (Array.isArray(character.inventory)) {
+      inventory = character.inventory;
+    } else {
       console.warn(`Player ${playerId} has non-array inventory, converting to array`);
       inventory = [];
     }
