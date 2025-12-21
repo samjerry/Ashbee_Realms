@@ -119,3 +119,51 @@ Next steps
 - Add user commands like `!mystats`, `!leaderboard`.
 - Expand the text adventure narrative.
 
+## Adding Map Images
+
+The world map system supports custom tile images that display on the grid map. Adding images is simple and requires no code changes.
+
+### Image Requirements
+- **Format:** PNG with transparency support
+- **Size:** 128x128 pixels (recommended for best quality)
+- **Naming:** Use the exact biome ID from `data/biomes.json` (e.g., `whispering_woods.png`, `town_square.png`)
+
+### How to Add Images
+
+1. Create or find a 128x128px PNG image for your biome
+2. Name it exactly as the biome ID (found in `data/biomes.json`)
+   - Example: For "Whispering Woods" biome with id `whispering_woods`, name the file `whispering_woods.png`
+3. Place it in the `/public/maps/tiles/` directory
+4. Refresh the map page - the image will automatically appear!
+
+### Automatic Fallback System
+
+The grid map automatically falls back to text abbreviations if:
+- No image file exists for a biome
+- The image fails to load
+- The image path is incorrect
+
+This means you can:
+- Add images gradually (some biomes with images, others with text)
+- Test the system without needing all images ready
+- Mix and match based on your preferences
+
+### Example Biome IDs
+
+Common biome IDs from the game:
+- `town_square` - Town Square (starting location)
+- `whispering_woods` - Whispering Woods
+- `twilight_wetlands` - Twilight Wetlands
+- `highland_reaches` - Highland Reaches
+- `ashen_barrens` - Ashen Barrens
+- `goblin_tunnels` - Goblin Tunnels
+- `deep_caverns` - Deep Caverns
+- `ancient_crypts` - Ancient Crypts
+- `cursed_swamp` - Cursed Swamp
+- `forsaken_ruins` - Forsaken Ruins
+- `volcanic_peaks` - Volcanic Peaks
+- `frozen_wastes` - Frozen Wastes
+- `void_realm` - Void Realm
+
+See `data/biomes.json` for the complete list of biome IDs.
+

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
 import { generateWorldGrid, getDangerColor, getDangerBgColor, formatDiscoveryStats } from '../../utils/asciiMapGenerator';
 import GridCell from './GridCell';
-import worldGrid from '../../../data/world_grid.json';
+import worldGrid from '../../data/world_grid.json';
 
 const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation }) => {
   const gridData = useMemo(() => {

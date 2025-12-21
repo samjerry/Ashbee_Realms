@@ -1,0 +1,186 @@
+{
+  "grid_size": {
+    "width": 10,
+    "height": 10
+  },
+  "biome_coordinates": {
+    "town_square": {
+      "x": 5,
+      "y": 5,
+      "abbreviation": "TS",
+      "color": "green",
+      "icon": "🏰"
+    },
+    "whispering_woods": {
+      "x": 4,
+      "y": 4,
+      "abbreviation": "WW",
+      "color": "green",
+      "icon": "🌲"
+    },
+    "twilight_wetlands": {
+      "x": 3,
+      "y": 6,
+      "abbreviation": "TW",
+      "color": "blue",
+      "icon": "🌫️"
+    },
+    "highland_reaches": {
+      "x": 6,
+      "y": 3,
+      "abbreviation": "HR",
+      "color": "yellow",
+      "icon": "⛰️"
+    },
+    "ashen_barrens": {
+      "x": 7,
+      "y": 7,
+      "abbreviation": "AB",
+      "color": "orange",
+      "icon": "🔥"
+    },
+    "goblin_tunnels": {
+      "x": 3,
+      "y": 4,
+      "abbreviation": "GT",
+      "color": "yellow",
+      "icon": "⚒️"
+    },
+    "deep_caverns": {
+      "x": 2,
+      "y": 3,
+      "abbreviation": "DC",
+      "color": "orange",
+      "icon": "🕳️"
+    },
+    "ancient_crypts": {
+      "x": 7,
+      "y": 4,
+      "abbreviation": "AC",
+      "color": "orange",
+      "icon": "⚰️"
+    },
+    "cursed_swamp": {
+      "x": 2,
+      "y": 7,
+      "abbreviation": "CS",
+      "color": "orange",
+      "icon": "☠️"
+    },
+    "forsaken_ruins": {
+      "x": 8,
+      "y": 6,
+      "abbreviation": "FR",
+      "color": "orange",
+      "icon": "🏚️"
+    },
+    "volcanic_peaks": {
+      "x": 9,
+      "y": 2,
+      "abbreviation": "VP",
+      "color": "red",
+      "icon": "🌋"
+    },
+    "frozen_wastes": {
+      "x": 1,
+      "y": 1,
+      "abbreviation": "FW",
+      "color": "red",
+      "icon": "❄️"
+    },
+    "void_realm": {
+      "x": 9,
+      "y": 9,
+      "abbreviation": "VR",
+      "color": "purple",
+      "icon": "🌀"
+    },
+    "infernal_rift": {
+      "x": 9,
+      "y": 8,
+      "abbreviation": "IR",
+      "color": "red",
+      "icon": "👿"
+    },
+    "tempest_spire": {
+      "x": 8,
+      "y": 1,
+      "abbreviation": "TP",
+      "color": "red",
+      "icon": "⚡"
+    },
+    "crystalline_caverns": {
+      "x": 4,
+      "y": 2,
+      "abbreviation": "CC",
+      "color": "yellow",
+      "icon": "💎"
+    },
+    "clockwork_citadel": {
+      "x": 6,
+      "y": 8,
+      "abbreviation": "CW",
+      "color": "red",
+      "icon": "⚙️"
+    },
+    "verdant_expanse": {
+      "x": 2,
+      "y": 5,
+      "abbreviation": "VE",
+      "color": "yellow",
+      "icon": "🌿"
+    },
+    "abyssal_trench": {
+      "x": 0,
+      "y": 9,
+      "abbreviation": "AT",
+      "color": "purple",
+      "icon": "🌊"
+    },
+    "dragons_roost": {
+      "x": 9,
+      "y": 0,
+      "abbreviation": "DR",
+      "color": "red",
+      "icon": "🐉"
+    },
+    "ethereal_realm": {
+      "x": 1,
+      "y": 8,
+      "abbreviation": "ER",
+      "color": "red",
+      "icon": "👻"
+    }
+  },
+  "adjacency_map": {
+    "town_square": ["whispering_woods", "highland_reaches", "twilight_wetlands", "ashen_barrens"],
+    "whispering_woods": ["town_square", "goblin_tunnels", "crystalline_caverns"],
+    "twilight_wetlands": ["town_square", "cursed_swamp", "verdant_expanse"],
+    "highland_reaches": ["town_square", "crystalline_caverns", "ancient_crypts"],
+    "ashen_barrens": ["town_square", "forsaken_ruins", "clockwork_citadel"],
+    "goblin_tunnels": ["whispering_woods", "deep_caverns", "verdant_expanse"],
+    "deep_caverns": ["goblin_tunnels", "frozen_wastes", "crystalline_caverns"],
+    "ancient_crypts": ["highland_reaches", "forsaken_ruins"],
+    "cursed_swamp": ["twilight_wetlands", "verdant_expanse", "ethereal_realm"],
+    "forsaken_ruins": ["ashen_barrens", "ancient_crypts", "clockwork_citadel"],
+    "volcanic_peaks": ["tempest_spire", "dragons_roost"],
+    "frozen_wastes": ["deep_caverns", "tempest_spire"],
+    "void_realm": ["infernal_rift"],
+    "infernal_rift": ["void_realm", "clockwork_citadel", "dragons_roost"],
+    "tempest_spire": ["frozen_wastes", "volcanic_peaks", "dragons_roost"],
+    "crystalline_caverns": ["whispering_woods", "highland_reaches", "deep_caverns"],
+    "clockwork_citadel": ["ashen_barrens", "forsaken_ruins", "infernal_rift"],
+    "verdant_expanse": ["twilight_wetlands", "goblin_tunnels", "cursed_swamp"],
+    "abyssal_trench": ["ethereal_realm"],
+    "dragons_roost": ["volcanic_peaks", "tempest_spire", "infernal_rift"],
+    "ethereal_realm": ["cursed_swamp", "abyssal_trench"]
+  },
+  "danger_level_colors": {
+    "0": "#22c55e",
+    "1": "#22c55e",
+    "2": "#3b82f6",
+    "3": "#eab308",
+    "4": "#f97316",
+    "5": "#ef4444"
+  }
+}
