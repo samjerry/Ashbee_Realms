@@ -31,7 +31,7 @@ const CharacterSheet = () => {
   const slots = [
     { key: 'main_hand', label: 'Main Hand' },
     { key: 'off_hand', label: 'Off Hand' },
-    { key: 'armor', label: 'Armor' },
+    { key: 'chest', label: 'Chest Armor' },
     { key: 'helmet', label: 'Helmet' },
     { key: 'legs', label: 'Legs' },
     { key: 'boots', label: 'Boots' },

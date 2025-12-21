@@ -589,7 +589,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     is_player = true,
     in_combat = false,
     equipped = {
-      headgear: null, armor: null, legs: null, footwear: null,
+      headgear: null, chest: null, legs: null, footwear: null,
       hands: null, cape: null, off_hand: null, amulet: null,
       ring1: null, ring2: null, belt: null, main_hand: null,
       relic1: null, relic2: null, relic3: null
@@ -801,7 +801,7 @@ async function initializeNewPlayer(playerId, channelName, playerName, startLocat
     is_player: true,
     in_combat: false,
     equipped: {
-      headgear: null, armor: null, legs: null, footwear: null,
+      headgear: null, chest: null, legs: null, footwear: null,
       hands: null, cape: null, off_hand: null, amulet: null,
       ring1: null, ring2: null, belt: null, main_hand: null,
       relic1: null, relic2: null, relic3: null

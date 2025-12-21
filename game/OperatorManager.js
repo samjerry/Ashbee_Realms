@@ -708,7 +708,7 @@ class OperatorManager {
     // Reset inventory and equipment using Character classes
     character.inventory = new InventoryManager([GAME_CONSTANTS.DEFAULT_STARTING_ITEM], GAME_CONSTANTS.DEFAULT_INVENTORY_SIZE);
     character.equipment = new EquipmentManager({
-      headgear: null, armor: null, legs: null, footwear: null,
+      headgear: null, chest: null, legs: null, footwear: null,
       hands: null, cape: null, off_hand: null, amulet: null,
       ring1: null, ring2: null, belt: null, main_hand: null,
       relic1: null, relic2: null, relic3: null

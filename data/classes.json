@@ -33,7 +33,7 @@
       },
       "starting_equipment": {
         "main_hand": "rusty_sword",
-        "armor": "padded_vest"
+        "chest": "padded_vest"
       }
     },
     "mage": {
@@ -68,7 +68,7 @@
       },
       "starting_equipment": {
         "main_hand": "wooden_staff",
-        "armor": "rough_tunic"
+        "chest": "rough_tunic"
       }
     },
     "rogue": {
@@ -104,7 +104,7 @@
       },
       "starting_equipment": {
         "main_hand": "rusty_dagger",
-        "armor": "padded_vest"
+        "chest": "padded_vest"
       }
     },
     "cleric": {
@@ -140,7 +140,7 @@
       },
       "starting_equipment": {
         "main_hand": "wooden_mace",
-        "armor": "rough_tunic"
+        "chest": "rough_tunic"
       }
     },
     "ranger": {
@@ -175,7 +175,7 @@
       },
       "starting_equipment": {
         "main_hand": "short_bow",
-        "armor": "padded_vest"
+        "chest": "padded_vest"
       }
     },
     "paladin": {
@@ -212,7 +212,7 @@
       },
       "starting_equipment": {
         "main_hand": "mace",
-        "armor": "chainmail"
+        "chest": "chainmail"
       }
     }
   }

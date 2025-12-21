@@ -63,13 +63,13 @@ class CharacterInitializer {
     if (!classInfo || !classInfo.starting_equipment) {
       return {
         main_hand: null,
-        armor: null
+        chest: null
       };
     }
     
     return {
       main_hand: classInfo.starting_equipment.main_hand || null,
-      armor: classInfo.starting_equipment.armor || null
+      chest: classInfo.starting_equipment.chest || null
     };
   }
 

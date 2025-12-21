@@ -23,14 +23,14 @@ module.exports = {
   getGear: () => {
     // Combine all gear files into single structure
     const weapons = loadJSON('gear_weapons.json').weapons || {};
-    const armor = loadJSON('gear_armor.json').armor || {};
+    const chest = loadJSON('gear_armor.json').armor || {};
     const headgear = loadJSON('gear_headgear.json').headgear || {};
     const accessories = loadJSON('gear_accessories.json').accessories || {};
     
     // Merge into equipment structure
     const equipment = {
       main_hand: weapons,
-      armor: armor,
+      chest: chest,
       headgear: headgear,
       ...accessories  // rings, amulets, belts, trinkets, relics
     };
