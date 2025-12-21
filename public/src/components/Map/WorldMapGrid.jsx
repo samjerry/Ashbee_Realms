@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
-import { generateWorldGrid, getDangerColor, getDangerBgColor, formatDiscoveryStats } from '../../utils/asciiMapGenerator';
 import GridCell from './GridCell';
 import worldGrid from '../../data/world_grid.json';
 
@@ -11,16 +10,6 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
     biomes.forEach(biome => map.set(biome.id, biome));
     return map;
   }, [biomes]);
-  
-  const gridData = useMemo(() => {
-    return generateWorldGrid(mapKnowledge, biomes, currentLocation?.id);
-  }, [mapKnowledge, biomes, currentLocation]);
-
-  const handleCellClick = (cell) => {
-    if (cell.type === 'biome' && cell.discovered && onSelectLocation) {
-      onSelectLocation(cell.biome);
-    }
-  };
   
   // Helper to check if a coordinate is discovered
   const isCoordinateDiscovered = (x, y) => {
