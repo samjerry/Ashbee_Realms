@@ -113,7 +113,7 @@
     {
       "id": "dragonslayer",
       "name": "Dragonslayer",
-      "description": "An legendary blade forged to slay dragons",
+      "description": "A legendary blade forged to slay dragons",
       "slot": "main_hand",
       "rarity": "epic",
       "required_level": 20,
