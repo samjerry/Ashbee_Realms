@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Sword, Shield, Sparkles, Knife, Heart, Crown, Award, Gem, Star, User, Eye, Beaker, Target } from 'lucide-react';
+import { Sword, Shield, Sparkles, Swords, Heart, Crown, Award, Gem, Star, User, Eye, Beaker, Target } from 'lucide-react';
 import { getRoleBadges as getRoleBadgesHelper } from '../../utils/roleHelpers';
 
 export default function CharacterCreation({ onComplete }) {
@@ -123,7 +123,7 @@ export default function CharacterCreation({ onComplete }) {
     {
       id: 'rogue',
       name: 'Rogue',
-      icon:  Knife,
+      icon:  Swords,
       color: 'purple',
       description: 'Masters of shadow and subterfuge who strike with lethal precision. These deadly assassins rely on lightning-fast reflexes, cunning tactics, and devastating critical strikes to eliminate their foes before they even know danger lurks.',
       stats: { 
