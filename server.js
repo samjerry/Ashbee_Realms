@@ -46,6 +46,7 @@ const seasonsRoutes = require('./routes/seasons.routes');
 const operatorRoutes = require('./routes/operator.routes');
 const leaderboardsRoutes = require('./routes/leaderboards.routes');
 const tutorialRoutes = require('./routes/tutorial.routes');
+const mapRoutes = require('./routes/map.routes');
 
 // Default game state values
 const DEFAULT_GAME_STATE = {
@@ -851,6 +852,7 @@ app.use('/api/seasons', seasonsRoutes);
 app.use('/api/operator', operatorRoutes);
 app.use('/api/leaderboards', leaderboardsRoutes);
 app.use('/api/tutorial', tutorialRoutes);
+app.use('/api/map', mapRoutes);
 console.log('✅ Route modules mounted and ready (WebSocket initialized)');
 // ==================== END ROUTE MODULES ====================
 

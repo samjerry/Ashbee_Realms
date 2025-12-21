@@ -21,10 +21,13 @@ class MapKnowledgeManager {
       explored_sublocations: {
         'town_square': ['inn', 'shop', 'blacksmith', 'temple']
       },
-      visited_coordinates: [[5, 5]], // Town square at center
+      visited_coordinates: [[5, 5]], // Town square at center (legacy)
+      discovered_coordinates: [[5, 5]], // Grid coordinates discovered
       discovery_timestamp: {
-        'town_square': new Date().toISOString()
-      }
+        'town_square': new Date().toISOString(),
+        '5,5': new Date().toISOString()
+      },
+      exploration_percentage: 5.0 // 1 out of 20 biomes = 5%
     };
   }
 
@@ -76,6 +79,11 @@ class MapKnowledgeManager {
     if (!mapKnowledge) {
       mapKnowledge = this.initializeMapKnowledge();
     }
+    
+    // Ensure discovered_coordinates array exists
+    if (!mapKnowledge.discovered_coordinates) {
+      mapKnowledge.discovered_coordinates = [];
+    }
 
     // Check if already discovered
     if (this.isRegionDiscovered(mapKnowledge, regionId)) {
@@ -93,16 +101,73 @@ class MapKnowledgeManager {
     mapKnowledge.discovery_timestamp[regionId] = new Date().toISOString();
 
     // Add coordinates if provided
-    if (coordinates && !mapKnowledge.visited_coordinates.some(
-      coord => coord[0] === coordinates[0] && coord[1] === coordinates[1]
-    )) {
-      mapKnowledge.visited_coordinates.push(coordinates);
+    if (coordinates) {
+      const coordStr = `${coordinates[0]},${coordinates[1]}`;
+      
+      // Add to visited_coordinates (legacy)
+      if (!mapKnowledge.visited_coordinates.some(
+        coord => coord[0] === coordinates[0] && coord[1] === coordinates[1]
+      )) {
+        mapKnowledge.visited_coordinates.push(coordinates);
+      }
+      
+      // Add to discovered_coordinates
+      if (!mapKnowledge.discovered_coordinates.some(
+        coord => coord[0] === coordinates[0] && coord[1] === coordinates[1]
+      )) {
+        mapKnowledge.discovered_coordinates.push(coordinates);
+        mapKnowledge.discovery_timestamp[coordStr] = new Date().toISOString();
+      }
     }
+    
+    // Update exploration percentage
+    const totalBiomes = Object.keys(this.biomes).length;
+    mapKnowledge.exploration_percentage = (mapKnowledge.discovered_regions.length / totalBiomes) * 100;
 
     return {
       mapKnowledge,
       isNew: true,
       region: this.biomes[regionId]
+    };
+  }
+  
+  /**
+   * Discover a specific coordinate on the grid
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {Array} coordinate - Grid coordinate [x, y]
+   * @returns {Object} Updated map knowledge and discovery info
+   */
+  discoverCoordinate(mapKnowledge, coordinate) {
+    // Initialize if needed
+    if (!mapKnowledge) {
+      mapKnowledge = this.initializeMapKnowledge();
+    }
+    
+    // Ensure discovered_coordinates array exists
+    if (!mapKnowledge.discovered_coordinates) {
+      mapKnowledge.discovered_coordinates = [];
+    }
+    
+    const coordStr = `${coordinate[0]},${coordinate[1]}`;
+    
+    // Check if already discovered
+    const alreadyDiscovered = mapKnowledge.discovered_coordinates.some(
+      coord => coord[0] === coordinate[0] && coord[1] === coordinate[1]
+    );
+    
+    if (!alreadyDiscovered) {
+      mapKnowledge.discovered_coordinates.push(coordinate);
+      mapKnowledge.discovery_timestamp[coordStr] = new Date().toISOString();
+      
+      return {
+        mapKnowledge,
+        isNew: true
+      };
+    }
+    
+    return {
+      mapKnowledge,
+      isNew: false
     };
   }
 

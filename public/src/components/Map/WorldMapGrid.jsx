@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
 import { generateWorldGrid, getDangerColor, getDangerBgColor, formatDiscoveryStats } from '../../utils/asciiMapGenerator';
+import GridCell from './GridCell';
+import worldGrid from '../../../data/world_grid.json';
 
 const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation }) => {
   const gridData = useMemo(() => {
@@ -12,30 +14,45 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
       onSelectLocation(cell.biome);
     }
   };
-
-  const getCellClassName = (cell) => {
-    const baseClass = 'aspect-square flex items-center justify-center text-xs font-mono font-bold border transition-all';
+  
+  // Helper to check if a coordinate is discovered
+  const isCoordinateDiscovered = (x, y) => {
+    // Check if this coordinate has a biome
+    const biomeEntry = Object.entries(worldGrid.biome_coordinates).find(
+      ([_, coords]) => coords.x === x && coords.y === y
+    );
     
-    if (cell.type === 'empty') {
-      return `${baseClass} bg-dark-900 border-dark-800 text-gray-700 cursor-default`;
-    }
+    if (!biomeEntry) return false; // Empty cell
     
-    if (!cell.discovered) {
-      return `${baseClass} bg-dark-800 border-dark-700 text-gray-600 cursor-default`;
-    }
-    
-    if (cell.isCurrent) {
-      return `${baseClass} ${getDangerBgColor(cell.dangerLevel)} ${getDangerColor(cell.dangerLevel)} ring-2 ring-primary-500 cursor-pointer hover:scale-110`;
-    }
-    
-    return `${baseClass} ${getDangerBgColor(cell.dangerLevel)} ${getDangerColor(cell.dangerLevel)} cursor-pointer hover:scale-105 hover:ring-2 hover:ring-primary-500/50`;
+    const [biomeId, _] = biomeEntry;
+    return mapKnowledge?.discovered_regions?.includes(biomeId) || biomeId === 'town_square';
   };
-
-  const getCellContent = (cell) => {
-    if (cell.isCurrent) {
-      return '[@]';
-    }
-    return cell.content;
+  
+  // Helper to check if player is at coordinate
+  const isPlayerAt = (x, y) => {
+    if (!currentLocation) return false;
+    const coords = worldGrid.biome_coordinates[currentLocation.id];
+    return coords && coords.x === x && coords.y === y;
+  };
+  
+  // Helper to get biome at coordinate
+  const getBiomeAtCoordinate = (x, y) => {
+    const biomeEntry = Object.entries(worldGrid.biome_coordinates).find(
+      ([_, coords]) => coords.x === x && coords.y === y
+    );
+    
+    if (!biomeEntry) return null;
+    
+    const [biomeId, coords] = biomeEntry;
+    const biomeData = biomes.find(b => b.id === biomeId);
+    
+    if (!biomeData) return null;
+    
+    return {
+      ...biomeData,
+      abbreviation: coords.abbreviation,
+      icon: coords.icon
+    };
   };
 
   return (
@@ -58,7 +75,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
         {/* Coordinate Labels - Top */}
         <div className="flex mb-1">
           <div className="w-8 sm:w-10"></div>
-          {Array.from({ length: gridData.width }).map((_, x) => (
+          {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
             <div
               key={`top-${x}`}
               className="flex-1 text-center text-xs sm:text-sm text-gray-400 font-mono"
@@ -70,7 +87,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
 
         {/* Grid */}
         <div className="space-y-1">
-          {gridData.grid.map((row, y) => (
+          {Array.from({ length: worldGrid.grid_size.height }).map((_, y) => (
             <div key={y} className="flex gap-1">
               {/* Y-axis label */}
               <div className="w-8 sm:w-10 flex items-center justify-center text-xs sm:text-sm text-gray-400 font-mono">
@@ -78,20 +95,26 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
               </div>
               
               {/* Grid cells */}
-              {row.map((cell, x) => (
-                <div
-                  key={`${x}-${y}`}
-                  className="flex-1"
-                >
+              {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => {
+                const biome = getBiomeAtCoordinate(x, y);
+                const discovered = isCoordinateDiscovered(x, y);
+                const playerHere = isPlayerAt(x, y);
+                
+                return (
                   <div
-                    className={getCellClassName(cell)}
-                    onClick={() => handleCellClick(cell)}
-                    title={cell.discovered && cell.biome ? cell.biome.name : 'Unknown'}
+                    key={`${x}-${y}`}
+                    className="flex-1"
                   >
-                    {getCellContent(cell)}
+                    <GridCell
+                      coordinate={[x, y]}
+                      biome={biome}
+                      isDiscovered={discovered}
+                      isPlayerHere={playerHere}
+                      onClick={() => biome && discovered && onSelectLocation && onSelectLocation(biome)}
+                    />
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ))}
         </div>
@@ -99,7 +122,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
         {/* Coordinate Labels - Bottom */}
         <div className="flex mt-1">
           <div className="w-8 sm:w-10"></div>
-          {Array.from({ length: gridData.width }).map((_, x) => (
+          {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
             <div
               key={`bottom-${x}`}
               className="flex-1 text-center text-xs sm:text-sm text-gray-400 font-mono"

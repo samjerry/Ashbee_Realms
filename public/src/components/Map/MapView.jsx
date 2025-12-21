@@ -5,13 +5,14 @@ import WorldMapGrid from './WorldMapGrid';
 import AsciiMapView from './AsciiMapView';
 
 const MapView = () => {
-  const { availableLocations, currentLocation, player, mapKnowledge, fetchLocations, travelTo } = useGameStore();
+  const { availableLocations, currentLocation, player, mapKnowledge, fetchLocations, fetchMapKnowledge, travelTo } = useGameStore();
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid', 'ascii'
   const [showFilter, setShowFilter] = useState('all'); // 'all', 'discovered', 'undiscovered'
   
   useEffect(() => {
     fetchLocations();
+    fetchMapKnowledge();
   }, []);
   
   const getDangerColor = (level) => {
