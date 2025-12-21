@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Eye, Beaker, Target } from 'lucide-react';
+import { Sword, Shield, Sparkles, Knife, Heart, Crown, Award, Gem, Star, User, Eye, Beaker, Target } from 'lucide-react';
 import { getRoleBadges as getRoleBadgesHelper } from '../../utils/roleHelpers';
 
 export default function CharacterCreation({ onComplete }) {
@@ -123,7 +123,7 @@ export default function CharacterCreation({ onComplete }) {
     {
       id: 'rogue',
       name: 'Rogue',
-      icon:  Wind,
+      icon:  Knife,
       color: 'purple',
       description: 'Swift assassins with exceptional dexterity and finesse',
       stats: { 
