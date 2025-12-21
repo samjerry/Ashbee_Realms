@@ -1325,6 +1325,353 @@
         },
         "tags": ["mobility", "control", "melee"]
       }
+    ],
+    "paladin": [
+      {
+        "id": "righteous_strike",
+        "name": "Righteous Strike",
+        "description": "Strike with holy power, dealing damage and healing for 25% of damage dealt",
+        "unlock_type": "level",
+        "unlock_requirement": 1,
+        "cooldown": 2,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 7, "scales_with": "strength", "scaling": 0.6},
+          "lifesteal": {"percent": 0.25},
+          "element": "holy"
+        },
+        "tags": ["melee", "holy", "healing"]
+      },
+      {
+        "id": "lay_on_hands",
+        "name": "Lay on Hands",
+        "description": "Channel healing energy to restore health",
+        "unlock_type": "level",
+        "unlock_requirement": 2,
+        "cooldown": 3,
+        "cost": {"type": "mana", "amount": 15},
+        "effects": {
+          "heal": {"base": 25, "scales_with": "magic", "scaling": 1.8}
+        },
+        "tags": ["healing", "support"]
+      },
+      {
+        "id": "holy_shield",
+        "name": "Holy Shield",
+        "description": "Conjure a shield of light that blocks damage",
+        "unlock_type": "level",
+        "unlock_requirement": 3,
+        "cooldown": 4,
+        "cost": {"type": "mana", "amount": 18},
+        "effects": {
+          "shield": {"amount": 30, "scales_with": "defense", "scaling": 2.5, "duration": 3}
+        },
+        "tags": ["defense", "shield", "holy"]
+      },
+      {
+        "id": "judgment",
+        "name": "Judgment",
+        "description": "Deal holy damage and reduce enemy defense",
+        "unlock_type": "level",
+        "unlock_requirement": 4,
+        "cooldown": 3,
+        "cost": {"type": "mana", "amount": 12},
+        "effects": {
+          "damage": {"base": 10, "scales_with": "magic", "scaling": 0.8},
+          "debuff": {"stat": "defense", "amount": 3, "duration": 3},
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "debuff"]
+      },
+      {
+        "id": "consecration",
+        "name": "Consecration",
+        "description": "Consecrate ground, dealing holy DoT to all enemies",
+        "unlock_type": "level",
+        "unlock_requirement": 5,
+        "cooldown": 5,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "damage": {"base": 9, "scales_with": "magic", "scaling": 0.5},
+          "dot": {"damage": 5, "scales_with": "magic", "scaling": 0.6, "duration": 4},
+          "aoe": true,
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "aoe", "dot"]
+      },
+      {
+        "id": "divine_protection",
+        "name": "Divine Protection",
+        "description": "Reduce incoming damage by 60% for 2 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 6,
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "buff": {"stat": "damage_reduction", "amount": 0.60, "duration": 2}
+        },
+        "tags": ["defense", "buff", "holy"]
+      },
+      {
+        "id": "cleanse",
+        "name": "Cleanse",
+        "description": "Purge all debuffs and heal",
+        "unlock_type": "level",
+        "unlock_requirement": 7,
+        "cooldown": 5,
+        "cost": {"type": "mana", "amount": 22},
+        "effects": {
+          "cleanse": {"type": "all_debuffs"},
+          "heal": {"base": 15, "scales_with": "magic", "scaling": 1.0}
+        },
+        "tags": ["support", "cleanse", "healing"]
+      },
+      {
+        "id": "crusader_strike",
+        "name": "Crusader Strike",
+        "description": "Holy-infused strike with increased damage",
+        "unlock_type": "level",
+        "unlock_requirement": 8,
+        "cooldown": 3,
+        "cost": {"type": "none"},
+        "effects": {
+          "damage": {"base": 14, "scales_with": "strength", "scaling": 0.9},
+          "element": "holy"
+        },
+        "tags": ["melee", "holy", "damage"]
+      },
+      {
+        "id": "blessing_of_kings",
+        "name": "Blessing of Kings",
+        "description": "Increase all stats by 15% for 4 turns",
+        "unlock_type": "scroll",
+        "unlock_requirement": "blessing_tome",
+        "cooldown": 8,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "buffs": [
+            {"stat": "strength", "amount": 0.15, "duration": 4},
+            {"stat": "defense", "amount": 0.15, "duration": 4},
+            {"stat": "magic", "amount": 0.15, "duration": 4},
+            {"stat": "agility", "amount": 0.15, "duration": 4}
+          ]
+        },
+        "tags": ["buff", "support", "holy"]
+      },
+      {
+        "id": "hammer_of_wrath",
+        "name": "Hammer of Wrath",
+        "description": "Execute ability for enemies below 25% HP",
+        "unlock_type": "level",
+        "unlock_requirement": 10,
+        "cooldown": 5,
+        "cost": {"type": "mana", "amount": 15},
+        "effects": {
+          "damage": {"base": 20, "scales_with": "strength", "scaling": 1.2},
+          "conditional": {"target_hp_below": 0.25, "damage_multiplier": 2.5},
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "execute"]
+      },
+      {
+        "id": "guardian_angel",
+        "name": "Guardian Angel",
+        "description": "Survive fatal damage with 20% HP once per combat",
+        "unlock_type": "trainer",
+        "unlock_requirement": "holy_protector",
+        "cooldown": 20,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "buff": {"stat": "guardian_spirit", "duration": 999, "revive_percent": 0.20}
+        },
+        "tags": ["support", "protection", "ultimate"]
+      },
+      {
+        "id": "avenging_wrath",
+        "name": "Avenging Wrath",
+        "description": "Holy fury increasing damage and healing by 30% for 3 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 12,
+        "cooldown": 8,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "buffs": [
+            {"stat": "damage", "amount": 0.30, "duration": 3},
+            {"stat": "healing_power", "amount": 0.30, "duration": 3}
+          ]
+        },
+        "tags": ["buff", "holy", "damage"]
+      },
+      {
+        "id": "holy_light",
+        "name": "Holy Light",
+        "description": "Burst healing that damages nearby undead",
+        "unlock_type": "scroll",
+        "unlock_requirement": "radiance_scroll",
+        "cooldown": 4,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "heal": {"base": 35, "scales_with": "magic", "scaling": 2.0},
+          "damage": {"base": 20, "scales_with": "magic", "scaling": 1.2, "aoe": true},
+          "conditional": {"target_type": "undead", "damage_multiplier": 2.0},
+          "element": "holy"
+        },
+        "tags": ["healing", "magic", "holy"]
+      },
+      {
+        "id": "shield_of_the_righteous",
+        "name": "Shield of the Righteous",
+        "description": "Absorb damage and reflect 30% back to attackers",
+        "unlock_type": "level",
+        "unlock_requirement": 14,
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "shield": {"amount": 45, "scales_with": "defense", "scaling": 3.0, "duration": 2},
+          "buff": {"stat": "thorns", "amount": 0.30, "duration": 2}
+        },
+        "tags": ["defense", "shield", "holy"]
+      },
+      {
+        "id": "hand_of_protection",
+        "name": "Hand of Protection",
+        "description": "Grant immunity to physical damage for 1 turn",
+        "unlock_type": "trainer",
+        "unlock_requirement": "divine_champion",
+        "cooldown": 12,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "buff": {"stat": "physical_immunity", "duration": 1}
+        },
+        "tags": ["support", "protection", "holy"]
+      },
+      {
+        "id": "divine_storm",
+        "name": "Divine Storm",
+        "description": "Spin with holy power, damaging all enemies and healing yourself",
+        "unlock_type": "level",
+        "unlock_requirement": 16,
+        "cooldown": 6,
+        "cost": {"type": "mana", "amount": 35},
+        "effects": {
+          "damage": {"base": 24, "scales_with": "strength", "scaling": 1.0},
+          "heal": {"base": 18, "scales_with": "magic", "scaling": 1.2},
+          "aoe": true,
+          "element": "holy"
+        },
+        "tags": ["melee", "aoe", "holy", "healing"]
+      },
+      {
+        "id": "sacred_shield",
+        "name": "Sacred Shield",
+        "description": "Create a shield that heals when it expires or is consumed",
+        "unlock_type": "scroll",
+        "unlock_requirement": "sacred_codex",
+        "cooldown": 7,
+        "cost": {"type": "mana", "amount": 28},
+        "effects": {
+          "shield": {"amount": 40, "scales_with": "magic", "scaling": 2.5, "duration": 3},
+          "buff": {"stat": "shield_heal_on_expire", "amount": 25, "duration": 3}
+        },
+        "tags": ["defense", "shield", "healing", "holy"]
+      },
+      {
+        "id": "word_of_glory",
+        "name": "Word of Glory",
+        "description": "Large heal that also grants a shield",
+        "unlock_type": "level",
+        "unlock_requirement": 18,
+        "cooldown": 5,
+        "cost": {"type": "mana", "amount": 35},
+        "effects": {
+          "heal": {"base": 45, "scales_with": "magic", "scaling": 2.5},
+          "shield": {"amount": 30, "scales_with": "magic", "scaling": 1.5, "duration": 2}
+        },
+        "tags": ["healing", "shield", "holy"]
+      },
+      {
+        "id": "seal_of_righteousness",
+        "name": "Seal of Righteousness",
+        "description": "Empower weapon with holy energy, adding damage to attacks",
+        "unlock_type": "trainer",
+        "unlock_requirement": "righteous_crusader",
+        "cooldown": 10,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "buff": {"stat": "weapon_enchant_holy", "amount": 15, "duration": 5}
+        },
+        "tags": ["buff", "holy", "damage"]
+      },
+      {
+        "id": "ardent_defender",
+        "name": "Ardent Defender",
+        "description": "When below 35% HP, reduce damage taken by 80% for 3 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 20,
+        "cooldown": 15,
+        "cost": {"type": "mana", "amount": 30},
+        "effects": {
+          "buff": {"stat": "ardent_defender", "amount": 0.80, "duration": 3, "activation_threshold": 0.35}
+        },
+        "tags": ["defense", "buff", "conditional"]
+      },
+      {
+        "id": "hand_of_sacrifice",
+        "name": "Hand of Sacrifice",
+        "description": "Transfer damage from an ally to yourself for 2 turns",
+        "unlock_type": "scroll",
+        "unlock_requirement": "sacrifice_prayer",
+        "cooldown": 12,
+        "cost": {"type": "mana", "amount": 25},
+        "effects": {
+          "buff": {"stat": "damage_transfer", "amount": 0.50, "duration": 2, "target": "ally"}
+        },
+        "tags": ["support", "protection", "holy"]
+      },
+      {
+        "id": "repentance",
+        "name": "Repentance",
+        "description": "Incapacitate enemy for 2 turns, breaks on damage",
+        "unlock_type": "trainer",
+        "unlock_requirement": "grand_inquisitor",
+        "cooldown": 10,
+        "cost": {"type": "mana", "amount": 20},
+        "effects": {
+          "debuff": {"type": "incapacitate", "duration": 2, "breaks_on_damage": true},
+          "element": "holy"
+        },
+        "tags": ["control", "crowd_control", "holy"]
+      },
+      {
+        "id": "final_stand",
+        "name": "Final Stand",
+        "description": "Cannot drop below 1 HP for 4 turns",
+        "unlock_type": "level",
+        "unlock_requirement": 23,
+        "cooldown": 20,
+        "cost": {"type": "mana", "amount": 40},
+        "effects": {
+          "buff": {"stat": "cannot_die", "duration": 4}
+        },
+        "tags": ["defense", "ultimate", "survival"]
+      },
+      {
+        "id": "wake_of_ashes",
+        "name": "Wake of Ashes",
+        "description": "Massive AoE holy damage with stun for undead and demons",
+        "unlock_type": "scroll",
+        "unlock_requirement": "ashes_scripture",
+        "cooldown": 12,
+        "cost": {"type": "mana", "amount": 50},
+        "effects": {
+          "damage": {"base": 40, "scales_with": "magic", "scaling": 1.8},
+          "conditional": {"target_type": ["undead", "demon"], "damage_multiplier": 2.0},
+          "stun": {"duration": 2, "conditional": {"target_type": ["undead", "demon"]}},
+          "aoe": true,
+          "element": "holy"
+        },
+        "tags": ["magic", "holy", "aoe", "ultimate"]
+      }
     ]
   }
 }

@@ -418,10 +418,18 @@ class StatusEffectManager {
    */
   getModifiers() {
     const modifiers = {
+      // New 5-stat system bonuses
+      strength_bonus: 0,
+      dexterity_bonus: 0,
+      constitution_bonus: 0,
+      intelligence_bonus: 0,
+      wisdom_bonus: 0,
+      // Legacy stat bonuses
       attack_bonus: 0,
       defense_bonus: 0,
       magic_bonus: 0,
       agility_bonus: 0,
+      // Multipliers and derived stats
       damage_multiplier: 1.0,
       defense_multiplier: 1.0,
       magic_damage_multiplier: 1.0,
@@ -463,7 +471,14 @@ class StatusEffectManager {
     const stacks = effect.current_stacks || 1;
     const effects = effect.effects;
 
-    // Flat bonuses
+    // New 5-stat system flat bonuses
+    if (effects.strength_bonus) modifiers.strength_bonus += effects.strength_bonus * stacks;
+    if (effects.dexterity_bonus) modifiers.dexterity_bonus += effects.dexterity_bonus * stacks;
+    if (effects.constitution_bonus) modifiers.constitution_bonus += effects.constitution_bonus * stacks;
+    if (effects.intelligence_bonus) modifiers.intelligence_bonus += effects.intelligence_bonus * stacks;
+    if (effects.wisdom_bonus) modifiers.wisdom_bonus += effects.wisdom_bonus * stacks;
+    
+    // Legacy flat bonuses (for backward compatibility)
     if (effects.attack_bonus) modifiers.attack_bonus += effects.attack_bonus * stacks;
     if (effects.defense_bonus) modifiers.defense_bonus += effects.defense_bonus * stacks;
     if (effects.magic_bonus) modifiers.magic_bonus += effects.magic_bonus * stacks;

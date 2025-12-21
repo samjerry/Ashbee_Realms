@@ -100,6 +100,9 @@ class Character {
     this.bestiary = data.bestiary || {};
     this.bestiaryUnlocked = data.bestiary_unlocked || false;
     
+    // Map knowledge tracking (fog of war system)
+    this.mapKnowledge = data.map_knowledge || null;
+    
     // Playtime tracking
     this.playtime = data.playtime || 0;
     
@@ -139,9 +142,10 @@ class Character {
     if (!this.classData) {
       return {
         strength: 1,
-        defense: 1,
-        magic: 1,
-        agility: 1,
+        dexterity: 1,
+        constitution: 1,
+        intelligence: 1,
+        wisdom: 1,
         maxHp: 100
       };
     }
@@ -152,9 +156,10 @@ class Character {
 
     return {
       strength: Math.floor((startingStats.strength || 0) + (bonuses.strength_per_level || 0) * levelDiff),
-      defense: Math.floor((startingStats.defense || 0) + (bonuses.defense_per_level || 0) * levelDiff),
-      magic: Math.floor((startingStats.magic || 0) + (bonuses.magic_per_level || 0) * levelDiff),
-      agility: Math.floor((startingStats.agility || 0) + (bonuses.agility_per_level || 0) * levelDiff),
+      dexterity: Math.floor((startingStats.dexterity || 0) + (bonuses.dexterity_per_level || 0) * levelDiff),
+      constitution: Math.floor((startingStats.constitution || 0) + (bonuses.constitution_per_level || 0) * levelDiff),
+      intelligence: Math.floor((startingStats.intelligence || 0) + (bonuses.intelligence_per_level || 0) * levelDiff),
+      wisdom: Math.floor((startingStats.wisdom || 0) + (bonuses.wisdom_per_level || 0) * levelDiff),
       maxHp: Math.floor((startingStats.max_hp || 100) + (bonuses.hp_per_level || 10) * levelDiff)
     };
   }
@@ -176,16 +181,25 @@ class Character {
     const equipmentStats = this.getEquipmentStats();
 
     return {
+      // New 5-stat system
       strength: baseStats.strength + (equipmentStats.strength || 0),
-      defense: baseStats.defense + (equipmentStats.defense || 0),
-      magic: baseStats.magic + (equipmentStats.magic || 0),
-      agility: baseStats.agility + (equipmentStats.agility || 0),
-      attack: (equipmentStats.attack || 0) + baseStats.strength, // Attack comes from equipment + strength
+      dexterity: baseStats.dexterity + (equipmentStats.dexterity || 0),
+      constitution: baseStats.constitution + (equipmentStats.constitution || 0),
+      intelligence: baseStats.intelligence + (equipmentStats.intelligence || 0),
+      wisdom: baseStats.wisdom + (equipmentStats.wisdom || 0),
+      
+      // Derived stats for backward compatibility
+      attack: (equipmentStats.attack || 0) + baseStats.strength, // Attack from equipment + strength
+      defense: baseStats.constitution + (equipmentStats.defense || 0), // Defense derived from constitution
+      magic: baseStats.intelligence + (equipmentStats.magic || 0), // Magic derived from intelligence
+      agility: baseStats.dexterity + (equipmentStats.agility || 0), // Agility derived from dexterity
+      
       maxHp: baseStats.maxHp + (equipmentStats.hp || 0),
+      
       // Additional derived stats
-      critChance: (baseStats.agility * 0.5) + (equipmentStats.crit_chance || 0),
-      dodgeChance: (baseStats.agility * 0.3) + (equipmentStats.dodge_chance || 0),
-      blockChance: (baseStats.defense * 0.2) + (equipmentStats.block_chance || 0)
+      critChance: (baseStats.dexterity * 0.5) + (equipmentStats.crit_chance || 0),
+      dodgeChance: (baseStats.dexterity * 0.3) + (equipmentStats.dodge_chance || 0),
+      blockChance: (baseStats.constitution * 0.2) + (equipmentStats.block_chance || 0)
     };
   }
 
@@ -211,9 +225,10 @@ class Character {
       },
       baseStats: {
         strength: baseStats.strength,
-        defense: baseStats.defense,
-        magic: baseStats.magic,
-        agility: baseStats.agility,
+        dexterity: baseStats.dexterity,
+        constitution: baseStats.constitution,
+        intelligence: baseStats.intelligence,
+        wisdom: baseStats.wisdom,
         maxHp: baseStats.maxHp
       },
       equipmentStats: {
@@ -221,14 +236,22 @@ class Character {
         defense: equipmentStats.defense || 0,
         magic: equipmentStats.magic || 0,
         strength: equipmentStats.strength || 0,
+        dexterity: equipmentStats.dexterity || 0,
+        constitution: equipmentStats.constitution || 0,
+        intelligence: equipmentStats.intelligence || 0,
+        wisdom: equipmentStats.wisdom || 0,
         agility: equipmentStats.agility || 0,
         hp: equipmentStats.hp || 0
       },
       finalStats: {
+        strength: finalStats.strength,
+        dexterity: finalStats.dexterity,
+        constitution: finalStats.constitution,
+        intelligence: finalStats.intelligence,
+        wisdom: finalStats.wisdom,
         attack: finalStats.attack,
         defense: finalStats.defense,
         magic: finalStats.magic,
-        strength: finalStats.strength,
         agility: finalStats.agility,
         maxHp: finalStats.maxHp,
         critChance: Math.min(finalStats.critChance, 100).toFixed(1) + '%',
@@ -507,7 +530,8 @@ class Character {
       bestiary: this.bestiary,
       bestiary_unlocked: this.bestiaryUnlocked,
       equipped_abilities: this.equipped_abilities,
-      ability_cooldowns: this.ability_cooldowns
+      ability_cooldowns: this.ability_cooldowns,
+      map_knowledge: this.mapKnowledge
     };
   }
 
@@ -545,11 +569,17 @@ class Character {
       
       // Combat Stats (from getFinalStats())
       stats: {
+        // New 5-stat system
+        strength: finalStats.strength,
+        dexterity: finalStats.dexterity,
+        constitution: finalStats.constitution,
+        intelligence: finalStats.intelligence,
+        wisdom: finalStats.wisdom,
+        // Derived stats for backward compatibility
         attack: finalStats.attack,
         defense: finalStats.defense,
         magic: finalStats.magic,
         agility: finalStats.agility,
-        strength: finalStats.strength,
         critChance: finalStats.critChance,
         dodgeChance: finalStats.dodgeChance,
         blockChance: finalStats.blockChance
@@ -641,12 +671,17 @@ class Character {
       mage: ["mana_potion"],                // Mages get mana management
       rogue: ["antidote"],                  // Rogues get poison cure for trap disarming
       cleric: ["health_potion"],            // Clerics get extra healing items  
-      ranger: ["bread"]                     // Rangers get extra food for wilderness
+      ranger: ["bread"],                    // Rangers get extra food for wilderness
+      paladin: ["health_potion", "blessed_water"]  // Paladins get healing and holy items
     };
     
     if (classStartingItems[classType]) {
       startingInventory.push(...classStartingItems[classType]);
     }
+
+    // Initialize map knowledge with town_square discovered
+    const MapKnowledgeManager = require('./MapKnowledgeManager');
+    const initialMapKnowledge = MapKnowledgeManager.initializeMapKnowledge();
 
     const characterData = {
       name: playerName,
@@ -664,7 +699,8 @@ class Character {
       combat: null,
       skill_cd: 0,
       step: 0,
-      pending: null
+      pending: null,
+      map_knowledge: initialMapKnowledge
     };
 
     return new Character(characterData);

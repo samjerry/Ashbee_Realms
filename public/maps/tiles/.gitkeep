@@ -1,0 +1,3 @@
+# This directory contains map tile images for the world grid
+# Images should be named by biome ID (e.g., whispering_woods.png, town_square.png)
+# Recommended size: 128x128px PNG with transparency

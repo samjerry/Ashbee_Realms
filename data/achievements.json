@@ -185,6 +185,73 @@
         }
       },
       {
+        "id": "novice_explorer",
+        "name": "Novice Explorer",
+        "description": "Discover 5 regions on the world map",
+        "icon": "🗺️",
+        "rarity": "common",
+        "points": 10,
+        "criteria": {
+          "type": "regions_discovered",
+          "count": 5
+        },
+        "rewards": {
+          "xp": 100,
+          "gold": 50
+        }
+      },
+      {
+        "id": "adept_explorer",
+        "name": "Adept Explorer",
+        "description": "Discover 10 regions on the world map",
+        "icon": "🧭",
+        "rarity": "uncommon",
+        "points": 20,
+        "criteria": {
+          "type": "regions_discovered",
+          "count": 10
+        },
+        "rewards": {
+          "xp": 250,
+          "gold": 100
+        }
+      },
+      {
+        "id": "expert_explorer",
+        "name": "Expert Explorer",
+        "description": "Discover 15 regions on the world map",
+        "icon": "🌏",
+        "rarity": "rare",
+        "points": 40,
+        "criteria": {
+          "type": "regions_discovered",
+          "count": 15
+        },
+        "rewards": {
+          "title": "explorer",
+          "xp": 500,
+          "gold": 250
+        }
+      },
+      {
+        "id": "cartographer",
+        "name": "Cartographer",
+        "description": "Discover all regions in Ashbee Realms",
+        "icon": "🗺️",
+        "rarity": "legendary",
+        "points": 100,
+        "criteria": {
+          "type": "regions_discovered",
+          "count": 21
+        },
+        "rewards": {
+          "title": "cartographer",
+          "xp": 3000,
+          "gold": 1000,
+          "passive_unlock": "map_master"
+        }
+      },
+      {
         "id": "master_explorer",
         "name": "Master Explorer",
         "description": "Visit all biomes",

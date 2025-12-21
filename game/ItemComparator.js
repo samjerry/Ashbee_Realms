@@ -56,7 +56,13 @@ class ItemComparator {
     }
 
     const differences = {};
-    const stats = ['attack', 'defense', 'magic', 'agility', 'hp', 'crit_chance', 'crit_damage'];
+    const stats = [
+      // New 5-stat system
+      'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom',
+      // Derived/legacy stats
+      'attack', 'defense', 'magic', 'agility',
+      'hp', 'crit_chance', 'crit_damage'
+    ];
 
     // Compare stats
     for (const stat of stats) {

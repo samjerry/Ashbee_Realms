@@ -23,7 +23,6 @@ async function fetchUserRolesFromTwitch(broadcasterToken, broadcasterId, userId,
     // Check if user is the broadcaster
     if (userId === broadcasterId || userName.toLowerCase() === channelName.toLowerCase()) {
       roles.push('streamer');
-      return roles;
     }
     
     // Check if user is a moderator

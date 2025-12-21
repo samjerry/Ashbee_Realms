@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { loadData } = require('../data/data_loader');
 
 class AchievementManager {
   constructor() {
@@ -15,6 +16,7 @@ class AchievementManager {
     this.achievementTiers = null;
     this.achievementsByCategory = {};
     this.achievementById = {};
+    this.biomes = null;
     this.load();
   }
 
@@ -28,6 +30,9 @@ class AchievementManager {
       
       this.achievements = data.achievements;
       this.achievementTiers = data.achievement_tiers;
+      
+      // Load biomes data for dynamic achievement requirements
+      this.biomes = loadData('biomes')?.biomes || {};
       
       // Index achievements by category and ID for quick lookup
       for (const [category, achievementList] of Object.entries(this.achievements)) {
@@ -243,6 +248,14 @@ class AchievementManager {
         required = criteria.count === 'all' ? 10 : criteria.count; // Assuming 10 mysteries
         break;
         
+      case 'regions_discovered':
+        current = character.mapKnowledge?.discovered_regions?.length || 0;
+        // Use dynamic count if 'all' is specified, otherwise use the criteria count
+        required = criteria.count === 'all' || criteria.count >= 21 
+          ? Object.keys(this.biomes || {}).length 
+          : criteria.count;
+        break;
+        
       case 'all_factions_exalted':
         const exaltedFactions = Object.values(character.reputation || {}).filter(rep => rep >= 21000).length;
         current = exaltedFactions;
@@ -311,6 +324,7 @@ class AchievementManager {
       'damage_dealt': ['single_hit_damage'],
       'survival': ['survive_lethal'],
       'location_change': ['locations_visited', 'all_biomes_visited'],
+      'region_discovered': ['regions_discovered'],
       'quest_complete': ['quests_completed', 'all_main_quests'],
       'item_acquired': ['legendary_items'],
       'gold_gained': ['gold_accumulated'],

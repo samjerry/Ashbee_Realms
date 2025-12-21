@@ -398,6 +398,19 @@ async function initPostgres() {
         END IF;
       END $$;
     `);
+    
+    // Migration: Add map_knowledge column if it doesn't exist
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'map_knowledge'
+        ) THEN
+          ALTER TABLE ${tableName} ADD COLUMN map_knowledge JSONB DEFAULT '{"discovered_regions":["town_square"],"explored_sublocations":{"town_square":["inn","shop","blacksmith","temple"]},"visited_coordinates":[[5,5]],"discovered_coordinates":[[5,5]],"discovery_timestamp":{},"exploration_percentage":0}';
+        END IF;
+      END $$;
+    `);
   }
   
   // Migration: Add game_mode column to game_state table if it doesn't exist
