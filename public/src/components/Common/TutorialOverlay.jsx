@@ -20,7 +20,7 @@ export default function TutorialOverlay({ quest, onComplete, onSkip }) {
     },
     {
       title: "Character Stats",
-      description: "Your character has stats like Attack, Defense, Magic, and Agility. These determine your effectiveness in combat. Check your stats in the top header bar.",
+      description: "Your character has 5 core stats: Strength (STR), Dexterity (DEX), Constitution (CON), Intelligence (INT), and Wisdom (WIS). These determine your effectiveness in combat. Check your stats in the top header bar.",
       highlight: "header",
       action: "View your HP and stats above"
     },
