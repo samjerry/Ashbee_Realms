@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Eye, Beaker } from 'lucide-react';
+import { Sword, Shield, Sparkles, Wind, Heart, Crown, Award, Gem, Star, User, Eye, Beaker, Target } from 'lucide-react';
 import { getRoleBadges as getRoleBadgesHelper } from '../../utils/roleHelpers';
 
 export default function CharacterCreation({ onComplete }) {
@@ -155,7 +155,7 @@ export default function CharacterCreation({ onComplete }) {
     {
       id: 'ranger',
       name: 'Ranger',
-      icon: Star,
+      icon: Target,
       color: 'green',
       description: 'Skilled hunters with ranged weapons and high dexterity',
       stats:  { 
