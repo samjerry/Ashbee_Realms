@@ -43,6 +43,8 @@ const useGameStore = create((set, get) => ({
   // Map state
   currentLocation: null,
   availableLocations: [],
+  mapKnowledge: null,
+  mapDiscoveryStats: null,
   
   // Achievements
   achievements: [],
@@ -97,7 +99,15 @@ const useGameStore = create((set, get) => ({
       }
       
       const data = await response.json();
-      set({ player: data, isLoading: false });
+      
+      // Extract map knowledge and set it separately
+      const mapKnowledge = data.map_knowledge || null;
+      
+      set({ 
+        player: data, 
+        mapKnowledge: mapKnowledge,
+        isLoading: false 
+      });
       return true; // Indicate success
     } catch (error) {
       console.error('Failed to fetch player:', error);
