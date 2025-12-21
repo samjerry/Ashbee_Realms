@@ -36,8 +36,8 @@ const AsciiMapView = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
           `}>
             {discovered ? `
 ╔════════════════╗
-║  ${coords?.icon || '🗺️'}  ${biome.name.substring(0, 10).toUpperCase().padEnd(10)}║
-║  Danger Lv: ${biome.danger_level}   ║
+║  ${coords?.icon || '🗺️'}  ${(biome.name || 'Unknown').substring(0, 10).toUpperCase().padEnd(10)}║
+║  Danger Lv: ${biome.danger_level || 0}   ║
 ╚════════════════╝
             `.trim() : `
 ╔════════════════╗

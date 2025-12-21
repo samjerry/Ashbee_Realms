@@ -12,10 +12,10 @@ class MapKnowledgeManager {
   }
 
   /**
-   * Initialize map knowledge for a new character
+   * Initialize map knowledge for a new character (static method)
    * @returns {Object} Initial map knowledge state
    */
-  initializeMapKnowledge() {
+  static initializeMapKnowledge() {
     return {
       discovered_regions: ['town_square'], // Town square is always known
       explored_sublocations: {
@@ -26,6 +26,14 @@ class MapKnowledgeManager {
         'town_square': new Date().toISOString()
       }
     };
+  }
+
+  /**
+   * Initialize map knowledge for a new character (instance method for backwards compatibility)
+   * @returns {Object} Initial map knowledge state
+   */
+  initializeMapKnowledge() {
+    return MapKnowledgeManager.initializeMapKnowledge();
   }
 
   /**

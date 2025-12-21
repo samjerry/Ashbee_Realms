@@ -654,8 +654,7 @@ class Character {
 
     // Initialize map knowledge with town_square discovered
     const MapKnowledgeManager = require('./MapKnowledgeManager');
-    const mapManager = new MapKnowledgeManager();
-    const initialMapKnowledge = mapManager.initializeMapKnowledge();
+    const initialMapKnowledge = MapKnowledgeManager.initializeMapKnowledge();
 
     const characterData = {
       name: playerName,

@@ -25,7 +25,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
     }
     
     if (cell.isCurrent) {
-      return `${baseClass} ${getDangerBgColor(cell.dangerLevel)} ${getDangerColor(cell.dangerLevel)} ring-2 ring-primary-500 cursor-pointer hover:scale-110 animate-pulse`;
+      return `${baseClass} ${getDangerBgColor(cell.dangerLevel)} ${getDangerColor(cell.dangerLevel)} ring-2 ring-primary-500 cursor-pointer hover:scale-110`;
     }
     
     return `${baseClass} ${getDangerBgColor(cell.dangerLevel)} ${getDangerColor(cell.dangerLevel)} cursor-pointer hover:scale-105 hover:ring-2 hover:ring-primary-500/50`;
