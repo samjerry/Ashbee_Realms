@@ -87,43 +87,53 @@ module.exports = {
   },
   
   getGearById: (id) => {
-    // Search in all gear files
-    const gearFiles = ['gear_weapons.json', 'gear_armor.json', 'gear_headgear.json', 'gear_accessories.json'];
-    
-    for (const file of gearFiles) {
-      const gearData = loadJSON(file);
-      // Each file has different top-level structure (weapons, armor, headgear, accessories)
-      const topLevel = Object.values(gearData)[0];
+    try {
+      // Search in all gear files
+      const gearFiles = ['gear_weapons.json', 'gear_armor.json', 'gear_headgear.json', 'gear_accessories.json'];
       
-      if (topLevel) {
-        // Check if it's nested by category (like accessories: {rings, amulets, belts})
-        const categories = Object.values(topLevel);
-        for (const category of categories) {
-          if (typeof category === 'object' && !Array.isArray(category)) {
-            // It's a nested structure, search within rarities
-            for (const rarity in category) {
-              if (Array.isArray(category[rarity])) {
-                const found = category[rarity].find(g => g.id === id);
+      for (const file of gearFiles) {
+        try {
+          const gearData = loadJSON(file);
+          // Each file has different top-level structure (weapons, armor, headgear, accessories)
+          const topLevel = Object.values(gearData)[0];
+          
+          if (topLevel) {
+            // Check if it's nested by category (like accessories: {rings, amulets, belts})
+            const categories = Object.values(topLevel);
+            for (const category of categories) {
+              if (typeof category === 'object' && !Array.isArray(category)) {
+                // It's a nested structure, search within rarities
+                for (const rarity in category) {
+                  if (Array.isArray(category[rarity])) {
+                    const found = category[rarity].find(g => g.id === id);
+                    if (found) return found;
+                  }
+                }
+              } else if (Array.isArray(category)) {
+                // Direct array of items
+                const found = category.find(g => g.id === id);
                 if (found) return found;
               }
             }
-          } else if (Array.isArray(category)) {
-            // Direct array of items
-            const found = category.find(g => g.id === id);
-            if (found) return found;
+            
+            // Also check top level rarities directly (for weapons/armor/headgear)
+            for (const rarity in topLevel) {
+              if (Array.isArray(topLevel[rarity])) {
+                const found = topLevel[rarity].find(g => g.id === id);
+                if (found) return found;
+              }
+            }
           }
-        }
-        
-        // Also check top level rarities directly (for weapons/armor/headgear)
-        for (const rarity in topLevel) {
-          if (Array.isArray(topLevel[rarity])) {
-            const found = topLevel[rarity].find(g => g.id === id);
-            if (found) return found;
-          }
+        } catch (fileError) {
+          console.error(`Error reading gear file ${file}:`, fileError);
+          continue;
         }
       }
+      return null;
+    } catch (error) {
+      console.error('Error in getGearById:', error);
+      return null;
     }
-    return null;
   },
   
   getBiomeById: (id) => {

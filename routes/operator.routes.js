@@ -315,22 +315,34 @@ router.get('/data/player-inventory', checkOperatorAccess, async (req, res) => {
     });
     
     const inventoryDetails = Object.entries(itemCounts).map(([itemId, quantity]) => {
-      // Try to find item in consumables first
-      let itemData = data.getItemById(itemId);
-      
-      // If not found, try gear
-      if (!itemData) {
-        itemData = data.getGearById(itemId);
+      try {
+        // Try to find item in consumables first
+        let itemData = data.getItemById(itemId);
+        
+        // If not found, try gear
+        if (!itemData) {
+          itemData = data.getGearById(itemId);
+        }
+        
+        return {
+          id: itemId,
+          quantity,
+          name: itemData?.name || itemId,
+          rarity: itemData?.rarity || 'common',
+          description: itemData?.description || '',
+          stats: itemData?.stats || null
+        };
+      } catch (itemError) {
+        console.error(`Error loading item ${itemId}:`, itemError);
+        return {
+          id: itemId,
+          quantity,
+          name: itemId,
+          rarity: 'common',
+          description: 'Unknown item',
+          stats: null
+        };
       }
-      
-      return {
-        id: itemId,
-        quantity,
-        name: itemData?.name || itemId,
-        rarity: itemData?.rarity || 'common',
-        description: itemData?.description || '',
-        stats: itemData?.stats || null
-      };
     });
     
     res.json({ 
