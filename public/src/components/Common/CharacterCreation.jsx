@@ -95,11 +95,11 @@ export default function CharacterCreation({ onComplete }) {
       color: 'red',
       description: 'Masters of melee combat with high strength and constitution',
       stats: { 
-        strength: 9, 
-        dexterity: 2, 
+        strength: 10, 
+        dexterity: 3, 
         constitution: 8, 
         intelligence: 1, 
-        wisdom: 5 
+        wisdom: 3 
       },
       playstyle: 'Tank and deal massive physical damage',
       startingGear: 'Iron Sword, Leather Armor, Wooden Shield'
@@ -112,10 +112,10 @@ export default function CharacterCreation({ onComplete }) {
       description: 'Wielders of arcane forces with devastating magical abilities',
       stats: { 
         strength: 1, 
-        dexterity: 2, 
+        dexterity: 3, 
         constitution: 4, 
         intelligence: 10, 
-        wisdom: 8 
+        wisdom: 7 
       },
       playstyle: 'Cast powerful spells from range',
       startingGear:  'Wooden Staff, Apprentice Robes, Mana Crystal'
@@ -127,11 +127,11 @@ export default function CharacterCreation({ onComplete }) {
       color: 'purple',
       description: 'Swift assassins with exceptional dexterity and finesse',
       stats: { 
-        strength: 2, 
+        strength: 4, 
         dexterity: 10, 
-        constitution: 6, 
-        intelligence: 2, 
-        wisdom: 5 
+        constitution: 5, 
+        intelligence: 3, 
+        wisdom: 3 
       },
       playstyle: 'Strike fast with critical hits',
       startingGear:  'Dual Daggers, Leather Vest, Lockpicks'
@@ -140,13 +140,13 @@ export default function CharacterCreation({ onComplete }) {
       id: 'cleric',
       name: 'Cleric',
       icon:  Heart,
-      color: 'green',
+      color: 'white',
       description: 'Holy warriors blessed with divine wisdom and healing power',
       stats: { 
-        strength: 2, 
-        dexterity: 2, 
+        strength: 4, 
+        dexterity: 3, 
         constitution: 6, 
-        intelligence: 5, 
+        intelligence: 4, 
         wisdom: 10 
       },
       playstyle: 'Support with healing and buffs',
@@ -159,11 +159,11 @@ export default function CharacterCreation({ onComplete }) {
       color: 'yellow',
       description: 'Skilled hunters with ranged weapons and high dexterity',
       stats:  { 
-        strength: 3, 
+        strength: 5, 
         dexterity: 9, 
-        constitution: 6, 
-        intelligence: 2, 
-        wisdom: 5 
+        constitution: 5, 
+        intelligence: 3, 
+        wisdom: 6 
       },
       playstyle: 'Balanced combat and utility',
       startingGear:  'Longbow, Leather Armor, Quiver of Arrows'
@@ -175,11 +175,11 @@ export default function CharacterCreation({ onComplete }) {
       color: 'yellow',
       description: 'Holy knights who blend combat prowess with divine magic (Requested by PalaJen)',
       stats: { 
-        strength: 7, 
-        dexterity: 2, 
-        constitution: 7, 
-        intelligence: 2, 
-        wisdom: 7 
+        strength: 6, 
+        dexterity: 1, 
+        constitution: 10, 
+        intelligence: 3, 
+        wisdom: 8 
       },
       playstyle: 'Tank, heal, and smite with holy power',
       startingGear: 'Iron Mace, Chainmail Vest, Holy Symbol'
@@ -202,6 +202,7 @@ export default function CharacterCreation({ onComplete }) {
     blue: 'border-blue-500 bg-blue-900/20',
     purple: 'border-purple-500 bg-purple-900/20',
     green: 'border-green-500 bg-green-900/20',
+    amber: 'border-amber-500 bg-amber-900/20',
     yellow: 'border-yellow-500 bg-yellow-900/20'
   };
 
@@ -210,6 +211,7 @@ export default function CharacterCreation({ onComplete }) {
     blue: 'border-blue-400 bg-blue-800/40 ring-2 ring-blue-400',
     purple: 'border-purple-400 bg-purple-800/40 ring-2 ring-purple-400',
     green: 'border-green-400 bg-green-800/40 ring-2 ring-green-400',
+    amber: 'border-amber-400 bg-amber-800/40 ring-2 ring-amber-400',
     yellow: 'border-yellow-400 bg-yellow-800/40 ring-2 ring-yellow-400'
   };
 

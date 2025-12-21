@@ -6,11 +6,11 @@
       "description": "A battle-hardened fighter who excels in close combat. Warriors can withstand tremendous punishment and deal devastating melee damage.",
       "starting_stats": {
         "max_hp": 110,
-        "strength": 9,
-        "dexterity": 2,
+        "strength": 10,
+        "dexterity": 3,
         "constitution": 8,
         "intelligence": 1,
-        "wisdom": 5
+        "wisdom": 3
       },
       "stat_bonuses": {
         "hp_per_level": 10,
@@ -43,10 +43,10 @@
       "starting_stats": {
         "max_hp": 80,
         "strength": 1,
-        "dexterity": 2,
+        "dexterity": 3,
         "constitution": 4,
         "intelligence": 10,
-        "wisdom": 8
+        "wisdom": 7
       },
       "stat_bonuses": {
         "hp_per_level": 6,
@@ -77,11 +77,11 @@
       "description": "A cunning assassin who strikes from the shadows. Rogues rely on speed, critical hits, and dodging attacks.",
       "starting_stats": {
         "max_hp": 90,
-        "strength": 2,
+        "strength": 4,
         "dexterity": 10,
-        "constitution": 6,
-        "intelligence": 2,
-        "wisdom": 5
+        "constitution": 5,
+        "intelligence": 3,
+        "wisdom": 3
       },
       "stat_bonuses": {
         "hp_per_level": 7,
@@ -113,10 +113,10 @@
       "description": "A holy warrior blessed by divine powers. Clerics can heal allies and smite evil with holy magic.",
       "starting_stats": {
         "max_hp": 100,
-        "strength": 2,
-        "dexterity": 2,
+        "strength": 4,
+        "dexterity": 3,
         "constitution": 6,
-        "intelligence": 5,
+        "intelligence": 4,
         "wisdom": 10
       },
       "stat_bonuses": {
@@ -149,11 +149,11 @@
       "description": "A master of ranged combat and wilderness survival. Rangers excel at dealing consistent damage from a distance.",
       "starting_stats": {
         "max_hp": 95,
-        "strength": 3,
+        "strength": 5,
         "dexterity": 9,
-        "constitution": 6,
-        "intelligence": 2,
-        "wisdom": 5
+        "constitution": 5,
+        "intelligence": 3,
+        "wisdom": 6
       },
       "stat_bonuses": {
         "hp_per_level": 7,
@@ -185,10 +185,10 @@
       "starting_stats": {
         "max_hp": 105,
         "strength": 7,
-        "dexterity": 2,
+        "dexterity": 3,
         "constitution": 7,
-        "intelligence": 2,
-        "wisdom": 7
+        "intelligence": 3,
+        "wisdom": 8
       },
       "stat_bonuses": {
         "hp_per_level": 9,
