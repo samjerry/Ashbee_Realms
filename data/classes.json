@@ -139,7 +139,7 @@
         }
       },
       "starting_equipment": {
-        "main_hand": "wooden_mace",
+        "main_hand": "rusty_mace",
         "chest": "rough_tunic"
       }
     },
@@ -211,8 +211,8 @@
         }
       },
       "starting_equipment": {
-        "main_hand": "mace",
-        "chest": "chainmail"
+        "main_hand": "rusty_mace",
+        "chest": "padded_vest"
       }
     }
   }

@@ -118,9 +118,9 @@
         "value": 8
       },
       {
-        "id": "wooden_mace",
-        "name": "Wooden Mace",
-        "description": "A simple wooden cudgel, rough but effective",
+        "id": "rusty_mace",
+        "name": "Rusty Mace",
+        "description": "An old, worn mace with rust spots",
         "slot": "main_hand",
         "rarity": "common",
         "required_level": 1,
