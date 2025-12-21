@@ -5,6 +5,7 @@ const OperatorManager = require('../game/OperatorManager');
 const validation = require('../middleware/validation');
 const security = require('../middleware/security');
 const socketHandler = require('../websocket/socketHandler');
+const gameData = require('../data/data');
 
 const operatorMgr = new OperatorManager();
 
@@ -251,6 +252,313 @@ router.get('/audit-log', checkOperatorAccess, async (req, res) => {
   } catch (error) {
     console.error('Error fetching audit log:', error);
     res.status(500).json({ error: 'Failed to fetch audit log' });
+  }
+});
+
+/**
+ * GET /data/items
+ * Get all game items with categories for item browsers
+ */
+router.get('/data/items', checkOperatorAccess, async (req, res) => {
+  try {
+    const items = gameData.getItems();
+    const gear = gameData.getGear();
+    
+    // Format items for UI consumption
+    const formattedItems = [];
+    
+    // Add consumables
+    for (const rarity in items) {
+      if (Array.isArray(items[rarity])) {
+        items[rarity].forEach(item => {
+          formattedItems.push({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            rarity: rarity,
+            type: 'consumable',
+            icon: item.icon || '🧪',
+            value: item.value || 0
+          });
+        });
+      }
+    }
+    
+    // Add gear items
+    for (const slot in gear) {
+      const slotItems = gear[slot];
+      if (typeof slotItems === 'object') {
+        for (const rarity in slotItems) {
+          if (Array.isArray(slotItems[rarity])) {
+            slotItems[rarity].forEach(item => {
+              formattedItems.push({
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                rarity: rarity,
+                type: slot,
+                icon: item.icon || '⚔️',
+                value: item.value || 0
+              });
+            });
+          }
+        }
+      }
+    }
+    
+    res.json({ items: formattedItems });
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).json({ error: 'Failed to fetch items' });
+  }
+});
+
+/**
+ * GET /data/player-inventory
+ * Get a specific player's inventory
+ */
+router.get('/data/player-inventory', checkOperatorAccess, async (req, res) => {
+  try {
+    const { playerId } = req.query;
+    if (!playerId) {
+      return res.status(400).json({ error: 'playerId parameter required' });
+    }
+    
+    const table = db.getPlayerTable(req.channelName);
+    const result = await db.query(
+      `SELECT inventory, equipped FROM ${table} WHERE player_id = $1`,
+      [playerId]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    const player = result.rows[0];
+    const inventory = typeof player.inventory === 'string' 
+      ? JSON.parse(player.inventory) 
+      : player.inventory;
+    
+    // Count items and format for UI
+    const itemCounts = {};
+    inventory.forEach(itemId => {
+      itemCounts[itemId] = (itemCounts[itemId] || 0) + 1;
+    });
+    
+    // Get item details
+    const inventoryItems = [];
+    for (const itemId in itemCounts) {
+      const item = gameData.getItemById(itemId) || gameData.getGearById(itemId);
+      if (item) {
+        inventoryItems.push({
+          id: itemId,
+          name: item.name,
+          description: item.description,
+          rarity: item.rarity,
+          quantity: itemCounts[itemId],
+          icon: item.icon || '📦'
+        });
+      } else {
+        // Unknown item
+        inventoryItems.push({
+          id: itemId,
+          name: itemId,
+          description: 'Unknown item',
+          rarity: 'common',
+          quantity: itemCounts[itemId],
+          icon: '❓'
+        });
+      }
+    }
+    
+    res.json({ inventory: inventoryItems });
+  } catch (error) {
+    console.error('Error fetching player inventory:', error);
+    res.status(500).json({ error: 'Failed to fetch player inventory' });
+  }
+});
+
+/**
+ * GET /data/player-quests
+ * Get a specific player's active and completed quests
+ */
+router.get('/data/player-quests', checkOperatorAccess, async (req, res) => {
+  try {
+    const { playerId } = req.query;
+    if (!playerId) {
+      return res.status(400).json({ error: 'playerId parameter required' });
+    }
+    
+    const table = db.getPlayerTable(req.channelName);
+    const result = await db.query(
+      `SELECT active_quests, completed_quests FROM ${table} WHERE player_id = $1`,
+      [playerId]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+    
+    const player = result.rows[0];
+    const activeQuests = typeof player.active_quests === 'string' 
+      ? JSON.parse(player.active_quests) 
+      : (player.active_quests || []);
+    const completedQuests = typeof player.completed_quests === 'string' 
+      ? JSON.parse(player.completed_quests) 
+      : (player.completed_quests || []);
+    
+    // Get quest details
+    const quests = [];
+    
+    activeQuests.forEach(questId => {
+      const quest = gameData.getQuestById(questId);
+      if (quest) {
+        quests.push({
+          id: questId,
+          name: quest.name,
+          description: quest.description,
+          status: 'active',
+          type: quest.chapter ? 'main' : 'side'
+        });
+      } else {
+        quests.push({
+          id: questId,
+          name: questId,
+          description: 'Unknown quest',
+          status: 'active',
+          type: 'unknown'
+        });
+      }
+    });
+    
+    completedQuests.forEach(questId => {
+      const quest = gameData.getQuestById(questId);
+      if (quest) {
+        quests.push({
+          id: questId,
+          name: quest.name,
+          description: quest.description,
+          status: 'completed',
+          type: quest.chapter ? 'main' : 'side'
+        });
+      } else {
+        quests.push({
+          id: questId,
+          name: questId,
+          description: 'Unknown quest',
+          status: 'completed',
+          type: 'unknown'
+        });
+      }
+    });
+    
+    res.json({ quests });
+  } catch (error) {
+    console.error('Error fetching player quests:', error);
+    res.status(500).json({ error: 'Failed to fetch player quests' });
+  }
+});
+
+/**
+ * GET /data/locations
+ * Get all valid locations from biomes
+ */
+router.get('/data/locations', checkOperatorAccess, async (req, res) => {
+  try {
+    const biomes = gameData.getBiomes();
+    const locations = [];
+    
+    for (const biomeId in biomes) {
+      const biome = biomes[biomeId];
+      
+      // Add main biome location
+      locations.push({
+        id: biomeId,
+        name: biome.name,
+        description: biome.description,
+        dangerLevel: biome.danger_level,
+        type: 'biome'
+      });
+      
+      // Add sub-locations
+      if (biome.sub_locations && Array.isArray(biome.sub_locations)) {
+        biome.sub_locations.forEach(subLoc => {
+          locations.push({
+            id: subLoc.id,
+            name: subLoc.name,
+            description: subLoc.description,
+            dangerLevel: biome.danger_level,
+            type: 'location',
+            biome: biome.name
+          });
+        });
+      }
+    }
+    
+    res.json({ locations });
+  } catch (error) {
+    console.error('Error fetching locations:', error);
+    res.status(500).json({ error: 'Failed to fetch locations' });
+  }
+});
+
+/**
+ * GET /data/achievements
+ * Get all achievements
+ */
+router.get('/data/achievements', checkOperatorAccess, async (req, res) => {
+  try {
+    const achievements = gameData.getAchievements();
+    const formattedAchievements = [];
+    
+    for (const category in achievements) {
+      if (Array.isArray(achievements[category])) {
+        achievements[category].forEach(achievement => {
+          formattedAchievements.push({
+            id: achievement.id,
+            name: achievement.name,
+            description: achievement.description,
+            category: category,
+            rarity: achievement.rarity,
+            icon: achievement.icon || '🏆',
+            points: achievement.points || 0
+          });
+        });
+      }
+    }
+    
+    res.json({ achievements: formattedAchievements });
+  } catch (error) {
+    console.error('Error fetching achievements:', error);
+    res.status(500).json({ error: 'Failed to fetch achievements' });
+  }
+});
+
+/**
+ * GET /data/encounters
+ * Get all random encounters
+ */
+router.get('/data/encounters', checkOperatorAccess, async (req, res) => {
+  try {
+    const encounters = gameData.getRandomEncounters();
+    const formattedEncounters = [];
+    
+    for (const encounterId in encounters) {
+      const encounter = encounters[encounterId];
+      formattedEncounters.push({
+        id: encounterId,
+        name: encounter.name,
+        description: encounter.description,
+        type: encounter.type,
+        rarity: encounter.rarity,
+        locations: encounter.locations || []
+      });
+    }
+    
+    res.json({ encounters: formattedEncounters });
+  } catch (error) {
+    console.error('Error fetching encounters:', error);
+    res.status(500).json({ error: 'Failed to fetch encounters' });
   }
 });
 
