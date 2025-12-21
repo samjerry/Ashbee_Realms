@@ -1,0 +1,132 @@
+{
+  "weapons": [
+    {
+      "id": "flamebrand_sword",
+      "name": "Flamebrand Sword",
+      "description": "A sword wreathed in eternal flames",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 25,
+      "stats": {
+        "attack": 28
+      },
+      "passive": {
+        "burn_damage": 6,
+        "burn_duration": 4
+      },
+      "value": 250
+    },
+    {
+      "id": "archmage_staff",
+      "name": "Archmage Staff",
+      "description": "A staff of immense magical power",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 25,
+      "stats": {
+        "attack": 28,
+        "magic": 32
+      },
+      "passive": {
+        "spell_power": 0.5
+      },
+      "value": 350
+    },
+    {
+      "id": "dragon_bone_sword",
+      "name": "Dragon Bone Sword",
+      "description": "Forged from the bones of an ancient dragon",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 28,
+      "stats": {
+        "attack": 32,
+        "magic": 12
+      },
+      "value": 400
+    },
+    {
+      "id": "blade_of_elements",
+      "name": "Blade of Elements",
+      "description": "Sword infused with all elemental powers",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 30,
+      "stats": {
+        "attack": 35
+      },
+      "passive": {
+        "fire_damage": 10,
+        "ice_damage": 10,
+        "lightning_damage": 10
+      },
+      "value": 500
+    },
+    {
+      "id": "orb_of_storms",
+      "name": "Orb of Storms",
+      "description": "Controls weather and lightning",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 28,
+      "stats": {
+        "attack": 32,
+        "magic": 30
+      },
+      "passive": {
+        "storm_control": true
+      },
+      "value": 420
+    },
+    {
+      "id": "staff_of_life",
+      "name": "Staff of Life",
+      "description": "Channels the essence of life itself",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 26,
+      "stats": {
+        "attack": 30,
+        "magic": 28
+      },
+      "passive": {
+        "heal_on_kill": 10
+      },
+      "value": 380
+    },
+    {
+      "id": "sword_of_truth",
+      "name": "Sword of Truth",
+      "description": "Always strikes true and reveals deception",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 30,
+      "stats": {
+        "attack": 35
+      },
+      "passive": {
+        "true_strike": true,
+        "detect_lies": true
+      },
+      "value": 550
+    },
+    {
+      "id": "dragonslayer",
+      "name": "Dragonslayer",
+      "description": "An legendary blade forged to slay dragons",
+      "slot": "main_hand",
+      "rarity": "epic",
+      "required_level": 20,
+      "stats": {
+        "attack": 32,
+        "strength": 8,
+        "defense": 10
+      },
+      "passive": {
+        "bonus_vs_dragons": 2,
+        "lifesteal": 0.15
+      },
+      "value": 2000
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "weapons": [
+    {
+      "id": "stick",
+      "name": "Stick",
+      "description": "A simple wooden stick",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 1
+      },
+      "value": 2
+    },
+    {
+      "id": "wooden_club",
+      "name": "Wooden Club",
+      "description": "A heavy wooden cudgel",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 3
+      },
+      "value": 4
+    },
+    {
+      "id": "sling",
+      "name": "Sling",
+      "description": "Simple leather sling for stones",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 2
+      },
+      "value": 3
+    },
+    {
+      "id": "wooden_sword",
+      "name": "Wooden Sword",
+      "description": "A crude wooden training sword",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 2
+      },
+      "value": 5
+    },
+    {
+      "id": "rusty_knife",
+      "name": "Rusty Knife",
+      "description": "An old, worn blade",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 1
+      },
+      "value": 3
+    },
+    {
+      "id": "hammer",
+      "name": "Hammer",
+      "description": "A basic carpenter's hammer",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 2,
+      "stats": {
+        "attack": 3
+      },
+      "passive": {
+        "stun_chance": 0.1
+      },
+      "value": 8
+    },
+    {
+      "id": "rusty_sword",
+      "name": "Rusty Sword",
+      "description": "A worn blade, barely functional but better than nothing",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 4
+      },
+      "value": 10
+    },
+    {
+      "id": "wooden_staff",
+      "name": "Wooden Staff",
+      "description": "A simple wooden staff for channeling magic",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "magic": 4,
+        "attack": 2
+      },
+      "value": 12
+    },
+    {
+      "id": "rusty_dagger",
+      "name": "Rusty Dagger",
+      "description": "A small, corroded blade",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 3,
+        "agility": 2
+      },
+      "passive": {
+        "crit_chance": 0.05
+      },
+      "value": 8
+    },
+    {
+      "id": "rusty_mace",
+      "name": "Rusty Mace",
+      "description": "An old, worn mace with rust spots",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 4
+      },
+      "value": 10
+    },
+    {
+      "id": "short_bow",
+      "name": "Short Bow",
+      "description": "A compact hunting bow with decent range",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 1,
+      "stats": {
+        "attack": 4
+      },
+      "value": 10
+    },
+    {
+      "id": "farming_scythe",
+      "name": "Farming Scythe",
+      "description": "A simple tool for harvesting crops, repurposed for combat",
+      "slot": "main_hand",
+      "rarity": "common",
+      "required_level": 2,
+      "stats": {
+        "attack": 5,
+        "agility": 1
+      },
+      "value": 12
+    }
+  ]
+}

@@ -70,7 +70,7 @@ class EquipmentManager {
     }
 
     // Load from data files
-    const weapons = loadData('gear_weapons');
+    const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
     const armor = loadData('gear_armor');
     const headgear = loadData('gear_headgear');
     const accessories = loadData('gear_accessories');
@@ -82,10 +82,11 @@ class EquipmentManager {
 
     let item = null;
 
-    // Search in weapons
-    if (weapons && weapons.weapons) {
-      for (const rarity of Object.keys(weapons.weapons)) {
-        const found = weapons.weapons[rarity].find(i => i.id === itemId);
+    // Search in weapons from new rarity-based files
+    for (const rarity of rarities) {
+      const weapons = loadData(`gear/weapons/weapons_${rarity}`);
+      if (weapons && weapons.weapons) {
+        const found = weapons.weapons.find(i => i.id === itemId);
         if (found) {
           item = found;
           break;

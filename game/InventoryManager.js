@@ -84,7 +84,7 @@ class InventoryManager {
     // Try loading from various data sources
     const consumables = loadData('consumables_extended');
     const items = loadData('items');
-    const weapons = loadData('gear_weapons');
+    const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
     const armor = loadData('gear_armor');
     const headgear = loadData('gear_headgear');
     const accessories = loadData('gear_accessories');
@@ -126,13 +126,16 @@ class InventoryManager {
       }
     }
 
-    // Search in weapons
-    if (!item && weapons && weapons.weapons) {
-      for (const rarity of Object.keys(weapons.weapons)) {
-        const found = weapons.weapons[rarity].find(i => i.id === itemId);
-        if (found) {
-          item = found;
-          break;
+    // Search in weapons from new rarity-based files
+    if (!item) {
+      for (const rarity of rarities) {
+        const weaponData = loadData(`gear/weapons/weapons_${rarity}`);
+        if (weaponData && weaponData.weapons) {
+          const found = weaponData.weapons.find(i => i.id === itemId);
+          if (found) {
+            item = found;
+            break;
+          }
         }
       }
     }
