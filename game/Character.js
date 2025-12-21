@@ -644,6 +644,9 @@ class Character {
     const classData = classes.classes[classType];
     const startingStats = classData.starting_stats;
     
+    // Prepare starting inventory with class-specific items (unequipped)
+    const startingInventory = ["potion", "bread"]; // Base starting items
+    
     // Prepare equipped items
     const equipped = {
       headgear: null, chest: null, legs: null, footwear: null,
@@ -663,9 +666,6 @@ class Character {
         startingInventory.push(classData.starting_equipment.chest); // Add to inventory
       }
     }
-
-    // Prepare starting inventory with class-specific items (unequipped)
-    const startingInventory = ["potion", "bread"]; // Base starting items
     
     // Add class-specific starting items to inventory (these are unequipped backups/extras)
     const classStartingItems = {
