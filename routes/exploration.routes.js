@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const ExplorationManager = require('../game/ExplorationManager');
+const MapKnowledgeManager = require('../game/MapKnowledgeManager');
 const socketHandler = require('../websocket/socketHandler');
 
 /**

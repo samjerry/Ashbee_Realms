@@ -5,6 +5,13 @@ import GridCell from './GridCell';
 import worldGrid from '../../data/world_grid.json';
 
 const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation }) => {
+  // Create a lookup map for biomes by ID for O(1) access
+  const biomeMap = useMemo(() => {
+    const map = new Map();
+    biomes.forEach(biome => map.set(biome.id, biome));
+    return map;
+  }, [biomes]);
+  
   const gridData = useMemo(() => {
     return generateWorldGrid(mapKnowledge, biomes, currentLocation?.id);
   }, [mapKnowledge, biomes, currentLocation]);
@@ -35,7 +42,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
     return coords && coords.x === x && coords.y === y;
   };
   
-  // Helper to get biome at coordinate
+  // Helper to get biome at coordinate - optimized with Map lookup
   const getBiomeAtCoordinate = (x, y) => {
     const biomeEntry = Object.entries(worldGrid.biome_coordinates).find(
       ([_, coords]) => coords.x === x && coords.y === y
@@ -44,7 +51,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
     if (!biomeEntry) return null;
     
     const [biomeId, coords] = biomeEntry;
-    const biomeData = biomes.find(b => b.id === biomeId);
+    const biomeData = biomeMap.get(biomeId);
     
     if (!biomeData) return null;
     

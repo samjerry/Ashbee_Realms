@@ -122,7 +122,11 @@ class MapKnowledgeManager {
     
     // Update exploration percentage
     const totalBiomes = Object.keys(this.biomes).length;
-    mapKnowledge.exploration_percentage = (mapKnowledge.discovered_regions.length / totalBiomes) * 100;
+    if (totalBiomes > 0) {
+      mapKnowledge.exploration_percentage = (mapKnowledge.discovered_regions.length / totalBiomes) * 100;
+    } else {
+      mapKnowledge.exploration_percentage = 0;
+    }
 
     return {
       mapKnowledge,
