@@ -306,8 +306,8 @@ router.get('/data/player-inventory', checkOperatorAccess, async (req, res) => {
     
     // Get inventory with detailed item information
     const data = require('../data/data');
-    // Ensure inventory is always an array
-    let inventory = character.inventory || [];
+    // Ensure inventory is always an array - check for InventoryManager object first
+    let inventory = character.inventory?.items || character.inventory || [];
     if (!Array.isArray(inventory)) {
       console.warn(`Player ${playerId} has non-array inventory, converting to array`);
       inventory = [];
@@ -315,8 +315,12 @@ router.get('/data/player-inventory', checkOperatorAccess, async (req, res) => {
     
     // Count items and get details
     const itemCounts = {};
-    inventory.forEach(itemId => {
-      itemCounts[itemId] = (itemCounts[itemId] || 0) + 1;
+    inventory.forEach(item => {
+      // Handle both old format (string itemId) and new format (object with id property)
+      const itemId = typeof item === 'string' ? item : item?.id;
+      if (itemId) {
+        itemCounts[itemId] = (itemCounts[itemId] || 0) + 1;
+      }
     });
     
     const inventoryDetails = Object.entries(itemCounts).map(([itemId, quantity]) => {
