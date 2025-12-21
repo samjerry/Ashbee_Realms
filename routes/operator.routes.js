@@ -407,69 +407,40 @@ router.get('/data/player-quests', checkOperatorAccess, async (req, res) => {
       ? JSON.parse(player.completed_quests) 
       : (player.completed_quests || []);
     
+    // Helper function to find quest and determine type
+    const findQuestDetails = (questId, status) => {
+      const allQuests = gameData.getQuests();
+      
+      // Search in all quest categories
+      for (const category in allQuests) {
+        if (Array.isArray(allQuests[category])) {
+          const quest = allQuests[category].find(q => q.id === questId);
+          if (quest) {
+            return {
+              id: questId,
+              name: quest.name,
+              description: quest.description,
+              status: status,
+              type: category === 'main_story' ? 'main' : (category === 'daily_quests' ? 'daily' : 'side')
+            };
+          }
+        }
+      }
+      
+      // Quest not found in data
+      return {
+        id: questId,
+        name: questId,
+        description: 'Unknown quest',
+        status: status,
+        type: 'unknown'
+      };
+    };
+    
     // Get quest details
     const quests = [];
-    const allQuests = gameData.getQuests();
-    
-    activeQuests.forEach(questId => {
-      // Search in all quest categories
-      let found = false;
-      for (const category in allQuests) {
-        if (Array.isArray(allQuests[category])) {
-          const quest = allQuests[category].find(q => q.id === questId);
-          if (quest) {
-            quests.push({
-              id: questId,
-              name: quest.name,
-              description: quest.description,
-              status: 'active',
-              type: quest.chapter ? 'main' : 'side'
-            });
-            found = true;
-            break;
-          }
-        }
-      }
-      if (!found) {
-        quests.push({
-          id: questId,
-          name: questId,
-          description: 'Unknown quest',
-          status: 'active',
-          type: 'unknown'
-        });
-      }
-    });
-    
-    completedQuests.forEach(questId => {
-      // Search in all quest categories
-      let found = false;
-      for (const category in allQuests) {
-        if (Array.isArray(allQuests[category])) {
-          const quest = allQuests[category].find(q => q.id === questId);
-          if (quest) {
-            quests.push({
-              id: questId,
-              name: quest.name,
-              description: quest.description,
-              status: 'completed',
-              type: quest.chapter ? 'main' : 'side'
-            });
-            found = true;
-            break;
-          }
-        }
-      }
-      if (!found) {
-        quests.push({
-          id: questId,
-          name: questId,
-          description: 'Unknown quest',
-          status: 'completed',
-          type: 'unknown'
-        });
-      }
-    });
+    activeQuests.forEach(questId => quests.push(findQuestDetails(questId, 'active')));
+    completedQuests.forEach(questId => quests.push(findQuestDetails(questId, 'completed')));
     
     res.json({ quests });
   } catch (error) {
