@@ -361,8 +361,14 @@ router.post('/create',
             );
             
             if (fetchedRoles && fetchedRoles.length > 0) {
-              userRoles = fetchedRoles;
-              console.log(`✅ Fetched roles from Twitch API:`, userRoles);
+              // Preserve special roles (creator, tester) that were manually assigned
+              const existingSpecialRoles = existingProgress?.roles?.filter(r => ['creator', 'tester'].includes(r)) || [];
+              userRoles = [...new Set([...existingSpecialRoles, ...fetchedRoles])]; // Merge and deduplicate
+              console.log(`✅ Fetched roles from Twitch API:`, fetchedRoles);
+              if (existingSpecialRoles.length > 0) {
+                console.log(`✅ Preserved special roles:`, existingSpecialRoles);
+              }
+              console.log(`✅ Final merged roles:`, userRoles);
             } else {
               userRoles = ['viewer'];
             }
@@ -758,7 +764,11 @@ router.post('/role-display',
       // Emit websocket event for live update with complete player data
       const character = await db.getCharacter(user.id, channelName);
       if (character) {
-        socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+        socketHandler.emitPlayerUpdate(character.name, channelName, {
+          ...character.toFrontend(),
+          nameColor: validatedColor,
+          selectedRoleBadge: selectedRoleBadge.toLowerCase()
+        });
       }
       
       res.json({ success: true, nameColor: validatedColor, selectedRoleBadge: selectedRoleBadge.toLowerCase() });
