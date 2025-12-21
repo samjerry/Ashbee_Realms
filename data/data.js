@@ -21,8 +21,17 @@ module.exports = {
   getMonsters: () => loadJSON('monsters.json').monsters,
   getItems: () => loadJSON('items.json').consumables,
   getGear: () => {
-    // Combine all gear files into single structure
-    const weapons = loadJSON('gear_weapons.json').weapons || {};
+    // Load weapons from new rarity-based structure
+    const weapons = {};
+    const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
+    
+    for (const rarity of rarities) {
+      const weaponFile = loadJSON(`gear/weapons/weapons_${rarity}.json`);
+      if (weaponFile && weaponFile.weapons) {
+        weapons[rarity] = weaponFile.weapons;
+      }
+    }
+    
     const chest = loadJSON('gear_armor.json').armor || {};
     const headgear = loadJSON('gear_headgear.json').headgear || {};
     const accessories = loadJSON('gear_accessories.json').accessories || {};
@@ -88,8 +97,23 @@ module.exports = {
   
   getGearById: (id) => {
     try {
-      // Search in all gear files
-      const gearFiles = ['gear_weapons.json', 'gear_armor.json', 'gear_headgear.json', 'gear_accessories.json'];
+      // Search in weapons from new structure
+      const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
+      for (const rarity of rarities) {
+        try {
+          const weaponFile = loadJSON(`gear/weapons/weapons_${rarity}.json`);
+          if (weaponFile && weaponFile.weapons) {
+            const found = weaponFile.weapons.find(g => g.id === id);
+            if (found) return found;
+          }
+        } catch (fileError) {
+          // Continue to next file if this one fails
+          continue;
+        }
+      }
+      
+      // Search in other gear files
+      const gearFiles = ['gear_armor.json', 'gear_headgear.json', 'gear_accessories.json'];
       
       for (const file of gearFiles) {
         try {
@@ -116,7 +140,7 @@ module.exports = {
               }
             }
             
-            // Also check top level rarities directly (for weapons/armor/headgear)
+            // Also check top level rarities directly (for armor/headgear)
             for (const rarity in topLevel) {
               if (Array.isArray(topLevel[rarity])) {
                 const found = topLevel[rarity].find(g => g.id === id);

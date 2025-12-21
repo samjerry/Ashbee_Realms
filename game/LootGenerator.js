@@ -142,6 +142,16 @@ class LootGenerator {
    * @returns {Object|null} Equipment item
    */
   getRandomEquipment(gearFile, rarity) {
+    // Handle new weapons structure
+    if (gearFile === 'gear_weapons') {
+      const weaponData = loadData(`gear/weapons/weapons_${rarity}`);
+      if (weaponData && weaponData.weapons && weaponData.weapons.length > 0) {
+        return weaponData.weapons[Math.floor(Math.random() * weaponData.weapons.length)];
+      }
+      return null;
+    }
+    
+    // Handle other gear files
     const gearData = loadData(gearFile);
     
     if (!gearData) return null;

@@ -1,0 +1,78 @@
+{
+  "weapons": [
+    {
+      "id": "excalibur",
+      "name": "Excalibur",
+      "description": "The legendary sword of kings, blessed by ancient magic",
+      "slot": "main_hand",
+      "rarity": "legendary",
+      "required_level": 30,
+      "stats": {
+        "attack": 50,
+        "strength": 15,
+        "magic": 12,
+        "defense": 10
+      },
+      "passive": {
+        "all_stats": 10,
+        "holy_damage": 15,
+        "lifesteal": 0.2
+      },
+      "special_ability": {
+        "name": "Divine Smite",
+        "cooldown": 8,
+        "effect": "Deal 300% holy damage to target"
+      },
+      "value": 10000
+    },
+    {
+      "id": "godslayer_blade",
+      "name": "Godslayer Blade",
+      "description": "A weapon capable of harming divine beings",
+      "slot": "main_hand",
+      "rarity": "legendary",
+      "required_level": 40,
+      "stats": {
+        "attack": 75
+      },
+      "passive": {
+        "divine_damage": 25,
+        "crit_chance": 0.25
+      },
+      "value": 2000
+    },
+    {
+      "id": "blade_of_universe_sundering",
+      "name": "Blade of Universe Sundering",
+      "description": "Can cut through the fabric of reality itself",
+      "slot": "main_hand",
+      "rarity": "legendary",
+      "required_level": 45,
+      "stats": {
+        "attack": 100
+      },
+      "passive": {
+        "void_damage": 35,
+        "reality_tear": 30
+      },
+      "value": 100000
+    },
+    {
+      "id": "staff_of_creation",
+      "name": "Staff of Creation",
+      "description": "The tool used to build the first universe",
+      "slot": "main_hand",
+      "rarity": "legendary",
+      "required_level": 45,
+      "stats": {
+        "attack": 100,
+        "magic": 80
+      },
+      "passive": {
+        "create_matter": true,
+        "world_shaping": true
+      },
+      "value": 120000
+    }
+  ]
+}

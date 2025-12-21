@@ -17,14 +17,27 @@ class ShopManager {
    * @returns {Object} Combined gear data
    */
   loadAllGearData() {
+    const combined = {};
+    
+    // Load weapons from new rarity-based structure
+    const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic'];
+    const weapons = {};
+    
+    for (const rarity of rarities) {
+      const weaponFile = loadData(`gear/weapons/weapons_${rarity}`);
+      if (weaponFile && weaponFile.weapons) {
+        weapons[rarity] = weaponFile.weapons;
+      }
+    }
+    
+    combined.weapons = weapons;
+    
+    // Load other gear files
     const gearFiles = [
-      'gear_weapons',
       'gear_armor', 
       'gear_headgear',
       'gear_accessories'
     ];
-
-    const combined = {};
     
     for (const file of gearFiles) {
       const data = loadData(file);

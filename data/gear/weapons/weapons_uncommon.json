@@ -1,0 +1,176 @@
+{
+  "weapons": [
+    {
+      "id": "iron_sword",
+      "name": "Iron Sword",
+      "description": "A sturdy iron blade, sharper than training weapons",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 5,
+      "stats": {
+        "attack": 7
+      },
+      "value": 15
+    },
+    {
+      "id": "hunters_bow",
+      "name": "Hunter's Bow",
+      "description": "A bow favored by hunters. Light and reliable",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 5,
+      "stats": {
+        "attack": 7
+      },
+      "passive": {
+        "crit_chance": 0.05
+      },
+      "value": 20
+    },
+    {
+      "id": "steel_dagger",
+      "name": "Steel Dagger",
+      "description": "Sharper than a rusty knife, ideal for quick strikes",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 5,
+      "stats": {
+        "attack": 7
+      },
+      "passive": {
+        "bleed_chance": 0.15
+      },
+      "value": 20
+    },
+    {
+      "id": "shortsword",
+      "name": "Shortsword",
+      "description": "Balanced one-handed blade",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 6,
+      "stats": {
+        "attack": 8
+      },
+      "value": 22
+    },
+    {
+      "id": "spiked_club",
+      "name": "Spiked Club",
+      "description": "A brutal club with crude spikes",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 6,
+      "stats": {
+        "attack": 8
+      },
+      "passive": {
+        "bleed_chance": 0.1
+      },
+      "value": 18
+    },
+    {
+      "id": "mace",
+      "name": "Mace",
+      "description": "Blunt weapon that crushes armor",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 7,
+      "stats": {
+        "attack": 9
+      },
+      "passive": {
+        "armor_penetration": 0.1
+      },
+      "value": 24
+    },
+    {
+      "id": "spear",
+      "name": "Spear",
+      "description": "Reach weapon favored by militia",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 6,
+      "stats": {
+        "attack": 8
+      },
+      "passive": {
+        "first_strike": true
+      },
+      "value": 20
+    },
+    {
+      "id": "oak_staff",
+      "name": "Oak Staff",
+      "description": "Sturdy staff channeling minor magic",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 6,
+      "stats": {
+        "attack": 7,
+        "magic": 10
+      },
+      "value": 26
+    },
+    {
+      "id": "crossbow",
+      "name": "Crossbow",
+      "description": "Compact ranged weapon with a snap",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 8,
+      "stats": {
+        "attack": 10
+      },
+      "passive": {
+        "crit_chance": 0.03
+      },
+      "value": 28
+    },
+    {
+      "id": "steel_sword",
+      "name": "Steel Sword",
+      "description": "A well-crafted blade of tempered steel",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 5,
+      "stats": {
+        "attack": 9,
+        "strength": 2
+      },
+      "value": 100
+    },
+    {
+      "id": "orcish_axe",
+      "name": "Orcish Battle Axe",
+      "description": "A brutal axe that cleaves through armor",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 6,
+      "stats": {
+        "attack": 10,
+        "strength": 3
+      },
+      "passive": {
+        "armor_penetration": 0.15
+      },
+      "value": 150
+    },
+    {
+      "id": "war_scythe",
+      "name": "War Scythe",
+      "description": "A combat scythe with a reinforced blade and balanced grip",
+      "slot": "main_hand",
+      "rarity": "uncommon",
+      "required_level": 7,
+      "stats": {
+        "attack": 9,
+        "agility": 2
+      },
+      "passive": {
+        "cleave_damage": 0.15
+      },
+      "value": 45
+    }
+  ]
+}

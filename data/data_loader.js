@@ -353,7 +353,7 @@ const dataCache = new Map();
 
 /**
  * Load any JSON data file from the data directory
- * @param {string} dataName - Name of the data file without .json extension
+ * @param {string} dataName - Name of the data file without .json extension (can include subdirectory like 'gear/weapons/weapons_common')
  * @returns {Object|null} Parsed JSON data or null if not found
  */
 function loadData(dataName) {
@@ -363,6 +363,7 @@ function loadData(dataName) {
   }
 
   try {
+    // Support subdirectories by joining path components
     const filePath = path.join(__dirname, `${dataName}.json`);
     const data = fs.readFileSync(filePath, 'utf8');
     const parsed = JSON.parse(data);

@@ -1,0 +1,56 @@
+{
+  "weapons": [
+    {
+      "id": "void_reaper",
+      "name": "Void Reaper",
+      "description": "A scythe that harvests the essence of reality itself",
+      "slot": "main_hand",
+      "rarity": "mythic",
+      "required_level": 50,
+      "stats": {
+        "attack": 150
+      },
+      "passive": {
+        "void_damage": 50,
+        "soul_steal": 30
+      },
+      "value": 500000
+    },
+    {
+      "id": "universe_forge",
+      "name": "Universe Forge",
+      "description": "The hammer used to create worlds",
+      "slot": "main_hand",
+      "rarity": "mythic",
+      "required_level": 50,
+      "stats": {
+        "attack": 250
+      },
+      "passive": {
+        "cosmic_damage": 80,
+        "reality_shaping": 20,
+        "create_matter": true,
+        "dimensional_rift": true
+      },
+      "value": 3000000
+    },
+    {
+      "id": "quantum_blade",
+      "name": "Quantum Blade",
+      "description": "Exists in all possible states simultaneously",
+      "slot": "main_hand",
+      "rarity": "mythic",
+      "required_level": 50,
+      "stats": {
+        "attack": 200
+      },
+      "passive": {
+        "quantum_damage": 60,
+        "dimensional_slash": 20,
+        "quantum_strike": true,
+        "probability_control": 0.5
+      },
+      "value": 4000000
+    }
+  ]
+}
