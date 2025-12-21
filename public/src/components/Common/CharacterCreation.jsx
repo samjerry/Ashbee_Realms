@@ -1,5 +1,5 @@
 /**
- * CharacterCreation.jsx
+ * CharacterCreation. jsx
  * Interactive character creation flow for new players
  */
 
@@ -33,7 +33,7 @@ export default function CharacterCreation({ onComplete }) {
         
         // If user has only one role, auto-select it
         if (data.availableColors && data.availableColors.length === 1) {
-          setSelectedRoleBadge(data.availableColors[0].role);
+          setSelectedRoleBadge(data.availableColors[0]. role);
         } else if (data.availableColors && data.availableColors.length > 0) {
           // Default to primary role
           setSelectedRoleBadge(data.availableColors[0].role);
@@ -60,9 +60,9 @@ export default function CharacterCreation({ onComplete }) {
       creator: Eye,
       streamer: Crown,
       moderator: Shield,
-      vip: Gem,
+      vip:  Gem,
       subscriber: Star,
-      tester: Beaker,
+      tester:  Beaker,
       viewer: User
     };
     return icons[role] || User;
@@ -70,9 +70,21 @@ export default function CharacterCreation({ onComplete }) {
 
   // Get the color for the selected role badge
   const getRoleColor = (role) => {
-    if (!userRoles || !userRoles.availableColors) return '#FFFFFF';
+    if (! userRoles || !userRoles. availableColors) return '#FFFFFF';
     const roleData = userRoles.availableColors.find(r => r.role === role);
-    return roleData ? roleData.color : '#FFFFFF';
+    return roleData ? roleData. color : '#FFFFFF';
+  };
+
+  // Helper function to render stars with filled and empty versions
+  const renderStars = (filledCount, maxStars = 10) => {
+    const filled = '⭐'.repeat(filledCount);
+    const empty = '☆'.repeat(maxStars - filledCount);
+    return (
+      <>
+        <span className="text-yellow-400">{filled}</span>
+        <span className="text-gray-600">{empty}</span>
+      </>
+    );
   };
 
   const classes = [
@@ -81,8 +93,14 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Warrior',
       icon: Sword,
       color: 'red',
-      description: 'Masters of melee combat with high attack and defense',
-      stats: { attack: '⭐⭐⭐⭐⭐', defense: '⭐⭐⭐⭐', magic: '⭐', agility: '⭐⭐' },
+      description: 'Masters of melee combat with high strength and constitution',
+      stats: { 
+        strength: 9, 
+        dexterity: 2, 
+        constitution: 8, 
+        intelligence: 1, 
+        wisdom: 5 
+      },
       playstyle: 'Tank and deal massive physical damage',
       startingGear: 'Iron Sword, Leather Armor, Wooden Shield'
     },
@@ -91,40 +109,80 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Mage',
       icon: Sparkles,
       color: 'blue',
-      description: 'Wielders of arcane magic with devastating spells',
-      stats: { attack: '⭐⭐', defense: '⭐⭐', magic: '⭐⭐⭐⭐⭐', agility: '⭐⭐' },
+      description: 'Wielders of arcane forces with devastating magical abilities',
+      stats: { 
+        strength: 1, 
+        dexterity: 2, 
+        constitution: 4, 
+        intelligence: 10, 
+        wisdom: 8 
+      },
       playstyle: 'Cast powerful spells from range',
-      startingGear: 'Wooden Staff, Apprentice Robes, Mana Crystal'
+      startingGear:  'Wooden Staff, Apprentice Robes, Mana Crystal'
     },
     {
       id: 'rogue',
       name: 'Rogue',
       icon: Wind,
       color: 'purple',
-      description: 'Swift assassins with high critical hit chance',
-      stats: { attack: '⭐⭐⭐', defense: '⭐⭐', magic: '⭐', agility: '⭐⭐⭐⭐⭐' },
+      description: 'Swift assassins with exceptional dexterity and finesse',
+      stats: { 
+        strength: 2, 
+        dexterity: 10, 
+        constitution: 6, 
+        intelligence: 2, 
+        wisdom: 5 
+      },
       playstyle: 'Strike fast with critical hits',
-      startingGear: 'Dual Daggers, Leather Vest, Lockpicks'
+      startingGear:  'Dual Daggers, Leather Vest, Lockpicks'
     },
     {
       id: 'cleric',
       name: 'Cleric',
-      icon: Heart,
+      icon:  Heart,
       color: 'green',
-      description: 'Holy warriors who heal and protect allies',
-      stats: { attack: '⭐⭐', defense: '⭐⭐⭐⭐', magic: '⭐⭐⭐⭐', agility: '⭐⭐' },
+      description: 'Holy warriors blessed with divine wisdom and healing power',
+      stats: { 
+        strength: 2, 
+        dexterity: 2, 
+        constitution: 6, 
+        intelligence: 5, 
+        wisdom: 10 
+      },
       playstyle: 'Support with healing and buffs',
       startingGear: 'Mace, Chainmail, Holy Symbol'
     },
     {
       id: 'ranger',
       name: 'Ranger',
-      icon: Shield,
+      icon: Star,
       color: 'yellow',
-      description: 'Skilled hunters with ranged weapons and nature magic',
-      stats: { attack: '⭐⭐⭐', defense: '⭐⭐⭐', magic: '⭐⭐', agility: '⭐⭐⭐⭐' },
+      description: 'Skilled hunters with ranged weapons and high dexterity',
+      stats: { 
+        strength: 3, 
+        dexterity: 9, 
+        constitution: 6, 
+        intelligence: 2, 
+        wisdom: 5 
+      },
       playstyle: 'Balanced combat and utility',
-      startingGear: 'Longbow, Leather Armor, Quiver of Arrows'
+      startingGear:  'Longbow, Leather Armor, Quiver of Arrows'
+    },
+    {
+      id: 'paladin',
+      name: 'Paladin',
+      icon:  Shield,
+      color: 'yellow',
+      description: 'Holy knights who blend combat prowess with divine magic (Requested by PalaJen)',
+      stats: { 
+        strength: 7, 
+        dexterity: 2, 
+        constitution: 7, 
+        intelligence: 2, 
+        wisdom: 7 
+      },
+      playstyle: 'Tank, heal, and smite with holy power',
+      startingGear: 'Iron Mace, Chainmail Vest, Holy Symbol'
     }
   ];
 
@@ -182,14 +240,14 @@ export default function CharacterCreation({ onComplete }) {
           <div className="mb-8 p-6 bg-gray-800 border border-gray-700 rounded-lg">
             <h3 className="text-lg font-semibold text-white mb-4">Select Your Display Role</h3>
             <p className="text-sm text-gray-400 mb-4">
-              {userRoles.availableColors && userRoles.availableColors.length > 1
-                ? 'You have multiple roles. Choose which one to display (icon + color come together):'
-                : 'Your display role:'}
+              {userRoles.availableColors && userRoles.availableColors. length > 1
+                ? 'You have multiple roles.  Choose which one to display (icon + color come together):'
+                : 'Your display role: '}
             </p>
             
             {/* Role Selection - Package deal (icon + color) */}
             <div className="flex flex-wrap gap-3">
-              {userRoles.availableColors && userRoles.availableColors.map(({ role, color, name }) => {
+              {userRoles. availableColors && userRoles. availableColors.map(({ role, color, name }) => {
                 const RoleIcon = getRoleIcon(role);
                 const isSelected = selectedRoleBadge === role;
                 
@@ -216,13 +274,13 @@ export default function CharacterCreation({ onComplete }) {
         <div className="mb-8">
           <label className="block text-white font-semibold mb-2">Your Character</label>
           <div className="p-4 bg-gray-800 border border-gray-700 rounded-lg">
-            {displayName ? (
+            {displayName ?  (
               <div className="flex items-center gap-2">
-                <span className="text-gray-400 text-sm">Name:</span>
+                <span className="text-gray-400 text-sm">Name: </span>
                 <span className="font-semibold flex items-center gap-1 text-xl" style={{ color: getRoleColor(selectedRoleBadge) }}>
                   {(() => {
                     const RoleIcon = getRoleIcon(selectedRoleBadge);
-                    return <RoleIcon size={20} style={{ color: getRoleColor(selectedRoleBadge) }} />;
+                    return <RoleIcon size={20} style={{ color:  getRoleColor(selectedRoleBadge) }} />;
                   })()}
                   {displayName}
                 </span>
@@ -238,7 +296,7 @@ export default function CharacterCreation({ onComplete }) {
           <h2 className="text-2xl font-bold text-white mb-4">Select Your Class</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {classes.map((classInfo) => {
-              const Icon = classInfo.icon;
+              const Icon = classInfo. icon;
               const isSelected = selectedClass === classInfo.id;
               
               return (
@@ -260,26 +318,30 @@ export default function CharacterCreation({ onComplete }) {
                   
                   <div className="space-y-1 text-xs mb-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Attack:</span>
-                      <span className="text-yellow-400">{classInfo.stats.attack}</span>
+                      <span className="text-gray-400">Strength (STR):</span>
+                      <span className="text-red-400">{renderStars(classInfo.stats. strength)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Defense:</span>
-                      <span className="text-blue-400">{classInfo.stats.defense}</span>
+                      <span className="text-gray-400">Dexterity (DEX):</span>
+                      <span className="text-green-400">{renderStars(classInfo.stats.dexterity)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Magic:</span>
-                      <span className="text-purple-400">{classInfo.stats.magic}</span>
+                      <span className="text-gray-400">Constitution (CON):</span>
+                      <span className="text-blue-400">{renderStars(classInfo.stats.constitution)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Agility:</span>
-                      <span className="text-green-400">{classInfo.stats.agility}</span>
+                      <span className="text-gray-400">Intelligence (INT):</span>
+                      <span className="text-purple-400">{renderStars(classInfo.stats.intelligence)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Wisdom (WIS):</span>
+                      <span className="text-yellow-400">{renderStars(classInfo.stats.wisdom)}</span>
                     </div>
                   </div>
                   
                   <div className="border-t border-gray-700 pt-3 space-y-2">
                     <p className="text-xs text-gray-400">
-                      <strong className="text-white">Playstyle:</strong> {classInfo.playstyle}
+                      <strong className="text-white">Playstyle:</strong> {classInfo. playstyle}
                     </p>
                     <p className="text-xs text-gray-400">
                       <strong className="text-white">Starting Gear:</strong> {classInfo.startingGear}
@@ -300,14 +362,14 @@ export default function CharacterCreation({ onComplete }) {
             disabled={!selectedClass}
             className={`px-8 py-4 rounded-lg text-lg font-bold transition-all ${
               selectedClass
-                ? 'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'
+                ?  'bg-blue-600 hover:bg-blue-500 text-white cursor-pointer'
                 : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
           >
             Begin Your Adventure
           </button>
           
-          {!selectedClass && (
+          {! selectedClass && (
             <p className="text-red-400 text-sm mt-2">
               Please select a class to continue
             </p>
