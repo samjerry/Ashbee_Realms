@@ -81,8 +81,14 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Warrior',
       icon: Sword,
       color: 'red',
-      description: 'Masters of melee combat with high attack and defense',
-      stats: { attack: '⭐⭐⭐⭐⭐', defense: '⭐⭐⭐⭐', magic: '⭐', agility: '⭐⭐' },
+      description: 'Masters of melee combat with high strength and constitution',
+      stats: { 
+        strength: '⭐⭐⭐⭐⭐⭐⭐⭐⭐', 
+        dexterity: '⭐⭐', 
+        constitution: '⭐⭐⭐⭐⭐⭐⭐⭐', 
+        intelligence: '⭐', 
+        wisdom: '⭐⭐⭐⭐⭐' 
+      },
       playstyle: 'Tank and deal massive physical damage',
       startingGear: 'Iron Sword, Leather Armor, Wooden Shield'
     },
@@ -91,8 +97,14 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Mage',
       icon: Sparkles,
       color: 'blue',
-      description: 'Wielders of arcane magic with devastating spells',
-      stats: { attack: '⭐⭐', defense: '⭐⭐', magic: '⭐⭐⭐⭐⭐', agility: '⭐⭐' },
+      description: 'Wielders of arcane forces with devastating magical abilities',
+      stats: { 
+        strength: '⭐', 
+        dexterity: '⭐⭐', 
+        constitution: '⭐⭐⭐⭐', 
+        intelligence: '⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐', 
+        wisdom: '⭐⭐⭐⭐⭐⭐⭐⭐' 
+      },
       playstyle: 'Cast powerful spells from range',
       startingGear: 'Wooden Staff, Apprentice Robes, Mana Crystal'
     },
@@ -101,8 +113,14 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Rogue',
       icon: Wind,
       color: 'purple',
-      description: 'Swift assassins with high critical hit chance',
-      stats: { attack: '⭐⭐⭐', defense: '⭐⭐', magic: '⭐', agility: '⭐⭐⭐⭐⭐' },
+      description: 'Swift assassins with exceptional dexterity and finesse',
+      stats: { 
+        strength: '⭐⭐', 
+        dexterity: '⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐', 
+        constitution: '⭐⭐⭐⭐⭐⭐', 
+        intelligence: '⭐⭐', 
+        wisdom: '⭐⭐⭐⭐⭐' 
+      },
       playstyle: 'Strike fast with critical hits',
       startingGear: 'Dual Daggers, Leather Vest, Lockpicks'
     },
@@ -111,8 +129,14 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Cleric',
       icon: Heart,
       color: 'green',
-      description: 'Holy warriors who heal and protect allies',
-      stats: { attack: '⭐⭐', defense: '⭐⭐⭐⭐', magic: '⭐⭐⭐⭐', agility: '⭐⭐' },
+      description: 'Holy warriors blessed with divine wisdom and healing power',
+      stats: { 
+        strength: '⭐⭐', 
+        dexterity: '⭐⭐', 
+        constitution: '⭐⭐⭐⭐⭐⭐', 
+        intelligence: '⭐⭐⭐⭐⭐', 
+        wisdom: '⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐' 
+      },
       playstyle: 'Support with healing and buffs',
       startingGear: 'Mace, Chainmail, Holy Symbol'
     },
@@ -121,8 +145,14 @@ export default function CharacterCreation({ onComplete }) {
       name: 'Ranger',
       icon: Star,
       color: 'yellow',
-      description: 'Skilled hunters with ranged weapons and nature magic',
-      stats: { attack: '⭐⭐⭐', defense: '⭐⭐⭐', magic: '⭐⭐', agility: '⭐⭐⭐⭐' },
+      description: 'Skilled hunters with ranged weapons and high dexterity',
+      stats: { 
+        strength: '⭐⭐⭐', 
+        dexterity: '⭐⭐⭐⭐⭐⭐⭐⭐⭐', 
+        constitution: '⭐⭐⭐⭐⭐⭐', 
+        intelligence: '⭐⭐', 
+        wisdom: '⭐⭐⭐⭐⭐' 
+      },
       playstyle: 'Balanced combat and utility',
       startingGear: 'Longbow, Leather Armor, Quiver of Arrows'
     },
@@ -132,7 +162,13 @@ export default function CharacterCreation({ onComplete }) {
       icon: Shield,
       color: 'yellow',
       description: 'Holy knights who blend combat prowess with divine magic (Requested by PalaJen)',
-      stats: { attack: '⭐⭐⭐⭐', defense: '⭐⭐⭐⭐⭐', magic: '⭐⭐⭐', agility: '⭐⭐' },
+      stats: { 
+        strength: '⭐⭐⭐⭐⭐⭐⭐', 
+        dexterity: '⭐⭐', 
+        constitution: '⭐⭐⭐⭐⭐⭐⭐', 
+        intelligence: '⭐⭐', 
+        wisdom: '⭐⭐⭐⭐⭐⭐⭐' 
+      },
       playstyle: 'Tank, heal, and smite with holy power',
       startingGear: 'Iron Mace, Chainmail Vest, Holy Symbol'
     }
@@ -270,20 +306,24 @@ export default function CharacterCreation({ onComplete }) {
                   
                   <div className="space-y-1 text-xs mb-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Attack:</span>
-                      <span className="text-yellow-400">{classInfo.stats.attack}</span>
+                      <span className="text-gray-400">Strength (STR):</span>
+                      <span className="text-red-400">{classInfo.stats.strength}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Defense:</span>
-                      <span className="text-blue-400">{classInfo.stats.defense}</span>
+                      <span className="text-gray-400">Dexterity (DEX):</span>
+                      <span className="text-green-400">{classInfo.stats.dexterity}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Magic:</span>
-                      <span className="text-purple-400">{classInfo.stats.magic}</span>
+                      <span className="text-gray-400">Constitution (CON):</span>
+                      <span className="text-blue-400">{classInfo.stats.constitution}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Agility:</span>
-                      <span className="text-green-400">{classInfo.stats.agility}</span>
+                      <span className="text-gray-400">Intelligence (INT):</span>
+                      <span className="text-purple-400">{classInfo.stats.intelligence}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Wisdom (WIS):</span>
+                      <span className="text-yellow-400">{classInfo.stats.wisdom}</span>
                     </div>
                   </div>
                   

@@ -170,7 +170,13 @@ function validateStatsObject(stats) {
     return { valid: false, error: 'Stats must be an object' };
   }
 
-  const validStats = ['attack', 'defense', 'magic', 'agility', 'strength', 'hp', 'maxHp', 'mana', 'maxMana'];
+  const validStats = [
+    // New 5-stat system
+    'strength', 'dexterity', 'constitution', 'intelligence', 'wisdom',
+    // Derived/legacy stats
+    'attack', 'defense', 'magic', 'agility', 
+    'hp', 'maxHp', 'mana', 'maxMana'
+  ];
   
   for (const [key, value] of Object.entries(stats)) {
     if (!validStats.includes(key)) {
