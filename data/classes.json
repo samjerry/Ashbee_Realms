@@ -162,6 +162,41 @@
         "main_hand": "short_bow",
         "armor": "padded_vest"
       }
+    },
+    "paladin": {
+      "id": "paladin",
+      "name": "Paladin",
+      "description": "A holy knight who combines martial prowess with divine magic. Paladins protect allies, smite evil, and stand as beacons of righteousness. Requested by PalaJen.",
+      "starting_stats": {
+        "max_hp": 105,
+        "strength": 4,
+        "defense": 5,
+        "magic": 3,
+        "agility": 2
+      },
+      "stat_bonuses": {
+        "hp_per_level": 9,
+        "strength_per_level": 1.2,
+        "defense_per_level": 1.5,
+        "magic_per_level": 1.0,
+        "agility_per_level": 0.3
+      },
+      "special_ability": {
+        "name": "Divine Shield",
+        "description": "Surround yourself with holy protection, becoming invulnerable and healing for 30% HP",
+        "cooldown": 7,
+        "effect": {
+          "type": "defensive",
+          "heal_percent": 0.3,
+          "invulnerable": true,
+          "invulnerable_duration": 1,
+          "cleanse_debuffs": true
+        }
+      },
+      "starting_equipment": {
+        "main_hand": "mace",
+        "armor": "chainmail"
+      }
     }
   }
 }

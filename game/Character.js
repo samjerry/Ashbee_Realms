@@ -645,7 +645,8 @@ class Character {
       mage: ["mana_potion"],                // Mages get mana management
       rogue: ["antidote"],                  // Rogues get poison cure for trap disarming
       cleric: ["health_potion"],            // Clerics get extra healing items  
-      ranger: ["bread"]                     // Rangers get extra food for wilderness
+      ranger: ["bread"],                    // Rangers get extra food for wilderness
+      paladin: ["health_potion", "blessed_water"]  // Paladins get healing and holy items
     };
     
     if (classStartingItems[classType]) {
