@@ -579,6 +579,8 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     xp_to_next = 10,
     max_hp = 100,
     hp = 100,
+    mana = 0,
+    max_mana = 0,
     gold = 0,
     type = null,
     inventory = ["Potion"],
@@ -640,7 +642,7 @@ async function savePlayerProgress(playerId, channelName, playerData) {
 
   await query(`
     INSERT INTO ${table} (
-      player_id, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+      player_id, name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
       type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped,
       base_stats, skills, skill_points, travel_state, active_quests, completed_quests,
       consumable_cooldowns, dialogue_history, reputation, unlocked_achievements,
@@ -651,30 +653,30 @@ async function savePlayerProgress(playerId, channelName, playerData) {
       total_gold_earned, total_xp_earned, highest_level_reached, total_crits, roles, name_color, selected_role_badge, theme,
       unlocked_abilities, equipped_abilities, ability_cooldowns, updated_at
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9,
-      $10, $11, $12, $13, $14, $15, $16, $17, $18,
-      $19, $20, $21, $22, $23, $24,
-      $25, $26, $27, $28,
-      $29, $30, $31,
-      $32, $33, $34, $35, $36,
-      $37, $38, $39, $40,
-      $41, $42, $43, $44, $45, $46,
-      $47, $48, $49, $50, $51, $52, $53, $54,
-      $55, $56, $57, NOW()
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
+      $12, $13, $14, $15, $16, $17, $18, $19, $20,
+      $21, $22, $23, $24, $25, $26,
+      $27, $28, $29, $30,
+      $31, $32, $33,
+      $34, $35, $36, $37, $38,
+      $39, $40, $41, $42,
+      $43, $44, $45, $46, $47, $48,
+      $49, $50, $51, $52, $53, $54, $55, $56,
+      $57, $58, $59, NOW()
     )
     ON CONFLICT(player_id) DO UPDATE SET
-      name=$2, location=$3, level=$4, xp=$5, xp_to_next=$6, max_hp=$7, hp=$8, gold=$9,
-      type=$10, inventory=$11, pending=$12, combat=$13, skill_cd=$14, step=$15, is_player=$16, in_combat=$17, equipped=$18,
-      base_stats=$19, skills=$20, skill_points=$21, travel_state=$22, active_quests=$23, completed_quests=$24,
-      consumable_cooldowns=$25, dialogue_history=$26, reputation=$27, unlocked_achievements=$28,
-      achievement_progress=$29, achievement_unlock_dates=$30, achievement_points=$31,
-      unlocked_titles=$32, active_title=$33, stats=$34, dungeon_state=$35, completed_dungeons=$36,
-      crafting_xp=$37, known_recipes=$38, season_progress=$39, seasonal_challenges_completed=$40,
-      passive_levels=$41, souls=$42, legacy_points=$43, account_stats=$44, total_deaths=$45, total_kills=$46,
-      total_gold_earned=$47, total_xp_earned=$48, highest_level_reached=$49, total_crits=$50, roles=$51, name_color=$52, selected_role_badge=$53, theme=$54,
-      unlocked_abilities=$55, equipped_abilities=$56, ability_cooldowns=$57, updated_at=NOW()
+      name=$2, location=$3, level=$4, xp=$5, xp_to_next=$6, max_hp=$7, hp=$8, mana=$9, max_mana=$10, gold=$11,
+      type=$12, inventory=$13, pending=$14, combat=$15, skill_cd=$16, step=$17, is_player=$18, in_combat=$19, equipped=$20,
+      base_stats=$21, skills=$22, skill_points=$23, travel_state=$24, active_quests=$25, completed_quests=$26,
+      consumable_cooldowns=$27, dialogue_history=$28, reputation=$29, unlocked_achievements=$30,
+      achievement_progress=$31, achievement_unlock_dates=$32, achievement_points=$33,
+      unlocked_titles=$34, active_title=$35, stats=$36, dungeon_state=$37, completed_dungeons=$38,
+      crafting_xp=$39, known_recipes=$40, season_progress=$41, seasonal_challenges_completed=$42,
+      passive_levels=$43, souls=$44, legacy_points=$45, account_stats=$46, total_deaths=$47, total_kills=$48,
+      total_gold_earned=$49, total_xp_earned=$50, highest_level_reached=$51, total_crits=$52, roles=$53, name_color=$54, selected_role_badge=$55, theme=$56,
+      unlocked_abilities=$57, equipped_abilities=$58, ability_cooldowns=$59, updated_at=NOW()
   `, [
-    playerId, name, location, level, xp, xp_to_next, max_hp, hp, gold,
+    playerId, name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
     type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
     skill_cd, step, is_player, in_combat, JSON.stringify(equipped),
     JSON.stringify(base_stats), JSON.stringify(skills), skill_points, JSON.stringify(travel_state),
@@ -716,6 +718,8 @@ async function loadPlayerProgress(playerId, channelName) {
     xp_to_next: row.xp_to_next,
     max_hp: row.max_hp,
     hp: row.hp,
+    mana: row.mana || 0,
+    max_mana: row.max_mana || 0,
     gold: row.gold,
     type: row.type,
     inventory: typeof row.inventory === 'string' ? JSON.parse(row.inventory) : row.inventory,
