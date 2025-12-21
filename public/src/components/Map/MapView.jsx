@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Map, MapPin, Navigation, Grid3x3, FileText, TrendingUp } from 'lucide-react';
+import { Map, MapPin, Navigation, Grid3x3, TrendingUp } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import WorldMapGrid from './WorldMapGrid';
-import AsciiMapView from './AsciiMapView';
 
 const MapView = () => {
   const { availableLocations, currentLocation, player, mapKnowledge, fetchLocations, fetchMapKnowledge, travelTo } = useGameStore();
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid', 'ascii'
+  const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid'
   const [showFilter, setShowFilter] = useState('all'); // 'all', 'discovered', 'undiscovered'
   
   useEffect(() => {
@@ -124,35 +123,12 @@ const MapView = () => {
             <Grid3x3 size={18} />
             <span>Grid Map</span>
           </button>
-          <button
-            onClick={() => setViewMode('ascii')}
-            className={`
-              flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap
-              ${viewMode === 'ascii' 
-                ? 'bg-primary-500 text-white' 
-                : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
-              }
-            `}
-          >
-            <FileText size={18} />
-            <span>ASCII View</span>
-          </button>
         </div>
       </div>
 
       {/* Grid Map View */}
       {viewMode === 'grid' && (
         <WorldMapGrid
-          mapKnowledge={mapKnowledge}
-          biomes={locationsWithDiscovery}
-          currentLocation={currentLocation}
-          onSelectLocation={setSelectedLocation}
-        />
-      )}
-
-      {/* ASCII Map View */}
-      {viewMode === 'ascii' && (
-        <AsciiMapView
           mapKnowledge={mapKnowledge}
           biomes={locationsWithDiscovery}
           currentLocation={currentLocation}
