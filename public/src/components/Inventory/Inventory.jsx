@@ -32,7 +32,22 @@ const Inventory = () => {
   
   // Helper function to check if item is equippable
   const isEquippableItem = (item) => {
-    return item.type === 'weapon' || item.type === 'armor' || item.category === 'equipment';
+    // Check if item has a slot property (indicates it's equippable)
+    if (item.slot) {
+      return true;
+    }
+    
+    // Check if item has armor or weapon tags
+    if (item.tags && Array.isArray(item.tags)) {
+      return item.tags.includes('armor') || item.tags.includes('weapon');
+    }
+    
+    // Fallback to checking type/category
+    if (item.type === 'weapon' || item.type === 'armor' || item.category === 'equipment') {
+      return true;
+    }
+    
+    return false;
   };
   
   const filteredInventory = safeInventory.filter(item => {
