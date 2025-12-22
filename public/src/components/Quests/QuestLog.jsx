@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Scroll, CheckCircle, Clock, Star } from 'lucide-react';
+import { Scroll, CheckCircle, Clock, Star, Lock } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const QuestLog = () => {
@@ -183,15 +183,34 @@ const QuestLog = () => {
                       Complete Quest
                     </button>
                   )}
-                  <button
-                    onClick={() => {
-                      abandonQuest(selectedQuest.id);
-                      setSelectedQuest(null);
-                    }}
-                    className="btn-danger w-full"
-                  >
-                    Abandon Quest
-                  </button>
+                  
+                  {/* Conditional Abandon Button */}
+                  {(selectedQuest.type === 'side' || selectedQuest.type === 'daily' || selectedQuest.is_random) && (
+                    <button
+                      onClick={() => {
+                        abandonQuest(selectedQuest.id);
+                        setSelectedQuest(null);
+                      }}
+                      className="btn-danger w-full"
+                    >
+                      Abandon Quest
+                      {selectedQuest.is_random && (
+                        <span className="text-xs block mt-1">
+                          (Will permanently disappear)
+                        </span>
+                      )}
+                    </button>
+                  )}
+                  
+                  {/* Cannot Abandon Message */}
+                  {(selectedQuest.type === 'main' || selectedQuest.is_tutorial) && (
+                    <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-lg p-3 text-center">
+                      <p className="text-yellow-300 text-sm flex items-center justify-center gap-2">
+                        <Lock size={16} />
+                        {selectedQuest.is_tutorial ? 'Tutorial quests cannot be abandoned' : 'Main story quests cannot be abandoned'}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (

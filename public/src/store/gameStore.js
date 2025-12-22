@@ -265,14 +265,27 @@ const useGameStore = create((set, get) => ({
       const player = get().player;
       const channel = player?.channel;
       
-      await fetch('/api/quests/abandon', {
+      const response = await fetch('/api/quests/abandon', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ questId, channel })
       });
+
+      const data = await response.json();
+      
+      if (!response.ok || !data.success) {
+        // Show error notification
+        console.error('Failed to abandon quest:', data.error);
+        // TODO: Show toast notification with error message
+        alert(data.error || 'Failed to abandon quest');
+        return;
+      }
+
+      // Refresh quest list
       get().fetchQuests();
     } catch (error) {
       console.error('Failed to abandon quest:', error);
+      alert('Failed to abandon quest. Please try again.');
     }
   },
   
