@@ -114,7 +114,12 @@ const useGameStore = create((set, get) => ({
       });
 
       // Auto-fetch inventory/equipment after player loads
-      await get().fetchInventory();
+      // Don't let inventory errors break player loading
+      try {
+        await get().fetchInventory();
+      } catch (err) {
+        console.error('Failed to auto-fetch inventory on player load:', err);
+      }
 
       return true; // Indicate success
     } catch (error) {
