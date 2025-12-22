@@ -112,6 +112,10 @@ const useGameStore = create((set, get) => ({
         mapKnowledge: mapKnowledge,
         isLoading: false 
       });
+
+      // Auto-fetch inventory/equipment after player loads
+      await get().fetchInventory();
+
       return true; // Indicate success
     } catch (error) {
       console.error('Failed to fetch player:', error);
