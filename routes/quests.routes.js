@@ -43,7 +43,11 @@ router.get('/available', async (req, res) => {
     let available = questMgr.getAvailableQuests(character, activeQuestIds, completedQuestIds);
 
     // Filter out abandoned random quests (they should not reappear)
-    available = available.filter(quest => !abandonedQuests.includes(quest.id));
+    // Use Set for O(1) lookup performance
+    if (abandonedQuests.length > 0) {
+      const abandonedSet = new Set(abandonedQuests);
+      available = available.filter(quest => !abandonedSet.has(quest.id));
+    }
 
     // Note: Location and NPC filtering are placeholders for future implementation
     // Currently all available quests are returned regardless of these parameters
