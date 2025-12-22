@@ -89,7 +89,7 @@ const Inventory = () => {
     if (type === 'weapon') return 'main_hand';
     if (type === 'shield') return 'off_hand';
     if (type === 'helmet' || type === 'headgear') return 'helmet';
-    if (type === 'armor' || type === 'chest') return 'chest';
+    if (type === 'chest armor') return 'chest';
     if (type === 'legs') return 'legs';
     if (type === 'boots' || type === 'footwear') return 'boots';
     if (type === 'gloves' || type === 'hands') return 'hands';
@@ -102,6 +102,7 @@ const Inventory = () => {
       return 'ring1'; // Default to ring1 for swap
     }
     if (type === 'belt') return 'belt';
+    if (type === 'trinket') return 'trinket';
     
     return 'main_hand'; // Default fallback
   };
