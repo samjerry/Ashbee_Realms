@@ -41,23 +41,9 @@ router.get('/available', async (req, res) => {
     const questMgr = new QuestManager();
     let available = questMgr.getAvailableQuests(character, activeQuestIds, completedQuestIds);
 
-    // Filter by location if specified
-    if (location) {
-      available = available.filter(quest => {
-        // For now, we don't have location data in quests, so we'll return all
-        // In the future, you can add quest.location or quest.available_at fields
-        return true;
-      });
-    }
-
-    // Filter by NPC if specified
-    if (npcId) {
-      available = available.filter(quest => {
-        // For now, we don't have NPC data in quests, so we'll return all
-        // In the future, you can add quest.npc_id or quest.offered_by fields
-        return true;
-      });
-    }
+    // Note: Location and NPC filtering are placeholders for future implementation
+    // Currently all available quests are returned regardless of these parameters
+    // TODO: Add location/NPC fields to quest data and implement filtering
 
     res.json({
       success: true,

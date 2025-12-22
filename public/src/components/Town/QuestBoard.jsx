@@ -79,9 +79,9 @@ const QuestBoard = ({ location, onClose }) => {
 
   const filteredQuests = availableQuests.filter(quest => {
     if (filter === 'all') return true;
-    if (filter === 'main') return quest.is_main;
+    if (filter === 'main') return quest.is_main === true;
     if (filter === 'side') return !quest.is_main && !quest.is_daily;
-    if (filter === 'daily') return quest.is_daily;
+    if (filter === 'daily') return quest.is_daily === true;
     return true;
   });
 
