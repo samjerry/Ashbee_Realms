@@ -88,11 +88,11 @@ const Inventory = () => {
     const type = item.type?.toLowerCase();
     if (type === 'weapon') return 'main_hand';
     if (type === 'shield') return 'off_hand';
-    if (type === 'helmet' || type === 'headgear') return 'helmet';
+    if (type === 'headgear') return 'headgear';
     if (type === 'chest armor') return 'chest';
     if (type === 'legs') return 'legs';
-    if (type === 'boots' || type === 'footwear') return 'boots';
-    if (type === 'gloves' || type === 'hands') return 'hands';
+    if (type === 'footwear') return 'footwear';
+    if (type === 'hands') return 'hands';
     if (type === 'cape') return 'cape';
     if (type === 'amulet') return 'amulet';
     if (type === 'ring') {
