@@ -4,6 +4,9 @@
  * Database Migration Script: Add mana and max_mana columns
  * This script adds mana and max_mana columns to all player tables
  * and initializes mana based on character intelligence
+ * 
+ * NOTE: This migration now runs automatically on server startup.
+ * You can also run it manually with: node scripts/add_mana_columns.js
  */
 
 require('dotenv').config();
@@ -111,6 +114,22 @@ async function addManaColumns() {
       
       console.log(`  ✅ Table ${table} migration complete`);
     }
+    
+    // Verify migration
+    console.log('\n🧪 Verifying migration...');
+    for (const table of tables) {
+      const verifyResult = await pool.query(`
+        SELECT column_name 
+        FROM information_schema.columns 
+        WHERE table_name = $1 
+        AND column_name IN ('mana', 'max_mana')
+      `, [table]);
+      
+      if (verifyResult.rows.length !== 2) {
+        throw new Error(`Migration verification failed for table ${table}`);
+      }
+    }
+    console.log('✅ Migration verified successfully');
     
     console.log('\n\n✅ Migration completed successfully!\n');
     

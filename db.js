@@ -413,6 +413,48 @@ async function initPostgres() {
     `);
   }
   
+  // Migration: Add mana columns to all player tables if they don't exist
+  console.log('🔧 Ensuring mana columns exist...');
+  for (const channel of CHANNELS) {
+    const tableName = getPlayerTable(channel);
+    
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'mana'
+        ) THEN
+          ALTER TABLE ${tableName} ADD COLUMN mana INTEGER DEFAULT 100;
+        END IF;
+        
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = '${tableName}' AND column_name = 'max_mana'
+        ) THEN
+          ALTER TABLE ${tableName} ADD COLUMN max_mana INTEGER DEFAULT 100;
+        END IF;
+      END $$;
+    `);
+    
+    // Initialize mana for existing characters without it
+    await pool.query(`
+      UPDATE ${tableName}
+      SET mana = CASE 
+        WHEN base_stats->>'intelligence' IS NOT NULL 
+        THEN 50 + ((base_stats->>'intelligence')::int * 5)
+        ELSE 100
+      END,
+      max_mana = CASE 
+        WHEN base_stats->>'intelligence' IS NOT NULL 
+        THEN 50 + ((base_stats->>'intelligence')::int * 5)
+        ELSE 100
+      END
+      WHERE (mana = 0 OR mana IS NULL) AND (max_mana = 0 OR max_mana IS NULL)
+    `);
+  }
+  console.log('✅ Mana columns verified');
+  
   // Migration: Add game_mode column to game_state table if it doesn't exist
   await pool.query(`
     DO $$
@@ -859,10 +901,23 @@ async function saveCharacter(playerId, channelName, character) {
  * @returns {Character} New character instance
  */
 async function createCharacter(playerId, channelName, playerName, classType, location = "Town Square") {
-  const Character = require('./game/Character');
-  const character = Character.createNew(playerName, classType, location);
-  await saveCharacter(playerId, channelName, character);
-  return character;
+  try {
+    const Character = require('./game/Character');
+    const character = Character.createNew(playerName, classType, location);
+    await saveCharacter(playerId, channelName, character);
+    return character;
+  } catch (error) {
+    console.error('❌ Failed to create character:', error.message);
+    
+    // If it's a missing column error, provide helpful message
+    if (error.message.includes('column') && error.message.includes('does not exist')) {
+      throw new Error(
+        'Database schema is missing required columns. Please run: node scripts/add_mana_columns.js'
+      );
+    }
+    
+    throw error;
+  }
 }
 
 /**
