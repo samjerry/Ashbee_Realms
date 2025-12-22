@@ -332,17 +332,34 @@ class InventoryManager {
         if (itemData?.slot) {
           const slot = itemData.slot;
           // Weapon slots
-          if (slot === 'main_hand' || slot === 'off_hand') {
+          if (slot === 'main_hand') {
             itemType = 'weapon';
+          } else if (slot === 'off_hand') {
+            itemType = 'shield';
           }
-          // Armor slots
-          else if (slot === 'armor' || slot === 'headgear' || slot === 'legs' || 
-                   slot === 'footwear' || slot === 'hands' || slot === 'cape') {
-            itemType = 'armor';
+          // Armor slots - each gets its own type
+          else if (slot === 'armor' || slot === 'chest') {
+            itemType = 'chest armor';
+          } else if (slot === 'headgear' || slot === 'helmet') {
+            itemType = 'headgear';
+          } else if (slot === 'legs') {
+            itemType = 'legs';
+          } else if (slot === 'footwear' || slot === 'boots') {
+            itemType = 'footwear';
+          } else if (slot === 'hands' || slot === 'gloves') {
+            itemType = 'hands';
+          } else if (slot === 'cape') {
+            itemType = 'cape';
           }
           // Accessory slots
-          else if (slot === 'amulet' || slot === 'belt' || slot === 'ring' || slot === 'trinket') {
-            itemType = 'accessory';
+          else if (slot === 'amulet') {
+            itemType = 'amulet';
+          } else if (slot === 'belt') {
+            itemType = 'belt';
+          } else if (slot === 'ring') {
+            itemType = 'ring';
+          } else if (slot === 'trinket') {
+            itemType = 'trinket';
           }
         } else if (itemData?.usage) {
           itemType = 'consumable';

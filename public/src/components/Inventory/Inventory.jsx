@@ -37,21 +37,50 @@ const Inventory = () => {
       return true;
     }
     
-    // Check type for weapon, armor, or accessory
-    if (item.type === 'weapon' || item.type === 'armor' || item.type === 'accessory') {
-      return true;
-    }
+    const equipmentTypes = [
+      'weapon', 'shield', 'chest armor', 'headgear', 'legs', 
+      'footwear', 'hands', 'cape', 'amulet', 'belt', 'ring', 'trinket'
+    ];
     
-    return false;
+    return equipmentTypes.includes(item.type);
   };
   
   const filteredInventory = safeInventory.filter(item => {
     if (filter === 'all') return true;
-    // Direct type match
+    
+    // Special "equipment" filter shows all equipment types
+    if (filter === 'equipment') {
+      const equipmentTypes = [
+        'weapon', 'shield', 'chest armor', 'headgear', 'legs', 
+        'footwear', 'hands', 'cape', 'amulet', 'belt', 'ring', 'trinket'
+      ];
+      return equipmentTypes.includes(item.type);
+    }
+    
+    // Direct type match for other filters
     return item.type === filter;
   });
   
-  const itemTypes = ['all', 'weapon', 'armor', 'accessory', 'consumable', 'material', 'quest', 'misc'];
+  const itemTypes = [
+    'all', 
+    'equipment',  // New filter for all equipment
+    'weapon', 
+    'shield',
+    'chest armor',
+    'headgear',
+    'legs',
+    'footwear',
+    'hands',
+    'cape',
+    'amulet',
+    'belt',
+    'ring',
+    'trinket',
+    'consumable', 
+    'material', 
+    'quest', 
+    'misc'
+  ];
 
   // Helper function to determine equipment slot from item data
   const getItemSlot = (item) => {
