@@ -82,14 +82,18 @@ const Inventory = () => {
   // Helper function to determine equipment slot from item data
   const getItemSlot = (item) => {
     // Use explicit slot if available
-    if (item.slot) return item.slot;
+    if (item.slot) {
+      // Fix: Map "armor" to "chest" for compatibility
+      if (item.slot === 'armor') return 'chest';
+      return item.slot;
+    }
     
     // Fallback slot detection based on type
     const type = item.type?.toLowerCase();
     if (type === 'weapon') return 'main_hand';
     if (type === 'shield') return 'off_hand';
     if (type === 'headgear') return 'headgear';
-    if (type === 'chest armor') return 'chest';
+    if (type === 'chest armor' || type === 'armor') return 'chest';
     if (type === 'legs') return 'legs';
     if (type === 'footwear') return 'footwear';
     if (type === 'hands') return 'hands';
@@ -260,19 +264,6 @@ const Inventory = () => {
                         <p className="text-xs text-gray-400">x{item.count}</p>
                       )}
                     </button>
-                    
-                    {/* Add Equip Button for Equipment Items */}
-                    {isEquippableItem(item) && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEquipClick(item);
-                        }}
-                        className="absolute bottom-1 right-1 bg-primary-600 hover:bg-primary-700 text-white text-xs px-2 py-1 rounded transition-colors"
-                      >
-                        Equip
-                      </button>
-                    )}
                   </div>
                 ))}
               </div>
