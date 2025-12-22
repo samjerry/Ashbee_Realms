@@ -3,6 +3,12 @@ import { Package, Trash2, ArrowUpCircle } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import { getRarityColor, getRarityTextClass } from '../../utils/rarityHelpers';
 
+// Equipment types constant - used for filtering and validation
+const EQUIPMENT_TYPES = [
+  'weapon', 'shield', 'chest armor', 'headgear', 'legs', 
+  'footwear', 'hands', 'cape', 'amulet', 'belt', 'ring', 'trinket'
+];
+
 const Inventory = () => {
   const { inventory, equipment, fetchInventory, equipItem, player } = useGameStore();
   const [selectedItem, setSelectedItem] = useState(null);
@@ -37,21 +43,41 @@ const Inventory = () => {
       return true;
     }
     
-    // Check type for weapon, armor, or accessory
-    if (item.type === 'weapon' || item.type === 'armor' || item.type === 'accessory') {
-      return true;
-    }
-    
-    return false;
+    return EQUIPMENT_TYPES.includes(item.type);
   };
   
   const filteredInventory = safeInventory.filter(item => {
     if (filter === 'all') return true;
-    // Direct type match
+    
+    // Special "equipment" filter shows all equipment types
+    if (filter === 'equipment') {
+      return EQUIPMENT_TYPES.includes(item.type);
+    }
+    
+    // Direct type match for other filters
     return item.type === filter;
   });
   
-  const itemTypes = ['all', 'weapon', 'armor', 'accessory', 'consumable', 'material', 'quest', 'misc'];
+  const itemTypes = [
+    'all', 
+    'equipment',  // New filter for all equipment
+    'weapon', 
+    'shield',
+    'chest armor',
+    'headgear',
+    'legs',
+    'footwear',
+    'hands',
+    'cape',
+    'amulet',
+    'belt',
+    'ring',
+    'trinket',
+    'consumable', 
+    'material', 
+    'quest', 
+    'misc'
+  ];
 
   // Helper function to determine equipment slot from item data
   const getItemSlot = (item) => {
@@ -62,11 +88,11 @@ const Inventory = () => {
     const type = item.type?.toLowerCase();
     if (type === 'weapon') return 'main_hand';
     if (type === 'shield') return 'off_hand';
-    if (type === 'helmet' || type === 'headgear') return 'helmet';
-    if (type === 'armor' || type === 'chest') return 'chest';
+    if (type === 'headgear') return 'headgear';
+    if (type === 'chest armor') return 'chest';
     if (type === 'legs') return 'legs';
-    if (type === 'boots' || type === 'footwear') return 'boots';
-    if (type === 'gloves' || type === 'hands') return 'hands';
+    if (type === 'footwear') return 'footwear';
+    if (type === 'hands') return 'hands';
     if (type === 'cape') return 'cape';
     if (type === 'amulet') return 'amulet';
     if (type === 'ring') {
@@ -76,6 +102,7 @@ const Inventory = () => {
       return 'ring1'; // Default to ring1 for swap
     }
     if (type === 'belt') return 'belt';
+    if (type === 'trinket') return 'trinket';
     
     return 'main_hand'; // Default fallback
   };
