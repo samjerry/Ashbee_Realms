@@ -13,7 +13,7 @@ router.get('/available', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  let { channel } = req.query;
+  let { channel, location, npcId } = req.query;
   
   // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
@@ -39,11 +39,31 @@ router.get('/available', async (req, res) => {
     const completedQuestIds = completedQuests.map(q => q.questId || q.id);
 
     const questMgr = new QuestManager();
-    const available = questMgr.getAvailableQuests(character, activeQuestIds, completedQuestIds);
+    let available = questMgr.getAvailableQuests(character, activeQuestIds, completedQuestIds);
+
+    // Filter by location if specified
+    if (location) {
+      available = available.filter(quest => {
+        // For now, we don't have location data in quests, so we'll return all
+        // In the future, you can add quest.location or quest.available_at fields
+        return true;
+      });
+    }
+
+    // Filter by NPC if specified
+    if (npcId) {
+      available = available.filter(quest => {
+        // For now, we don't have NPC data in quests, so we'll return all
+        // In the future, you can add quest.npc_id or quest.offered_by fields
+        return true;
+      });
+    }
 
     res.json({
       success: true,
-      quests: available || []
+      quests: available || [],
+      location: location || null,
+      npcId: npcId || null
     });
   } catch (error) {
     console.error('Error getting available quests:', error);
@@ -59,7 +79,7 @@ router.post('/accept', async (req, res) => {
   const user = req.session.user;
   if (!user) return res.status(401).json({ error: 'Not logged in' });
 
-  let { channel, questId } = req.body;
+  let { channel, questId, source, npcId, location } = req.body;
   
   // If no channel specified, use the first channel from CHANNELS environment variable
   if (!channel) {
@@ -73,6 +93,11 @@ router.post('/accept', async (req, res) => {
   
   if (!questId) {
     return res.status(400).json({ error: 'Quest ID required' });
+  }
+
+  // Validate source if provided
+  if (source && !['npc', 'quest_board'].includes(source)) {
+    return res.status(400).json({ error: 'Invalid quest source. Must be "npc" or "quest_board"' });
   }
 
   try {
@@ -94,6 +119,13 @@ router.post('/accept', async (req, res) => {
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
+    }
+
+    // Track source in quest state
+    if (source) {
+      result.questState.acceptedFrom = source;
+      if (npcId) result.questState.acceptedFromNpcId = npcId;
+      if (location) result.questState.acceptedFromLocation = location;
     }
 
     // Add to active quests

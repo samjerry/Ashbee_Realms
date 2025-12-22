@@ -3,8 +3,7 @@ import { Scroll, CheckCircle, Clock, Star } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
 const QuestLog = () => {
-  const { activeQuests, availableQuests, fetchQuests, acceptQuest, abandonQuest } = useGameStore();
-  const [selectedTab, setSelectedTab] = useState('active');
+  const { activeQuests, fetchQuests, abandonQuest } = useGameStore();
   const [selectedQuest, setSelectedQuest] = useState(null);
   
   useEffect(() => {
@@ -27,7 +26,7 @@ const QuestLog = () => {
     return (completed / quest.objectives.length) * 100;
   };
   
-  const currentQuests = selectedTab === 'active' ? activeQuests : availableQuests;
+  const currentQuests = activeQuests;
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -42,35 +41,7 @@ const QuestLog = () => {
             </div>
           </div>
           
-          {/* Tabs */}
-          <div className="flex space-x-2 w-full sm:w-auto">
-            <button
-              onClick={() => {
-                setSelectedTab('active');
-                setSelectedQuest(null);
-              }}
-              className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-lg transition-all text-sm ${
-                selectedTab === 'active'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
-              }`}
-            >
-              Active ({activeQuests.length})
-            </button>
-            <button
-              onClick={() => {
-                setSelectedTab('available');
-                setSelectedQuest(null);
-              }}
-              className={`flex-1 sm:flex-none px-4 sm:px-6 py-2 rounded-lg transition-all text-sm ${
-                selectedTab === 'available'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
-              }`}
-            >
-              Available ({availableQuests.length})
-            </button>
-          </div>
+
         </div>
       </div>
       
@@ -80,9 +51,8 @@ const QuestLog = () => {
           {currentQuests.length === 0 ? (
             <div className="card p-12 text-center">
               <Scroll size={48} className="mx-auto mb-3 text-gray-600" />
-              <p className="text-gray-500">
-                {selectedTab === 'active' ? 'No active quests' : 'No available quests'}
-              </p>
+              <p className="text-gray-500">No active quests</p>
+              <p className="text-sm text-gray-600 mt-2">Accept quests from NPCs or Quest Boards in towns</p>
             </div>
           ) : (
             currentQuests.map(quest => (
@@ -109,7 +79,7 @@ const QuestLog = () => {
                   </div>
                 </div>
                 
-                {selectedTab === 'active' && quest.objectives && (
+                {quest.objectives && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-400 mb-1">
                       <span>Progress</span>
@@ -123,20 +93,6 @@ const QuestLog = () => {
                         style={{ width: `${getProgressPercent(quest)}%` }}
                       />
                     </div>
-                  </div>
-                )}
-                
-                {selectedTab === 'available' && (
-                  <div className="mt-3 flex items-center space-x-4 text-sm text-gray-400">
-                    {quest.rewards?.xp && (
-                      <span className="flex items-center space-x-1">
-                        <CheckCircle size={14} />
-                        <span>{quest.rewards.xp} XP</span>
-                      </span>
-                    )}
-                    {quest.rewards?.gold && (
-                      <span className="text-yellow-500">{quest.rewards.gold} Gold</span>
-                    )}
                   </div>
                 )}
               </button>
@@ -221,33 +177,22 @@ const QuestLog = () => {
                   </div>
                 )}
                 
-                {selectedTab === 'available' && (
-                  <button
-                    onClick={() => acceptQuest(selectedQuest.id)}
-                    className="btn-primary w-full mt-4"
-                  >
-                    Accept Quest
-                  </button>
-                )}
-                
-                {selectedTab === 'active' && (
-                  <div className="space-y-2 mt-4">
-                    {getProgressPercent(selectedQuest) === 100 && (
-                      <button className="btn-success w-full">
-                        Complete Quest
-                      </button>
-                    )}
-                    <button
-                      onClick={() => {
-                        abandonQuest(selectedQuest.id);
-                        setSelectedQuest(null);
-                      }}
-                      className="btn-danger w-full"
-                    >
-                      Abandon Quest
+                <div className="space-y-2 mt-4">
+                  {getProgressPercent(selectedQuest) === 100 && (
+                    <button className="btn-success w-full">
+                      Complete Quest
                     </button>
-                  </div>
-                )}
+                  )}
+                  <button
+                    onClick={() => {
+                      abandonQuest(selectedQuest.id);
+                      setSelectedQuest(null);
+                    }}
+                    className="btn-danger w-full"
+                  >
+                    Abandon Quest
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="text-center py-12 text-gray-500">
