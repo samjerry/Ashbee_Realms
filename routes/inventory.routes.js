@@ -31,9 +31,10 @@ router.get('/', async (req, res) => {
     }
     
     const inventorySummary = character.inventory.getSummary();
+    const equipmentSummary = character.equipment.getSummary();
     res.json({ 
       items: inventorySummary.items,
-      equipment: character.equipment.toObject()
+      equipment: equipmentSummary.equipped  // Use the full equipped items with stats
     });
   } catch (error) {
     console.error('Error fetching inventory:', error);
