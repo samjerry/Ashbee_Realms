@@ -720,7 +720,9 @@ class Combat {
     }
 
     if (item.effects?.restore_mana) {
-      this.addLog(`${this.character.name} uses ${item.name} and restores mana!`);
+      const manaAmount = item.effects.restore_mana;
+      const restored = this.character.restoreMana(manaAmount);
+      this.addLog(`${this.character.name} uses ${item.name} and restores ${restored} mana!`);
     }
 
     if (item.effects?.buff) {
@@ -866,7 +868,10 @@ class Combat {
         name: this.character.name,
         hp: this.character.current_hp,
         max_hp: this.character.max_hp,
+        mana: this.character.mana || 0,
+        max_mana: this.character.maxMana || 0,
         skill_cooldown: this.character.skill_cooldown || 0,
+        ability_cooldowns: this.character.ability_cooldowns || {},
         status_effects: this.statusEffects.player.getActiveEffects()
       },
       monster: {

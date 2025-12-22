@@ -32,6 +32,11 @@ const useGameStore = create((set, get) => ({
   combatLog: [],
   combatMenuState: 'main', // 'main', 'fight', 'items'
   
+  // Status effect notifications
+  statusNotification: null,
+  showStatusNotification: false,
+  statusNotificationTimer: null,
+  
   // Quest state
   activeQuests: [],
   availableQuests: [],
@@ -550,7 +555,28 @@ const useGameStore = create((set, get) => ({
     // Status effects
     socket.on('status:effect', (effect) => {
       console.log('✨ Status effect:', effect);
-      // TODO: Show effect notification
+      // Clear any existing notification timer
+      const currentTimer = get().statusNotificationTimer;
+      if (currentTimer) {
+        clearTimeout(currentTimer);
+        set({ statusNotificationTimer: null });
+      }
+      
+      // Set new notification
+      set({ 
+        statusNotification: effect,
+        showStatusNotification: true 
+      });
+      
+      // Auto-hide after 3 seconds
+      const timer = setTimeout(() => {
+        set({ 
+          showStatusNotification: false,
+          statusNotificationTimer: null
+        });
+      }, 3000);
+      
+      set({ statusNotificationTimer: timer });
     });
     
     // Party updates
