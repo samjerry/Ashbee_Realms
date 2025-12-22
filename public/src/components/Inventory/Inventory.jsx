@@ -3,6 +3,12 @@ import { Package, Trash2, ArrowUpCircle } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import { getRarityColor, getRarityTextClass } from '../../utils/rarityHelpers';
 
+// Equipment types constant - used for filtering and validation
+const EQUIPMENT_TYPES = [
+  'weapon', 'shield', 'chest armor', 'headgear', 'legs', 
+  'footwear', 'hands', 'cape', 'amulet', 'belt', 'ring', 'trinket'
+];
+
 const Inventory = () => {
   const { inventory, equipment, fetchInventory, equipItem, player } = useGameStore();
   const [selectedItem, setSelectedItem] = useState(null);
@@ -37,12 +43,7 @@ const Inventory = () => {
       return true;
     }
     
-    const equipmentTypes = [
-      'weapon', 'shield', 'chest armor', 'headgear', 'legs', 
-      'footwear', 'hands', 'cape', 'amulet', 'belt', 'ring', 'trinket'
-    ];
-    
-    return equipmentTypes.includes(item.type);
+    return EQUIPMENT_TYPES.includes(item.type);
   };
   
   const filteredInventory = safeInventory.filter(item => {
@@ -50,11 +51,7 @@ const Inventory = () => {
     
     // Special "equipment" filter shows all equipment types
     if (filter === 'equipment') {
-      const equipmentTypes = [
-        'weapon', 'shield', 'chest armor', 'headgear', 'legs', 
-        'footwear', 'hands', 'cape', 'amulet', 'belt', 'ring', 'trinket'
-      ];
-      return equipmentTypes.includes(item.type);
+      return EQUIPMENT_TYPES.includes(item.type);
     }
     
     // Direct type match for other filters
