@@ -30,11 +30,15 @@ const Inventory = () => {
     return colors[rarity] || colors.common;
   };
   
+  // Helper function to check if item is equippable
+  const isEquippableItem = (item) => {
+    return item.type === 'weapon' || item.type === 'armor' || item.category === 'equipment';
+  };
+  
   const filteredInventory = safeInventory.filter(item => {
     if (filter === 'all') return true;
     if (filter === 'equipment') {
-      // Equipment includes weapons and armor
-      return item.type === 'weapon' || item.type === 'armor' || item.category === 'equipment';
+      return isEquippableItem(item);
     }
     return item.type === filter;
   });
@@ -226,7 +230,7 @@ const Inventory = () => {
                     </button>
                     
                     {/* Add Equip Button for Equipment Items */}
-                    {(item.type === 'weapon' || item.type === 'armor' || item.category === 'equipment') && (
+                    {isEquippableItem(item) && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
