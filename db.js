@@ -416,6 +416,8 @@ async function initPostgres() {
   // Migration: Add mana columns to all player tables if they don't exist
   console.log('🔧 Ensuring mana columns exist...');
   for (const channel of CHANNELS) {
+    // SECURITY: getPlayerTable() sanitizes channel name, removing all non-alphanumeric characters
+    // to prevent SQL injection. Table name format: players_{sanitized_channel}
     const tableName = getPlayerTable(channel);
     
     await pool.query(`
