@@ -267,6 +267,41 @@ class QuestManager {
   }
 
   /**
+   * Check if a quest can be abandoned
+   * @param {string} questId - Quest identifier
+   * @returns {Object} { canAbandon: boolean, reason: string }
+   */
+  isQuestAbandonable(questId) {
+    const quest = this.getQuest(questId);
+    
+    if (!quest) {
+      return { canAbandon: false, reason: 'Quest not found' };
+    }
+    
+    // Cannot abandon tutorial quest
+    if (this.isTutorialQuest(questId)) {
+      return { canAbandon: false, reason: 'Tutorial quests cannot be abandoned' };
+    }
+    
+    // Cannot abandon main story quests (have chapter property)
+    if (quest.chapter !== undefined) {
+      return { canAbandon: false, reason: 'Main story quests cannot be abandoned' };
+    }
+    
+    return { canAbandon: true, reason: null };
+  }
+
+  /**
+   * Check if quest is randomly generated
+   * @param {string} questId - Quest identifier  
+   * @returns {boolean} True if quest is random/procedural
+   */
+  isRandomQuest(questId) {
+    const quest = this.getQuest(questId);
+    return quest && quest.is_random === true;
+  }
+
+  /**
    * Abandon an active quest
    * @param {Object} questState - Quest state
    * @returns {Object} Abandon result
@@ -303,13 +338,26 @@ class QuestManager {
     });
     const progressPercent = Math.floor((totalProgress / totalObjectives) * 100);
 
+    // Determine quest type
+    let questType = 'side';
+    if (this.mainQuests.some(q => q.id === quest.id)) {
+      questType = 'main';
+    } else if (this.dailyQuests.some(q => q.id === quest.id)) {
+      questType = 'daily';
+    }
+
     return {
       questId: quest.id,
+      id: quest.id, // Add id for consistency
       name: quest.name,
       description: quest.description,
       status: questState.status,
       progress: `${completedObjectives}/${totalObjectives}`,
       progressPercent,
+      type: questType,
+      chapter: quest.chapter,
+      is_tutorial: this.isTutorialQuest(quest.id),
+      is_random: quest.is_random || false,
       objectives: questState.objectives.map(obj => ({
         description: obj.description,
         progress: `${obj.current}/${obj.required}`,

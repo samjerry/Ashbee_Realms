@@ -33,6 +33,7 @@ router.get('/available', async (req, res) => {
 
     const activeQuests = character.activeQuests || [];
     const completedQuests = character.completedQuests || [];
+    const abandonedQuests = character.abandonedQuests || [];
 
     // Extract quest IDs from quest state objects
     const activeQuestIds = activeQuests.map(q => q.questId);
@@ -40,6 +41,13 @@ router.get('/available', async (req, res) => {
 
     const questMgr = new QuestManager();
     let available = questMgr.getAvailableQuests(character, activeQuestIds, completedQuestIds);
+
+    // Filter out abandoned random quests (they should not reappear)
+    // Use Set for O(1) lookup performance
+    if (abandonedQuests.length > 0) {
+      const abandonedSet = new Set(abandonedQuests);
+      available = available.filter(quest => !abandonedSet.has(quest.id));
+    }
 
     // Note: Location and NPC filtering are placeholders for future implementation
     // Currently all available quests are returned regardless of these parameters
@@ -186,13 +194,39 @@ router.post('/abandon', async (req, res) => {
       console.log('[Quest Abandon] Error: Quest not active. Active quests:', activeQuests.map(q => q.questId));
       return res.status(400).json({ error: 'Quest not active' });
     }
+
+    const questMgr = new QuestManager();
     
+    // Check if quest can be abandoned
+    const abandonCheck = questMgr.isQuestAbandonable(questId);
+    if (!abandonCheck.canAbandon) {
+      console.log('[Quest Abandon] Error: Quest cannot be abandoned:', abandonCheck.reason);
+      return res.status(400).json({ 
+        error: abandonCheck.reason,
+        canAbandon: false
+      });
+    }
+    
+    // Check if quest is random
+    const isRandom = questMgr.isRandomQuest(questId);
+    
+    // Remove from active quests
     activeQuests.splice(questIndex, 1);
     character.activeQuests = activeQuests;
 
+    // If random quest, add to abandonedQuests for permanent removal
+    if (isRandom) {
+      if (!character.abandonedQuests) {
+        character.abandonedQuests = [];
+      }
+      if (!character.abandonedQuests.includes(questId)) {
+        character.abandonedQuests.push(questId);
+      }
+    }
+
     await db.saveCharacter(user.id, channel.toLowerCase(), character);
 
-    console.log('[Quest Abandon] Success: Quest abandoned', questId);
+    console.log('[Quest Abandon] Success: Quest abandoned', questId, isRandom ? '(random quest - permanently removed)' : '');
 
     // Emit real-time quest update
     socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
@@ -200,7 +234,8 @@ router.post('/abandon', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Quest abandoned'
+      message: 'Quest abandoned',
+      isRandom
     });
   } catch (error) {
     console.error('[Quest Abandon] Error:', error);
