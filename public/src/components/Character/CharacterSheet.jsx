@@ -6,7 +6,7 @@ import { getRarityTextClass } from '../../utils/rarityHelpers';
 
 // Force rebuild - fixed null safety issues
 const CharacterSheet = () => {
-  const { player } = useGameStore();
+  const { player, equipment } = useGameStore();
   
   if (!player) {
     return (
@@ -27,7 +27,7 @@ const CharacterSheet = () => {
     { label: 'Crit Chance', value: `${stats.critChance || 5}%`, icon: Star, color: 'text-yellow-500' },
   ];
   
-  const equipment = player.equipment || {};
+  const equipmentData = equipment || {};
   const slots = [
     { key: 'main_hand', label: 'Main Hand' },
     { key: 'off_hand', label: 'Off Hand' },
@@ -109,7 +109,7 @@ const CharacterSheet = () => {
         <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">Equipment</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
           {slots.map((slot) => {
-            const item = equipment[slot.key];
+            const item = equipmentData[slot.key];
             return (
               <div key={slot.key} className="bg-dark-900 rounded-lg p-3 sm:p-4 border border-dark-700">
                 <p className="text-xs sm:text-sm text-gray-400 mb-2">{slot.label}</p>
