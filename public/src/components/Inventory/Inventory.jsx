@@ -37,13 +37,8 @@ const Inventory = () => {
       return true;
     }
     
-    // Check if item has armor or weapon tags
-    if (item.tags && Array.isArray(item.tags)) {
-      return item.tags.includes('armor') || item.tags.includes('weapon');
-    }
-    
-    // Fallback to checking type/category
-    if (item.type === 'weapon' || item.type === 'armor' || item.category === 'equipment') {
+    // Check type for weapon, armor, or accessory
+    if (item.type === 'weapon' || item.type === 'armor' || item.type === 'accessory') {
       return true;
     }
     
@@ -52,13 +47,11 @@ const Inventory = () => {
   
   const filteredInventory = safeInventory.filter(item => {
     if (filter === 'all') return true;
-    if (filter === 'equipment') {
-      return isEquippableItem(item);
-    }
+    // Direct type match
     return item.type === filter;
   });
   
-  const itemTypes = ['all', 'equipment', 'weapon', 'armor', 'consumable', 'material', 'quest', 'misc'];
+  const itemTypes = ['all', 'weapon', 'armor', 'accessory', 'consumable', 'material', 'quest', 'misc'];
 
   // Helper function to determine equipment slot from item data
   const getItemSlot = (item) => {
@@ -239,8 +232,8 @@ const Inventory = () => {
                       <p className={`text-xs font-bold text-center ${getRarityTextClass(item.rarity)}`}>
                         {item.name}
                       </p>
-                      {item.quantity > 1 && (
-                        <p className="text-xs text-gray-400">x{item.quantity}</p>
+                      {item.count > 1 && (
+                        <p className="text-xs text-gray-400">x{item.count}</p>
                       )}
                     </button>
                     
@@ -301,9 +294,9 @@ const Inventory = () => {
                 
                 {/* Actions */}
                 <div className="space-y-2 pt-4">
-                  {selectedItem.type === 'weapon' || selectedItem.type === 'armor' ? (
+                  {isEquippableItem(selectedItem) ? (
                     <button
-                      onClick={() => equipItem(selectedItem.id, selectedItem.slot)}
+                      onClick={() => handleEquipClick(selectedItem)}
                       className="btn-primary w-full flex items-center justify-center space-x-2"
                     >
                       <ArrowUpCircle size={20} />

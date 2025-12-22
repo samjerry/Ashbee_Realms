@@ -127,8 +127,7 @@ class LootGenerator {
         id: item.id,
         quantity: 1,
         name: item.name,
-        rarity: item.rarity,
-        type: 'equipment'
+        rarity: item.rarity
       };
     }
 
