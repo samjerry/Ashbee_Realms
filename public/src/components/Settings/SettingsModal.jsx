@@ -110,11 +110,24 @@ const SettingsModal = () => {
   useEffect(() => {
     // Fetch user's roles and current name color
     fetch('/api/player/roles')
-      .then(res => res.json())
+      .then(res => {
+        console.log('📡 Roles API status:', res.status);
+        return res.json();
+      })
       .then(data => {
+        console.log('✅ Roles API response:', data);
+        console.log('🎨 Available colors:', data.availableColors);
         setUserRoles(data);
       })
-      .catch(err => console.error('Failed to fetch roles:', err));
+      .catch(err => {
+        console.error('❌ Failed to fetch roles:', err);
+        // Set fallback data so UI still shows
+        setUserRoles({ 
+          roles: ['viewer'], 
+          availableColors: [{ role: 'viewer', color: '#FFFFFF', name: 'Viewer' }],
+          primaryRole: 'viewer'
+        });
+      });
     
     // Fetch player data to get current name color, role badge, and theme
     fetch('/api/player')
@@ -196,6 +209,17 @@ const SettingsModal = () => {
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Settings</h1>
             <p className="text-sm sm:text-base text-gray-400">Customize your game experience</p>
+            <button 
+              onClick={() => {
+                console.log('🔍 Debug Info:');
+                console.log('userRoles:', userRoles);
+                console.log('userRoles.availableColors:', userRoles?.availableColors);
+                console.log('player:', player);
+              }}
+              className="mt-2 bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600 transition-colors text-sm"
+            >
+              🐛 Debug Roles
+            </button>
           </div>
           
           {/* Audio Settings */}
@@ -321,65 +345,85 @@ const SettingsModal = () => {
           </div>
 
           {/* Role Badge Selection - Complete Package (Icon + Color) */}
-          {userRoles && userRoles.availableColors && userRoles.availableColors.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <User size={24} className="text-primary-500" />
-                <h2 className="text-xl font-bold text-white">Role Display</h2>
-              </div>
-              
-              <div className="pl-8">
-                <p className="text-sm text-gray-400 mb-3">
-                  {userRoles.availableColors.length > 1
-                    ? 'Choose which role to display (icon + color come as a package):'
-                    : 'Your display role:'}
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {userRoles.availableColors.map(({ role, color, name }) => {
-                    const RoleIcon = getRoleIcon(role);
-                    const isSelected = selectedRoleBadge === role || (!selectedRoleBadge && userRoles.primaryRole === role);
-                    
-                    return (
-                      <button
-                        key={role}
-                        onClick={async () => {
-                          setSelectedNameColor(color);
-                          setSelectedRoleBadge(role);
-                          // Save both name color and role badge to server
-                          try {
-                            await fetch('/api/player/role-display', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ nameColor: color, selectedRoleBadge: role })
-                            });
-                            
-                            // Update player state in gameStore for immediate UI update
-                            if (player) {
-                              setPlayer({
-                                ...player,
-                                nameColor: color,
-                                selectedRoleBadge: role
-                              });
-                            }
-                          } catch (err) {
-                            console.error('Failed to save role display:', err);
-                          }
-                        }}
-                        className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
-                          isSelected
-                            ? 'border-white bg-gray-700 shadow-lg scale-105'
-                            : 'border-gray-600 bg-gray-800 hover:border-gray-500'
-                        }`}
-                      >
-                        <RoleIcon size={20} style={{ color }} />
-                        <span className="font-semibold capitalize" style={{ color }}>{name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <User size={24} className="text-primary-500" />
+              <h2 className="text-xl font-bold text-white">Role Display</h2>
             </div>
-          )}
+            
+            <div className="pl-8">
+              {!userRoles ? (
+                // Loading state
+                <div className="text-gray-400 text-sm">
+                  Loading role data...
+                </div>
+              ) : !userRoles.availableColors || userRoles.availableColors.length === 0 ? (
+                // No roles available
+                <div className="text-gray-400 text-sm">
+                  No role data available. Using default viewer role.
+                </div>
+              ) : (
+                // Roles available - show selection
+                <>
+                  <p className="text-sm text-gray-400 mb-3">
+                    {userRoles.availableColors.length > 1
+                      ? 'Choose which role to display (icon + color come as a package):'
+                      : 'Your display role: '}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    {userRoles.availableColors.map(({ role, color, name }) => {
+                      const RoleIcon = getRoleIcon(role);
+                      const isSelected = selectedRoleBadge === role || (!selectedRoleBadge && userRoles.primaryRole === role);
+                      
+                      return (
+                        <button
+                          key={role}
+                          onClick={async () => {
+                            setSelectedNameColor(color);
+                            setSelectedRoleBadge(role);
+                            // Save both name color and role badge to server
+                            try {
+                              const response = await fetch('/api/player/role-display', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ nameColor: color, selectedRoleBadge: role })
+                              });
+                              
+                              if (!response.ok) {
+                                throw new Error('Failed to save role display');
+                              }
+                              
+                              // Update player state in gameStore for immediate UI update
+                              if (player) {
+                                setPlayer({
+                                  ...player,
+                                  nameColor: color,
+                                  selectedRoleBadge: role
+                                });
+                              }
+                              
+                              console.log('✅ Role saved:', role, color);
+                            } catch (err) {
+                              console.error('❌ Failed to save role display:', err);
+                              alert('Failed to save role selection. Please try again.');
+                            }
+                          }}
+                          className={`flex items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                            isSelected
+                              ? 'border-white bg-gray-700 shadow-lg scale-105'
+                              : 'border-gray-600 bg-gray-800 hover:border-gray-500'
+                          }`}
+                        >
+                          <RoleIcon size={20} style={{ color }} />
+                          <span className="font-semibold capitalize" style={{ color }}>{name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
           
           {/* Gameplay Settings */}
           <div className="space-y-4">
