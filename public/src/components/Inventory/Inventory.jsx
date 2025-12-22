@@ -85,7 +85,8 @@ const Inventory = () => {
     const itemSlot = getItemSlot(item);
     const equippedInSlot = equipment?.[itemSlot];
     
-    if (equippedInSlot) {
+    // Only show comparison if there's actually an item equipped in that slot
+    if (equippedInSlot && equippedInSlot.id) {
       // Slot occupied - show comparison
       setItemToEquip(item);
       setCurrentlyEquipped(equippedInSlot);
@@ -294,7 +295,7 @@ const Inventory = () => {
                 
                 {/* Actions */}
                 <div className="space-y-2 pt-4">
-                  {isEquippableItem(selectedItem) ? (
+                  {selectedItem && isEquippableItem(selectedItem) ? (
                     <button
                       onClick={() => handleEquipClick(selectedItem)}
                       className="btn-primary w-full flex items-center justify-center space-x-2"
@@ -304,20 +305,24 @@ const Inventory = () => {
                     </button>
                   ) : null}
                   
-                  {selectedItem.type === 'consumable' ? (
+                  {selectedItem && selectedItem.type === 'consumable' ? (
                     <button className="btn-success w-full">
                       Use
                     </button>
                   ) : null}
                   
-                  <button className="btn-secondary w-full">
-                    Sell ({Math.floor(selectedItem.value * 0.4)} gold)
-                  </button>
+                  {selectedItem && selectedItem.value ? (
+                    <button className="btn-secondary w-full">
+                      Sell ({Math.floor(selectedItem.value * 0.4)} gold)
+                    </button>
+                  ) : null}
                   
-                  <button className="btn-danger w-full flex items-center justify-center space-x-2">
-                    <Trash2 size={16} />
-                    <span>Destroy</span>
-                  </button>
+                  {selectedItem ? (
+                    <button className="btn-danger w-full flex items-center justify-center space-x-2">
+                      <Trash2 size={16} />
+                      <span>Destroy</span>
+                    </button>
+                  ) : null}
                 </div>
               </div>
             ) : (
