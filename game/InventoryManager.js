@@ -326,12 +326,38 @@ class InventoryManager {
         }
       } else {
         const itemData = this._getItemData(itemId);
+        
+        // Determine type based on slot
+        let itemType = 'misc';
+        if (itemData?.slot) {
+          const slot = itemData.slot;
+          // Weapon slots
+          if (slot === 'main_hand' || slot === 'off_hand') {
+            itemType = 'weapon';
+          }
+          // Armor slots
+          else if (slot === 'armor' || slot === 'headgear' || slot === 'legs' || 
+                   slot === 'footwear' || slot === 'hands' || slot === 'cape') {
+            itemType = 'armor';
+          }
+          // Accessory slots
+          else if (slot === 'amulet' || slot === 'belt' || slot === 'ring' || slot === 'trinket') {
+            itemType = 'accessory';
+          }
+        } else if (itemData?.usage) {
+          itemType = 'consumable';
+        }
+        
         itemMap.set(itemId, {
           id: itemId,
           name: itemData?.name || itemId,
           count: 1,
           rarity: itemData?.rarity || 'common',
-          type: itemData?.slot ? 'equipment' : (itemData?.usage ? 'consumable' : 'misc'),
+          type: itemType,
+          slot: itemData?.slot, // Include slot info
+          description: itemData?.description,
+          icon: itemData?.icon,
+          stats: itemData?.stats,
           value: itemData?.value || 0,
           stackable: itemData?.stackable || false,
           tags: itemData?.tags || [], // Global tags
@@ -448,7 +474,9 @@ class InventoryManager {
       totalValue: this.getTotalValue(),
       items: this.getItemsWithCounts(),
       itemsByType: {
-        equipment: this.getItemsByType('equipment').length,
+        weapon: this.getItemsByType('weapon').length,
+        armor: this.getItemsByType('armor').length,
+        accessory: this.getItemsByType('accessory').length,
         consumable: this.getItemsByType('consumable').length,
         misc: this.getItemsByType('misc').length
       }
