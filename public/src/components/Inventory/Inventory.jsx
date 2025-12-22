@@ -120,7 +120,6 @@ const Inventory = () => {
       
       if (response.ok && result.success) {
         await fetchInventory();
-        alert(`Equipped ${item.name}!`);
       } else {
         alert(`Failed to equip: ${result.error || result.message || 'Unknown error'}`);
       }
@@ -166,9 +165,6 @@ const Inventory = () => {
           setComparisonMode(false);
           setItemToEquip(null);
           setCurrentlyEquipped(null);
-          
-          // Show success message
-          alert(`Equipped ${itemToEquip.name}! ${currentlyEquipped.name} moved to inventory.`);
         } else {
           alert(`Failed to equip: ${result.error || result.message || 'Unknown error'}`);
         }
