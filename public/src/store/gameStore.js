@@ -39,7 +39,6 @@ const useGameStore = create((set, get) => ({
   
   // Quest state
   activeQuests: [],
-  availableQuests: [],
   
   // Inventory state
   inventory: [],
@@ -232,22 +231,16 @@ const useGameStore = create((set, get) => ({
   // Quest actions
   fetchQuests: async () => {
     try {
-      const [activeRes, availableRes] = await Promise.all([
-        fetch('/api/quests/active'),
-        fetch('/api/quests/available')
-      ]);
-      
+      const activeRes = await fetch('/api/quests/active');
       const activeData = await activeRes.json();
-      const availableData = await availableRes.json();
       
       // Handle both array and object responses
       const activeQuests = Array.isArray(activeData) ? activeData : (activeData.quests || []);
-      const availableQuests = Array.isArray(availableData) ? availableData : (availableData.quests || []);
       
-      set({ activeQuests, availableQuests });
+      set({ activeQuests });
     } catch (error) {
       console.error('Failed to fetch quests:', error);
-      set({ activeQuests: [], availableQuests: [] });
+      set({ activeQuests: [] });
     }
   },
   
