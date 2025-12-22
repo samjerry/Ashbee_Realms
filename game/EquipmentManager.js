@@ -465,7 +465,10 @@ class EquipmentManager {
           id: itemId,
           name: item?.name || itemId,
           rarity: item?.rarity || 'common',
-          stats: item?.stats || {}
+          icon: item?.icon || '📦',
+          stats: item?.stats || {},
+          type: item?.type || 'unknown',
+          description: item?.description || ''
         };
       } else {
         equipped[slot] = null;
