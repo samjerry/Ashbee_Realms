@@ -42,4 +42,57 @@ router.get('/', async (req, res) => {
   }
 });
 
+/**
+ * POST /discard
+ * Discard an item from inventory
+ */
+router.post('/discard', async (req, res) => {
+  const user = req.session.user;
+  if (!user) return res.status(401).json({ error: 'Not logged in' });
+  
+  const { itemId, channel } = req.body;
+  
+  if (!itemId) {
+    return res.status(400).json({ error: 'Item ID is required' });
+  }
+  
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel is required' });
+  }
+  
+  const channelName = channel.toLowerCase();
+  
+  try {
+    const character = await db.getCharacter(user.id, channelName);
+    
+    if (!character) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    // Find the item in inventory
+    const itemIndex = character.inventory.items.findIndex(item => item.id === itemId);
+    
+    if (itemIndex === -1) {
+      return res.status(404).json({ error: 'Item not found in inventory' });
+    }
+    
+    const item = character.inventory.items[itemIndex];
+    
+    // Remove the item from inventory
+    character.inventory.items.splice(itemIndex, 1);
+    
+    // Save the character
+    await db.saveCharacter(user.id, channelName, character);
+    
+    res.json({ 
+      success: true, 
+      message: `${item.name} has been discarded`,
+      itemName: item.name 
+    });
+  } catch (error) {
+    console.error('Error discarding item:', error);
+    res.status(500).json({ error: 'Failed to discard item' });
+  }
+});
+
 module.exports = router;

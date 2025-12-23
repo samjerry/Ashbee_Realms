@@ -16,6 +16,8 @@ const Inventory = () => {
   const [comparisonMode, setComparisonMode] = useState(false);
   const [itemToEquip, setItemToEquip] = useState(null);
   const [currentlyEquipped, setCurrentlyEquipped] = useState(null);
+  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
+  const [itemToDiscard, setItemToDiscard] = useState(null);
   
   useEffect(() => {
     fetchInventory();
@@ -206,6 +208,72 @@ const Inventory = () => {
     }
   };
 
+  // Handle discard button click
+  const handleDiscardClick = (item) => {
+    // Check if item is rare or higher
+    const rareRarities = ['rare', 'epic', 'legendary', 'mythic'];
+    if (rareRarities.includes(item.rarity?.toLowerCase())) {
+      // Show confirmation for rare+ items
+      setItemToDiscard(item);
+      setShowDiscardConfirm(true);
+    } else {
+      // Discard common/uncommon items directly
+      discardItem(item);
+    }
+  };
+
+  // Discard item function
+  const discardItem = async (item) => {
+    try {
+      const channel = player?.channel;
+      if (!channel) {
+        alert('Channel information missing');
+        return;
+      }
+
+      const response = await fetch('/api/inventory/discard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          itemId: item.id,
+          channel: channel
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        // Refresh inventory
+        await fetchInventory();
+        // Clear selected item if it was discarded
+        if (selectedItem?.id === item.id) {
+          setSelectedItem(null);
+        }
+      } else {
+        alert(`Failed to discard: ${result.error || result.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error discarding item:', error);
+      alert('Failed to discard item');
+    }
+  };
+
+  // Confirm discard from modal
+  const confirmDiscard = () => {
+    if (itemToDiscard) {
+      discardItem(itemToDiscard);
+      setShowDiscardConfirm(false);
+      setItemToDiscard(null);
+    }
+  };
+
+  // Cancel discard
+  const cancelDiscard = () => {
+    setShowDiscardConfirm(false);
+    setItemToDiscard(null);
+  };
+
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -325,16 +393,13 @@ const Inventory = () => {
                     </button>
                   ) : null}
                   
-                  {selectedItem && selectedItem.value ? (
-                    <button className="btn-secondary w-full">
-                      Sell ({Math.floor(selectedItem.value * 0.4)} gold)
-                    </button>
-                  ) : null}
-                  
                   {selectedItem ? (
-                    <button className="btn-danger w-full flex items-center justify-center space-x-2">
+                    <button 
+                      onClick={() => handleDiscardClick(selectedItem)}
+                      className="btn-danger w-full flex items-center justify-center space-x-2"
+                    >
                       <Trash2 size={16} />
-                      <span>Destroy</span>
+                      <span>Discard</span>
                     </button>
                   ) : null}
                 </div>
@@ -453,6 +518,45 @@ const Inventory = () => {
             >
               Cancel
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Discard Confirmation Modal */}
+      {showDiscardConfirm && itemToDiscard && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-dark-800 rounded-lg max-w-md w-full p-6 border border-dark-700">
+            <h2 className="text-2xl font-bold text-white mb-4 text-center">
+              ⚠️ Discard Rare Item?
+            </h2>
+            
+            <div className="text-center mb-6">
+              <div className="text-5xl mb-3">{itemToDiscard.icon || '📦'}</div>
+              <h3 className={`text-xl font-bold mb-2 ${getRarityTextClass(itemToDiscard.rarity)}`}>
+                {itemToDiscard.name}
+              </h3>
+              <p className="text-gray-400 text-sm mb-4">
+                This is a <span className={getRarityTextClass(itemToDiscard.rarity)}>{itemToDiscard.rarity}</span> item!
+              </p>
+              <p className="text-gray-300">
+                Are you sure you want to discard this item? This action cannot be undone.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={cancelDiscard}
+                className="bg-dark-700 hover:bg-dark-600 text-white py-3 px-4 rounded-lg transition-colors font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDiscard}
+                className="bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg transition-colors font-bold"
+              >
+                Yes, Discard
+              </button>
+            </div>
           </div>
         </div>
       )}
