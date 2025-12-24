@@ -1,526 +1,434 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { embedBuilder } = require('../utils/embedBuilder');
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const MapKnowledgeManager = require('../game/MapKnowledgeManager');
+const { loadData } = require('../data/data_loader');
 
-// Helper function to get adjacent tiles
-function getAdjacentTiles(x, y) {
-  return {
-    north: { x, y: y - 1, direction: 'north' },
-    south: { x, y: y + 1, direction: 'south' },
-    east: { x: x + 1, y, direction: 'east' },
-    west: { x: x - 1, y, direction: 'west' }
-  };
+// Helper function to calculate distance
+function calculateDistance(x1, y1, x2, y2) {
+    return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 }
 
-// Helper function to create map view
-function createMapView(character, mapData) {
-  const currentX = character.x;
-  const currentY = character.y;
-  const viewRadius = 2;
-  
-  let mapView = '';
-  for (let y = currentY - viewRadius; y <= currentY + viewRadius; y++) {
-    for (let x = currentX - viewRadius; x <= currentX + viewRadius; x++) {
-      const key = `${x},${y}`;
-      
-      if (x === currentX && y === currentY) {
-        mapView += '🧙'; // Player position
-      } else if (character.mapKnowledge && character.mapKnowledge[key]) {
-        const tile = character.mapKnowledge[key];
-        mapView += tile.icon || '📍';
-      } else {
-        mapView += '⬛'; // Unexplored
-      }
-      mapView += ' ';
+// Helper function to get danger hint based on distance
+function getDangerHint(distance) {
+    if (distance === 0) return 'You are here!';
+    if (distance === 1) return 'Extremely close! Right next to you!';
+    if (distance === 2) return 'Very close! Just a step away!';
+    if (distance <= 4) return 'Nearby. You sense something close.';
+    if (distance <= 6) return 'In the area. Not too far.';
+    if (distance <= 10) return 'Some distance away.';
+    return 'Far away.';
+}
+
+// Helper function to generate tile hint
+function generateTileHint(tileX, tileY, targetX, targetY) {
+    const dx = targetX - tileX;
+    const dy = targetY - tileY;
+    const distance = calculateDistance(tileX, tileY, targetX, targetY);
+    
+    let direction = '';
+    if (Math.abs(dx) > Math.abs(dy)) {
+        direction = dx > 0 ? 'east' : 'west';
+    } else if (Math.abs(dy) > Math.abs(dx)) {
+        direction = dy > 0 ? 'south' : 'north';
+    } else {
+        const horizontal = dx > 0 ? 'east' : 'west';
+        const vertical = dy > 0 ? 'south' : 'north';
+        direction = `${vertical}-${horizontal}`;
     }
-    mapView += '\n';
-  }
-  
-  return mapView;
-}
-
-// Helper function to reveal current tile
-function revealTile(character, mapData) {
-  const key = `${character.x},${character.y}`;
-  const tile = mapData[key];
-  
-  if (!character.mapKnowledge) {
-    character.mapKnowledge = {};
-  }
-  
-  if (tile) {
-    character.mapKnowledge[key] = {
-      name: tile.name,
-      description: tile.description,
-      icon: tile.icon,
-      explored: true,
-      exploredAt: new Date().toISOString()
+    
+    return {
+        distance,
+        direction,
+        hint: getDangerHint(distance)
     };
-  }
 }
 
-// GET /map - Show current map view
-router.get('/', async (req, res) => {
-  try {
-    const { user, channel } = req.query;
-    
-    if (!user || !channel) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: user and channel' 
-      });
-    }
-
-    const character = await db.getCharacter(user, channel.toLowerCase());
-    
-    if (!character) {
-      return res.status(404).json({ 
-        error: 'Character not found. Please create a character first using /start' 
-      });
-    }
-
-    const mapData = await db.getMapData();
-    const currentKey = `${character.x},${character.y}`;
-    const currentTile = mapData[currentKey] || {
-      name: 'Unknown Location',
-      description: 'You find yourself in an unfamiliar place.',
-      icon: '❓'
-    };
-
-    // Reveal current tile
-    revealTile(character, mapData);
-    
-    const mapView = createMapView(character, mapData);
-    const adjacent = getAdjacentTiles(character.x, character.y);
-    
-    // Create movement buttons
-    const buttons = new ActionRowBuilder();
-    
-    // Check each direction
-    for (const [direction, coords] of Object.entries(adjacent)) {
-      const tileKey = `${coords.x},${coords.y}`;
-      const tile = mapData[tileKey];
-      
-      if (tile) {
-        buttons.addComponents(
-          new ButtonBuilder()
-            .setCustomId(`move_${direction}`)
-            .setLabel(direction.charAt(0).toUpperCase() + direction.slice(1))
-            .setStyle(ButtonStyle.Primary)
-        );
-      }
-    }
-
-    const embed = embedBuilder({
-      title: `🗺️ ${currentTile.name}`,
-      description: currentTile.description,
-      fields: [
-        {
-          name: 'Map View',
-          value: `\`\`\`\n${mapView}\`\`\``,
-          inline: false
-        },
-        {
-          name: 'Coordinates',
-          value: `X: ${character.x}, Y: ${character.y}`,
-          inline: true
-        },
-        {
-          name: 'Tiles Explored',
-          value: `${Object.keys(character.mapKnowledge || {}).length}`,
-          inline: true
-        }
-      ],
-      color: 0x3498db
-    });
-
-    res.json({
-      embeds: [embed],
-      components: buttons.components.length > 0 ? [buttons] : []
-    });
-
-  } catch (error) {
-    console.error('Error in GET /map:', error);
-    res.status(500).json({ 
-      error: 'Failed to retrieve map',
-      details: error.message 
-    });
-  }
-});
-
-// POST /map/move - Move to a new location
-router.post('/move', async (req, res) => {
-  try {
-    const { user, channel, direction } = req.body;
-    
-    if (!user || !channel || !direction) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: user, channel, and direction' 
-      });
-    }
-
-    const character = await db.getCharacter(user, channel.toLowerCase());
-    
-    if (!character) {
-      return res.status(404).json({ 
-        error: 'Character not found. Please create a character first using /start' 
-      });
-    }
-
-    const mapData = await db.getMapData();
-    let newX = character.x;
-    let newY = character.y;
-
-    // Calculate new position based on direction
-    switch (direction.toLowerCase()) {
-      case 'north':
-        newY -= 1;
-        break;
-      case 'south':
-        newY += 1;
-        break;
-      case 'east':
-        newX += 1;
-        break;
-      case 'west':
-        newX -= 1;
-        break;
-      default:
-        return res.status(400).json({ 
-          error: 'Invalid direction. Use: north, south, east, or west' 
+// GET /api/map/knowledge - Get player's map knowledge
+router.get('/knowledge', async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const knowledge = await MapKnowledgeManager.getPlayerKnowledge(userId);
+        
+        res.json({
+            success: true,
+            knowledge
+        });
+    } catch (error) {
+        console.error('Error fetching map knowledge:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch map knowledge'
         });
     }
+});
 
-    const newKey = `${newX},${newY}`;
-    const newTile = mapData[newKey];
-
-    if (!newTile) {
-      return res.status(400).json({ 
-        error: 'You cannot move in that direction. There is no path there.' 
-      });
-    }
-
-    // Update character position
-    character.x = newX;
-    character.y = newY;
-    
-    // Reveal new tile
-    revealTile(character, mapData);
-    
-    // Save character with updated position and map knowledge
-    await db.saveCharacter(user, channel.toLowerCase(), character);
-
-    // Create new map view
-    const mapView = createMapView(character, mapData);
-    const adjacent = getAdjacentTiles(newX, newY);
-    
-    // Create movement buttons for new location
-    const buttons = new ActionRowBuilder();
-    
-    for (const [dir, coords] of Object.entries(adjacent)) {
-      const tileKey = `${coords.x},${coords.y}`;
-      const tile = mapData[tileKey];
-      
-      if (tile) {
-        buttons.addComponents(
-          new ButtonBuilder()
-            .setCustomId(`move_${dir}`)
-            .setLabel(dir.charAt(0).toUpperCase() + dir.slice(1))
-            .setStyle(ButtonStyle.Primary)
+// GET /api/map/grid - Get world grid data
+router.get('/grid', async (req, res) => {
+    try {
+        const userId = req.user.id;
+        
+        // Get player's current position
+        const player = await db.query(
+            'SELECT current_biome_id, grid_x, grid_y FROM players WHERE user_id = $1',
+            [userId]
         );
-      }
-    }
-
-    const embed = embedBuilder({
-      title: `🗺️ ${newTile.name}`,
-      description: `You travel ${direction}.\n\n${newTile.description}`,
-      fields: [
-        {
-          name: 'Map View',
-          value: `\`\`\`\n${mapView}\`\`\``,
-          inline: false
-        },
-        {
-          name: 'Coordinates',
-          value: `X: ${newX}, Y: ${newY}`,
-          inline: true
-        },
-        {
-          name: 'Tiles Explored',
-          value: `${Object.keys(character.mapKnowledge || {}).length}`,
-          inline: true
+        
+        if (player.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Player not found'
+            });
         }
-      ],
-      color: 0x2ecc71
-    });
-
-    res.json({
-      embeds: [embed],
-      components: buttons.components.length > 0 ? [buttons] : []
-    });
-
-  } catch (error) {
-    console.error('Error in POST /map/move:', error);
-    res.status(500).json({ 
-      error: 'Failed to move character',
-      details: error.message 
-    });
-  }
+        
+        const { current_biome_id, grid_x, grid_y } = player.rows[0];
+        
+        // Get discovered tiles
+        const discoveredTiles = await MapKnowledgeManager.getDiscoveredTiles(userId, current_biome_id);
+        
+        res.json({
+            success: true,
+            currentPosition: { x: grid_x, y: grid_y },
+            biomeId: current_biome_id,
+            discoveredTiles
+        });
+    } catch (error) {
+        console.error('Error fetching grid data:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch grid data'
+        });
+    }
 });
 
-// GET /map/explore - Explore current location
-router.get('/explore', async (req, res) => {
-  try {
-    const { user, channel } = req.query;
-    
-    if (!user || !channel) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: user and channel' 
-      });
-    }
-
-    const character = await db.getCharacter(user, channel.toLowerCase());
-    
-    if (!character) {
-      return res.status(404).json({ 
-        error: 'Character not found. Please create a character first using /start' 
-      });
-    }
-
-    const mapData = await db.getMapData();
-    const currentKey = `${character.x},${character.y}`;
-    const currentTile = mapData[currentKey];
-
-    if (!currentTile) {
-      return res.status(404).json({ 
-        error: 'Current location not found in map data' 
-      });
-    }
-
-    // Reveal adjacent tiles
-    const adjacent = getAdjacentTiles(character.x, character.y);
-    let revealedCount = 0;
-    
-    if (!character.mapKnowledge) {
-      character.mapKnowledge = {};
-    }
-
-    for (const coords of Object.values(adjacent)) {
-      const key = `${coords.x},${coords.y}`;
-      const tile = mapData[key];
-      
-      if (tile && !character.mapKnowledge[key]) {
-        character.mapKnowledge[key] = {
-          name: tile.name,
-          description: tile.description,
-          icon: tile.icon,
-          explored: false, // Seen but not visited
-          discoveredAt: new Date().toISOString()
-        };
-        revealedCount++;
-      }
-    }
-
-    // Save updated map knowledge
-    await db.saveCharacter(user, channel.toLowerCase(), character);
-
-    const mapView = createMapView(character, mapData);
-    
-    const embed = embedBuilder({
-      title: `🔍 Exploring ${currentTile.name}`,
-      description: `You carefully survey your surroundings...\n\n${revealedCount > 0 ? `You discovered ${revealedCount} new area(s)!` : 'You don\'t see any new areas from here.'}`,
-      fields: [
-        {
-          name: 'Updated Map View',
-          value: `\`\`\`\n${mapView}\`\`\``,
-          inline: false
-        },
-        {
-          name: 'Total Areas Discovered',
-          value: `${Object.keys(character.mapKnowledge || {}).length}`,
-          inline: true
+// POST /api/map/discover - Discover a region
+router.post('/discover', async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { biomeId } = req.body;
+        
+        if (!biomeId) {
+            return res.status(400).json({
+                success: false,
+                error: 'Biome ID is required'
+            });
         }
-      ],
-      color: 0x9b59b6
-    });
-
-    res.json({
-      embeds: [embed]
-    });
-
-  } catch (error) {
-    console.error('Error in GET /map/explore:', error);
-    res.status(500).json({ 
-      error: 'Failed to explore location',
-      details: error.message 
-    });
-  }
+        
+        // Get player's current position
+        const player = await db.query(
+            'SELECT current_biome_id, grid_x, grid_y FROM players WHERE user_id = $1',
+            [userId]
+        );
+        
+        if (player.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Player not found'
+            });
+        }
+        
+        const { current_biome_id, grid_x, grid_y } = player.rows[0];
+        
+        // Discover the region
+        const result = await MapKnowledgeManager.discoverRegion(userId, biomeId, grid_x, grid_y);
+        
+        res.json({
+            success: true,
+            message: 'Region discovered successfully',
+            data: result
+        });
+    } catch (error) {
+        console.error('Error discovering region:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to discover region'
+        });
+    }
 });
 
-// GET /map/journal - View exploration journal
-router.get('/journal', async (req, res) => {
-  try {
-    const { user, channel } = req.query;
-    
-    if (!user || !channel) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: user and channel' 
-      });
-    }
-
-    const character = await db.getCharacter(user, channel.toLowerCase());
-    
-    if (!character) {
-      return res.status(404).json({ 
-        error: 'Character not found. Please create a character first using /start' 
-      });
-    }
-
-    const mapKnowledge = character.mapKnowledge || {};
-    const exploredTiles = Object.entries(mapKnowledge)
-      .filter(([_, tile]) => tile.explored)
-      .sort((a, b) => {
-        const dateA = new Date(a[1].exploredAt || 0);
-        const dateB = new Date(b[1].exploredAt || 0);
-        return dateB - dateA;
-      });
-
-    const discoveredTiles = Object.entries(mapKnowledge)
-      .filter(([_, tile]) => !tile.explored)
-      .sort((a, b) => {
-        const dateA = new Date(a[1].discoveredAt || 0);
-        const dateB = new Date(b[1].discoveredAt || 0);
-        return dateB - dateA;
-      });
-
-    let journalText = '**🏛️ Explored Locations:**\n';
-    if (exploredTiles.length > 0) {
-      exploredTiles.slice(0, 10).forEach(([coords, tile]) => {
-        journalText += `${tile.icon} **${tile.name}** (${coords})\n`;
-      });
-      if (exploredTiles.length > 10) {
-        journalText += `_...and ${exploredTiles.length - 10} more_\n`;
-      }
-    } else {
-      journalText += '_None yet_\n';
-    }
-
-    journalText += '\n**👁️ Discovered (Not Visited):**\n';
-    if (discoveredTiles.length > 0) {
-      discoveredTiles.slice(0, 10).forEach(([coords, tile]) => {
-        journalText += `${tile.icon} **${tile.name}** (${coords})\n`;
-      });
-      if (discoveredTiles.length > 10) {
-        journalText += `_...and ${discoveredTiles.length - 10} more_\n`;
-      }
-    } else {
-      journalText += '_None yet_\n';
-    }
-
-    const embed = embedBuilder({
-      title: `📖 ${character.name}'s Exploration Journal`,
-      description: journalText,
-      fields: [
-        {
-          name: 'Statistics',
-          value: `Explored: ${exploredTiles.length}\nDiscovered: ${discoveredTiles.length}\nTotal: ${Object.keys(mapKnowledge).length}`,
-          inline: true
+// POST /api/map/scout-tile - Scout adjacent tile
+router.post('/scout-tile', async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { x, y } = req.body;
+        
+        if (x === undefined || y === undefined) {
+            return res.status(400).json({
+                success: false,
+                error: 'Coordinates (x, y) are required'
+            });
         }
-      ],
-      color: 0xe67e22
-    });
-
-    res.json({
-      embeds: [embed]
-    });
-
-  } catch (error) {
-    console.error('Error in GET /map/journal:', error);
-    res.status(500).json({ 
-      error: 'Failed to retrieve exploration journal',
-      details: error.message 
-    });
-  }
+        
+        // Get player's current position
+        const player = await db.query(
+            'SELECT current_biome_id, grid_x, grid_y FROM players WHERE user_id = $1',
+            [userId]
+        );
+        
+        if (player.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Player not found'
+            });
+        }
+        
+        const { current_biome_id, grid_x, grid_y } = player.rows[0];
+        
+        // Check if tile is adjacent
+        const distance = calculateDistance(grid_x, grid_y, x, y);
+        if (distance !== 1) {
+            return res.status(400).json({
+                success: false,
+                error: 'Can only scout adjacent tiles'
+            });
+        }
+        
+        // Scout the tile
+        const result = await MapKnowledgeManager.scoutTile(userId, current_biome_id, x, y);
+        
+        res.json({
+            success: true,
+            message: 'Tile scouted successfully',
+            data: result
+        });
+    } catch (error) {
+        console.error('Error scouting tile:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to scout tile'
+        });
+    }
 });
 
-// POST /map/teleport - Admin command to teleport to coordinates
-router.post('/teleport', async (req, res) => {
-  try {
-    const { user, channel, x, y, admin } = req.body;
-    
-    // Simple admin check (you should implement proper admin verification)
-    if (!admin) {
-      return res.status(403).json({ 
-        error: 'This command requires admin privileges' 
-      });
-    }
-
-    if (!user || !channel || x === undefined || y === undefined) {
-      return res.status(400).json({ 
-        error: 'Missing required parameters: user, channel, x, y' 
-      });
-    }
-
-    const character = await db.getCharacter(user, channel.toLowerCase());
-    
-    if (!character) {
-      return res.status(404).json({ 
-        error: 'Character not found' 
-      });
-    }
-
-    const mapData = await db.getMapData();
-    const targetKey = `${x},${y}`;
-    const targetTile = mapData[targetKey];
-
-    if (!targetTile) {
-      return res.status(400).json({ 
-        error: 'No tile exists at those coordinates' 
-      });
-    }
-
-    // Update character position
-    character.x = parseInt(x);
-    character.y = parseInt(y);
-    
-    // Reveal target tile
-    revealTile(character, mapData);
-    
-    // Save character
-    await db.saveCharacter(user, channel.toLowerCase(), character);
-
-    const mapView = createMapView(character, mapData);
-
-    const embed = embedBuilder({
-      title: `✨ Teleported to ${targetTile.name}`,
-      description: targetTile.description,
-      fields: [
-        {
-          name: 'Map View',
-          value: `\`\`\`\n${mapView}\`\`\``,
-          inline: false
-        },
-        {
-          name: 'New Coordinates',
-          value: `X: ${x}, Y: ${y}`,
-          inline: true
+// POST /api/map/explore-tile - Explore a tile
+router.post('/explore-tile', async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { x, y } = req.body;
+        
+        if (x === undefined || y === undefined) {
+            return res.status(400).json({
+                success: false,
+                error: 'Coordinates (x, y) are required'
+            });
         }
-      ],
-      color: 0xf39c12
-    });
+        
+        // Get player's current position
+        const player = await db.query(
+            'SELECT current_biome_id, grid_x, grid_y FROM players WHERE user_id = $1',
+            [userId]
+        );
+        
+        if (player.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Player not found'
+            });
+        }
+        
+        const { current_biome_id, grid_x, grid_y } = player.rows[0];
+        
+        // Check if player is on the tile
+        if (grid_x !== x || grid_y !== y) {
+            return res.status(400).json({
+                success: false,
+                error: 'You must be on the tile to explore it'
+            });
+        }
+        
+        // Explore the tile
+        const result = await MapKnowledgeManager.exploreTile(userId, current_biome_id, x, y);
+        
+        res.json({
+            success: true,
+            message: 'Tile explored successfully',
+            data: result
+        });
+    } catch (error) {
+        console.error('Error exploring tile:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to explore tile'
+        });
+    }
+});
 
-    res.json({
-      embeds: [embed]
-    });
+// POST /api/map/move - Move to discovered tile
+router.post('/move', async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { x, y } = req.body;
+        
+        if (x === undefined || y === undefined) {
+            return res.status(400).json({
+                success: false,
+                error: 'Coordinates (x, y) are required'
+            });
+        }
+        
+        // Get player's current position
+        const player = await db.query(
+            'SELECT current_biome_id, grid_x, grid_y FROM players WHERE user_id = $1',
+            [userId]
+        );
+        
+        if (player.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Player not found'
+            });
+        }
+        
+        const { current_biome_id, grid_x, grid_y } = player.rows[0];
+        
+        // Check if tile is adjacent
+        const distance = calculateDistance(grid_x, grid_y, x, y);
+        if (distance !== 1) {
+            return res.status(400).json({
+                success: false,
+                error: 'Can only move to adjacent tiles'
+            });
+        }
+        
+        // Check if tile is discovered
+        const isDiscovered = await MapKnowledgeManager.isTileDiscovered(userId, current_biome_id, x, y);
+        if (!isDiscovered) {
+            return res.status(400).json({
+                success: false,
+                error: 'Tile must be scouted before moving to it'
+            });
+        }
+        
+        // Move player
+        await db.query(
+            'UPDATE players SET grid_x = $1, grid_y = $2 WHERE user_id = $3',
+            [x, y, userId]
+        );
+        
+        res.json({
+            success: true,
+            message: 'Moved successfully',
+            newPosition: { x, y }
+        });
+    } catch (error) {
+        console.error('Error moving player:', error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to move player'
+        });
+    }
+});
 
-  } catch (error) {
-    console.error('Error in POST /map/teleport:', error);
-    res.status(500).json({ 
-      error: 'Failed to teleport character',
-      details: error.message 
-    });
-  }
+// GET /api/map/fog-hint/:biome_id/:x/:y - Get fog hint
+router.get('/fog-hint/:biome_id/:x/:y', async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { biome_id, x, y } = req.params;
+        
+        const tileX = parseInt(x);
+        const tileY = parseInt(y);
+        
+        if (isNaN(tileX) || isNaN(tileY)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid coordinates'
+            });
+        }
+        
+        // Get player's current position
+        const player = await db.query(
+            'SELECT grid_x, grid_y FROM players WHERE user_id = $1',
+            [userId]
+        );
+        
+        if (player.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                error: 'Player not found'
+            });
+        }
+        
+        const { grid_x, grid_y } = player.rows[0];
+        
+        // Get biome data to find points of interest
+        const biomes = loadData('biomes');
+        const biome = biomes.find(b => b.id === biome_id);
+        
+        if (!biome || !biome.grid) {
+            return res.status(404).json({
+                success: false,
+                error: 'Biome not found or has no grid'
+            });
+        }
+        
+        // Find nearest point of interest
+        let nearestHint = null;
+        let minDistance = Infinity;
+        
+        if (biome.grid.poi) {
+            for (const poi of biome.grid.poi) {
+                const hint = generateTileHint(tileX, tileY, poi.x, poi.y);
+                if (hint.distance < minDistance) {
+                    minDistance = hint.distance;
+                    nearestHint = {
+                        ...hint,
+                        type: poi.type
+                    };
+                }
+            }
+        }
+        
+        res.json({
+            success: true,
+            hint: nearestHint || {
+                hint: 'Nothing of interest detected.',
+                distance: 0,
+                direction: 'unknown'
+            }
+        });
+    } catch (error) {
+        console.error('Error getting fog hint:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to get fog hint'
+        });
+    }
+});
+
+// GET /api/map/biome-grid/:biome_id - Get biome grid config
+router.get('/biome-grid/:biome_id', async (req, res) => {
+    try {
+        const { biome_id } = req.params;
+        
+        // Load biome data
+        const biomes = loadData('biomes');
+        const biome = biomes.find(b => b.id === biome_id);
+        
+        if (!biome) {
+            return res.status(404).json({
+                success: false,
+                error: 'Biome not found'
+            });
+        }
+        
+        if (!biome.grid) {
+            return res.status(404).json({
+                success: false,
+                error: 'Biome has no grid configuration'
+            });
+        }
+        
+        res.json({
+            success: true,
+            grid: biome.grid
+        });
+    } catch (error) {
+        console.error('Error fetching biome grid:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to fetch biome grid configuration'
+        });
+    }
 });
 
 module.exports = router;
