@@ -1,0 +1,436 @@
+{
+  "town_square": {
+    "grid_size": { "width": 8, "height": 8 },
+    "starting_position": [4, 4],
+    "tile_locations": {
+      "4,4": {
+        "type": "sublocation",
+        "id": "town_center",
+        "name": "Town Center",
+        "description": "The heart of the town square, bustling with activity",
+        "abbreviation": "TC",
+        "danger_level": 1
+      },
+      "4,5": {
+        "type": "sublocation",
+        "id": "inn",
+        "name": "The Rusty Tankard Inn",
+        "description": "A warm, inviting tavern with the smell of ale and roasted meat",
+        "abbreviation": "IN",
+        "danger_level": 1
+      },
+      "5,4": {
+        "type": "sublocation",
+        "id": "blacksmith",
+        "name": "Forge of Iron",
+        "description": "A bustling blacksmith shop, the sound of hammering echoes",
+        "abbreviation": "BS",
+        "danger_level": 1
+      },
+      "3,4": {
+        "type": "sublocation",
+        "id": "shop",
+        "name": "General Store",
+        "description": "Shelves stocked with adventuring supplies",
+        "abbreviation": "SH",
+        "danger_level": 1
+      },
+      "4,3": {
+        "type": "sublocation",
+        "id": "temple",
+        "name": "Temple of Light",
+        "description": "A sacred place where healers practice their art",
+        "abbreviation": "TM",
+        "danger_level": 1
+      },
+      "5,5": {
+        "type": "generic",
+        "name": "Market Stalls",
+        "description": "Merchants hawk their wares from colorful tents",
+        "abbreviation": "MK",
+        "danger_level": 1
+      },
+      "3,5": {
+        "type": "generic",
+        "name": "Town Square Gardens",
+        "description": "Well-tended gardens with flowers and benches",
+        "abbreviation": "GD",
+        "danger_level": 1
+      },
+      "5,3": {
+        "type": "generic",
+        "name": "Guard Post",
+        "description": "Town guards keep watch from this fortified position",
+        "abbreviation": "GP",
+        "danger_level": 1
+      },
+      "3,3": {
+        "type": "generic",
+        "name": "Fountain Plaza",
+        "description": "A beautiful fountain where townsfolk gather",
+        "abbreviation": "FP",
+        "danger_level": 1
+      },
+      "6,4": {
+        "type": "generic",
+        "name": "Craftsman's Quarter",
+        "description": "Various artisans ply their trades here",
+        "abbreviation": "CQ",
+        "danger_level": 1
+      },
+      "4,6": {
+        "type": "generic",
+        "name": "Residential Area",
+        "description": "Modest homes line the cobblestone streets",
+        "abbreviation": "RA",
+        "danger_level": 1
+      },
+      "2,4": {
+        "type": "generic",
+        "name": "Town Gate West",
+        "description": "The western entrance to town",
+        "abbreviation": "TW",
+        "danger_level": 1
+      },
+      "7,4": {
+        "type": "generic",
+        "name": "Town Gate East",
+        "description": "The eastern entrance to town",
+        "abbreviation": "TE",
+        "danger_level": 1
+      }
+    }
+  },
+  
+  "whispering_woods": {
+    "grid_size": { "width": 12, "height": 12 },
+    "starting_position": [6, 6],
+    "tile_locations": {
+      "6,6": {
+        "type": "sublocation",
+        "id": "forest_entrance",
+        "name": "Forest Entrance",
+        "description": "Where the forest path begins, sunlight still filters through",
+        "abbreviation": "FE",
+        "danger_level": 2
+      },
+      "6,7": {
+        "type": "generic",
+        "name": "Dense Thicket",
+        "description": "Thick undergrowth blocks easy passage",
+        "abbreviation": "DT",
+        "danger_level": 2,
+        "encounter_chance": 0.3
+      },
+      "7,7": {
+        "type": "sublocation",
+        "id": "dark_grove",
+        "name": "Dark Grove",
+        "description": "An ominous clearing where shadows gather and whispers echo",
+        "abbreviation": "DG",
+        "danger_level": 3,
+        "encounter_chance": 0.5
+      },
+      "5,6": {
+        "type": "generic",
+        "name": "Mushroom Circle",
+        "description": "Strange fungi grow in a perfect ring",
+        "abbreviation": "MC",
+        "danger_level": 2,
+        "loot_chance": 0.4
+      },
+      "7,6": {
+        "type": "generic",
+        "name": "Ancient Tree",
+        "description": "A massive oak that has stood for centuries",
+        "abbreviation": "AT",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "6,5": {
+        "type": "generic",
+        "name": "Forest Path",
+        "description": "A well-worn trail through the woods",
+        "abbreviation": "FP",
+        "danger_level": 2,
+        "encounter_chance": 0.15
+      },
+      "5,7": {
+        "type": "generic",
+        "name": "Babbling Brook",
+        "description": "A small stream winds through the forest",
+        "abbreviation": "BB",
+        "danger_level": 2,
+        "encounter_chance": 0.2,
+        "loot_chance": 0.2
+      },
+      "8,8": {
+        "type": "empty",
+        "description": "Deep woods with no distinct features",
+        "abbreviation": "..",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "7,8": {
+        "type": "generic",
+        "name": "Overgrown Ruins",
+        "description": "Ancient stone structures claimed by nature",
+        "abbreviation": "OR",
+        "danger_level": 3,
+        "encounter_chance": 0.4,
+        "loot_chance": 0.5
+      },
+      "8,7": {
+        "type": "generic",
+        "name": "Spider's Lair",
+        "description": "Thick webs stretch between the trees",
+        "abbreviation": "SL",
+        "danger_level": 3,
+        "encounter_chance": 0.6
+      },
+      "5,5": {
+        "type": "generic",
+        "name": "Sunny Glade",
+        "description": "A peaceful clearing bathed in sunlight",
+        "abbreviation": "SG",
+        "danger_level": 1,
+        "encounter_chance": 0.1
+      },
+      "6,8": {
+        "type": "sublocation",
+        "id": "whispering_grove",
+        "name": "Whispering Grove",
+        "description": "Ancient trees that speak in hushed tones",
+        "abbreviation": "WG",
+        "danger_level": 3,
+        "encounter_chance": 0.35
+      },
+      "4,6": {
+        "type": "generic",
+        "name": "Berry Bushes",
+        "description": "Wild berries grow abundantly here",
+        "abbreviation": "BY",
+        "danger_level": 2,
+        "loot_chance": 0.6
+      },
+      "8,6": {
+        "type": "generic",
+        "name": "Thorny Brambles",
+        "description": "Sharp thorns make passage difficult",
+        "abbreviation": "TB",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "5,8": {
+        "type": "generic",
+        "name": "Mossy Stones",
+        "description": "Large boulders covered in thick moss",
+        "abbreviation": "MS",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "4,7": {
+        "type": "empty",
+        "description": "Dense forest, nothing of note",
+        "abbreviation": "..",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "7,5": {
+        "type": "empty",
+        "description": "Trees and underbrush",
+        "abbreviation": "..",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "4,5": {
+        "type": "empty",
+        "description": "Quiet woods",
+        "abbreviation": "..",
+        "danger_level": 2,
+        "encounter_chance": 0.15
+      },
+      "8,5": {
+        "type": "empty",
+        "description": "Forest shadows",
+        "abbreviation": "..",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      }
+    }
+  },
+  
+  "goblin_tunnels": {
+    "grid_size": { "width": 10, "height": 10 },
+    "starting_position": [5, 1],
+    "tile_locations": {
+      "5,1": {
+        "type": "sublocation",
+        "id": "tunnel_entrance",
+        "name": "Tunnel Entrance",
+        "description": "The dank opening into the goblin warrens",
+        "abbreviation": "EN",
+        "danger_level": 3
+      },
+      "5,2": {
+        "type": "generic",
+        "name": "Main Passage",
+        "description": "A crude tunnel carved by goblin hands",
+        "abbreviation": "MP",
+        "danger_level": 3,
+        "encounter_chance": 0.4
+      },
+      "4,2": {
+        "type": "generic",
+        "name": "Side Tunnel",
+        "description": "A narrow passage branching off",
+        "abbreviation": "ST",
+        "danger_level": 3,
+        "encounter_chance": 0.35
+      },
+      "6,2": {
+        "type": "generic",
+        "name": "Side Tunnel",
+        "description": "A narrow passage branching off",
+        "abbreviation": "ST",
+        "danger_level": 3,
+        "encounter_chance": 0.35
+      },
+      "5,3": {
+        "type": "sublocation",
+        "id": "guard_post",
+        "name": "Guard Post",
+        "description": "Goblins stand watch at this fortified position",
+        "abbreviation": "GD",
+        "danger_level": 3,
+        "encounter_chance": 0.8,
+        "guaranteed_encounter": true
+      },
+      "4,3": {
+        "type": "generic",
+        "name": "Storage Room",
+        "description": "Crates and barrels of stolen goods",
+        "abbreviation": "SR",
+        "danger_level": 3,
+        "encounter_chance": 0.3,
+        "loot_chance": 0.7
+      },
+      "6,3": {
+        "type": "generic",
+        "name": "Sleeping Quarters",
+        "description": "Filthy bedrolls and the stench of unwashed bodies",
+        "abbreviation": "SQ",
+        "danger_level": 3,
+        "encounter_chance": 0.5
+      },
+      "5,4": {
+        "type": "generic",
+        "name": "Junction",
+        "description": "Three tunnels meet here",
+        "abbreviation": "JN",
+        "danger_level": 3,
+        "encounter_chance": 0.4
+      },
+      "3,4": {
+        "type": "generic",
+        "name": "Torture Chamber",
+        "description": "A grim room with chains and bloodstains",
+        "abbreviation": "TC",
+        "danger_level": 4,
+        "encounter_chance": 0.6,
+        "loot_chance": 0.4
+      },
+      "7,4": {
+        "type": "generic",
+        "name": "Mine Shaft",
+        "description": "Goblins dig for ore in the darkness",
+        "abbreviation": "MS",
+        "danger_level": 3,
+        "encounter_chance": 0.5,
+        "loot_chance": 0.5
+      },
+      "5,5": {
+        "type": "generic",
+        "name": "Deep Passage",
+        "description": "The tunnel slopes downward into deeper darkness",
+        "abbreviation": "DP",
+        "danger_level": 4,
+        "encounter_chance": 0.45
+      },
+      "5,6": {
+        "type": "sublocation",
+        "id": "war_room",
+        "name": "War Room",
+        "description": "Maps and battle plans cover crude tables",
+        "abbreviation": "WR",
+        "danger_level": 4,
+        "encounter_chance": 0.7
+      },
+      "4,6": {
+        "type": "generic",
+        "name": "Armory",
+        "description": "Weapons and armor hang on the walls",
+        "abbreviation": "AR",
+        "danger_level": 4,
+        "encounter_chance": 0.6,
+        "loot_chance": 0.8
+      },
+      "6,6": {
+        "type": "generic",
+        "name": "Treasury",
+        "description": "Glittering piles of stolen treasure",
+        "abbreviation": "TR",
+        "danger_level": 4,
+        "encounter_chance": 0.9,
+        "loot_chance": 0.9,
+        "required_item": "treasury_key"
+      },
+      "5,7": {
+        "type": "generic",
+        "name": "Throne Hall Approach",
+        "description": "The passage widens, torches line the walls",
+        "abbreviation": "TH",
+        "danger_level": 4,
+        "encounter_chance": 0.7
+      },
+      "5,8": {
+        "type": "sublocation",
+        "id": "throne_hall",
+        "name": "Goblin King's Throne",
+        "description": "A crude throne carved from stone where the Goblin King rules",
+        "abbreviation": "KT",
+        "danger_level": 5,
+        "guaranteed_encounter": true,
+        "boss_encounter": true
+      },
+      "4,4": {
+        "type": "empty",
+        "description": "Dark tunnel",
+        "abbreviation": "..",
+        "danger_level": 3,
+        "encounter_chance": 0.3
+      },
+      "6,4": {
+        "type": "empty",
+        "description": "Dark tunnel",
+        "abbreviation": "..",
+        "danger_level": 3,
+        "encounter_chance": 0.3
+      },
+      "3,3": {
+        "type": "empty",
+        "description": "Narrow passage",
+        "abbreviation": "..",
+        "danger_level": 3,
+        "encounter_chance": 0.25
+      },
+      "7,3": {
+        "type": "empty",
+        "description": "Narrow passage",
+        "abbreviation": "..",
+        "danger_level": 3,
+        "encounter_chance": 0.25
+      }
+    }
+  }
+}

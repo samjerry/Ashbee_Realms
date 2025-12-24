@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Map, MapPin, Navigation, Grid3x3, TrendingUp } from 'lucide-react';
+import { Map, MapPin, Navigation, Grid3x3, TrendingUp, Compass } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import WorldMapGrid from './WorldMapGrid';
+import BiomeExplorer from './BiomeExplorer';
 
 const MapView = () => {
   const { availableLocations, currentLocation, player, mapKnowledge, fetchLocations, fetchMapKnowledge, travelTo } = useGameStore();
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid'
+  const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid', 'biome-explore'
   const [showFilter, setShowFilter] = useState('all'); // 'all', 'discovered', 'undiscovered'
   
   useEffect(() => {
@@ -123,8 +124,29 @@ const MapView = () => {
             <Grid3x3 size={18} />
             <span>Grid Map</span>
           </button>
+          <button
+            onClick={() => setViewMode('biome-explore')}
+            className={`
+              flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap
+              ${viewMode === 'biome-explore' 
+                ? 'bg-primary-500 text-white' 
+                : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
+              }
+            `}
+          >
+            <Compass size={18} />
+            <span>Biome Explorer</span>
+          </button>
         </div>
       </div>
+
+      {/* Biome Explorer View */}
+      {viewMode === 'biome-explore' && player?.channel && (
+        <BiomeExplorer 
+          biomeId={currentLocation || 'town_square'} 
+          channel={player.channel}
+        />
+      )}
 
       {/* Grid Map View */}
       {viewMode === 'grid' && (

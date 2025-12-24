@@ -28,7 +28,16 @@ class MapKnowledgeManager {
         'town_square': now,
         '5,5': now
       },
-      exploration_percentage: 0 // Will be calculated when needed
+      exploration_percentage: 0, // Will be calculated when needed
+      current_biome: 'town_square',
+      biome_map_knowledge: {
+        'town_square': {
+          discovered_tiles: [[4, 4]], // Starting position
+          scouted_tiles: {},
+          fog_hints: {},
+          current_position: [4, 4]
+        }
+      }
     };
   }
 
@@ -330,6 +339,160 @@ class MapKnowledgeManager {
     }
 
     return achievements;
+  }
+
+  /**
+   * Initialize biome map knowledge for a specific biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} startingPosition - Starting position [x, y]
+   * @returns {Object} Updated map knowledge
+   */
+  initializeBiomeMapKnowledge(mapKnowledge, biomeId, startingPosition) {
+    if (!mapKnowledge.biome_map_knowledge) {
+      mapKnowledge.biome_map_knowledge = {};
+    }
+
+    if (!mapKnowledge.biome_map_knowledge[biomeId]) {
+      mapKnowledge.biome_map_knowledge[biomeId] = {
+        discovered_tiles: [startingPosition],
+        scouted_tiles: {},
+        fog_hints: {},
+        current_position: startingPosition
+      };
+    }
+
+    return mapKnowledge;
+  }
+
+  /**
+   * Get biome map knowledge for a specific biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @returns {Object|null} Biome map knowledge
+   */
+  getBiomeMapKnowledge(mapKnowledge, biomeId) {
+    if (!mapKnowledge || !mapKnowledge.biome_map_knowledge) {
+      return null;
+    }
+    return mapKnowledge.biome_map_knowledge[biomeId] || null;
+  }
+
+  /**
+   * Check if a tile is discovered in a biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} coordinate - Coordinate [x, y]
+   * @returns {boolean} True if discovered
+   */
+  isTileDiscovered(mapKnowledge, biomeId, coordinate) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge || !biomeKnowledge.discovered_tiles) return false;
+    
+    return biomeKnowledge.discovered_tiles.some(
+      tile => tile[0] === coordinate[0] && tile[1] === coordinate[1]
+    );
+  }
+
+  /**
+   * Check if a tile is scouted in a biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} coordinate - Coordinate [x, y]
+   * @returns {boolean} True if scouted
+   */
+  isTileScouted(mapKnowledge, biomeId, coordinate) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge || !biomeKnowledge.scouted_tiles) return false;
+    
+    const key = `${coordinate[0]},${coordinate[1]}`;
+    return !!biomeKnowledge.scouted_tiles[key];
+  }
+
+  /**
+   * Scout a tile in a biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} coordinate - Coordinate [x, y]
+   * @param {Object} scoutData - Scout information
+   * @returns {Object} Updated map knowledge
+   */
+  scoutTile(mapKnowledge, biomeId, coordinate, scoutData) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge) {
+      throw new Error(`Biome ${biomeId} not initialized in map knowledge`);
+    }
+
+    const key = `${coordinate[0]},${coordinate[1]}`;
+    biomeKnowledge.scouted_tiles[key] = {
+      ...scoutData,
+      scouted_at: new Date().toISOString()
+    };
+
+    return mapKnowledge;
+  }
+
+  /**
+   * Discover a tile in a biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} coordinate - Coordinate [x, y]
+   * @returns {Object} Updated map knowledge and discovery info
+   */
+  discoverTile(mapKnowledge, biomeId, coordinate) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge) {
+      throw new Error(`Biome ${biomeId} not initialized in map knowledge`);
+    }
+
+    // Check if already discovered
+    const alreadyDiscovered = this.isTileDiscovered(mapKnowledge, biomeId, coordinate);
+    
+    if (!alreadyDiscovered) {
+      biomeKnowledge.discovered_tiles.push(coordinate);
+      
+      // Remove from scouted tiles if present
+      const key = `${coordinate[0]},${coordinate[1]}`;
+      if (biomeKnowledge.scouted_tiles[key]) {
+        delete biomeKnowledge.scouted_tiles[key];
+      }
+    }
+
+    return {
+      mapKnowledge,
+      isNew: !alreadyDiscovered
+    };
+  }
+
+  /**
+   * Update player position in a biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} coordinate - Coordinate [x, y]
+   * @returns {Object} Updated map knowledge
+   */
+  updatePosition(mapKnowledge, biomeId, coordinate) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge) {
+      throw new Error(`Biome ${biomeId} not initialized in map knowledge`);
+    }
+
+    biomeKnowledge.current_position = coordinate;
+    mapKnowledge.current_biome = biomeId;
+
+    return mapKnowledge;
+  }
+
+  /**
+   * Get current position in a biome
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @returns {Array|null} Current position [x, y]
+   */
+  getCurrentPosition(mapKnowledge, biomeId) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge) return null;
+    return biomeKnowledge.current_position || null;
   }
 }
 
