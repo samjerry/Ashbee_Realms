@@ -1,0 +1,226 @@
+{
+  "town_square": {
+    "grid_size": { "width": 8, "height": 8 },
+    "starting_position": [4, 4],
+    "tile_locations": {
+      "4,4": {
+        "type": "sublocation",
+        "id": "town_center",
+        "name": "Town Center",
+        "description": "The heart of the town square",
+        "danger_level": 1
+      },
+      "4,5": {
+        "type": "sublocation",
+        "id": "inn",
+        "name": "The Rusty Tankard Inn",
+        "description": "A warm, inviting tavern",
+        "danger_level": 1
+      },
+      "5,4": {
+        "type": "generic",
+        "name": "Market Stalls",
+        "description": "Merchants hawk their wares",
+        "danger_level": 1
+      },
+      "4,3": {
+        "type": "empty",
+        "description": "Quiet residential area"
+      },
+      "3,4": {
+        "type": "sublocation",
+        "id": "blacksmith",
+        "name": "The Forge",
+        "description": "The town blacksmith's workshop",
+        "danger_level": 1
+      },
+      "5,5": {
+        "type": "generic",
+        "name": "Town Gardens",
+        "description": "Well-maintained public gardens",
+        "danger_level": 1
+      },
+      "3,3": {
+        "type": "generic",
+        "name": "North Quarter",
+        "description": "Residential streets and houses",
+        "danger_level": 1
+      },
+      "5,3": {
+        "type": "sublocation",
+        "id": "temple",
+        "name": "Temple of Light",
+        "description": "A sacred place of worship",
+        "danger_level": 1
+      },
+      "3,5": {
+        "type": "generic",
+        "name": "West Quarter",
+        "description": "Craftsmen workshops line the streets",
+        "danger_level": 1
+      },
+      "6,4": {
+        "type": "generic",
+        "name": "East Gate",
+        "description": "Guards patrol the eastern entrance",
+        "danger_level": 1
+      },
+      "4,6": {
+        "type": "generic",
+        "name": "South Gate",
+        "description": "The main southern entrance to town",
+        "danger_level": 1
+      },
+      "2,4": {
+        "type": "empty",
+        "description": "Outskirts of town"
+      },
+      "4,2": {
+        "type": "empty",
+        "description": "Northern farms"
+      }
+    }
+  },
+  "whispering_woods": {
+    "grid_size": { "width": 12, "height": 12 },
+    "starting_position": [6, 6],
+    "tile_locations": {
+      "6,6": {
+        "type": "sublocation",
+        "id": "forest_entrance",
+        "name": "Forest Entrance",
+        "description": "Where the forest path begins",
+        "danger_level": 2
+      },
+      "6,7": {
+        "type": "generic",
+        "name": "Dense Thicket",
+        "description": "Thick undergrowth blocks the way",
+        "danger_level": 2,
+        "encounter_chance": 0.3
+      },
+      "7,7": {
+        "type": "sublocation",
+        "id": "dark_grove",
+        "name": "Dark Grove",
+        "description": "An ominous clearing where shadows gather",
+        "danger_level": 3
+      },
+      "5,6": {
+        "type": "generic",
+        "name": "Mushroom Circle",
+        "description": "Strange fungi grow in a perfect ring",
+        "danger_level": 2,
+        "loot_chance": 0.4
+      },
+      "7,6": {
+        "type": "generic",
+        "name": "Twisted Path",
+        "description": "The path winds unnaturally through the trees",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "6,5": {
+        "type": "generic",
+        "name": "Ancient Oak",
+        "description": "A massive oak tree hundreds of years old",
+        "danger_level": 2
+      },
+      "5,7": {
+        "type": "generic",
+        "name": "Whispering Glen",
+        "description": "Soft voices seem to come from all around",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "5,5": {
+        "type": "sublocation",
+        "id": "forest_clearing",
+        "name": "Forest Clearing",
+        "description": "A peaceful clearing with a small stream",
+        "danger_level": 1
+      },
+      "7,5": {
+        "type": "generic",
+        "name": "Bramble Patch",
+        "description": "Thorny vines cover the forest floor",
+        "danger_level": 2,
+        "encounter_chance": 0.35
+      },
+      "8,6": {
+        "type": "generic",
+        "name": "Deep Woods",
+        "description": "The forest grows darker and more foreboding",
+        "danger_level": 3,
+        "encounter_chance": 0.4
+      },
+      "6,8": {
+        "type": "generic",
+        "name": "Shaded Glade",
+        "description": "Cool shade provides respite from the sun",
+        "danger_level": 2
+      },
+      "4,6": {
+        "type": "generic",
+        "name": "Fern Grove",
+        "description": "Lush ferns grow in abundance",
+        "danger_level": 2,
+        "loot_chance": 0.3
+      },
+      "6,4": {
+        "type": "generic",
+        "name": "Birch Stand",
+        "description": "White birch trees cluster together",
+        "danger_level": 2
+      },
+      "8,7": {
+        "type": "generic",
+        "name": "Spider's Lair",
+        "description": "Thick webs stretch between the trees",
+        "danger_level": 3,
+        "encounter_chance": 0.5
+      },
+      "5,8": {
+        "type": "generic",
+        "name": "Moss Covered Path",
+        "description": "Soft moss carpets the forest floor",
+        "danger_level": 2
+      },
+      "7,4": {
+        "type": "generic",
+        "name": "Wolf Den",
+        "description": "Paw prints and bones litter the ground",
+        "danger_level": 3,
+        "encounter_chance": 0.45
+      },
+      "4,5": {
+        "type": "generic",
+        "name": "Hollow Log",
+        "description": "A massive fallen tree, hollowed by time",
+        "danger_level": 2,
+        "loot_chance": 0.35
+      },
+      "8,5": {
+        "type": "generic",
+        "name": "Treant Grove",
+        "description": "Ancient trees that may not be trees at all",
+        "danger_level": 3,
+        "encounter_chance": 0.3
+      },
+      "5,4": {
+        "type": "generic",
+        "name": "Sunny Spot",
+        "description": "Rare sunlight breaks through the canopy",
+        "danger_level": 1
+      },
+      "4,7": {
+        "type": "generic",
+        "name": "Witch's Hut",
+        "description": "An abandoned hut slowly being reclaimed by nature",
+        "danger_level": 3,
+        "loot_chance": 0.5,
+        "requires": "courage"
+      }
+    }
+  }
+}
