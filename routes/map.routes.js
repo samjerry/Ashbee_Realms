@@ -18,7 +18,10 @@ function requireAuth(req, res, next) {
 // GET /api/map/knowledge - Get character's map knowledge
 router.get('/knowledge', requireAuth, async (req, res) => {
   try {
-    const character = await db.getCharacter(req.session.user);
+    const { channel } = req.query;
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -34,7 +37,10 @@ router.get('/knowledge', requireAuth, async (req, res) => {
 // GET /api/map/grid - Get the current map grid
 router.get('/grid', requireAuth, async (req, res) => {
   try {
-    const character = await db.getCharacter(req.session.user);
+    const { channel } = req.query;
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
+
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -52,13 +58,15 @@ router.get('/grid', requireAuth, async (req, res) => {
 // POST /api/map/discover - Discover a new tile
 router.post('/discover', requireAuth, async (req, res) => {
   try {
-    const { x, y, biome_id } = req.body;
+    const { x, y, biome_id, channel } = req.body;
+    
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
     
     if (x === undefined || y === undefined) {
       return res.status(400).json({ error: 'Missing x or y coordinates' });
     }
 
-    const character = await db.getCharacter(req.session.user);
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -77,13 +85,15 @@ router.post('/discover', requireAuth, async (req, res) => {
 // POST /api/map/scout-tile - Scout a specific tile
 router.post('/scout-tile', requireAuth, async (req, res) => {
   try {
-    const { x, y } = req.body;
+    const { x, y, channel } = req.body;
+    
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
     
     if (x === undefined || y === undefined) {
       return res.status(400).json({ error: 'Missing x or y coordinates' });
     }
 
-    const character = await db.getCharacter(req.session.user);
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -101,13 +111,15 @@ router.post('/scout-tile', requireAuth, async (req, res) => {
 // POST /api/map/explore-tile - Explore a specific tile
 router.post('/explore-tile', requireAuth, async (req, res) => {
   try {
-    const { x, y } = req.body;
+    const { x, y, channel } = req.body;
+    
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
     
     if (x === undefined || y === undefined) {
       return res.status(400).json({ error: 'Missing x or y coordinates' });
     }
 
-    const character = await db.getCharacter(req.session.user);
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -125,13 +137,15 @@ router.post('/explore-tile', requireAuth, async (req, res) => {
 // POST /api/map/move - Move character to a new position
 router.post('/move', requireAuth, async (req, res) => {
   try {
-    const { x, y } = req.body;
+    const { x, y, channel } = req.body;
+    
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
     
     if (x === undefined || y === undefined) {
       return res.status(400).json({ error: 'Missing x or y coordinates' });
     }
 
-    const character = await db.getCharacter(req.session.user);
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -156,8 +170,10 @@ router.post('/move', requireAuth, async (req, res) => {
 router.get('/fog-hint/:biome_id/:x/:y', requireAuth, async (req, res) => {
   try {
     const { biome_id, x, y } = req.params;
+    const { channel } = req.query;
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
     
-    const character = await db.getCharacter(req.session.user);
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -180,8 +196,10 @@ router.get('/fog-hint/:biome_id/:x/:y', requireAuth, async (req, res) => {
 router.get('/biome-grid/:biome_id', requireAuth, async (req, res) => {
   try {
     const { biome_id } = req.params;
+    const { channel } = req.query;
+    if (!channel) return res.status(400).json({ error: 'Channel required' });
     
-    const character = await db.getCharacter(req.session.user);
+    const character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
     }
