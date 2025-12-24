@@ -345,10 +345,11 @@ router.post('/explore-tile', async (req, res) => {
       danger_level: 1
     };
 
-    // Check for required items
+    // Check for required items (future enhancement)
     if (tileData.required_item) {
-      // TODO: Check inventory for required item
-      // For now, just note it in response
+      // Future: Integrate with InventoryManager to check for required items
+      // For MVP, tiles with required_item show a lock icon but can still be explored
+      // Example: character.inventory.hasItem(tileData.required_item)
     }
 
     // Discover the tile
@@ -365,11 +366,16 @@ router.post('/explore-tile', async (req, res) => {
     // Roll for encounter
     let encounter = null;
     if (tileData.guaranteed_encounter || Math.random() < encounterChance) {
-      // TODO: Integrate with existing encounter system
-      // For now, just indicate an encounter would occur
+      // Future enhancement: Integrate with ExplorationManager.generateMonsterEncounter()
+      // For MVP, we indicate that an encounter would occur but don't start combat
+      // This allows testing of the exploration mechanics without requiring full combat integration
       encounter = {
         type: 'combat',
-        message: `An enemy appears at ${tileData.name}!`
+        message: `An enemy appears at ${tileData.name}!`,
+        // Add basic encounter data for future integration
+        encounter_triggered: true,
+        danger_level: tileData.danger_level,
+        is_boss: tileData.boss_encounter || false
       };
     }
 

@@ -8,6 +8,10 @@ import {
   coordToKey
 } from '../../utils/tileHelpers';
 
+// Constants for tile indicators
+const HIGH_ENCOUNTER_THRESHOLD = 0.5;
+const HIGH_LOOT_THRESHOLD = 0.5;
+
 /**
  * BiomeGridCell Component
  * Renders a single cell in a biome exploration grid
@@ -135,10 +139,10 @@ const BiomeGridCell = ({
       )}
       
       {/* Special indicators */}
-      {tileData?.encounter_chance >= 0.5 && (
+      {tileData?.encounter_chance >= HIGH_ENCOUNTER_THRESHOLD && (
         <div className="encounter-warning" title="High encounter chance">⚔</div>
       )}
-      {tileData?.loot_chance >= 0.5 && (
+      {tileData?.loot_chance >= HIGH_LOOT_THRESHOLD && (
         <div className="loot-indicator" title="Loot possible">💎</div>
       )}
       {tileData?.required_item && (
