@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 const MapKnowledgeManager = require('../game/MapKnowledgeManager');
-const { loadData } = require('../utils/dataLoader');
+const { loadData } = require('../data/data_loader');
 
 // Load biome grids configuration
 const biomeGridsConfig = loadData('biome_grids.json');
