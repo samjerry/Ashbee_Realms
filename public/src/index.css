@@ -334,3 +334,303 @@
     padding: 1px 2px;
   }
 }
+
+/* ===================================
+   Biome Grid Exploration System Styles
+   =================================== */
+
+/* Biome Grid Container */
+.biome-grid-container {
+  background: #0a0a0a;
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid #2a2a2a;
+}
+
+.biome-header {
+  text-align: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgb(var(--color-primary-600));
+}
+
+/* Grid Layout */
+.grid-wrapper {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.grid-tiles {
+  display: grid;
+  gap: 2px;
+}
+
+/* Axis Labels */
+.axis-label {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #666;
+  font-family: monospace;
+}
+
+.y-axis-labels .axis-label {
+  width: 20px;
+}
+
+.x-axis-labels .axis-label {
+  height: 20px;
+}
+
+/* Grid Cell Base */
+.grid-cell {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+/* Deep Fog State */
+.grid-cell.deep-fog {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  border-color: #2a2a2a;
+}
+
+.grid-cell.deep-fog:hover {
+  border-color: rgb(var(--color-primary-600));
+  transform: scale(1.05);
+}
+
+.fog-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #333;
+  pointer-events: none;
+}
+
+.coordinate-label {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 0.5rem;
+  color: #555;
+}
+
+/* Danger Shimmer Animation */
+.danger-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  animation: shimmer 3s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+.shimmer-intense { animation-duration: 1.5s; }
+.shimmer-moderate { animation-duration: 2.5s; }
+.shimmer-faint { animation-duration: 4s; }
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.3; }
+}
+
+.danger-shimmer.danger-red {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%);
+}
+
+.danger-shimmer.danger-yellow {
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.3) 0%, transparent 70%);
+}
+
+.danger-shimmer.danger-green {
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, transparent 70%);
+}
+
+/* Thin Fog State */
+.grid-cell.thin-fog {
+  background: linear-gradient(135deg, #1a1a2a 0%, #2a2a3a 100%);
+  border: 1px solid #3a3a4a;
+}
+
+.grid-cell.thin-fog:hover {
+  border-color: rgb(var(--color-primary-500));
+  transform: scale(1.05);
+}
+
+.fog-overlay.thin {
+  opacity: 0.6;
+  font-size: 1rem;
+}
+
+.danger-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fbbf24;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: bold;
+}
+
+.mystery-text {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: #888;
+  font-weight: bold;
+}
+
+/* Revealed State */
+.grid-cell.revealed {
+  background: #1a1a1a;
+  border-color: #4a4a4a;
+}
+
+.grid-cell.revealed:hover {
+  border-color: rgb(var(--color-primary-600));
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.grid-cell.named-location {
+  border-color: rgb(var(--color-primary-600));
+  box-shadow: 0 0 8px rgba(var(--color-primary-600), 0.3);
+}
+
+.grid-cell.player-here {
+  border: 2px solid rgb(var(--color-primary-500));
+  box-shadow: 0 0 16px rgb(var(--color-primary-500) / 0.6);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 16px rgb(var(--color-primary-500) / 0.6);
+  }
+  50% {
+    box-shadow: 0 0 24px rgb(var(--color-primary-500) / 0.9);
+  }
+}
+
+.player-marker {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 0.8rem;
+  color: rgb(var(--color-primary-400));
+  text-shadow: 0 0 8px rgb(var(--color-primary-500));
+  font-weight: bold;
+}
+
+.tile-abbreviation {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.location-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+  color: #fff;
+  font-size: 0.55rem;
+  padding: 2px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.grid-cell:hover .location-label {
+  opacity: 1;
+}
+
+.danger-corner {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  border: 1px solid currentColor;
+}
+
+/* Special Indicators */
+.encounter-warning,
+.loot-indicator,
+.requirement-lock {
+  position: absolute;
+  font-size: 0.7rem;
+}
+
+.encounter-warning { top: 2px; left: 2px; }
+.loot-indicator { top: 2px; right: 2px; }
+.requirement-lock { bottom: 2px; right: 2px; }
+
+/* Progressive Reveal Animation */
+@keyframes fogReveal {
+  0% {
+    opacity: 1;
+    filter: blur(4px);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(0);
+  }
+}
+
+.grid-cell.revealing .fog-overlay {
+  animation: fogReveal 2.5s ease-out forwards;
+}
+
+/* Hint Display */
+.hint-display {
+  min-height: 2.5rem;
+}
+
+/* Map Actions */
+.map-actions {
+  margin-top: 1rem;
+}
+
+/* Grid Legend */
+.grid-legend {
+  font-size: 0.875rem;
+}
