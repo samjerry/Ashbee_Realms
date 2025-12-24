@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Map, MapPin, Navigation, Grid3x3, TrendingUp } from 'lucide-react';
+import { Map, MapPin, Navigation, Grid3x3, TrendingUp, Compass } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import WorldMapGrid from './WorldMapGrid';
+import BiomeGridMap from './BiomeGridMap';
+import axios from 'axios';
 
 const MapView = () => {
   const { availableLocations, currentLocation, player, mapKnowledge, fetchLocations, fetchMapKnowledge, travelTo } = useGameStore();
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid'
+  const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid', 'biome-grid'
   const [showFilter, setShowFilter] = useState('all'); // 'all', 'discovered', 'undiscovered'
+  const [biomeGridView, setBiomeGridView] = useState(null); // Current biome for grid view
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
     fetchLocations();
@@ -50,90 +55,204 @@ const MapView = () => {
   const totalCount = locationsWithDiscovery.length;
   const discoveryPercentage = totalCount > 0 ? ((discoveredCount / totalCount) * 100).toFixed(1) : 0;
 
+  // Handle biome grid view
+  const openBiomeGrid = (biomeId) => {
+    setBiomeGridView(biomeId);
+    setViewMode('biome-grid');
+  };
+
+  const closeBiomeGrid = () => {
+    setBiomeGridView(null);
+    setViewMode('grid');
+    fetchMapKnowledge(); // Refresh map knowledge
+  };
+
+  // Handle tile actions
+  const handleTileAction = async (action, coordinate, tileData) => {
+    if (!biomeGridView) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const channel = player?.channel || 'default';
+      let response;
+
+      switch (action) {
+        case 'scout':
+          response = await axios.post('/api/map/scout-tile', {
+            channel,
+            biomeId: biomeGridView,
+            coordinate
+          });
+          break;
+
+        case 'explore':
+          response = await axios.post('/api/map/explore-tile', {
+            channel,
+            biomeId: biomeGridView,
+            coordinate
+          });
+          
+          // Check for encounter
+          if (response.data.encounter?.triggered) {
+            // TODO: Show encounter modal or trigger combat
+            alert(response.data.encounter.message);
+          }
+          break;
+
+        case 'move':
+          response = await axios.post('/api/map/move', {
+            channel,
+            biomeId: biomeGridView,
+            coordinate
+          });
+          break;
+
+        case 'enter':
+          // Navigate to sublocation
+          if (tileData?.id) {
+            // TODO: Navigate to sublocation page
+            console.log('Entering sublocation:', tileData.id);
+          }
+          break;
+
+        default:
+          console.warn('Unknown action:', action);
+          return;
+      }
+
+      // Refresh map knowledge after action
+      await fetchMapKnowledge();
+      
+    } catch (err) {
+      console.error('Tile action error:', err);
+      setError(err.response?.data?.error || 'Failed to perform action');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header */}
-      <div className="card p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <Map size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white">World Map</h1>
-              <p className="text-sm sm:text-base text-gray-400">Explore the world of Ashbee Realms</p>
+      {error && (
+        <div className="card p-4 bg-red-900/20 border-red-700">
+          <p className="text-red-400">{error}</p>
+        </div>
+      )}
+
+      {/* Biome Grid View */}
+      {viewMode === 'biome-grid' && biomeGridView && (
+        <BiomeGridMap
+          biomeId={biomeGridView}
+          mapKnowledge={mapKnowledge}
+          onTileAction={handleTileAction}
+          onClose={closeBiomeGrid}
+        />
+      )}
+
+      {/* World Map Views */}
+      {viewMode !== 'biome-grid' && (
+        <>
+          {/* Header */}
+          <div className="card p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center space-x-3">
+                <Map size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-white">World Map</h1>
+                  <p className="text-sm sm:text-base text-gray-400">Explore the world of Ashbee Realms</p>
+                </div>
+              </div>
+              
+              {currentLocation && (
+                <div className="flex items-center space-x-2 bg-dark-800 px-3 sm:px-4 py-2 rounded-lg border border-dark-700">
+                  <MapPin size={16} className="sm:w-5 sm:h-5 text-primary-500 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs text-gray-400">Current Location</p>
+                    <p className="text-xs sm:text-sm font-bold text-white">{currentLocation.name}</p>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-          
-          {currentLocation && (
-            <div className="flex items-center space-x-2 bg-dark-800 px-3 sm:px-4 py-2 rounded-lg border border-dark-700">
-              <MapPin size={16} className="sm:w-5 sm:h-5 text-primary-500 flex-shrink-0" />
-              <div>
-                <p className="text-xs text-gray-400">Current Location</p>
-                <p className="text-xs sm:text-sm font-bold text-white">{currentLocation.name}</p>
+
+            {/* Discovery Progress */}
+            <div className="mt-4 pt-4 border-t border-dark-700">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <TrendingUp size={16} className="text-primary-500" />
+                  <span className="text-sm text-gray-400">Discovery Progress</span>
+                </div>
+                <span className="text-sm font-bold text-white">
+                  {discoveredCount}/{totalCount} ({discoveryPercentage}%)
+                </span>
+              </div>
+              <div className="w-full bg-dark-800 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-primary-500 to-primary-400 transition-all duration-500"
+                  style={{ width: `${discoveryPercentage}%` }}
+                />
               </div>
             </div>
-          )}
-        </div>
+          </div>
 
-        {/* Discovery Progress */}
-        <div className="mt-4 pt-4 border-t border-dark-700">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <TrendingUp size={16} className="text-primary-500" />
-              <span className="text-sm text-gray-400">Discovery Progress</span>
+          {/* View Mode Tabs */}
+          <div className="card p-2">
+            <div className="flex gap-2 overflow-x-auto">
+              <button
+                onClick={() => setViewMode('locations')}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap
+                  ${viewMode === 'locations' 
+                    ? 'bg-primary-500 text-white' 
+                    : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
+                  }
+                `}
+              >
+                <Map size={18} />
+                <span>Locations</span>
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap
+                  ${viewMode === 'grid' 
+                    ? 'bg-primary-500 text-white' 
+                    : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
+                  }
+                `}
+              >
+                <Grid3x3 size={18} />
+                <span>Grid Map</span>
+              </button>
             </div>
-            <span className="text-sm font-bold text-white">
-              {discoveredCount}/{totalCount} ({discoveryPercentage}%)
-            </span>
           </div>
-          <div className="w-full bg-dark-800 rounded-full h-2 overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-primary-500 to-primary-400 transition-all duration-500"
-              style={{ width: `${discoveryPercentage}%` }}
-            />
-          </div>
-        </div>
-      </div>
 
-      {/* View Mode Tabs */}
-      <div className="card p-2">
-        <div className="flex gap-2 overflow-x-auto">
-          <button
-            onClick={() => setViewMode('locations')}
-            className={`
-              flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap
-              ${viewMode === 'locations' 
-                ? 'bg-primary-500 text-white' 
-                : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
-              }
-            `}
-          >
-            <Map size={18} />
-            <span>Locations</span>
-          </button>
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`
-              flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap
-              ${viewMode === 'grid' 
-                ? 'bg-primary-500 text-white' 
-                : 'bg-dark-800 text-gray-400 hover:bg-dark-700'
-              }
-            `}
-          >
-            <Grid3x3 size={18} />
-            <span>Grid Map</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Grid Map View */}
-      {viewMode === 'grid' && (
-        <WorldMapGrid
-          mapKnowledge={mapKnowledge}
-          biomes={locationsWithDiscovery}
-          currentLocation={currentLocation}
-          onSelectLocation={setSelectedLocation}
-        />
+          {/* Grid Map View */}
+          {viewMode === 'grid' && (
+            <>
+              <WorldMapGrid
+                mapKnowledge={mapKnowledge}
+                biomes={locationsWithDiscovery}
+                currentLocation={currentLocation}
+                onSelectLocation={setSelectedLocation}
+              />
+              
+              {/* View Biome Grid Button */}
+              {selectedLocation && selectedLocation.discovered && (
+                <div className="card p-4">
+                  <button
+                    onClick={() => openBiomeGrid(selectedLocation.id)}
+                    className="btn-primary w-full flex items-center justify-center gap-2"
+                  >
+                    <Compass size={20} />
+                    <span>Explore {selectedLocation.name} Grid</span>
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </>
       )}
 
       {/* Original Locations View */}
