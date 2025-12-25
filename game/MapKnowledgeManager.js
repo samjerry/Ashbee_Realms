@@ -9,6 +9,7 @@ const { loadData } = require('../data/data_loader');
 class MapKnowledgeManager {
   constructor() {
     this.biomes = loadData('biomes')?.biomes || {};
+    this.biomeGrids = loadData('biome_grids') || {};
   }
 
   /**
@@ -527,8 +528,7 @@ class MapKnowledgeManager {
    * @returns {Array} Array of adjacent positions [[x, y], ...]
    */
   getAdjacentTiles(biomeId, position, gridSize = null) {
-    const biomeGridsConfig = loadData('biome_grids');
-    const biomeGrid = biomeGridsConfig[biomeId];
+    const biomeGrid = this.biomeGrids[biomeId];
     
     if (!biomeGrid) {
       return [];
@@ -558,7 +558,7 @@ class MapKnowledgeManager {
       const newX = x + dx;
       const newY = y + dy;
 
-      // Check bounds
+      // Check bounds - x is row (height), y is column (width)
       if (newX >= 0 && newX < height && newY >= 0 && newY < width) {
         adjacent.push([newX, newY]);
       }
@@ -660,8 +660,7 @@ class MapKnowledgeManager {
    * @returns {Object} Updated map knowledge
    */
   initializeBiomeEntry(mapKnowledge, biomeId) {
-    const biomeGridsConfig = loadData('biome_grids');
-    const biomeGrid = biomeGridsConfig[biomeId];
+    const biomeGrid = this.biomeGrids[biomeId];
     
     if (!biomeGrid) {
       throw new Error(`Biome grid not found for ${biomeId}`);
@@ -687,6 +686,26 @@ class MapKnowledgeManager {
     mapKnowledge.current_biome = biomeId;
 
     return mapKnowledge;
+  }
+
+  /**
+   * Format danger hint from monster spawn types
+   * @param {Array} monsterSpawnTypes - Array of spawn type strings
+   * @returns {string} Formatted danger hint
+   */
+  static formatDangerHint(monsterSpawnTypes) {
+    if (!monsterSpawnTypes || monsterSpawnTypes.length === 0) {
+      return 'Danger: Unknown';
+    }
+    return `Danger: ${monsterSpawnTypes.join(', ')}`;
+  }
+
+  /**
+   * Get default encounter chance for exploration
+   * @returns {number} Default encounter chance (0.3 = 30%)
+   */
+  static getDefaultEncounterChance() {
+    return 0.3;
   }
 }
 

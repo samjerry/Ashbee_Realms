@@ -407,7 +407,7 @@ router.post('/scout', requireAuth, async (req, res) => {
           sublocationData = {
             id: subId,
             name: subLocation.name,
-            dangerHint: `Danger: ${subLocation.monster_spawn_types?.join(', ') || 'Unknown'}`,
+            dangerHint: MapKnowledgeManager.formatDangerHint(subLocation.monster_spawn_types),
             briefDesc: subLocation.description?.substring(0, 100) + '...'
           };
         }
@@ -505,7 +505,7 @@ router.post('/explore', requireAuth, async (req, res) => {
           // Determine if an encounter occurs
           if (subLocation.guaranteed_encounter) {
             encounter = { type: 'combat', guaranteed: true };
-          } else if (Math.random() < 0.3) { // 30% chance
+          } else if (Math.random() < MapKnowledgeManager.getDefaultEncounterChance()) {
             encounter = { type: 'combat', guaranteed: false };
           }
         }
