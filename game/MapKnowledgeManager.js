@@ -494,6 +494,200 @@ class MapKnowledgeManager {
     if (!biomeKnowledge) return null;
     return biomeKnowledge.current_position || null;
   }
+
+  /**
+   * Get tile state (hidden, scouted, or explored)
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} position - Position [x, y]
+   * @returns {string} 'hidden', 'scouted', or 'explored'
+   */
+  getTileState(mapKnowledge, biomeId, position) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge) return 'hidden';
+
+    // Check if explored (discovered)
+    if (this.isTileDiscovered(mapKnowledge, biomeId, position)) {
+      return 'explored';
+    }
+
+    // Check if scouted
+    if (this.isTileScouted(mapKnowledge, biomeId, position)) {
+      return 'scouted';
+    }
+
+    return 'hidden';
+  }
+
+  /**
+   * Get adjacent tiles (8 directions including diagonals)
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} position - Center position [x, y]
+   * @param {Array} gridSize - Grid size [width, height] or null to load from config
+   * @returns {Array} Array of adjacent positions [[x, y], ...]
+   */
+  getAdjacentTiles(biomeId, position, gridSize = null) {
+    const biomeGridsConfig = loadData('biome_grids.json');
+    const biomeGrid = biomeGridsConfig[biomeId];
+    
+    if (!biomeGrid) {
+      return [];
+    }
+
+    // Get grid size
+    const size = gridSize || biomeGrid.grid_size;
+    const width = Array.isArray(size) ? size[0] : size.width;
+    const height = Array.isArray(size) ? size[1] : size.height;
+
+    const [x, y] = position;
+    const adjacent = [];
+
+    // 8 directions: N, NE, E, SE, S, SW, W, NW
+    const directions = [
+      [-1, 0],  // N
+      [-1, 1],  // NE
+      [0, 1],   // E
+      [1, 1],   // SE
+      [1, 0],   // S
+      [1, -1],  // SW
+      [0, -1],  // W
+      [-1, -1]  // NW
+    ];
+
+    for (const [dx, dy] of directions) {
+      const newX = x + dx;
+      const newY = y + dy;
+
+      // Check bounds
+      if (newX >= 0 && newX < height && newY >= 0 && newY < width) {
+        adjacent.push([newX, newY]);
+      }
+    }
+
+    return adjacent;
+  }
+
+  /**
+   * Explore a tile (mark as explored and move player)
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Array} position - Position [x, y]
+   * @returns {Object} Updated map knowledge
+   */
+  exploreTile(mapKnowledge, biomeId, position) {
+    const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+    if (!biomeKnowledge) {
+      throw new Error(`Biome ${biomeId} not initialized in map knowledge`);
+    }
+
+    // Mark tile as discovered/explored
+    const result = this.discoverTile(mapKnowledge, biomeId, position);
+    
+    // Update player position
+    this.updatePosition(mapKnowledge, biomeId, position);
+
+    return result.mapKnowledge;
+  }
+
+  /**
+   * Get grid with fog of war applied
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @param {Object} gridData - Grid data from biome_grids.json
+   * @returns {Array} 2D array representing the grid with fog states
+   */
+  getGridWithFogOfWar(mapKnowledge, biomeId, gridData) {
+    if (!gridData) return null;
+
+    const size = gridData.grid_size;
+    const width = Array.isArray(size) ? size[0] : size.width;
+    const height = Array.isArray(size) ? size[1] : size.height;
+
+    // Initialize grid
+    const grid = [];
+    for (let x = 0; x < height; x++) {
+      grid[x] = [];
+      for (let y = 0; y < width; y++) {
+        const state = this.getTileState(mapKnowledge, biomeId, [x, y]);
+        const tileKey = `${x},${y}`;
+        
+        let tileInfo = {
+          position: [x, y],
+          state: state
+        };
+
+        // Get tile data from gridData
+        const tileLoc = gridData.tile_locations ? gridData.tile_locations[tileKey] : null;
+        const subLocData = gridData.sub_locations ? 
+          Object.entries(gridData.sub_locations).find(([id, data]) => 
+            data.position && data.position[0] === x && data.position[1] === y
+          ) : null;
+
+        if (state === 'explored') {
+          // Full information
+          if (tileLoc) {
+            tileInfo = { ...tileInfo, ...tileLoc };
+          } else if (subLocData) {
+            const [subId, subData] = subLocData;
+            tileInfo.sublocation_id = subId;
+            tileInfo.position = subData.position;
+          }
+        } else if (state === 'scouted') {
+          // Partial information
+          const biomeKnowledge = this.getBiomeMapKnowledge(mapKnowledge, biomeId);
+          if (biomeKnowledge && biomeKnowledge.scouted_tiles) {
+            const scoutedData = biomeKnowledge.scouted_tiles[tileKey];
+            if (scoutedData) {
+              tileInfo.scouted_info = scoutedData;
+            }
+          }
+        } else {
+          // Hidden - only show question marks
+          tileInfo.hidden = true;
+        }
+
+        grid[x][y] = tileInfo;
+      }
+    }
+
+    return grid;
+  }
+
+  /**
+   * Initialize biome entry for a player
+   * @param {Object} mapKnowledge - Player's map knowledge
+   * @param {string} biomeId - Biome identifier
+   * @returns {Object} Updated map knowledge
+   */
+  initializeBiomeEntry(mapKnowledge, biomeId) {
+    const biomeGridsConfig = loadData('biome_grids.json');
+    const biomeGrid = biomeGridsConfig[biomeId];
+    
+    if (!biomeGrid) {
+      throw new Error(`Biome grid not found for ${biomeId}`);
+    }
+
+    const startingPosition = biomeGrid.starting_position || [2, 2];
+    
+    // Initialize biome map knowledge
+    if (!mapKnowledge.biome_map_knowledge) {
+      mapKnowledge.biome_map_knowledge = {};
+    }
+
+    if (!mapKnowledge.biome_map_knowledge[biomeId]) {
+      mapKnowledge.biome_map_knowledge[biomeId] = {
+        current_position: startingPosition,
+        discovered_tiles: [startingPosition],
+        scouted_tiles: {},
+        fog_hints: {},
+        entry_timestamp: new Date().toISOString()
+      };
+    }
+
+    mapKnowledge.current_biome = biomeId;
+
+    return mapKnowledge;
+  }
 }
 
 module.exports = MapKnowledgeManager;
