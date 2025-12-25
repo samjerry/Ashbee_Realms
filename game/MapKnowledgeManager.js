@@ -527,7 +527,7 @@ class MapKnowledgeManager {
    * @returns {Array} Array of adjacent positions [[x, y], ...]
    */
   getAdjacentTiles(biomeId, position, gridSize = null) {
-    const biomeGridsConfig = loadData('biome_grids.json');
+    const biomeGridsConfig = loadData('biome_grids');
     const biomeGrid = biomeGridsConfig[biomeId];
     
     if (!biomeGrid) {
@@ -660,7 +660,7 @@ class MapKnowledgeManager {
    * @returns {Object} Updated map knowledge
    */
   initializeBiomeEntry(mapKnowledge, biomeId) {
-    const biomeGridsConfig = loadData('biome_grids.json');
+    const biomeGridsConfig = loadData('biome_grids');
     const biomeGrid = biomeGridsConfig[biomeId];
     
     if (!biomeGrid) {

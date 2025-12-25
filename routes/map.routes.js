@@ -5,7 +5,7 @@ const MapKnowledgeManager = require('../game/MapKnowledgeManager');
 const { loadData } = require('../data/data_loader');
 
 // Load biome grids configuration and biomes data
-const biomeGridsConfig = loadData('biome_grids.json');
+const biomeGridsConfig = loadData('biome_grids');
 const biomesData = loadData('biomes');
 
 // Instantiate MapKnowledgeManager
