@@ -1,110 +1,13 @@
 {
-  "town_square": {
-    "grid_size": { "width": 8, "height": 8 },
-    "starting_position": [4, 4],
-    "tile_locations": {
-      "4,4": {
-        "type": "sublocation",
-        "id": "town_center",
-        "name": "Town Center",
-        "description": "The heart of the town square, bustling with activity",
-        "abbreviation": "TC",
-        "danger_level": 1
-      },
-      "4,5": {
-        "type": "sublocation",
-        "id": "inn",
-        "name": "The Rusty Tankard Inn",
-        "description": "A warm, inviting tavern with the smell of ale and roasted meat",
-        "abbreviation": "IN",
-        "danger_level": 1
-      },
-      "5,4": {
-        "type": "sublocation",
-        "id": "blacksmith",
-        "name": "Forge of Iron",
-        "description": "A bustling blacksmith shop, the sound of hammering echoes",
-        "abbreviation": "BS",
-        "danger_level": 1
-      },
-      "3,4": {
-        "type": "sublocation",
-        "id": "shop",
-        "name": "General Store",
-        "description": "Shelves stocked with adventuring supplies",
-        "abbreviation": "SH",
-        "danger_level": 1
-      },
-      "4,3": {
-        "type": "sublocation",
-        "id": "temple",
-        "name": "Temple of Light",
-        "description": "A sacred place where healers practice their art",
-        "abbreviation": "TM",
-        "danger_level": 1
-      },
-      "5,5": {
-        "type": "generic",
-        "name": "Market Stalls",
-        "description": "Merchants hawk their wares from colorful tents",
-        "abbreviation": "MK",
-        "danger_level": 1
-      },
-      "3,5": {
-        "type": "generic",
-        "name": "Town Square Gardens",
-        "description": "Well-tended gardens with flowers and benches",
-        "abbreviation": "GD",
-        "danger_level": 1
-      },
-      "5,3": {
-        "type": "generic",
-        "name": "Guard Post",
-        "description": "Town guards keep watch from this fortified position",
-        "abbreviation": "GP",
-        "danger_level": 1
-      },
-      "3,3": {
-        "type": "generic",
-        "name": "Fountain Plaza",
-        "description": "A beautiful fountain where townsfolk gather",
-        "abbreviation": "FP",
-        "danger_level": 1
-      },
-      "6,4": {
-        "type": "generic",
-        "name": "Craftsman's Quarter",
-        "description": "Various artisans ply their trades here",
-        "abbreviation": "CQ",
-        "danger_level": 1
-      },
-      "4,6": {
-        "type": "generic",
-        "name": "Residential Area",
-        "description": "Modest homes line the cobblestone streets",
-        "abbreviation": "RA",
-        "danger_level": 1
-      },
-      "2,4": {
-        "type": "generic",
-        "name": "Town Gate West",
-        "description": "The western entrance to town",
-        "abbreviation": "TW",
-        "danger_level": 1
-      },
-      "7,4": {
-        "type": "generic",
-        "name": "Town Gate East",
-        "description": "The eastern entrance to town",
-        "abbreviation": "TE",
-        "danger_level": 1
-      }
-    }
-  },
-  
   "whispering_woods": {
-    "grid_size": { "width": 12, "height": 12 },
-    "starting_position": [6, 6],
+    "grid_size": {
+      "width": 12,
+      "height": 12
+    },
+    "starting_position": [
+      6,
+      6
+    ],
     "tile_locations": {
       "6,6": {
         "type": "sublocation",
@@ -259,10 +162,123 @@
       }
     }
   },
-  
+  "twilight_wetlands": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "twilight_marsh": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "boggy_mire": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "sunken_trail": {
+        "position": [
+          2,
+          3
+        ]
+      },
+      "frozen_pond": {
+        "position": [
+          0,
+          2
+        ]
+      }
+    }
+  },
+  "highland_reaches": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "rolling_hills": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "wildflower_meadow": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "starlit_ridge": {
+        "position": [
+          2,
+          3
+        ]
+      },
+      "stormbluff_cliffs": {
+        "position": [
+          0,
+          2
+        ]
+      },
+      "howling_plateau": {
+        "position": [
+          1,
+          3
+        ]
+      },
+      "stone_circle": {
+        "position": [
+          2,
+          4
+        ]
+      }
+    }
+  },
+  "ashen_barrens": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "fallen_log_crossing": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "ashen_clearing": {
+        "position": [
+          1,
+          2
+        ]
+      }
+    }
+  },
   "goblin_tunnels": {
-    "grid_size": { "width": 10, "height": 10 },
-    "starting_position": [5, 1],
+    "grid_size": {
+      "width": 10,
+      "height": 10
+    },
+    "starting_position": [
+      5,
+      1
+    ],
     "tile_locations": {
       "5,1": {
         "type": "sublocation",
@@ -430,6 +446,702 @@
         "abbreviation": "..",
         "danger_level": 3,
         "encounter_chance": 0.25
+      }
+    }
+  },
+  "deep_caverns": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "fungal_hollow": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "echoing_grotto": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "dripping_tunnels": {
+        "position": [
+          2,
+          3
+        ]
+      },
+      "collapsed_shaft": {
+        "position": [
+          0,
+          2
+        ]
+      },
+      "crystal_cavern": {
+        "position": [
+          1,
+          3
+        ]
+      },
+      "stalactite_chamber": {
+        "position": [
+          2,
+          4
+        ]
+      },
+      "chasm_edge": {
+        "position": [
+          3,
+          3
+        ]
+      },
+      "serpents_den": {
+        "position": [
+          0,
+          1
+        ]
+      },
+      "blackwater_caves": {
+        "position": [
+          1,
+          0
+        ]
+      },
+      "lava_fissure": {
+        "position": [
+          4,
+          3
+        ]
+      }
+    }
+  },
+  "ancient_crypts": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "abandoned_catacombs": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "sunken_crypt": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "silent_tomb": {
+        "position": [
+          2,
+          3
+        ]
+      },
+      "forgotten_ossuary": {
+        "position": [
+          4,
+          0
+        ]
+      },
+      "buried_temple": {
+        "position": [
+          0,
+          4
+        ]
+      }
+    }
+  },
+  "cursed_swamp": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "murky_waters": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "witch_hut": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "graveyard": {
+        "position": [
+          4,
+          4
+        ]
+      }
+    }
+  },
+  "forsaken_ruins": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "watch_post": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "deserted_camp": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "overgrown_courtyard": {
+        "position": [
+          2,
+          3
+        ]
+      },
+      "abandoned_market": {
+        "position": [
+          0,
+          2
+        ]
+      },
+      "broken_aqueduct": {
+        "position": [
+          1,
+          3
+        ]
+      },
+      "derelict_mill": {
+        "position": [
+          2,
+          4
+        ]
+      },
+      "wrecked_caravan": {
+        "position": [
+          3,
+          3
+        ]
+      },
+      "ruined_chapel": {
+        "position": [
+          0,
+          1
+        ]
+      },
+      "forsaken_hamlet": {
+        "position": [
+          1,
+          0
+        ]
+      },
+      "sealed_gate": {
+        "position": [
+          3,
+          0
+        ]
+      },
+      "ancient_library": {
+        "position": [
+          4,
+          1
+        ]
+      },
+      "half_sunk_tower": {
+        "position": [
+          0,
+          0
+        ]
+      },
+      "fallen_barracks": {
+        "position": [
+          4,
+          0
+        ]
+      }
+    }
+  },
+  "volcanic_peaks": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "forge_of_ancients": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "lava_flows": {
+        "position": [
+          4,
+          4
+        ]
+      },
+      "dragon_lair": {
+        "position": [
+          4,
+          0
+        ]
+      }
+    }
+  },
+  "frozen_wastes": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "ice_caves": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "lich_tower": {
+        "position": [
+          4,
+          4
+        ]
+      }
+    }
+  },
+  "void_realm": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "void_gateway": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "chaos_throne": {
+        "position": [
+          4,
+          4
+        ]
+      }
+    }
+  },
+  "town_square": {
+    "grid_size": {
+      "width": 8,
+      "height": 8
+    },
+    "starting_position": [
+      4,
+      4
+    ],
+    "tile_locations": {
+      "4,4": {
+        "type": "sublocation",
+        "id": "town_center",
+        "name": "Town Center",
+        "description": "The heart of the town square, bustling with activity",
+        "abbreviation": "TC",
+        "danger_level": 1
+      },
+      "4,5": {
+        "type": "sublocation",
+        "id": "inn",
+        "name": "The Rusty Tankard Inn",
+        "description": "A warm, inviting tavern with the smell of ale and roasted meat",
+        "abbreviation": "IN",
+        "danger_level": 1
+      },
+      "5,4": {
+        "type": "sublocation",
+        "id": "blacksmith",
+        "name": "Forge of Iron",
+        "description": "A bustling blacksmith shop, the sound of hammering echoes",
+        "abbreviation": "BS",
+        "danger_level": 1
+      },
+      "3,4": {
+        "type": "sublocation",
+        "id": "shop",
+        "name": "General Store",
+        "description": "Shelves stocked with adventuring supplies",
+        "abbreviation": "SH",
+        "danger_level": 1
+      },
+      "4,3": {
+        "type": "sublocation",
+        "id": "temple",
+        "name": "Temple of Light",
+        "description": "A sacred place where healers practice their art",
+        "abbreviation": "TM",
+        "danger_level": 1
+      },
+      "5,5": {
+        "type": "generic",
+        "name": "Market Stalls",
+        "description": "Merchants hawk their wares from colorful tents",
+        "abbreviation": "MK",
+        "danger_level": 1
+      },
+      "3,5": {
+        "type": "generic",
+        "name": "Town Square Gardens",
+        "description": "Well-tended gardens with flowers and benches",
+        "abbreviation": "GD",
+        "danger_level": 1
+      },
+      "5,3": {
+        "type": "generic",
+        "name": "Guard Post",
+        "description": "Town guards keep watch from this fortified position",
+        "abbreviation": "GP",
+        "danger_level": 1
+      },
+      "3,3": {
+        "type": "generic",
+        "name": "Fountain Plaza",
+        "description": "A beautiful fountain where townsfolk gather",
+        "abbreviation": "FP",
+        "danger_level": 1
+      },
+      "6,4": {
+        "type": "generic",
+        "name": "Craftsman's Quarter",
+        "description": "Various artisans ply their trades here",
+        "abbreviation": "CQ",
+        "danger_level": 1
+      },
+      "4,6": {
+        "type": "generic",
+        "name": "Residential Area",
+        "description": "Modest homes line the cobblestone streets",
+        "abbreviation": "RA",
+        "danger_level": 1
+      },
+      "2,4": {
+        "type": "generic",
+        "name": "Town Gate West",
+        "description": "The western entrance to town",
+        "abbreviation": "TW",
+        "danger_level": 1
+      },
+      "7,4": {
+        "type": "generic",
+        "name": "Town Gate East",
+        "description": "The eastern entrance to town",
+        "abbreviation": "TE",
+        "danger_level": 1
+      }
+    }
+  },
+  "infernal_rift": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "brimstone_chasm": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "soul_forge": {
+        "position": [
+          4,
+          4
+        ]
+      },
+      "demon_gate": {
+        "position": [
+          4,
+          0
+        ]
+      },
+      "hellfire_pools": {
+        "position": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "tempest_spire": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "thunder_peaks": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "wind_tunnels": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "lightning_rod": {
+        "position": [
+          4,
+          4
+        ]
+      },
+      "storm_eye": {
+        "position": [
+          0,
+          4
+        ]
+      }
+    }
+  },
+  "crystalline_caverns": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "prism_chamber": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "resonance_halls": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "gem_gardens": {
+        "position": [
+          2,
+          3
+        ]
+      }
+    }
+  },
+  "clockwork_citadel": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "gear_gardens": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "steam_vents": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "assembly_line": {
+        "position": [
+          4,
+          4
+        ]
+      },
+      "control_room": {
+        "position": [
+          0,
+          4
+        ]
+      }
+    }
+  },
+  "verdant_expanse": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "overgrowth": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "fairy_circle": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "poison_garden": {
+        "position": [
+          2,
+          3
+        ]
+      },
+      "ancient_grove": {
+        "position": [
+          4,
+          0
+        ]
+      }
+    }
+  },
+  "abyssal_trench": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "crushing_depths": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "dark_current": {
+        "position": [
+          4,
+          4
+        ]
+      },
+      "leviathan_lair": {
+        "position": [
+          4,
+          0
+        ]
+      },
+      "pressure_chamber": {
+        "position": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "dragons_roost": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "elder_nest": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "hatchery": {
+        "position": [
+          4,
+          4
+        ]
+      },
+      "treasure_vault": {
+        "position": [
+          4,
+          0
+        ]
+      },
+      "dragon_graveyard": {
+        "position": [
+          0,
+          0
+        ]
+      }
+    }
+  },
+  "ethereal_realm": {
+    "grid_size": [
+      5,
+      5
+    ],
+    "starting_position": [
+      2,
+      2
+    ],
+    "sub_locations": {
+      "spirit_gate": {
+        "position": [
+          2,
+          2
+        ]
+      },
+      "memory_echo": {
+        "position": [
+          1,
+          2
+        ]
+      },
+      "phase_boundary": {
+        "position": [
+          4,
+          4
+        ]
       }
     }
   }
