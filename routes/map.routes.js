@@ -131,7 +131,7 @@ router.post('/discover', requireAuth, async (req, res) => {
     }
     
     character.map_knowledge = mapKnowledge;
-    await db.saveCharacter(character);
+    await db.saveCharacter(req.session.user.id, channel.toLowerCase(), character);
 
     res.json({ success: true, mapKnowledge });
   } catch (error) {
@@ -171,7 +171,7 @@ router.post('/scout-tile', requireAuth, async (req, res) => {
 
     mapKnowledgeMgr.scoutTile(mapKnowledge, currentBiome, [x, y], scoutData);
     character.map_knowledge = mapKnowledge;
-    await db.saveCharacter(character);
+    await db.saveCharacter(req.session.user.id, channel.toLowerCase(), character);
 
     res.json({ success: true, tileInfo: scoutData });
   } catch (error) {
@@ -205,7 +205,7 @@ router.post('/explore-tile', requireAuth, async (req, res) => {
 
     mapKnowledgeMgr.exploreTile(mapKnowledge, currentBiome, [x, y]);
     character.map_knowledge = mapKnowledge;
-    await db.saveCharacter(character);
+    await db.saveCharacter(req.session.user.id, channel.toLowerCase(), character);
 
     res.json({ success: true, position: [x, y] });
   } catch (error) {
@@ -244,7 +244,7 @@ router.post('/move', requireAuth, async (req, res) => {
     mapKnowledgeMgr.discoverTile(mapKnowledge, currentBiome, [x, y]);
     
     character.map_knowledge = mapKnowledge;
-    await db.saveCharacter(character);
+    await db.saveCharacter(req.session.user.id, channel.toLowerCase(), character);
 
     res.json({ success: true, position: character.position, mapKnowledge });
   } catch (error) {
@@ -317,7 +317,7 @@ router.get('/grid/:biome_id', requireAuth, async (req, res) => {
     if (!mapKnowledge.biome_map_knowledge || !mapKnowledge.biome_map_knowledge[biome_id]) {
       mapKnowledge = mapKnowledgeMgr.initializeBiomeEntry(mapKnowledge, biome_id);
       character.map_knowledge = mapKnowledge;
-      await db.saveCharacter(character);
+      await db.saveCharacter(req.session.user.id, channel.toLowerCase(), character);
     }
 
     // Get current position
@@ -441,7 +441,7 @@ router.post('/scout', requireAuth, async (req, res) => {
     }
 
     character.map_knowledge = mapKnowledge;
-    await db.saveCharacter(character);
+    await db.saveCharacter(req.session.user.id, channel.toLowerCase(), character);
 
     res.json({ success: true, tileInfo: scoutData });
   } catch (error) {
@@ -546,7 +546,7 @@ router.post('/explore', requireAuth, async (req, res) => {
     }
 
     character.map_knowledge = mapKnowledge;
-    await db.saveCharacter(character);
+    await db.saveCharacter(req.session.user.id, channel.toLowerCase(), character);
 
     res.json({ 
       success: true, 
