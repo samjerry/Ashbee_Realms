@@ -28,12 +28,12 @@ const MapView = () => {
   };
   
   const canTravel = (location) => {
-    if (!player) return false;
+    if (!player || !location.recommended_level) return false;
     return player.level >= location.recommended_level[0];
   };
 
   // Add discovery status to locations
-  const locationsWithDiscovery = availableLocations.map(loc => ({
+  const locationsWithDiscovery = (availableLocations || []).map(loc => ({
     ...loc,
     discovered: mapKnowledge?.discovered_regions?.includes(loc.id) || loc.id === 'town_square', // Town square always discovered
     exploredSublocations: mapKnowledge?.explored_sublocations?.[loc.id] || []
@@ -262,7 +262,7 @@ const MapView = () => {
                             <div>
                               <p className="text-gray-500">Level</p>
                               <p className={`font-bold ${accessible ? 'text-white' : 'text-red-500'}`}>
-                                {location.recommended_level[0]}-{location.recommended_level[1]}
+                                {location.recommended_level?.[0] || 1}-{location.recommended_level?.[1] || 1}
                               </p>
                             </div>
                           </div>
@@ -315,7 +315,7 @@ const MapView = () => {
                       <div className="bg-dark-900 rounded-lg p-3 border border-dark-700">
                         <p className="text-xs text-gray-400 mb-1">Recommended Level</p>
                         <p className="text-lg font-bold text-white">
-                          {selectedLocation.recommended_level[0]}-{selectedLocation.recommended_level[1]}
+                          {selectedLocation.recommended_level?.[0] || 1}-{selectedLocation.recommended_level?.[1] || 1}
                         </p>
                       </div>
                     </div>
