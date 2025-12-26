@@ -23,7 +23,7 @@ class MapKnowledgeManager {
       explored_sublocations: {
         'town_square': ['inn', 'shop', 'blacksmith', 'temple']
       },
-      visited_coordinates: [[3, 3]], // Town square at center (legacy)
+      visited_coordinates: [[3, 3]], // Town square at center
       discovered_coordinates: [[3, 3]], // Grid coordinates discovered
       discovery_timestamp: {
         'town_square': now,
