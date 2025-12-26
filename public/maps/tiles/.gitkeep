@@ -1,3 +1,7 @@
 # This directory contains map tile images for the world grid
 # Images should be named by biome ID (e.g., whispering_woods.png, town_square.png)
-# Recommended size: 128x128px PNG with transparency
+# Tile size: 64x64px (will be displayed at this size on the grid)
+# Recommended image size: 64x64px to 256x256px PNG
+# The images will appear BEHIND the grid overlay (fog, player markers, etc.)
+# Use transparency for better blending with the grid UI elements
+

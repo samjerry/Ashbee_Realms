@@ -140,7 +140,7 @@ const BiomeGridMap = ({
         <div className="y-axis-labels" style={{ 
           display: 'flex', 
           flexDirection: 'column',
-          gap: '2px',
+          gap: '0px',
           paddingTop: '24px'
         }}>
           {renderYAxisLabels()}
@@ -151,9 +151,9 @@ const BiomeGridMap = ({
           {/* X-axis labels */}
           <div className="x-axis-labels" style={{ 
             display: 'flex',
-            gap: '2px',
+            gap: '0px',
             marginBottom: '4px',
-            paddingLeft: '2px'
+            paddingLeft: '0px'
           }}>
             {renderXAxisLabels()}
           </div>
@@ -163,9 +163,9 @@ const BiomeGridMap = ({
             className="grid-tiles"
             style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${width}, 48px)`,
-              gridTemplateRows: `repeat(${height}, 48px)`,
-              gap: '2px'
+              gridTemplateColumns: `repeat(${width}, 64px)`,
+              gridTemplateRows: `repeat(${height}, 64px)`,
+              gap: '0px'
             }}
           >
             {renderGrid()}
