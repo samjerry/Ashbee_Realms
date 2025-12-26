@@ -226,7 +226,11 @@ class EquipmentManager {
       };
     }
 
-    const slot = item.slot;
+    // Map legacy "armor" slot to "chest"
+    let slot = item.slot;
+    if (slot === 'armor') {
+      slot = 'chest';
+    }
 
     // Validate slot
     if (!Object.values(EquipmentManager.SLOTS).includes(slot)) {
