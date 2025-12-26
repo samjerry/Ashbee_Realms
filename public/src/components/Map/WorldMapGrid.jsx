@@ -69,7 +69,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
         </div>
 
         {/* Coordinate Labels - Top */}
-        <div className="flex mb-1">
+        <div className="flex mb-0">
           <div className="w-8 sm:w-10"></div>
           {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
             <div
@@ -82,9 +82,9 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
         </div>
 
         {/* Grid */}
-        <div className="space-y-1">
+        <div className="space-y-0">
           {Array.from({ length: worldGrid.grid_size.height }).map((_, y) => (
-            <div key={y} className="flex gap-1">
+            <div key={y} className="flex gap-0">
               {/* Y-axis label */}
               <div className="w-8 sm:w-10 flex items-center justify-center text-xs sm:text-sm text-gray-400 font-mono">
                 {y}
@@ -116,7 +116,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
         </div>
 
         {/* Coordinate Labels - Bottom */}
-        <div className="flex mt-1">
+        <div className="flex mt-0">
           <div className="w-8 sm:w-10"></div>
           {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
             <div
