@@ -206,11 +206,11 @@ export const getAdjacentCoordinates = (coord, gridSize) => {
  * @returns {string} 'deep', 'thin', or 'revealed'
  */
 export const getFogState = (coord, biomeKnowledge) => {
-  if (!biomeKnowledge) return 'deep';
+  if (!biomeKnowledge || !coord) return 'deep';
   
   const key = coordToKey(coord);
   const isDiscovered = biomeKnowledge.discovered_tiles?.some(
-    c => c[0] === coord[0] && c[1] === coord[1]
+    c => c && Array.isArray(c) && c[0] === coord[0] && c[1] === coord[1]
   );
   
   if (isDiscovered) return 'revealed';

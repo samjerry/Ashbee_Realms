@@ -328,6 +328,15 @@ router.get('/grid/:biome_id', requireAuth, async (req, res) => {
 
     // Apply fog of war
     const gridWithFog = mapKnowledgeMgr.getGridWithFogOfWar(mapKnowledge, biome_id, biomeGrid);
+    
+    // Ensure biome knowledge has all required fields
+    const biomeKnowledge = mapKnowledge.biome_map_knowledge?.[biome_id] || {};
+    const playerKnowledge = {
+      current_position: biomeKnowledge.current_position || currentPosition,
+      discovered_tiles: biomeKnowledge.discovered_tiles || [],
+      scouted_tiles: biomeKnowledge.scouted_tiles || {},
+      fog_hints: biomeKnowledge.fog_hints || {}
+    };
 
     res.json({ 
       biome: {
@@ -341,7 +350,7 @@ router.get('/grid/:biome_id', requireAuth, async (req, res) => {
       grid: gridWithFog,
       currentPosition: currentPosition,
       adjacentTiles: adjacentTiles,
-      mapKnowledge: mapKnowledge.biome_map_knowledge?.[biome_id] || {}
+      mapKnowledge: playerKnowledge
     });
   } catch (error) {
     console.error('Error getting biome grid:', error);
