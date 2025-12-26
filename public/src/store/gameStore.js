@@ -330,7 +330,12 @@ const useGameStore = create((set, get) => ({
   // Map actions
   fetchLocations: async () => {
     try {
-      const response = await fetch('/api/exploration/biomes');
+      const player = get().player;
+      const channel = player?.channel;
+      
+      if (!channel) return;
+      
+      const response = await fetch(`/api/exploration/biomes?channel=${channel}`);
       const data = await response.json();
       set({ 
         availableLocations: Array.isArray(data) ? data : (data.biomes || [])

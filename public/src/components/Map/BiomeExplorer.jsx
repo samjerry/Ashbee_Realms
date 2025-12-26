@@ -24,7 +24,7 @@ const BiomeExplorer = ({ biomeId = 'town_square', channel }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/map/biome-grid/${biomeId}?channel=${channel}`);
+      const response = await fetch(`/api/map/grid/${biomeId}?channel=${channel}`);
       const data = await response.json();
 
       if (data.success) {
