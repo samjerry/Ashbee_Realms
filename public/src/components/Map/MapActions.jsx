@@ -65,7 +65,8 @@ const MapActions = ({
         body: JSON.stringify({
           channel,
           biome_id: biomeId,
-          coordinate: targetCoord
+          x: targetCoord[0],
+          y: targetCoord[1]
         })
       });
 
@@ -108,7 +109,8 @@ const MapActions = ({
         body: JSON.stringify({
           channel,
           biome_id: biomeId,
-          coordinate: selectedTile
+          x: selectedTile[0],
+          y: selectedTile[1]
         })
       });
 
@@ -155,7 +157,8 @@ const MapActions = ({
         body: JSON.stringify({
           channel,
           biome_id: biomeId,
-          coordinate: selectedTile
+          x: selectedTile[0],
+          y: selectedTile[1]
         })
       });
 
