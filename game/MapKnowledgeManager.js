@@ -23,20 +23,20 @@ class MapKnowledgeManager {
       explored_sublocations: {
         'town_square': ['inn', 'shop', 'blacksmith', 'temple']
       },
-      visited_coordinates: [[5, 5]], // Town square at center (legacy)
-      discovered_coordinates: [[5, 5]], // Grid coordinates discovered
+      visited_coordinates: [[3, 3]], // Town square at center
+      discovered_coordinates: [[3, 3]], // Grid coordinates discovered
       discovery_timestamp: {
         'town_square': now,
-        '5,5': now
+        '3,3': now
       },
       exploration_percentage: 0, // Will be calculated when needed
       current_biome: 'town_square',
       biome_map_knowledge: {
         'town_square': {
-          discovered_tiles: [[4, 4]], // Starting position
+          discovered_tiles: [[3, 3]], // Starting position
           scouted_tiles: {},
           fog_hints: {},
-          current_position: [4, 4]
+          current_position: [3, 3]
         }
       }
     };
