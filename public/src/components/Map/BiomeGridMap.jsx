@@ -135,13 +135,14 @@ const BiomeGridMap = ({
       )}
 
       {/* Grid Wrapper */}
-      <div className="grid-wrapper">
+      <div className="grid-wrapper" style={{ gap: '0px' }}>
         {/* Y-axis labels */}
         <div className="y-axis-labels" style={{ 
           display: 'flex', 
           flexDirection: 'column',
           gap: '0px',
-          paddingTop: '24px'
+          paddingTop: '24px',
+          margin: 0
         }}>
           {renderYAxisLabels()}
         </div>
@@ -165,7 +166,11 @@ const BiomeGridMap = ({
               display: 'grid',
               gridTemplateColumns: `repeat(${width}, 64px)`,
               gridTemplateRows: `repeat(${height}, 64px)`,
-              gap: '0px'
+              gap: '0px',
+              lineHeight: 0,
+              fontSize: 0,
+              margin: 0,
+              padding: 0
             }}
           >
             {renderGrid()}

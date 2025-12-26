@@ -368,13 +368,15 @@
 /* Grid Layout */
 .grid-wrapper {
   display: flex;
-  gap: 8px;
+  gap: 0px;
   overflow-x: auto;
 }
 
 .grid-tiles {
   display: grid;
   gap: 0px;
+  line-height: 0;
+  font-size: 0;
 }
 
 /* Axis Labels */
@@ -406,7 +408,7 @@
   border-radius: 0px;
   cursor: pointer;
   transition: all 0.2s;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: monospace;
@@ -416,6 +418,8 @@
   padding: 0;
   margin: 0;
   overflow: hidden;
+  vertical-align: top;
+  line-height: normal;
 }
 
 /* Deep Fog State */
