@@ -229,6 +229,8 @@
 .grid-cell.undiscovered {
   background: #0a0a0a;
   cursor: not-allowed;
+  width: 64px;
+  height: 64px;
 }
 
 .grid-cell.undiscovered .fog-overlay {
@@ -242,6 +244,8 @@
   background: #1a1a1a;
   border-color: #4a4a4a;
   cursor: pointer;
+  width: 64px;
+  height: 64px;
 }
 
 .grid-cell.discovered:hover {
@@ -409,12 +413,17 @@
   font-size: 0.75rem;
   user-select: none;
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
 }
 
 /* Deep Fog State */
 .grid-cell.deep-fog {
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
   border-color: #2a2a2a;
+  width: 64px;
+  height: 64px;
 }
 
 .grid-cell.deep-fog:hover {
@@ -424,13 +433,20 @@
 
 .fog-overlay {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
   color: #333;
   pointer-events: none;
+  margin: 0;
+  padding: 0;
 }
 
 .coordinate-label {
@@ -476,6 +492,8 @@
 .grid-cell.thin-fog {
   background: linear-gradient(135deg, #1a1a2a 0%, #2a2a3a 100%);
   border: 1px solid #3a3a4a;
+  width: 64px;
+  height: 64px;
 }
 
 .grid-cell.thin-fog:hover {
@@ -514,6 +532,8 @@
 .grid-cell.revealed {
   background: #1a1a1a;
   border-color: #4a4a4a;
+  width: 64px;
+  height: 64px;
 }
 
 .grid-cell.revealed:hover {
