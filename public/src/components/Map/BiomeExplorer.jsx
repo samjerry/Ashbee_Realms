@@ -27,11 +27,14 @@ const BiomeExplorer = ({ biomeId = 'town_square', channel }) => {
       const response = await fetch(`/api/map/grid/${biomeId}?channel=${channel}`);
       const data = await response.json();
 
-      if (data.success) {
-        setGridConfig(data.grid_config);
-        setPlayerKnowledge(data.player_knowledge);
+      if (data.error) {
+        setError(data.error);
+      } else if (data.gridConfig && data.mapKnowledge) {
+        // API returns: { biome, gridConfig, grid, currentPosition, adjacentTiles, mapKnowledge }
+        setGridConfig(data.gridConfig);
+        setPlayerKnowledge(data.mapKnowledge);
       } else {
-        setError(data.error || 'Failed to load biome data');
+        setError('Failed to load biome data');
       }
     } catch (err) {
       setError('Network error loading biome data');
