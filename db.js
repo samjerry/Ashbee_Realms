@@ -697,11 +697,36 @@ async function all(sql, params = []) {
 
 /**
  * Save or update player progress
+ * Saves to both old and new schema for backward compatibility
  * @param {string} playerId - The player's unique ID
  * @param {string} channelName - The streamer's channel name (lowercase)
  * @param {object} playerData - Player data object with all fields
  */
 async function savePlayerProgress(playerId, channelName, playerData) {
+  // Check if unified schema is available
+  const useUnifiedSchema = await hasUnifiedSchema();
+  
+  if (useUnifiedSchema) {
+    // Save to unified schema (new)
+    await saveCharacterUnified(playerId, channelName, playerData);
+    
+    // Also save account-wide data to account_progress table
+    const accountData = {
+      passive_levels: playerData.passive_levels || {},
+      souls: playerData.souls || 5,
+      legacy_points: playerData.legacy_points || 0,
+      account_stats: playerData.account_stats || {},
+      total_deaths: playerData.total_deaths || 0,
+      total_kills: playerData.total_kills || 0,
+      total_gold_earned: playerData.total_gold_earned || 0,
+      total_xp_earned: playerData.total_xp_earned || 0,
+      highest_level_reached: playerData.highest_level_reached || 1,
+      total_crits: playerData.total_crits || 0
+    };
+    await saveAccountProgress(playerId, accountData);
+  }
+  
+  // Always save to old schema for backward compatibility during transition
   const table = getPlayerTable(channelName);
   const {
     name,
@@ -827,11 +852,45 @@ async function savePlayerProgress(playerId, channelName, playerData) {
 
 /**
  * Load player progress from database
+ * Tries unified schema first, falls back to old schema for backward compatibility
  * @param {string} playerId - The player's unique ID
  * @param {string} channelName - The streamer's channel name (lowercase)
  * @returns {object|null} Player data or null if not found
  */
 async function loadPlayerProgress(playerId, channelName) {
+  // Check if unified schema is available
+  const useUnifiedSchema = await hasUnifiedSchema();
+  
+  if (useUnifiedSchema) {
+    // Try loading from unified schema first
+    const characterData = await loadCharacterUnified(playerId, channelName);
+    
+    if (characterData) {
+      // Load account progress and merge it
+      const accountProgress = await loadAccountProgress(playerId);
+      
+      if (accountProgress) {
+        // Merge account-wide data into character data
+        return {
+          ...characterData,
+          passive_levels: accountProgress.passive_levels,
+          souls: accountProgress.souls,
+          legacy_points: accountProgress.legacy_points,
+          account_stats: accountProgress.account_stats,
+          total_deaths: accountProgress.total_deaths,
+          total_kills: accountProgress.total_kills,
+          total_gold_earned: accountProgress.total_gold_earned,
+          total_xp_earned: accountProgress.total_xp_earned,
+          highest_level_reached: accountProgress.highest_level_reached,
+          total_crits: accountProgress.total_crits
+        };
+      }
+      
+      return characterData;
+    }
+  }
+  
+  // Fall back to old schema
   const table = getPlayerTable(channelName);
   const result = await query(`SELECT * FROM ${table} WHERE player_id = $1`, [playerId]);
 

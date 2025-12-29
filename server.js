@@ -17,6 +17,7 @@ const { fetchUserRolesFromTwitch } = require('./utils/twitchRoleChecker');
 const security = require('./middleware/security');
 const validation = require('./middleware/validation');
 const sanitization = require('./middleware/sanitization');
+const sessionMiddleware = require('./middleware/session');
 const rateLimiter = require('./utils/rateLimiter');
 
 // Import route modules
@@ -187,6 +188,12 @@ app.use(security.attachCsrfToken);
 
 // Detect suspicious activity (after session, before routes)
 app.use(security.detectSuspiciousActivity);
+
+// Update session activity tracking for authenticated users
+app.use(sessionMiddleware.updateSessionActivity);
+
+// Ensure session metadata is set
+app.use(sessionMiddleware.ensureSessionMetadata);
 
 // Track initialization state
 let isReady = false;
