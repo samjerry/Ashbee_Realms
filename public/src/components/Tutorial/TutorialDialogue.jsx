@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, SkipForward } from 'lucide-react';
 
+// Constants
+const WORLD_NAME = 'Ashbee Realms';
+
 /**
  * TutorialDialogue Component
  * Displays NPC dialogue for tutorial with branching conversations
+ * 
+ * Note: Variable replacement happens on the frontend because:
+ * 1. Character data is available in the frontend state
+ * 2. Tutorial dialogue routes return raw nodes (not pre-formatted)
+ * 3. This allows for real-time updates without backend calls
  */
 const TutorialDialogue = ({ 
   npcId, 
@@ -91,12 +99,22 @@ const TutorialDialogue = ({
   };
 
   const replaceVariables = (text) => {
-    if (!text || !character) return text;
+    if (!text) return text;
     
-    return text
-      .replace(/\{player_name\}/g, character.name || 'traveler')
-      .replace(/\{player_level\}/g, character.level || 1)
-      .replace(/\{player_class\}/g, character.class || 'adventurer');
+    let result = text;
+    
+    // Replace character variables
+    if (character) {
+      result = result
+        .replace(/\{player_name\}/g, character.name || 'traveler')
+        .replace(/\{player_level\}/g, character.level || 1)
+        .replace(/\{player_class\}/g, character.class || 'adventurer');
+    }
+    
+    // Replace world name
+    result = result.replace(/\{world_name\}/g, WORLD_NAME);
+    
+    return result;
   };
 
   const typewriterEffect = (text) => {

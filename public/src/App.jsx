@@ -36,6 +36,8 @@ function App() {
   const [showSetup, setShowSetup] = useState(false);
   const [showTutorialDialogue, setShowTutorialDialogue] = useState(false);
   const [tutorialDialogueData, setTutorialDialogueData] = useState(null);
+  const [isInTutorial, setIsInTutorial] = useState(false); // Track if we're in tutorial flow
+  const [shouldContinueTutorial, setShouldContinueTutorial] = useState(false); // Flag to continue tutorial after character creation
 
   // Apply theme helper function
   const applyTheme = (themeId) => {
@@ -127,10 +129,12 @@ function App() {
       await fetchPlayer();
       const currentPlayer = useGameStore.getState().player;
       console.log('🔍 [App] Player fetched:', { hasPlayer: !!currentPlayer });
+      console.log('🎓 [App] Tutorial state:', { isInTutorial, isTutorial, isCreate });
       
       // Handle tutorial parameter - new players
       if (isTutorial && !currentPlayer) {
         console.log('🎓 [App] Tutorial mode detected - showing tutorial dialogue');
+        setIsInTutorial(true); // Mark that we're in tutorial flow
         setShowTutorialDialogue(true);
         // Open with character_selection dialogue using correct NPC ID
         setTutorialDialogueData({ npcId: 'tutorial_mentor', dialogueNodeId: 'character_selection' });
@@ -168,6 +172,19 @@ function App() {
     initializeGame();
   }, []);
 
+  // Handle tutorial continuation after character creation
+  useEffect(() => {
+    if (shouldContinueTutorial && player && !showCharacterCreation) {
+      console.log('🎓 [App] Continuing tutorial after character creation');
+      setShouldContinueTutorial(false); // Reset flag
+      setShowTutorialDialogue(true);
+      setTutorialDialogueData({
+        npcId: 'tutorial_mentor',
+        dialogueNodeId: 'tutorial_start'
+      });
+    }
+  }, [shouldContinueTutorial, player, showCharacterCreation]);
+
   const handleCharacterCreation = async (characterData) => {
     setIsCreatingCharacter(true);
     
@@ -195,13 +212,19 @@ function App() {
       }
 
       const data = await response.json();
-      console.log('Character created successfully:', data);
+      console.log('✅ [App] Character created successfully:', data);
       
       // Hide character creation and fetch player data
       setShowCharacterCreation(false);
       await fetchPlayer();
+      
+      // If we're in tutorial mode, set flag to continue tutorial
+      if (isInTutorial) {
+        console.log('🎓 [App] Character created during tutorial - will advance to tutorial_start');
+        setShouldContinueTutorial(true); // Set flag - useEffect will handle opening dialogue
+      }
     } catch (error) {
-      console.error('Character creation failed:', error);
+      console.error('❌ [App] Character creation failed:', error);
       alert(`Failed to create character: ${error.message}`);
     } finally {
       setIsCreatingCharacter(false);
@@ -229,7 +252,9 @@ function App() {
       case 'open_character_creation':
         // Show character creation modal
         console.log('🎬 [App] Opening character creation from dialogue');
-        setShowCharacterCreation(true);
+        setShowTutorialDialogue(false); // Close dialogue
+        setShowCharacterCreation(true); // Open character creation
+        // isInTutorial state remains true - will be checked in handleCharacterCreation
         break;
       case 'open_bestiary':
         // Switch to bestiary tab and optionally filter by target monster
