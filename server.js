@@ -742,8 +742,8 @@ app.get('/auth/broadcaster/callback',
     // Save session before redirect
     req.session.save((err) => {
       if (err) {
-        console.error('Session save error:', err);
-        return res.status(500).send('Session error');
+        console.error('❌ Failed to save session data during broadcaster authentication:', err);
+        return res.status(500).send('Failed to save session data. Please try the !setup command again.');
       }
       res.redirect('/setup');
     });
