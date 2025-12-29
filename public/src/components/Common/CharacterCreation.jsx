@@ -112,6 +112,9 @@ export default function CharacterCreation({ onComplete }) {
     const fetchClasses = async () => {
       try {
         const response = await fetch('/api/classes');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch classes: ${response.status} ${response.statusText}`);
+        }
         const data = await response.json();
         if (data.success && data.classes) {
           // Map API response to component format
