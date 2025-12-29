@@ -218,7 +218,7 @@ function App() {
       setShowCharacterCreation(false);
       await fetchPlayer();
       
-      // IF we're in tutorial mode, set flag to continue tutorial
+      // If we're in tutorial mode, set flag to continue tutorial
       if (isInTutorial) {
         console.log('🎓 [App] Character created during tutorial - will advance to tutorial_start');
         setShouldContinueTutorial(true); // Set flag - useEffect will handle opening dialogue

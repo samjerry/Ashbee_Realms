@@ -106,6 +106,8 @@ class DialogueManager {
       };
     }
 
+    // Format node with default world name (Ashbee Realms)
+    // The worldName parameter is optional and defaults to 'Ashbee Realms'
     return {
       success: true,
       npc: {
@@ -183,6 +185,8 @@ class DialogueManager {
       };
     }
 
+    // Format node with default world name (Ashbee Realms)
+    // The worldName parameter is optional and defaults to 'Ashbee Realms'
     return {
       success: true,
       conversationEnded: false,
@@ -197,6 +201,10 @@ class DialogueManager {
    * @param {Object} character - Character object
    * @param {string} worldName - World name (defaults to 'Ashbee Realms')
    * @returns {Object} Formatted node
+   * 
+   * Note: This method is used by the backend DialogueManager when serving dialogue 
+   * through the /api/dialogue routes. The tutorial system uses /api/tutorial routes
+   * which return raw nodes, so the frontend must handle variable replacement.
    */
   formatNode(node, character, worldName = 'Ashbee Realms') {
     let text = node.text || '';

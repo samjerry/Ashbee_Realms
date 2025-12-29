@@ -7,6 +7,11 @@ const WORLD_NAME = 'Ashbee Realms';
 /**
  * TutorialDialogue Component
  * Displays NPC dialogue for tutorial with branching conversations
+ * 
+ * Note: Variable replacement happens on the frontend because:
+ * 1. Character data is available in the frontend state
+ * 2. Tutorial dialogue routes return raw nodes (not pre-formatted)
+ * 3. This allows for real-time updates without backend calls
  */
 const TutorialDialogue = ({ 
   npcId, 
