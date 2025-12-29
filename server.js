@@ -252,17 +252,20 @@ app.get('/health', (req, res) => {
       try {
         // 1. Extend session table schema with custom columns
         console.log('🔧 Extending session table schema...');
-        await db.query(`
-          ALTER TABLE session ADD COLUMN IF NOT EXISTS twitch_id VARCHAR(255);
-          ALTER TABLE session ADD COLUMN IF NOT EXISTS channel VARCHAR(255);
-          CREATE INDEX IF NOT EXISTS idx_session_twitch_channel ON session(twitch_id, channel);
-        `);
+        
+        // Add columns separately for better error handling
+        await db.query('ALTER TABLE session ADD COLUMN IF NOT EXISTS twitch_id VARCHAR(255)');
+        await db.query('ALTER TABLE session ADD COLUMN IF NOT EXISTS channel VARCHAR(255)');
+        await db.query('CREATE INDEX IF NOT EXISTS idx_session_twitch_channel ON session(twitch_id, channel)');
+        
         console.log('✅ Session table schema extended');
         
         // 2. Wipe all sessions on deployment for fresh start
+        // NOTE: This is intentional behavior to prevent stale sessions across deployments
+        // All users will need to log in again after each deployment
         console.log('🗑️ Wiping session table on deployment...');
         await db.query('TRUNCATE TABLE session');
-        console.log('✅ Session table wiped - fresh sessions on deployment');
+        console.log('✅ Session table wiped - fresh sessions on deployment (all users will need to re-login)');
       } catch (sessionErr) {
         console.error('⚠️ Session setup warning:', sessionErr.message);
         // Don't fail deployment if session setup has issues
@@ -410,24 +413,26 @@ app.get('/auth/twitch/callback', async (req, res) => {
     }
     console.log('🔍 Checking character for channel:', channel);
     
-    // Store session data and cleanup old sessions BEFORE saving
+    // Store session data
     req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
     req.session.twitch_id = user.id;
     req.session.channel = channel;
     console.log('✅ User logged in:', playerId);
     
-    // Clean up old sessions for this user/channel combination
-    await cleanupOldSessions(user.id, channel, req.sessionID);
-    
     // Update session table with twitch_id and channel (PostgreSQL only)
+    // Do this BEFORE cleanup to ensure the new session exists in the database
     if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
       try {
         await db.query(
           'UPDATE session SET twitch_id = $1, channel = $2 WHERE sid = $3',
           [user.id, channel, req.sessionID]
         );
+        
+        // Clean up old sessions for this user/channel combination
+        // Done after session metadata is updated to avoid race conditions
+        await cleanupOldSessions(user.id, channel, req.sessionID);
       } catch (err) {
-        console.error('⚠️ Failed to update session metadata:', err.message);
+        console.error('⚠️ Failed to update session metadata or cleanup:', err.message);
       }
     }
     
@@ -642,25 +647,27 @@ app.get('/auth/broadcaster/callback',
       [playerId, broadcasterId, broadcasterName, access_token, refresh_token]
     );
     
-    // Store session data and cleanup old sessions
+    // Store session data
     req.session.user = { id: playerId, displayName: broadcasterName, twitchId: broadcasterId };
     req.session.isBroadcaster = true;
     req.session.broadcasterChannel = channelName;
     req.session.twitch_id = broadcasterId;
     req.session.channel = channelName;
     
-    // Clean up old sessions for this broadcaster/channel combination
-    await cleanupOldSessions(broadcasterId, channelName, req.sessionID);
-    
     // Update session table with twitch_id and channel (PostgreSQL only)
+    // Do this BEFORE cleanup to ensure the new session exists in the database
     if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
       try {
         await db.query(
           'UPDATE session SET twitch_id = $1, channel = $2 WHERE sid = $3',
           [broadcasterId, channelName, req.sessionID]
         );
+        
+        // Clean up old sessions for this broadcaster/channel combination
+        // Done after session metadata is updated to avoid race conditions
+        await cleanupOldSessions(broadcasterId, channelName, req.sessionID);
       } catch (err) {
-        console.error('⚠️ Failed to update session metadata:', err.message);
+        console.error('⚠️ Failed to update session metadata or cleanup:', err.message);
       }
     }
     
