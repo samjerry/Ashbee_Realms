@@ -612,6 +612,36 @@ async function initPostgres() {
     END $$;
   `);
   
+  // Migration: Add username column to account_progress table if it doesn't exist
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'account_progress' AND column_name = 'username'
+      ) THEN
+        ALTER TABLE account_progress ADD COLUMN username TEXT DEFAULT NULL;
+        RAISE NOTICE 'Added username column to account_progress';
+      END IF;
+    END $$;
+  `);
+  console.log('✅ account_progress.username column verified');
+
+  // Migration: Ensure tutorial_completed column exists with proper default
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'account_progress' AND column_name = 'tutorial_completed'
+      ) THEN
+        ALTER TABLE account_progress ADD COLUMN tutorial_completed BOOLEAN DEFAULT false;
+        RAISE NOTICE 'Added tutorial_completed column to account_progress';
+      END IF;
+    END $$;
+  `);
+  console.log('✅ account_progress.tutorial_completed column verified');
+  
   console.log(`✅ Tables created/verified in ${Date.now() - tableStart}ms`);
   
   const tableTime = ((Date.now() - tableStart) / 1000).toFixed(2);
@@ -1870,43 +1900,54 @@ async function saveAccountProgress(playerId, progressData) {
     total_crits: progressData.total_crits ?? existing?.total_crits ?? 0
   };
 
-  await query(`
-    INSERT INTO account_progress (
-      player_id, username, tutorial_completed, passive_levels, souls, legacy_points, account_stats,
-      total_deaths, total_kills, total_gold_earned, total_xp_earned,
-      highest_level_reached, total_crits, updated_at
-    ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
-    )
-    ON CONFLICT (player_id) DO UPDATE SET
-      username = COALESCE($2, account_progress.username),
-      tutorial_completed = $3,
-      passive_levels = $4,
-      souls = $5,
-      legacy_points = $6,
-      account_stats = $7,
-      total_deaths = $8,
-      total_kills = $9,
-      total_gold_earned = $10,
-      total_xp_earned = $11,
-      highest_level_reached = $12,
-      total_crits = $13,
-      updated_at = NOW()
-  `, [
-    playerId,
-    merged.username,
-    merged.tutorial_completed,
-    JSON.stringify(merged.passive_levels),
-    merged.souls,
-    merged.legacy_points,
-    JSON.stringify(merged.account_stats),
-    merged.total_deaths,
-    merged.total_kills,
-    merged.total_gold_earned,
-    merged.total_xp_earned,
-    merged.highest_level_reached,
-    merged.total_crits
-  ]);
+  try {
+    await query(`
+      INSERT INTO account_progress (
+        player_id, username, tutorial_completed, passive_levels, souls, legacy_points, account_stats,
+        total_deaths, total_kills, total_gold_earned, total_xp_earned,
+        highest_level_reached, total_crits, updated_at
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
+      )
+      ON CONFLICT (player_id) DO UPDATE SET
+        username = COALESCE($2, account_progress.username),
+        tutorial_completed = $3,
+        passive_levels = $4,
+        souls = $5,
+        legacy_points = $6,
+        account_stats = $7,
+        total_deaths = $8,
+        total_kills = $9,
+        total_gold_earned = $10,
+        total_xp_earned = $11,
+        highest_level_reached = $12,
+        total_crits = $13,
+        updated_at = NOW()
+    `, [
+      playerId,
+      merged.username,
+      merged.tutorial_completed,
+      JSON.stringify(merged.passive_levels),
+      merged.souls,
+      merged.legacy_points,
+      JSON.stringify(merged.account_stats),
+      merged.total_deaths,
+      merged.total_kills,
+      merged.total_gold_earned,
+      merged.total_xp_earned,
+      merged.highest_level_reached,
+      merged.total_crits
+    ]);
+  } catch (error) {
+    // Enhanced error reporting for missing columns
+    if (error.code === '42703') {
+      console.error('❌ Database schema error: Missing column in account_progress table');
+      console.error('   Run: node scripts/migrate_account_progress.js');
+      console.error('   Original error:', error.message);
+      throw new Error('Database schema is incomplete. Please run migration: node scripts/migrate_account_progress.js');
+    }
+    throw error;
+  }
 }
 
 // ===== ADMIN QUERY FUNCTIONS =====

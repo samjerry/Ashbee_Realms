@@ -292,6 +292,17 @@ app.get('/health', async (req, res) => {
       // Don't fail deployment - columns might already exist
     }
     
+    // Run account_progress migration automatically
+    console.log('🔧 Running account_progress migration...');
+    try {
+      const { migrateAccountProgress } = require('./scripts/migrate_account_progress');
+      await migrateAccountProgress();
+      console.log('✅ account_progress migration complete');
+    } catch (accountErr) {
+      console.error('⚠️ account_progress migration warning:', accountErr.message);
+      // Don't fail deployment - columns might already exist
+    }
+    
     // Session management enhancements (PostgreSQL only)
     if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
       try {
