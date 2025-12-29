@@ -20,7 +20,7 @@ async function requireAdmin(req, res, next) {
   const userRole = req.session.userRole || 'viewer';
   const username = user.displayName || user.login;
   
-  // We need a channel context - use the first available channel or require it in query
+  // Channel context is required from query or body parameters
   const channel = req.query.channel || req.body?.channel;
   
   // For admin endpoints that don't require a specific channel, we check if user is creator

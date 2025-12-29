@@ -19,6 +19,10 @@ const ROLE_COLORS = {
 };
 const DEFAULT_STARTING_LOCATION = 'Silverbrook';
 
+// Cache channel list at module level since env vars don't change at runtime
+const CHANNEL_LIST = process.env.CHANNELS ? 
+  process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
+
 /**
  * Load beta tester IDs from environment variable and Testers.txt
  * TESTERS env var should contain Twitch IDs (e.g., "32319902,12345678")
@@ -2049,11 +2053,10 @@ async function searchCharactersByName(searchTerm, channelName = null) {
 
 /**
  * Helper function to get list of configured channels
- * Cached to avoid repeated environment variable parsing
+ * Returns cached channel list from module-level constant
  */
 function getChannelList() {
-  if (!process.env.CHANNELS) return [];
-  return process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase());
+  return CHANNEL_LIST;
 }
 
 /**

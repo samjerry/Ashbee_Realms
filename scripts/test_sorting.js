@@ -149,14 +149,19 @@ async function runTests() {
         
         // Test getAllCharactersForChannel - uses legacy table
         const channelChars = await db.getAllCharactersForChannel(testChannel);
-        const charNames = channelChars.map(c => c.name);
         
-        log(`Characters in ${testChannel}:`, colors.cyan);
+        // Filter for only test characters
+        const testCharNames = ['Aaron', 'Michael', 'Zara'];
+        const testChars = channelChars.filter(c => testCharNames.includes(c.name));
+        const charNames = testChars.map(c => c.name);
+        
+        log(`Test characters in ${testChannel}:`, colors.cyan);
         charNames.forEach((name, i) => log(`  ${i + 1}. ${name}`, colors.cyan));
         
         // Check if sorted alphabetically
         const expectedCharOrder = ['Aaron', 'Michael', 'Zara'];
-        const isCharsSorted = charNames.slice(0, 3).every((name, i) => name === expectedCharOrder[i]);
+        const isCharsSorted = charNames.length === 3 && 
+                             charNames.every((name, i) => name === expectedCharOrder[i]);
         
         if (isCharsSorted) {
           log('✅ Characters correctly sorted alphabetically', colors.green);
@@ -164,7 +169,7 @@ async function runTests() {
         } else {
           log(`❌ Characters not in expected order`, colors.red);
           log(`   Expected: ${expectedCharOrder.join(', ')}`, colors.red);
-          log(`   Got: ${charNames.slice(0, 3).join(', ')}`, colors.red);
+          log(`   Got: ${charNames.join(', ')}`, colors.red);
           failed++;
         }
       } catch (error) {
