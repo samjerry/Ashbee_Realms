@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getDangerColor, getDangerBgColor } from '../../utils/asciiMapGenerator';
+import { getDangerColor, getDangerBgColor } from '../../utils/mapUtils';
 
 /**
  * GridCell Component
