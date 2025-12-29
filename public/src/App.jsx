@@ -118,11 +118,11 @@ function App() {
 
     // Initialize game by fetching player data first
     const initializeGame = async () => {
-      const success = await fetchPlayer();
+      await fetchPlayer();
       const currentPlayer = useGameStore.getState().player;
       
-      // If fetchPlayer returned false (404) or player is null, show character creation
-      if (!success || !currentPlayer) {
+      // If player is null, show character creation
+      if (!currentPlayer) {
         console.log('🆕 New player detected - showing character creation');
         setShowCharacterCreation(true);
         
