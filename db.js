@@ -1098,7 +1098,18 @@ async function createCharacter(playerId, channelName, playerName, classType, loc
  * @param {string} channelName - Channel name
  */
 async function deleteCharacter(playerId, channelName) {
+  // SECURITY: Validate channel against whitelist
+  const validChannels = getChannelList();
+  if (!validChannels.includes(channelName.toLowerCase())) {
+    throw new Error(`Invalid channel: ${channelName}`);
+  }
+  
   const tableName = getPlayerTable(channelName);
+  
+  // SECURITY: Additional validation - tableName must match expected pattern
+  if (!/^players_[a-z0-9_]+$/.test(tableName)) {
+    throw new Error(`Invalid table name format: ${tableName}`);
+  }
   
   await query(
     `DELETE FROM ${tableName} WHERE player_id = $1`,

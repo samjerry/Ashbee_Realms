@@ -30,6 +30,12 @@ async function wipeDatabase() {
     for (const channel of CHANNELS) {
       const tableName = db.getPlayerTable(channel);
       
+      // SECURITY: Validate table name format
+      if (!/^players_[a-z0-9_]+$/.test(tableName)) {
+        console.error(`❌ Invalid table name format: ${tableName}`);
+        continue;
+      }
+      
       console.log(`  - Wiping ${tableName}...`);
       await db.query(`DELETE FROM ${tableName}`);
       
@@ -87,6 +93,13 @@ async function wipeDatabase() {
     
     for (const channel of CHANNELS) {
       const tableName = db.getPlayerTable(channel);
+      
+      // SECURITY: Validate table name format
+      if (!/^players_[a-z0-9_]+$/.test(tableName)) {
+        console.error(`❌ Invalid table name format: ${tableName}`);
+        continue;
+      }
+      
       const result = await db.query(`SELECT COUNT(*) as count FROM ${tableName}`);
       
       if (parseInt(result.rows[0].count) > 0) {
