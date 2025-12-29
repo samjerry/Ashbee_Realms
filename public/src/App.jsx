@@ -116,27 +116,43 @@ function App() {
       return;
     }
 
+    // Check URL parameters FIRST
+    const urlParams = new URLSearchParams(window.location.search);
+    const isTutorial = urlParams.get('tutorial') === 'true';
+    const isCreate = urlParams.get('create') === 'true';
+    console.log('🔍 [App] URL parameters parsed:', { isTutorial, isCreate, url: window.location.href });
+
     // Initialize game by fetching player data first
     const initializeGame = async () => {
       await fetchPlayer();
       const currentPlayer = useGameStore.getState().player;
+      console.log('🔍 [App] Player fetched:', { hasPlayer: !!currentPlayer });
       
-      // If player is null, show character creation
-      if (!currentPlayer) {
-        console.log('🆕 New player detected - showing character creation');
+      // Handle tutorial parameter - new players
+      if (isTutorial && !currentPlayer) {
+        console.log('🎓 [App] Tutorial mode detected - showing tutorial dialogue');
+        setShowTutorialDialogue(true);
+        // Open with character_selection dialogue
+        setTutorialDialogueData({ npcId: 'eldrin', dialogueNodeId: 'character_selection' });
+        return;
+      }
+      
+      // Handle create parameter - returning players
+      if (isCreate && !currentPlayer) {
+        console.log('📝 [App] Create mode detected - showing character creation (tutorial skipped)');
         setShowCharacterCreation(true);
-        
-        // Remove tutorial parameter from URL if present
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('tutorial')) {
-          const newUrl = window.location.pathname + 
-            (urlParams.get('channel') ? `?channel=${urlParams.get('channel')}` : '');
-          window.history.replaceState({}, '', newUrl);
-        }
+        return;
+      }
+      
+      // If player is null and no URL params, show character creation as fallback
+      if (!currentPlayer) {
+        console.log('🆕 [App] New player detected (no params) - showing character creation');
+        setShowCharacterCreation(true);
         return;
       }
       
       // Character exists - setup sockets and fetch world name
+      console.log('✅ [App] Character exists - setting up game');
       setupSocketListeners();
       
       try {
@@ -193,11 +209,13 @@ function App() {
   };
 
   const handleOpenTutorialDialogue = (npcId, dialogueNodeId) => {
+    console.log('📖 [App] Opening tutorial dialogue:', { npcId, dialogueNodeId });
     setTutorialDialogueData({ npcId, dialogueNodeId });
     setShowTutorialDialogue(true);
   };
 
   const handleCloseTutorialDialogue = () => {
+    console.log('📖 [App] Closing tutorial dialogue');
     setShowTutorialDialogue(false);
     setTutorialDialogueData(null);
     // Refresh player data to update tutorial progress
@@ -205,24 +223,29 @@ function App() {
   };
 
   const handleDialogueAction = (action, target) => {
+    console.log('🎬 [App] Dialogue action triggered:', { action, target });
     // Handle UI actions triggered by dialogue
     switch (action) {
       case 'open_character_creation':
         // Show character creation modal
+        console.log('🎬 [App] Opening character creation from dialogue');
         setShowCharacterCreation(true);
         break;
       case 'open_bestiary':
         // Switch to bestiary tab and optionally filter by target monster
+        console.log('🎬 [App] Opening bestiary from dialogue');
         useGameStore.getState().setActiveTab('bestiary');
         break;
       case 'open_character_sheet':
+        console.log('🎬 [App] Opening character sheet from dialogue');
         useGameStore.getState().setActiveTab('character');
         break;
       case 'open_quest_log':
+        console.log('🎬 [App] Opening quest log from dialogue');
         useGameStore.getState().setActiveTab('quests');
         break;
       default:
-        console.log('Dialogue action:', action, target);
+        console.log('🎬 [App] Unknown dialogue action:', action, target);
     }
   };
 
