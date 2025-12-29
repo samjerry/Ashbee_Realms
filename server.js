@@ -735,17 +735,18 @@ app.get('/auth/broadcaster/callback',
       }
     }
     
-    // Check if game state has already been set up
-    const gameState = await db.getGameState(channelName);
+    // IMPORTANT: Always redirect to /setup after broadcaster OAuth
+    // The setup page handles both new setup and editing existing settings
+    console.log(`✅ Broadcaster ${broadcasterName} authenticated, redirecting to setup`);
     
-    // If game state exists (has been saved at least once), go to adventure; otherwise go to setup
-    if (gameState && gameState.last_updated) {
-      console.log(`✅ Game state already configured for ${channelName}, redirecting to adventure`);
-      res.redirect('/adventure?broadcaster=authenticated');
-    } else {
-      console.log(`📝 No game state found for ${channelName}, redirecting to setup`);
+    // Save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.status(500).send('Session error');
+      }
       res.redirect('/setup');
-    }
+    });
   } catch (err) {
     console.error('❌ Broadcaster OAuth callback error:', err.response?.data || err.message);
     res.status(500).send(`Broadcaster authentication failed: ${err.response?.data?.message || err.message}`);
@@ -931,7 +932,13 @@ app.use('/api/auth', authRoutes);
 
 app.get('/api/me', (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
-  res.json({ user: req.session.user });
+  res.json({ 
+    user: {
+      ...req.session.user,
+      isBroadcaster: req.session.isBroadcaster || false,
+      broadcasterChannel: req.session.broadcasterChannel || null
+    }
+  });
 });
 
 // ==================== ROOT ROUTES ====================
@@ -951,14 +958,28 @@ app.get('/', (req, res) => {
 
 // Setup route - broadcaster game setup (requires broadcaster auth)
 app.get('/setup', async (req, res) => {
+  console.log('📋 /setup route accessed', {
+    hasUser: !!req.session.user,
+    isBroadcaster: req.session.isBroadcaster,
+    channel: req.session.broadcasterChannel,
+    sessionID: req.sessionID
+  });
+  
+  // Check if user is logged in
   if (!req.session.user) {
+    console.log('❌ No user in session, redirecting to login');
+    req.session.returnTo = '/setup';
     return res.redirect('/');
   }
   
+  // IMPORTANT: Broadcasters should ALWAYS be able to access setup
   // Only broadcasters can access setup
   if (!req.session.isBroadcaster) {
+    console.log(`⚠️ Non-broadcaster ${req.session.user.displayName} attempted to access /setup`);
     return res.redirect('/adventure');
   }
+  
+  console.log(`✅ Serving setup page to broadcaster ${req.session.user.displayName}`);
   
   // Serve the setup page (same React app, will show setup component based on route)
   if (process.env.NODE_ENV === 'production') {
