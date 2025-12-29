@@ -23,7 +23,7 @@
           "next": "world_lore"
         },
         {
-          "text": "I've adventured before. Can we skip the basics?",
+          "text": "I've adventured before. Can we skip the basics? (Skip Tutorial.)",
           "next": "skip_tutorial_confirm"
         },
         {
