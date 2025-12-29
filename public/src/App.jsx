@@ -14,7 +14,7 @@ import BestiaryView from './components/Bestiary/BestiaryView';
 import SettingsModal from './components/Settings/SettingsModal';
 import LoadingScreen from './components/Layout/LoadingScreen';
 import CharacterCreation from './components/Common/CharacterCreation';
-import BroadcasterSetup from './components/Broadcaster/BroadcasterSetup';
+import SetupView from './components/Setup/SetupView';
 
 function App() {
   const { 
@@ -186,7 +186,7 @@ function App() {
 
   // Show broadcaster setup screen if on /setup route
   if (showSetup) {
-    return <BroadcasterSetup />;
+    return <SetupView />;
   }
 
   // Show character creation screen for new users

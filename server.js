@@ -49,6 +49,7 @@ const leaderboardsRoutes = require('./routes/leaderboards.routes');
 const tutorialRoutes = require('./routes/tutorial.routes');
 const mapRoutes = require('./routes/map.routes');
 const adminRoutes = require('./routes/admin.routes');
+const setupRoutes = require('./routes/setup.routes');
 
 // Store interval IDs for cleanup on shutdown
 const intervals = [];
@@ -737,8 +738,8 @@ app.get('/auth/broadcaster/callback',
     // Check if game state has already been set up
     const gameState = await db.getGameState(channelName);
     
-    // If game state exists, go to adventure; otherwise go to setup
-    if (gameState) {
+    // If game state exists (has been saved at least once), go to adventure; otherwise go to setup
+    if (gameState && gameState.last_updated) {
       console.log(`✅ Game state already configured for ${channelName}, redirecting to adventure`);
       res.redirect('/adventure?broadcaster=authenticated');
     } else {
@@ -797,15 +798,7 @@ app.get('/api/game-state', async (req, res) => {
   if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
 
   try {
-    let gameState = await db.getGameState(channelName.toLowerCase());
-    
-    // If no game state exists, return defaults
-    if (!gameState) {
-      gameState = {
-        channel_name: channelName.toLowerCase(),
-        ...DEFAULT_GAME_STATE
-      };
-    }
+    const gameState = await db.getGameState(channelName.toLowerCase());
     
     res.json({ gameState });
   } catch (error) {
@@ -855,8 +848,8 @@ app.post('/api/game-state',
   }
 
   try {
-    // Get current game state or use defaults
-    let currentState = await db.getGameState(channel.toLowerCase()) || DEFAULT_GAME_STATE;
+    // Get current game state (returns defaults if not set)
+    const currentState = await db.getGameState(channel.toLowerCase());
 
     // Update only provided fields
     const updatedState = {
@@ -1063,6 +1056,7 @@ app.use('/api/leaderboards', leaderboardsRoutes);
 app.use('/api/tutorial', tutorialRoutes);
 app.use('/api/map', mapRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/setup', setupRoutes);
 console.log('✅ Route modules mounted and ready (WebSocket initialized)');
 // ==================== END ROUTE MODULES ====================
 

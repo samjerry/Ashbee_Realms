@@ -1646,6 +1646,12 @@ async function getPlayerProgress(playerId, channelName) {
  * @param {string} channelName - Channel name
  * @returns {Object|null} Game state object or null if not found
  */
+/**
+ * Get game state for a channel
+ * Returns all settings or default values if not set
+ * @param {string} channelName - Channel name
+ * @returns {Object} Game state with defaults
+ */
 async function getGameState(channelName) {
   try {
     const result = await query(
@@ -1657,8 +1663,19 @@ async function getGameState(channelName) {
       return result.rows[0];
     }
     
-    // If no game state exists, create default one
-    return null;
+    // Return defaults if no state exists
+    return {
+      channel_name: channelName.toLowerCase(),
+      weather: 'Clear',
+      time_of_day: 'Day',
+      season: 'Spring',
+      game_mode: 'softcore',
+      world_name: 'Ashbee Realms',
+      active_event: null,
+      maintenance_mode: false,
+      last_broadcast: null,
+      last_updated: null
+    };
   } catch (error) {
     console.error('Error getting game state:', error);
     throw error;
@@ -1667,28 +1684,53 @@ async function getGameState(channelName) {
 
 /**
  * Set/update game state for a channel
+ * Uses UPSERT to update existing or create new
  * @param {string} channelName - Channel name
- * @param {Object} gameState - Game state object with weather, time_of_day, season, game_mode
+ * @param {Object} settings - Game settings object
  * @returns {Object} Updated game state
  */
-async function setGameState(channelName, gameState) {
+async function setGameState(channelName, settings) {
   try {
-    const { weather, time_of_day, season, game_mode } = gameState;
+    const {
+      weather = 'Clear',
+      time_of_day = 'Day',
+      season = 'Spring',
+      game_mode = 'softcore',
+      world_name = 'Ashbee Realms',
+      active_event = null,
+      maintenance_mode = false
+    } = settings;
     
     const result = await query(
-      `INSERT INTO game_state (channel_name, weather, time_of_day, season, game_mode, last_updated)
-       VALUES ($1, $2, $3, $4, $5, NOW())
-       ON CONFLICT (channel_name) 
-       DO UPDATE SET 
-         weather = $2,
-         time_of_day = $3,
-         season = $4,
-         game_mode = $5,
-         last_updated = NOW()
-       RETURNING *`,
-      [channelName.toLowerCase(), weather, time_of_day, season, game_mode]
+      `INSERT INTO game_state (
+        channel_name, weather, time_of_day, season, game_mode, 
+        world_name, active_event, maintenance_mode, last_updated
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
+      ON CONFLICT (channel_name) 
+      DO UPDATE SET
+        weather = $2,
+        time_of_day = $3,
+        season = $4,
+        game_mode = $5,
+        world_name = $6,
+        active_event = $7,
+        maintenance_mode = $8,
+        last_updated = NOW()
+      RETURNING *`,
+      [
+        channelName.toLowerCase(),
+        weather,
+        time_of_day,
+        season,
+        game_mode,
+        world_name,
+        active_event,
+        maintenance_mode
+      ]
     );
     
+    console.log(`✅ Game state saved for ${channelName}:`, settings);
     return result.rows[0];
   } catch (error) {
     console.error('Error setting game state:', error);
