@@ -693,6 +693,13 @@ async function syncTesterRoles() {
 
 // Helper function to get channel-specific player table name
 // SECURITY: Table name is sanitized to prevent SQL injection
+/**
+ * Get sanitized table name for a channel's player data
+ * @deprecated This function is deprecated. Use the unified 'characters' table instead.
+ * This function is kept only for backward compatibility with migration scripts.
+ * @param {string} channelName - Channel name
+ * @returns {string} Sanitized table name
+ */
 function getPlayerTable(channelName) {
   if (!channelName) {
     throw new Error('Channel name is required');
@@ -1988,18 +1995,10 @@ async function analyzeDatabase() {
   console.log('📊 Analyzing database tables...');
   
   try {
-    // Analyze global tables
+    // Analyze unified schema tables
     await query('ANALYZE players');
     await query('ANALYZE characters');
     await query('ANALYZE account_progress');
-    
-    // Analyze channel tables
-    const channels = getChannelList();
-    
-    for (const channel of channels) {
-      const tableName = getPlayerTable(channel);
-      await query(`ANALYZE ${tableName}`);
-    }
     
     console.log('✅ Database analysis complete');
   } catch (error) {
