@@ -136,6 +136,10 @@ const useGameStore = create((set, get) => ({
       } catch (err) {
         console.error('Failed to auto-fetch inventory on player load:', err);
       }
+      
+      // Note: World name is now handled by backend dialogue processing
+      // The /api/tutorial/dialogue/:npcId/:nodeId route fetches and replaces {world_name}
+      // so frontend doesn't need to fetch it separately
 
       return true; // Indicate success
     } catch (error) {
