@@ -499,7 +499,8 @@ router.post('/create',
       console.error('Error creating character:', error);
       
       // Provide helpful error messages based on error type
-      if (error.message.includes('column') && error.message.includes('does not exist')) {
+      // PostgreSQL error code 42703 = undefined_column
+      if (error.code === '42703' || (error.message && error.message.includes('column') && error.message.includes('does not exist'))) {
         return res.status(500).json({ 
           error: 'Database schema is missing required columns. The server administrator needs to run database migrations. Please try again later or contact support.',
           details: process.env.NODE_ENV === 'development' ? error.message : undefined
