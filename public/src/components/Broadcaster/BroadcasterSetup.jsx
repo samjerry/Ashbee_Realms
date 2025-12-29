@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Cloud, Sun, Snowflake, Leaf, Skull, Heart } from 'lucide-react';
+import WorldNameSetup from './WorldNameSetup';
 
 const BroadcasterSetup = () => {
   const [channel, setChannel] = useState('');
@@ -194,6 +195,11 @@ const BroadcasterSetup = () => {
                 );
               })}
             </div>
+          </div>
+
+          {/* World Name Setup */}
+          <div>
+            <WorldNameSetup channel={channel} />
           </div>
 
           {/* Game Mode Selection */}

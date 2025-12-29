@@ -876,6 +876,62 @@ app.post('/api/game-state',
   }
 });
 
+/**
+ * GET /api/setup/world-name
+ * Get world name for a channel
+ */
+app.get('/api/setup/world-name', async (req, res) => {
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+  
+  try {
+    const worldName = await db.getWorldName(channel.toLowerCase());
+    res.json({ 
+      success: true, 
+      worldName: worldName
+    });
+  } catch (error) {
+    console.error('Error getting world name:', error);
+    res.status(500).json({ error: 'Failed to get world name' });
+  }
+});
+
+/**
+ * POST /api/setup/world-name
+ * Set world name for a channel (broadcaster only)
+ */
+app.post('/api/setup/world-name',
+  rateLimiter.middleware('strict'),
+  async (req, res) => {
+  const user = req.session.user;
+  if (!user || !req.session.isBroadcaster) {
+    return res.status(403).json({ error: 'Only broadcasters can set world name' });
+  }
+  
+  const { worldName } = req.body;
+  const channel = req.session.broadcasterChannel;
+  
+  if (!worldName || worldName.trim().length === 0) {
+    return res.status(400).json({ error: 'World name cannot be empty' });
+  }
+  
+  // Validate world name (alphanumeric, spaces, basic punctuation)
+  const sanitizedWorldName = worldName.trim().substring(0, 50); // Max 50 chars
+  
+  // Check for valid characters only (alphanumeric, spaces, hyphens, underscores, apostrophes, and basic punctuation)
+  if (!/^[a-zA-Z0-9\s\-_'.,!?]+$/.test(sanitizedWorldName)) {
+    return res.status(400).json({ error: 'World name contains invalid characters. Only letters, numbers, spaces, and basic punctuation allowed.' });
+  }
+  
+  try {
+    await db.setWorldName(channel, sanitizedWorldName);
+    res.json({ success: true, worldName: sanitizedWorldName });
+  } catch (error) {
+    console.error('Error setting world name:', error);
+    res.status(500).json({ error: 'Failed to set world name' });
+  }
+});
+
 // ==================== API ROUTES (Pre-WebSocket) ====================
 // Mount auth routes early (before WebSocket) since they don't emit events
 app.use('/api/auth', authRoutes);

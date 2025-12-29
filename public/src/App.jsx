@@ -24,6 +24,7 @@ function App() {
     showDialogue, 
     showSettings,
     fetchPlayer,
+    fetchWorldName,
     setupSocketListeners 
   } = useGameStore();
 
@@ -125,6 +126,16 @@ function App() {
         const success = await fetchPlayer();
         if (success) {
           setupSocketListeners();
+          
+          // Fetch world name for the channel
+          try {
+            const channelResponse = await fetch('/api/player/channel');
+            const channelData = await channelResponse.json();
+            const channel = channelData.channel || 'default';
+            await fetchWorldName(channel);
+          } catch (err) {
+            console.error('Failed to fetch world name:', err);
+          }
         } else {
           console.error('[App] Failed to fetch player data. WebSocket setup skipped.');
         }

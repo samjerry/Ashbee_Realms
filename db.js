@@ -594,6 +594,19 @@ async function initPostgres() {
     END $$;
   `);
   
+  // Migration: Add world_name column to game_state table if it doesn't exist
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'game_state' AND column_name = 'world_name'
+      ) THEN
+        ALTER TABLE game_state ADD COLUMN world_name TEXT DEFAULT 'Ashbee Realms';
+      END IF;
+    END $$;
+  `);
+  
   console.log(`✅ Tables created/verified in ${Date.now() - tableStart}ms`);
   
   const tableTime = ((Date.now() - tableStart) / 1000).toFixed(2);
@@ -1683,6 +1696,32 @@ async function setGameState(channelName, gameState) {
   }
 }
 
+/**
+ * Set world name for a channel
+ * @param {string} channelName - Channel name
+ * @param {string} worldName - Custom world name
+ */
+async function setWorldName(channelName, worldName) {
+  await query(
+    `INSERT INTO game_state (channel_name, world_name, last_updated)
+     VALUES ($1, $2, NOW())
+     ON CONFLICT (channel_name) 
+     DO UPDATE SET world_name = $2, last_updated = NOW()`,
+    [channelName.toLowerCase(), worldName]
+  );
+  console.log(`🌍 World name set to "${worldName}" for ${channelName}`);
+}
+
+/**
+ * Get world name for a channel
+ * @param {string} channelName - Channel name
+ * @returns {string} World name or default
+ */
+async function getWorldName(channelName) {
+  const gameState = await getGameState(channelName.toLowerCase());
+  return gameState?.world_name || 'Ashbee Realms';
+}
+
 // ===== UNIFIED SCHEMA HELPER FUNCTIONS =====
 
 /**
@@ -2123,6 +2162,8 @@ module.exports = {
   // Game state management
   getGameState,
   setGameState,
+  setWorldName,
+  getWorldName,
   // Unified schema functions (NEW)
   hasUnifiedSchema,
   loadCharacterUnified,

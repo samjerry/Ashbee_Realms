@@ -5,15 +5,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, ChevronLeft } from 'lucide-react';
+import useGameStore from '../../store/gameStore';
 
 export default function TutorialOverlay({ quest, onComplete, onSkip }) {
+  const worldName = useGameStore((state) => state.worldName);
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
   // Tutorial steps for "The Awakening" quest
   const tutorialSteps = [
     {
-      title: "Welcome to Ashbee Realms!",
+      title: `Welcome to ${worldName}!`,
       description: "This tutorial will teach you the basics of the game. You can skip it at any time, but we recommend completing it to understand all features.",
       highlight: null,
       action: "Click Next to continue"

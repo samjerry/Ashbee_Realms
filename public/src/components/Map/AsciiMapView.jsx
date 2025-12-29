@@ -1,8 +1,10 @@
 import React from 'react';
 import { MapPin, Lock } from 'lucide-react';
 import { generateBiomeAscii, getDangerColor, getBiomeCoordinates } from '../../utils/asciiMapGenerator';
+import useGameStore from '../../store/gameStore';
 
 const AsciiMapView = ({ mapKnowledge, biomes, currentLocation, onSelectLocation }) => {
+  const worldName = useGameStore((state) => state.worldName);
   const discoveredBiomes = biomes.filter(b => 
     mapKnowledge?.discovered_regions?.includes(b.id)
   );
@@ -185,7 +187,7 @@ const AsciiMapView = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
             No Regions Discovered
           </h3>
           <p className="text-gray-400">
-            Begin your journey to explore and map the world of Ashbee Realms!
+            Begin your journey to explore and map the world of {worldName}!
           </p>
         </div>
       )}
