@@ -18,6 +18,9 @@ const TutorialDialogue = ({
   onAction,
   onComplete 
 }) => {
+  // Get world name from game store for fallback use
+  const { worldName } = useGameStore();
+  
   const [currentNode, setCurrentNode] = useState(null);
   const [npcData, setNpcData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -111,8 +114,8 @@ const TutorialDialogue = ({
     if (result.includes('{')) {
       console.warn('⚠️ Variables found in dialogue text - backend should have replaced these');
       
-      // Get world name from game store as fallback
-      const worldName = useGameStore.getState().worldName || 'Ashbee Realms';
+      // Use world name from hook (already extracted at component level)
+      const fallbackWorldName = worldName || 'Ashbee Realms';
       
       if (character) {
         result = result
@@ -121,7 +124,7 @@ const TutorialDialogue = ({
           .replace(/\{player_class\}/g, character.class || 'adventurer');
       }
       
-      result = result.replace(/\{world_name\}/g, worldName);
+      result = result.replace(/\{world_name\}/g, fallbackWorldName);
     }
     
     return result;
