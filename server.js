@@ -158,6 +158,30 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'))
 
 app.use(session(sessionConfig));
 
+/**
+ * Helper function to clean up old sessions for a user/channel combination
+ * Deletes all sessions for the same twitch_id and channel except the current one
+ * @param {string} twitchId - User's Twitch ID
+ * @param {string} channel - Channel name
+ * @param {string} currentSessionId - Current session ID to preserve
+ */
+async function cleanupOldSessions(twitchId, channel, currentSessionId) {
+  if (!process.env.DATABASE_URL || !process.env.DATABASE_URL.startsWith('postgres')) {
+    return; // Only for PostgreSQL
+  }
+  
+  try {
+    await db.query(
+      'DELETE FROM session WHERE twitch_id = $1 AND channel = $2 AND sid != $3',
+      [twitchId, channel, currentSessionId]
+    );
+    console.log(`🗑️ Cleaned up old sessions for user ${twitchId} on channel ${channel}`);
+  } catch (err) {
+    console.error('⚠️ Failed to cleanup old sessions:', err.message);
+    // Don't throw - session cleanup failure shouldn't break login
+  }
+}
+
 // Attach CSRF token to session
 app.use(security.attachCsrfToken);
 
@@ -222,6 +246,29 @@ app.get('/health', (req, res) => {
     
     clearTimeout(initTimeout); // Clear timeout on success
     console.log(`✅ Database initialized successfully in ${dbInitTime}s`);
+    
+    // Session management enhancements (PostgreSQL only)
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
+      try {
+        // 1. Extend session table schema with custom columns
+        console.log('🔧 Extending session table schema...');
+        await db.query(`
+          ALTER TABLE session ADD COLUMN IF NOT EXISTS twitch_id VARCHAR(255);
+          ALTER TABLE session ADD COLUMN IF NOT EXISTS channel VARCHAR(255);
+          CREATE INDEX IF NOT EXISTS idx_session_twitch_channel ON session(twitch_id, channel);
+        `);
+        console.log('✅ Session table schema extended');
+        
+        // 2. Wipe all sessions on deployment for fresh start
+        console.log('🗑️ Wiping session table on deployment...');
+        await db.query('TRUNCATE TABLE session');
+        console.log('✅ Session table wiped - fresh sessions on deployment');
+      } catch (sessionErr) {
+        console.error('⚠️ Session setup warning:', sessionErr.message);
+        // Don't fail deployment if session setup has issues
+      }
+    }
+    
     isReady = true;
   } catch (err) {
     clearTimeout(initTimeout); // Clear timeout on error
@@ -355,9 +402,6 @@ app.get('/auth/twitch/callback', async (req, res) => {
       [playerId, user.id, user.display_name, access_token, refresh_token]
     );
 
-    req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
-    console.log('✅ User logged in:', playerId);
-    
     // Get the channel from session (set during /auth/twitch) or fall back to env
     let channel = req.session.oauthChannel;
     if (!channel) {
@@ -365,6 +409,27 @@ app.get('/auth/twitch/callback', async (req, res) => {
       channel = CHANNELS[0] || 'default';
     }
     console.log('🔍 Checking character for channel:', channel);
+    
+    // Store session data and cleanup old sessions BEFORE saving
+    req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
+    req.session.twitch_id = user.id;
+    req.session.channel = channel;
+    console.log('✅ User logged in:', playerId);
+    
+    // Clean up old sessions for this user/channel combination
+    await cleanupOldSessions(user.id, channel, req.sessionID);
+    
+    // Update session table with twitch_id and channel (PostgreSQL only)
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
+      try {
+        await db.query(
+          'UPDATE session SET twitch_id = $1, channel = $2 WHERE sid = $3',
+          [user.id, channel, req.sessionID]
+        );
+      } catch (err) {
+        console.error('⚠️ Failed to update session metadata:', err.message);
+      }
+    }
     
     // Clear the oauthChannel from session now that we've used it
     delete req.session.oauthChannel;
@@ -577,9 +642,27 @@ app.get('/auth/broadcaster/callback',
       [playerId, broadcasterId, broadcasterName, access_token, refresh_token]
     );
     
+    // Store session data and cleanup old sessions
     req.session.user = { id: playerId, displayName: broadcasterName, twitchId: broadcasterId };
     req.session.isBroadcaster = true;
     req.session.broadcasterChannel = channelName;
+    req.session.twitch_id = broadcasterId;
+    req.session.channel = channelName;
+    
+    // Clean up old sessions for this broadcaster/channel combination
+    await cleanupOldSessions(broadcasterId, channelName, req.sessionID);
+    
+    // Update session table with twitch_id and channel (PostgreSQL only)
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
+      try {
+        await db.query(
+          'UPDATE session SET twitch_id = $1, channel = $2 WHERE sid = $3',
+          [broadcasterId, channelName, req.sessionID]
+        );
+      } catch (err) {
+        console.error('⚠️ Failed to update session metadata:', err.message);
+      }
+    }
     
     // Check if game state has already been set up
     const gameState = await db.getGameState(channelName);
