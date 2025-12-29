@@ -542,33 +542,44 @@ app.get('/auth/twitch/callback', async (req, res) => {
     
     // Check if player has a character in this channel
     try {
+      console.log(`🔍 [OAuth] Checking character for player: ${user.display_name} (ID: ${playerId}), channel: ${channel}`);
       const existingCharacter = await db.loadPlayerProgress(playerId, channel);
       
       // Character needs creation if: no record exists, no type/class set, or type is 'Unknown'
       const needsCharacterCreation = !existingCharacter || !existingCharacter.type || existingCharacter.type === 'Unknown';
+      console.log(`🔍 [OAuth] Character exists: ${!!existingCharacter}, needs creation: ${needsCharacterCreation}`);
+      if (existingCharacter) {
+        console.log(`🔍 [OAuth] Character type: ${existingCharacter.type}`);
+      }
       
       if (needsCharacterCreation) {
         // Check if player has completed tutorial before
         const accountProgress = await db.loadAccountProgress(playerId);
         const hasCompletedTutorial = accountProgress && accountProgress.tutorial_completed === true;
+        console.log(`🔍 [OAuth] Account progress loaded: ${!!accountProgress}`);
+        console.log(`🔍 [OAuth] tutorial_completed flag: ${hasCompletedTutorial}`);
         
         if (hasCompletedTutorial) {
           // Player has done tutorial before, send directly to character creation
-          console.log(`📝 Returning player ${user.display_name} - redirecting to character creation (tutorial already completed)`);
+          console.log(`📝 [OAuth] Returning player ${user.display_name} - redirecting to character creation (tutorial already completed)`);
+          console.log(`🔀 [OAuth] Redirect URL: /adventure?create=true&channel=${encodeURIComponent(channel)}`);
           return res.redirect(`/adventure?create=true&channel=${encodeURIComponent(channel)}`);
         } else {
           // New player - send to tutorial which includes character creation
-          console.log(`📝 New player ${user.display_name} - redirecting to tutorial`);
+          console.log(`📝 [OAuth] New player ${user.display_name} - redirecting to tutorial`);
+          console.log(`🔀 [OAuth] Redirect URL: /adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
           return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
         }
       } else {
         // Character exists and is complete - redirect to main game
-        console.log(`🎮 Existing player ${user.display_name} (${existingCharacter.type}) - redirecting to game`);
+        console.log(`🎮 [OAuth] Existing player ${user.display_name} (${existingCharacter.type}) - redirecting to game`);
+        console.log(`🔀 [OAuth] Redirect URL: /adventure?channel=${encodeURIComponent(channel)}`);
         return res.redirect(`/adventure?channel=${encodeURIComponent(channel)}`);
       }
     } catch (err) {
-      console.error('Error checking character:', err);
+      console.error('❌ [OAuth] Error checking character:', err);
       // On error, redirect to character creation to be safe
+      console.log(`🔀 [OAuth] Error fallback - redirecting to: /adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
       return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
     }
   }catch(err){
