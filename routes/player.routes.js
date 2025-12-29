@@ -319,12 +319,15 @@ router.post('/create',
     const rawCharacterName = user.displayName || user.display_name || 'Adventurer';
     const characterName = sanitization.sanitizeCharacterName(rawCharacterName);
     
-    console.log('📝 Character creation request:', {
-      userId: user.id,
-      channel: channelName,
-      classType,
-      timestamp: new Date().toISOString()
-    });
+    // Log creation request (development only)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('📝 Character creation request:', {
+        userId: user.id,
+        channel: channelName,
+        classType,
+        timestamp: new Date().toISOString()
+      });
+    }
     
     // Validate nameColor if provided
     let validatedColor = null;
@@ -505,7 +508,12 @@ router.delete('/character/force',
       // Delete character
       await db.deleteCharacter(user.id, channelName);
       
-      console.log(`🗑️ Force deleted character for ${user.id} in ${channelName}`);
+      // Log deletion (sanitized for production)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`🗑️ Force deleted character for ${user.id} in ${channelName}`);
+      } else {
+        console.log(`🗑️ Force deleted character in ${channelName}`);
+      }
       
       res.json({ 
         success: true, 

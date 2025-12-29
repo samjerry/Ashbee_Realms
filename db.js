@@ -1110,16 +1110,25 @@ async function deleteCharacter(playerId, channelName) {
   const tableName = getPlayerTable(channelName);
   
   // SECURITY: Additional validation - tableName must match expected pattern
+  // Note: Table names cannot be parameterized in SQL (PostgreSQL limitation)
+  // We use defense-in-depth: sanitization + whitelist + regex validation
   if (!VALID_TABLE_NAME_PATTERN.test(tableName)) {
     throw new Error(`Invalid table name format: ${tableName}`);
   }
   
+  // Using string interpolation for table name is required (SQL limitation)
+  // Player ID is properly parameterized ($1) to prevent SQL injection
   await query(
     `DELETE FROM ${tableName} WHERE player_id = $1`,
     [playerId]
   );
   
-  console.log(`🗑️ Deleted character for ${playerId} in ${channelName}`);
+  // Log deletion (sanitized for production)
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`🗑️ Deleted character for ${playerId} in ${channelName}`);
+  } else {
+    console.log(`🗑️ Deleted character in ${channelName}`);
+  }
 }
 
 /**
