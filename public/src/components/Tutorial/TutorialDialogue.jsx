@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, SkipForward } from 'lucide-react';
 
+// Constants
+const WORLD_NAME = 'Ashbee Realms';
+
 /**
  * TutorialDialogue Component
  * Displays NPC dialogue for tutorial with branching conversations
@@ -93,9 +96,6 @@ const TutorialDialogue = ({
   const replaceVariables = (text) => {
     if (!text) return text;
     
-    // World name - use hardcoded default for now
-    const worldName = 'Ashbee Realms';
-    
     let result = text;
     
     // Replace character variables
@@ -107,7 +107,7 @@ const TutorialDialogue = ({
     }
     
     // Replace world name
-    result = result.replace(/\{world_name\}/g, worldName);
+    result = result.replace(/\{world_name\}/g, WORLD_NAME);
     
     return result;
   };

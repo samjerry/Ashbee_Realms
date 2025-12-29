@@ -37,6 +37,7 @@ function App() {
   const [showTutorialDialogue, setShowTutorialDialogue] = useState(false);
   const [tutorialDialogueData, setTutorialDialogueData] = useState(null);
   const [isInTutorial, setIsInTutorial] = useState(false); // Track if we're in tutorial flow
+  const [shouldContinueTutorial, setShouldContinueTutorial] = useState(false); // Flag to continue tutorial after character creation
 
   // Apply theme helper function
   const applyTheme = (themeId) => {
@@ -171,6 +172,19 @@ function App() {
     initializeGame();
   }, []);
 
+  // Handle tutorial continuation after character creation
+  useEffect(() => {
+    if (shouldContinueTutorial && player && !showCharacterCreation) {
+      console.log('🎓 [App] Continuing tutorial after character creation');
+      setShouldContinueTutorial(false); // Reset flag
+      setShowTutorialDialogue(true);
+      setTutorialDialogueData({
+        npcId: 'tutorial_mentor',
+        dialogueNodeId: 'tutorial_start'
+      });
+    }
+  }, [shouldContinueTutorial, player, showCharacterCreation]);
+
   const handleCharacterCreation = async (characterData) => {
     setIsCreatingCharacter(true);
     
@@ -204,18 +218,10 @@ function App() {
       setShowCharacterCreation(false);
       await fetchPlayer();
       
-      // IF we're in tutorial mode, advance to next dialogue step
+      // IF we're in tutorial mode, set flag to continue tutorial
       if (isInTutorial) {
-        console.log('🎓 [App] Character created during tutorial - advancing to tutorial_start');
-        
-        // Wait a moment for state to update
-        setTimeout(() => {
-          setShowTutorialDialogue(true);
-          setTutorialDialogueData({
-            npcId: 'tutorial_mentor',
-            dialogueNodeId: 'tutorial_start' // Next step in tutorial
-          });
-        }, 500);
+        console.log('🎓 [App] Character created during tutorial - will advance to tutorial_start');
+        setShouldContinueTutorial(true); // Set flag - useEffect will handle opening dialogue
       }
     } catch (error) {
       console.error('❌ [App] Character creation failed:', error);
