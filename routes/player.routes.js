@@ -493,8 +493,11 @@ router.post('/create',
           };
         } else {
           // Update existing account progress - only change username and tutorial_completed
-          accountProgress.username = characterName;
-          accountProgress.tutorial_completed = false;
+          accountProgress = {
+            ...accountProgress,
+            username: characterName,
+            tutorial_completed: false
+          };
         }
         
         await db.saveAccountProgress(user.id, accountProgress);
