@@ -58,36 +58,6 @@ export default function CharacterCreation({ onComplete }) {
       });
   }, []);
 
-  // Fetch classes from API on component mount
-  useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const response = await fetch('/api/classes');
-        const data = await response.json();
-        if (data.success && data.classes) {
-          // Map API response to component format
-          const formattedClasses = data.classes.map(cls => ({
-            id: cls.id,
-            name: cls.name,
-            icon: getClassIcon(cls.id),
-            color: getClassColor(cls.id),
-            description: cls.description,
-            stats: cls.startingStats,
-            playstyle: getClassPlaystyle(cls.id),
-            startingGear: getStartingGear(cls.id)
-          }));
-          setClasses(formattedClasses);
-        }
-      } catch (error) {
-        console.error('Failed to load classes:', error);
-      } finally {
-        setIsLoadingClasses(false);
-      }
-    };
-    
-    fetchClasses();
-  }, []);
-
   // Helper functions for UI data not in API
   const getClassIcon = (classId) => {
     const icons = {
@@ -136,6 +106,36 @@ export default function CharacterCreation({ onComplete }) {
     };
     return gear[classId] || '';
   };
+
+  // Fetch classes from API on component mount
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetch('/api/classes');
+        const data = await response.json();
+        if (data.success && data.classes) {
+          // Map API response to component format
+          const formattedClasses = data.classes.map(cls => ({
+            id: cls.id,
+            name: cls.name,
+            icon: getClassIcon(cls.id),
+            color: getClassColor(cls.id),
+            description: cls.description,
+            stats: cls.startingStats,
+            playstyle: getClassPlaystyle(cls.id),
+            startingGear: getStartingGear(cls.id)
+          }));
+          setClasses(formattedClasses);
+        }
+      } catch (error) {
+        console.error('Failed to load classes:', error);
+      } finally {
+        setIsLoadingClasses(false);
+      }
+    };
+    
+    fetchClasses();
+  }, []);
 
   // Get the icon for the selected role badge
   const getRoleIcon = (role) => {
