@@ -1098,10 +1098,14 @@ async function createCharacter(playerId, channelName, playerName, classType, loc
  * @param {string} channelName - Channel name
  */
 async function deleteCharacter(playerId, channelName) {
+  const tableName = getPlayerTable(channelName);
+  
   await query(
-    'DELETE FROM player_progress WHERE player_id = $1 AND channel_name = $2',
-    [playerId, channelName.toLowerCase()]
+    `DELETE FROM ${tableName} WHERE player_id = $1`,
+    [playerId]
   );
+  
+  console.log(`🗑️ Deleted character for ${playerId} in ${channelName}`);
 }
 
 /**

@@ -319,6 +319,13 @@ router.post('/create',
     const rawCharacterName = user.displayName || user.display_name || 'Adventurer';
     const characterName = sanitization.sanitizeCharacterName(rawCharacterName);
     
+    console.log('📝 Character creation request:', {
+      userId: user.id,
+      channel: channelName,
+      classType,
+      timestamp: new Date().toISOString()
+    });
+    
     // Validate nameColor if provided
     let validatedColor = null;
     if (nameColor) {
@@ -337,8 +344,35 @@ router.post('/create',
     try {
       // Check if character already exists
       const existing = await db.getCharacter(user.id, channelName);
+      
+      console.log('🔍 Existing character check:', {
+        found: !!existing,
+        hasName: existing?.name,
+        hasType: existing?.type,
+        characterData: existing ? {
+          name: existing.name,
+          type: existing.type,
+          level: existing.level
+        } : null
+      });
+      
+      // IMPROVED: Check if character actually has data, not just if row exists
+      // Allow recreation if character has no name/type (incomplete record)
+      if (existing && existing.name && existing.type) {
+        console.log(`❌ Character creation blocked: ${user.id} already has character "${existing.name}" in ${channelName}`);
+        return res.status(400).json({ 
+          error: 'Character already exists for this channel',
+          existingCharacter: {
+            name: existing.name,
+            type: existing.type,
+            level: existing.level
+          }
+        });
+      }
+      
+      // If we get here, either no character exists or it's incomplete
       if (existing) {
-        return res.status(400).json({ error: 'Character already exists for this channel' });
+        console.log(`⚠️ Incomplete character found for ${user.id} in ${channelName}, will overwrite`);
       }
       
       // Check if user has existing roles from previous activity (e.g., Twitch chat)
@@ -442,6 +476,41 @@ router.post('/create',
     } catch (error) {
       console.error('Error creating character:', error);
       res.status(500).json({ error: error.message || 'Failed to create character' });
+    }
+  });
+
+/**
+ * DELETE /character/force
+ * Forcefully delete a character (allows recreation)
+ */
+router.delete('/character/force',
+  security.requireAuth,
+  rateLimiter.middleware('strict'),
+  security.auditLog('force_delete_character'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { channel } = req.body;
+    if (!channel) {
+      return res.status(400).json({ error: 'Channel required' });
+    }
+    
+    try {
+      const channelName = channel.toLowerCase();
+      
+      // Delete character
+      await db.deleteCharacter(user.id, channelName);
+      
+      console.log(`🗑️ Force deleted character for ${user.id} in ${channelName}`);
+      
+      res.json({ 
+        success: true, 
+        message: 'Character deleted successfully' 
+      });
+    } catch (error) {
+      console.error('Error force deleting character:', error);
+      res.status(500).json({ error: 'Failed to delete character' });
     }
   });
 
