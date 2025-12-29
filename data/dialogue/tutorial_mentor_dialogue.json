@@ -4,6 +4,17 @@
   "npc_name": "Eldrin the Guide",
   "nodes": [
     {
+      "id": "character_selection",
+      "text": "Welcome, brave soul, to Ashbee Realms! I am Eldrin, and I've been guiding adventurers for many years. Before we begin your journey, tell me - what path calls to you? What role will you take in this vast world?",
+      "choices": [
+        {
+          "text": "Let me choose my class and role",
+          "next": "end",
+          "action": "open_character_creation"
+        }
+      ]
+    },
+    {
       "id": "tutorial_start",
       "text": "Ah, a fresh face! Welcome to Ashbee Realms, young {player_name}. These lands are filled with danger and opportunity in equal measure. I've been helping adventurers like yourself find their footing for many years. Shall we begin your training?",
       "choices": [

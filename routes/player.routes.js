@@ -471,6 +471,21 @@ router.post('/create',
       // Save character with roles and color
       await db.saveCharacter(user.id, channelName, character);
       
+      // Mark tutorial as completed in account_progress
+      try {
+        let accountProgress = await db.loadAccountProgress(user.id);
+        if (!accountProgress) {
+          accountProgress = {};
+        }
+        accountProgress.username = characterName;
+        accountProgress.tutorial_completed = true;
+        await db.saveAccountProgress(user.id, accountProgress);
+        console.log(`✅ Tutorial marked as completed for ${characterName}`);
+      } catch (error) {
+        console.error('Error updating account progress:', error);
+        // Don't fail character creation if account progress update fails
+      }
+      
       // Emit WebSocket update for new character creation
       socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
       

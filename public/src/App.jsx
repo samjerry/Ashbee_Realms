@@ -121,9 +121,15 @@ function App() {
     const isTutorial = urlParams.get('tutorial') === 'true';
     
     if (isTutorial) {
-      setShowCharacterCreation(true);
+      // For new users, start with dialogue to select class/role
+      // Then show character creation
+      const npcId = 'tutorial_mentor';
+      const nodeId = 'character_selection';
+      setTutorialDialogueData({ npcId, dialogueNodeId: nodeId });
+      setShowTutorialDialogue(true);
+      
       // Remove tutorial parameter from URL without reload
-      const newUrl = window.location.pathname;
+      const newUrl = window.location.pathname + '?channel=' + (urlParams.get('channel') || '');
       window.history.replaceState({}, '', newUrl);
     } else {
       // Initialize game by fetching player data first, then setting up sockets
@@ -204,6 +210,10 @@ function App() {
   const handleDialogueAction = (action, target) => {
     // Handle UI actions triggered by dialogue
     switch (action) {
+      case 'open_character_creation':
+        // Show character creation modal
+        setShowCharacterCreation(true);
+        break;
       case 'open_bestiary':
         // Switch to bestiary tab and optionally filter by target monster
         useGameStore.getState().setActiveTab('bestiary');

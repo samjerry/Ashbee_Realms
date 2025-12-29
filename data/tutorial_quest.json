@@ -9,6 +9,21 @@
   "npc_guide": "tutorial_mentor",
   "steps": [
     {
+      "id": "step_0_character_selection",
+      "order": 0,
+      "title": "Choose Your Path",
+      "description": "Before your journey begins, you must choose your class and role.",
+      "instruction": "Select your class and role to begin your adventure",
+      "type": "dialogue",
+      "target": "tutorial_mentor",
+      "dialogue_node": "character_selection",
+      "reward": {
+        "xp": 0,
+        "gold": 0
+      },
+      "tip": "Your class defines your combat style and abilities. Choose wisely!"
+    },
+    {
       "id": "step_1_meet_eldrin",
       "order": 1,
       "title": "Meet Your Mentor",

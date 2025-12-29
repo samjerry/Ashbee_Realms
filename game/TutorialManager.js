@@ -487,6 +487,10 @@ class TutorialManager {
     };
 
     switch (action) {
+      case 'open_character_creation':
+        result.uiAction = 'open_character_creation';
+        break;
+      
       case 'open_bestiary':
         result.uiAction = 'open_bestiary';
         result.targetMonster = actionTarget || 'forest_slime';

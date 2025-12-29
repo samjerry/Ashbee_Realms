@@ -125,7 +125,14 @@ const TutorialDialogue = ({
 
     // Check if choice has an action
     if (choice.action) {
-      if (onAction) {
+      if (choice.action === 'open_character_creation') {
+        // Special handling for character creation
+        if (onAction) {
+          onAction('open_character_creation', null);
+        }
+        onClose();
+        return;
+      } else if (onAction) {
         onAction(choice.action, choice.action_target);
       }
     }
