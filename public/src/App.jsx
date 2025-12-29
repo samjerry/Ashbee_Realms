@@ -15,6 +15,8 @@ import SettingsModal from './components/Settings/SettingsModal';
 import LoadingScreen from './components/Layout/LoadingScreen';
 import CharacterCreation from './components/Common/CharacterCreation';
 import SetupView from './components/Setup/SetupView';
+import TutorialDialogue from './components/Tutorial/TutorialDialogue';
+import { TutorialProgress } from './components/Tutorial/GameplayTips';
 
 function App() {
   const { 
@@ -23,6 +25,7 @@ function App() {
     showCombat, 
     showDialogue, 
     showSettings,
+    player,
     fetchPlayer,
     fetchWorldName,
     setupSocketListeners 
@@ -31,6 +34,8 @@ function App() {
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
   const [isCreatingCharacter, setIsCreatingCharacter] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
+  const [showTutorialDialogue, setShowTutorialDialogue] = useState(false);
+  const [tutorialDialogueData, setTutorialDialogueData] = useState(null);
 
   // Apply theme helper function
   const applyTheme = (themeId) => {
@@ -184,6 +189,42 @@ function App() {
     }
   };
 
+  const handleOpenTutorialDialogue = (npcId, dialogueNodeId) => {
+    setTutorialDialogueData({ npcId, dialogueNodeId });
+    setShowTutorialDialogue(true);
+  };
+
+  const handleCloseTutorialDialogue = () => {
+    setShowTutorialDialogue(false);
+    setTutorialDialogueData(null);
+    // Refresh player data to update tutorial progress
+    fetchPlayer();
+  };
+
+  const handleDialogueAction = (action, target) => {
+    // Handle UI actions triggered by dialogue
+    switch (action) {
+      case 'open_bestiary':
+        // Switch to bestiary tab and optionally filter by target monster
+        useGameStore.getState().setActiveTab('bestiary');
+        break;
+      case 'open_character_sheet':
+        useGameStore.getState().setActiveTab('character');
+        break;
+      case 'open_quest_log':
+        useGameStore.getState().setActiveTab('quests');
+        break;
+      default:
+        console.log('Dialogue action:', action, target);
+    }
+  };
+
+  const handleDialogueComplete = async () => {
+    // Tutorial complete - refresh player data
+    await fetchPlayer();
+    handleCloseTutorialDialogue();
+  };
+
   // Show broadcaster setup screen if on /setup route
   if (showSetup) {
     return <SetupView />;
@@ -232,6 +273,21 @@ function App() {
           {renderMainContent()}
         </main>
       </div>
+      
+      {/* Tutorial Progress Overlay */}
+      {player && <TutorialProgress character={player} onOpenDialogue={handleOpenTutorialDialogue} />}
+      
+      {/* Tutorial Dialogue Modal */}
+      {showTutorialDialogue && tutorialDialogueData && (
+        <TutorialDialogue
+          npcId={tutorialDialogueData.npcId}
+          dialogueNodeId={tutorialDialogueData.dialogueNodeId}
+          character={player}
+          onClose={handleCloseTutorialDialogue}
+          onAction={handleDialogueAction}
+          onComplete={handleDialogueComplete}
+        />
+      )}
       
       {showDialogue && <DialogueModal />}
       {showSettings && <SettingsModal />}

@@ -480,6 +480,35 @@ router.post('/dialogue/advance',
         }
       }
       
+      // Check if this dialogue advance completes a tutorial step
+      const stepCompletion = tutorialManager.checkStepTrigger(character, 'dialogue', {
+        npcId: sanitization.sanitizeInput(npcId, { maxLength: 100 }),
+        nodeId: currentNodeId
+      });
+      
+      if (stepCompletion && stepCompletion.success) {
+        // Apply step rewards
+        if (stepCompletion.rewards.xp > 0) {
+          character.xp += stepCompletion.rewards.xp;
+        }
+        if (stepCompletion.rewards.gold > 0) {
+          character.gold += stepCompletion.rewards.gold;
+        }
+        if (stepCompletion.rewards.items && stepCompletion.rewards.items.length > 0) {
+          stepCompletion.rewards.items.forEach(item => {
+            if (character.inventory && character.inventory.addItem) {
+              character.inventory.addItem(item.id, item.quantity || 1);
+            }
+          });
+        }
+        if (stepCompletion.rewards.title) {
+          character.titles = character.titles || [];
+          if (!character.titles.includes(stepCompletion.rewards.title)) {
+            character.titles.push(stepCompletion.rewards.title);
+          }
+        }
+      }
+      
       // Save character with dialogue history
       await db.saveCharacter(user.id, channel.toLowerCase(), character);
       

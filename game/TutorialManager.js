@@ -162,6 +162,12 @@ class TutorialManager {
     let shouldComplete = false;
 
     switch (currentStep.type) {
+      case 'dialogue':
+        shouldComplete = actionType === 'dialogue' && 
+          actionData.npcId === currentStep.target &&
+          actionData.nodeId === currentStep.dialogue_node;
+        break;
+      
       case 'ui_interaction':
         shouldComplete = actionType === 'ui_interaction' && actionData.target === currentStep.target;
         break;
