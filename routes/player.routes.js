@@ -474,16 +474,34 @@ router.post('/create',
       // Save username to account_progress and ensure tutorial_completed starts as false
       try {
         let accountProgress = await db.loadAccountProgress(user.id);
+        
+        // If no account progress exists, create default object with all required fields
         if (!accountProgress) {
-          accountProgress = {};
+          accountProgress = {
+            username: characterName,
+            tutorial_completed: false,
+            passive_levels: {},
+            souls: 5,
+            legacy_points: 0,
+            account_stats: {},
+            total_deaths: 0,
+            total_kills: 0,
+            total_gold_earned: 0,
+            total_xp_earned: 0,
+            highest_level_reached: 1,
+            total_crits: 0
+          };
+        } else {
+          // Update existing account progress - only change username and tutorial_completed
+          accountProgress.username = characterName;
+          accountProgress.tutorial_completed = false;
         }
-        accountProgress.username = characterName;
-        // Explicitly set tutorial_completed to false for new characters
-        accountProgress.tutorial_completed = false;
+        
         await db.saveAccountProgress(user.id, accountProgress);
         console.log(`✅ Username saved to account progress: ${characterName} (tutorial_completed: false)`);
       } catch (error) {
         console.error('Error updating account progress:', error);
+        console.error('Full error details:', error.stack);
         // Don't fail character creation if account progress update fails
       }
       
