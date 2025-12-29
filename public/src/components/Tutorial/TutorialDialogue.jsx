@@ -33,7 +33,8 @@ const TutorialDialogue = ({
 
   useEffect(() => {
     if (currentNode && enableTypewriter) {
-      typewriterEffect(currentNode.text);
+      const cleanup = typewriterEffect(currentNode.text);
+      return cleanup; // Cleanup interval on unmount or dependency change
     } else if (currentNode) {
       setDisplayText(replaceVariables(currentNode.text));
       setIsTyping(false);
@@ -182,8 +183,8 @@ const TutorialDialogue = ({
 
   const grantRewards = async (reward) => {
     // Rewards are handled server-side when advancing dialogue
-    // This is just a placeholder for client-side feedback
-    console.log('Rewards granted:', reward);
+    // Server applies rewards during dialogue advancement
+    return;
   };
 
   const skipTutorial = async () => {
@@ -197,7 +198,7 @@ const TutorialDialogue = ({
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = React.useCallback((e) => {
     if (e.key === 'Escape') {
       onClose();
     } else if (e.key === 'Enter' && !isTyping && currentNode?.choices?.length === 1) {
@@ -205,12 +206,12 @@ const TutorialDialogue = ({
     } else if (e.key === 'Enter' && isTyping) {
       skipTypewriter();
     }
-  };
+  }, [currentNode, isTyping, onClose]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [currentNode, isTyping]);
+  }, [handleKeyPress]);
 
   if (isLoading) {
     return (

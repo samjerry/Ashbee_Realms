@@ -357,12 +357,16 @@ class TutorialManager {
     try {
       const dialoguePath = path.join(__dirname, '../data/dialogue/tutorial_mentor_dialogue.json');
       if (fs.existsSync(dialoguePath)) {
-        const dialogueData = JSON.parse(fs.readFileSync(dialoguePath, 'utf8'));
+        const fileContent = fs.readFileSync(dialoguePath, 'utf8');
+        const dialogueData = JSON.parse(fileContent);
         this.dialogueTrees.set(dialogueData.dialogue_tree_id, dialogueData);
         console.log('✅ Tutorial dialogue tree loaded');
       }
     } catch (error) {
       console.error('❌ Error loading dialogue trees:', error);
+      if (error instanceof SyntaxError) {
+        console.error('Invalid JSON in dialogue file');
+      }
     }
   }
 
@@ -373,12 +377,16 @@ class TutorialManager {
     try {
       const npcPath = path.join(__dirname, '../data/npcs/tutorial_mentor.json');
       if (fs.existsSync(npcPath)) {
-        const npcData = JSON.parse(fs.readFileSync(npcPath, 'utf8'));
+        const fileContent = fs.readFileSync(npcPath, 'utf8');
+        const npcData = JSON.parse(fileContent);
         this.npcData.set(npcData.id, npcData);
         console.log('✅ Tutorial NPC loaded');
       }
     } catch (error) {
       console.error('❌ Error loading tutorial NPCs:', error);
+      if (error instanceof SyntaxError) {
+        console.error('Invalid JSON in NPC file');
+      }
     }
   }
 

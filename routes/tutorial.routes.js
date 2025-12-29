@@ -440,7 +440,7 @@ router.post('/dialogue/advance',
       return res.status(400).json({ error: 'No channel configured' });
     }
     
-    if (!npcId || !currentNodeId || choiceIndex === undefined) {
+    if (!npcId || !currentNodeId || typeof choiceIndex !== 'number') {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
     
@@ -494,7 +494,7 @@ router.post('/dialogue/advance',
         if (stepCompletion.rewards.gold > 0) {
           character.gold += stepCompletion.rewards.gold;
         }
-        if (stepCompletion.rewards.items && stepCompletion.rewards.items.length > 0) {
+        if (stepCompletion.rewards.items && Array.isArray(stepCompletion.rewards.items)) {
           stepCompletion.rewards.items.forEach(item => {
             if (character.inventory && character.inventory.addItem) {
               character.inventory.addItem(item.id, item.quantity || 1);

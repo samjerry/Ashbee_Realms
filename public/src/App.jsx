@@ -274,8 +274,10 @@ function App() {
         </main>
       </div>
       
-      {/* Tutorial Progress Overlay */}
-      {player && <TutorialProgress character={player} onOpenDialogue={handleOpenTutorialDialogue} />}
+      {/* Tutorial Progress Overlay - Only render if tutorial is active */}
+      {player?.tutorialProgress?.isActive && (
+        <TutorialProgress character={player} onOpenDialogue={handleOpenTutorialDialogue} />
+      )}
       
       {/* Tutorial Dialogue Modal */}
       {showTutorialDialogue && tutorialDialogueData && (
