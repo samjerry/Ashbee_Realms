@@ -80,17 +80,24 @@ async function migrateAccountProgress() {
     }
     
     console.log('\n✅ Migration completed successfully!');
-    process.exit(0);
   } catch (error) {
     console.error('❌ Migration failed:', error);
-    process.exit(1);
+    throw error;
   } finally {
     await pool.end();
   }
 }
 
 if (require.main === module) {
-  migrateAccountProgress();
+  migrateAccountProgress()
+    .then(() => {
+      console.log('🎉 Migration completed!');
+      process.exit(0);
+    })
+    .catch(error => {
+      console.error('💥 Fatal error:', error);
+      process.exit(1);
+    });
 }
 
 module.exports = { migrateAccountProgress };

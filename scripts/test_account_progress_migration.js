@@ -65,7 +65,8 @@ async function runTests() {
     log('\nTest 3: Verify server.js migration integration', colors.blue);
     try {
       const fs = require('fs');
-      const serverContent = fs.readFileSync('../server.js', 'utf8');
+      const path = require('path');
+      const serverContent = fs.readFileSync(path.join(__dirname, '../server.js'), 'utf8');
       if (serverContent.includes('migrateAccountProgress') && 
           serverContent.includes('./scripts/migrate_account_progress')) {
         log('✅ server.js includes account_progress migration', colors.green);
@@ -82,7 +83,8 @@ async function runTests() {
     log('\nTest 4: Verify db.js has inline migration SQL', colors.blue);
     try {
       const fs = require('fs');
-      const dbContent = fs.readFileSync('../db.js', 'utf8');
+      const path = require('path');
+      const dbContent = fs.readFileSync(path.join(__dirname, '../db.js'), 'utf8');
       if (dbContent.includes('account_progress.username column verified') && 
           dbContent.includes('account_progress.tutorial_completed column verified')) {
         log('✅ db.js includes inline migration SQL', colors.green);
