@@ -386,6 +386,7 @@ router.post('/skip',
 /**
  * GET /dialogue/:npcId/:nodeId
  * Get specific dialogue node with response options
+ * Now processes variables (including {world_name}) on backend before sending to frontend
  */
 router.get('/dialogue/:npcId/:nodeId', async (req, res) => {
   try {
@@ -401,13 +402,37 @@ router.get('/dialogue/:npcId/:nodeId', async (req, res) => {
       });
     }
     
+    // Get channel to fetch custom world name
+    const channel = getChannel(req);
+    
+    // Fetch custom world name from database
+    const worldName = await db.getWorldName(channel);
+    
+    console.log('📖 [Dialogue] Raw node text:', node.text);
+    console.log('📖 [Dialogue] World name used:', worldName);
+    
+    // Get character data if user is logged in (for player_name, etc.)
+    let character = null;
+    if (req.session && req.session.user) {
+      try {
+        character = await db.getCharacter(req.session.user.id, channel.toLowerCase());
+      } catch (err) {
+        console.log('📖 [Dialogue] No character found, using defaults for variables');
+      }
+    }
+    
+    // Format node with variable replacement
+    const formattedNode = tutorialManager.formatNode(node, character, worldName);
+    
+    console.log('📖 [Dialogue] Formatted text:', formattedNode.text);
+    
     res.json({
       success: true,
       node: {
-        id: node.id,
-        text: node.text,
-        choices: node.choices || [],
-        reward: node.reward || null,
+        id: formattedNode.id,
+        text: formattedNode.text,  // Processed text with variables replaced
+        choices: formattedNode.choices || [],
+        reward: formattedNode.reward || null,
         action: node.action || null,
         action_target: node.action_target || null,
         condition: node.condition || null

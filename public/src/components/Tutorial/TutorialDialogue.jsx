@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, SkipForward } from 'lucide-react';
-
-// Constants
-const WORLD_NAME = 'Ashbee Realms';
+import useGameStore from '../../store/gameStore';
 
 /**
  * TutorialDialogue Component
  * Displays NPC dialogue for tutorial with branching conversations
  * 
- * Note: Variable replacement happens on the frontend because:
- * 1. Character data is available in the frontend state
- * 2. Tutorial dialogue routes return raw nodes (not pre-formatted)
- * 3. This allows for real-time updates without backend calls
+ * Note: Variable replacement now happens on the BACKEND for world_name.
+ * The backend /api/tutorial/dialogue/:npcId/:nodeId route processes all variables
+ * before sending to the frontend. The frontend replaceVariables is now just a safety fallback.
  */
 const TutorialDialogue = ({ 
   npcId, 
@@ -21,6 +18,9 @@ const TutorialDialogue = ({
   onAction,
   onComplete 
 }) => {
+  // Get world name from game store for fallback use
+  const { worldName } = useGameStore();
+  
   const [currentNode, setCurrentNode] = useState(null);
   const [npcData, setNpcData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +44,9 @@ const TutorialDialogue = ({
       const cleanup = typewriterEffect(currentNode.text);
       return cleanup; // Cleanup interval on unmount or dependency change
     } else if (currentNode) {
-      setDisplayText(replaceVariables(currentNode.text));
+      const processedText = replaceVariables(currentNode.text);
+      console.log('📖 [Frontend] Display text (no typewriter):', processedText);
+      setDisplayText(processedText);
       setIsTyping(false);
     }
   }, [currentNode, enableTypewriter]);
@@ -83,6 +85,8 @@ const TutorialDialogue = ({
       }
       
       console.log('✅ [TutorialDialogue] Dialogue node loaded:', data.node.id);
+      console.log('📖 [Frontend] Received text from API:', data.node.text);
+      
       setCurrentNode(data.node);
       setDialogueHistory(prev => [...prev, { nodeId, text: data.node.text }]);
       
@@ -101,18 +105,27 @@ const TutorialDialogue = ({
   const replaceVariables = (text) => {
     if (!text) return text;
     
+    // Backend should have already replaced all variables
+    // This function is now just a safety fallback
+    
     let result = text;
     
-    // Replace character variables
-    if (character) {
-      result = result
-        .replace(/\{player_name\}/g, character.name || 'traveler')
-        .replace(/\{player_level\}/g, character.level || 1)
-        .replace(/\{player_class\}/g, character.class || 'adventurer');
+    // Only replace if variables still exist (shouldn't happen if backend works correctly)
+    if (result.includes('{')) {
+      console.warn('[TutorialDialogue] Variables found in dialogue text - backend should have replaced these');
+      
+      // Use world name from hook (already extracted at component level)
+      const fallbackWorldName = worldName || 'Ashbee Realms';
+      
+      if (character) {
+        result = result
+          .replace(/\{player_name\}/g, character.name || 'traveler')
+          .replace(/\{player_level\}/g, character.level || 1)
+          .replace(/\{player_class\}/g, character.class || 'adventurer');
+      }
+      
+      result = result.replace(/\{world_name\}/g, fallbackWorldName);
     }
-    
-    // Replace world name
-    result = result.replace(/\{world_name\}/g, WORLD_NAME);
     
     return result;
   };
@@ -121,6 +134,7 @@ const TutorialDialogue = ({
     setIsTyping(true);
     setDisplayText('');
     const processedText = replaceVariables(text);
+    console.log('📖 [Frontend] Typewriter processed text:', processedText);
     let index = 0;
     
     const interval = setInterval(() => {

@@ -57,8 +57,11 @@ router.post('/start', async (req, res) => {
 
     const character = await db.getCharacter(userId, channel);
     const dialogueMgr = new DialogueManager();
+    
+    // Fetch custom world name for this channel
+    const worldName = await db.getWorldName(channel);
 
-    const result = dialogueMgr.startConversation(npcId, character, conversationId);
+    const result = dialogueMgr.startConversation(npcId, character, conversationId, worldName);
 
     if (!result.success) {
       return res.status(400).json(result);
@@ -93,8 +96,11 @@ router.post('/choice', async (req, res) => {
 
     const character = await db.getCharacter(userId, channel);
     const dialogueMgr = new DialogueManager();
+    
+    // Fetch custom world name for this channel
+    const worldName = await db.getWorldName(channel);
 
-    const result = dialogueMgr.makeChoice(npcId, conversationId, currentNodeId, choiceIndex, character);
+    const result = dialogueMgr.makeChoice(npcId, conversationId, currentNodeId, choiceIndex, character, worldName);
 
     if (!result.success) {
       return res.status(400).json(result);
