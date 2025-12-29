@@ -143,11 +143,10 @@ class OperatorManager {
       return playerNameOrId;
     }
 
-    // Otherwise, look up by name
-    const table = db.getPlayerTable(channelName);
+    // Otherwise, look up by name in the unified characters table
     const result = await db.query(
-      `SELECT player_id FROM ${table} WHERE LOWER(name) = LOWER($1) LIMIT 1`,
-      [playerNameOrId]
+      `SELECT player_id FROM characters WHERE LOWER(name) = LOWER($1) AND channel_name = $2 LIMIT 1`,
+      [playerNameOrId, channelName.toLowerCase()]
     );
 
     if (result.rows.length === 0) {
@@ -662,10 +661,9 @@ class OperatorManager {
     const progress = await db.loadPlayerProgress(targetPlayerId, channelName);
     if (!progress) throw new Error('Player not found');
 
-    const table = db.getPlayerTable(channelName);
     await db.query(
-      `DELETE FROM ${table} WHERE player_id = $1`,
-      [targetPlayerId]
+      `DELETE FROM characters WHERE player_id = $1 AND channel_name = $2`,
+      [targetPlayerId, channelName.toLowerCase()]
     );
 
     return {

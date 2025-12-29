@@ -647,17 +647,13 @@ async function syncTesterRoles() {
     const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
     
     for (const channel of CHANNELS) {
-      // SECURITY: getPlayerTable() sanitizes channel name, removing all non-alphanumeric characters
-      // to prevent SQL injection. Table name format: players_{sanitized_channel}
-      const tableName = getPlayerTable(channel);
-      
       // For each beta tester, check if they have a character and update their roles
       for (const testerId of BETA_TESTERS) {
         try {
-          // Query to find character by player_id (parameterized to prevent SQL injection)
+          // Query to find character by player_id and channel_name (parameterized to prevent SQL injection)
           const result = await db.query(
-            `SELECT player_id, name, roles FROM ${tableName} WHERE player_id = $1`,
-            [testerId]
+            `SELECT player_id, name, roles FROM characters WHERE player_id = $1 AND channel_name = $2`,
+            [testerId, channel]
           );
           
           if (result.rows.length > 0) {
@@ -670,8 +666,8 @@ async function syncTesterRoles() {
               
               // Update the character's roles (parameterized to prevent SQL injection)
               await db.query(
-                `UPDATE ${tableName} SET roles = $1 WHERE player_id = $2`,
-                [JSON.stringify(updatedRoles), testerId]
+                `UPDATE characters SET roles = $1 WHERE player_id = $2 AND channel_name = $3`,
+                [JSON.stringify(updatedRoles), testerId, channel]
               );
               
               totalUpdated++;
@@ -697,6 +693,13 @@ async function syncTesterRoles() {
 
 // Helper function to get channel-specific player table name
 // SECURITY: Table name is sanitized to prevent SQL injection
+/**
+ * Get sanitized table name for a channel's player data
+ * @deprecated This function is deprecated. Use the unified 'characters' table instead.
+ * This function is kept only for backward compatibility with migration scripts.
+ * @param {string} channelName - Channel name
+ * @returns {string} Sanitized table name
+ */
 function getPlayerTable(channelName) {
   if (!channelName) {
     throw new Error('Channel name is required');
@@ -753,129 +756,6 @@ async function savePlayerProgress(playerId, channelName, playerData) {
     };
     await saveAccountProgress(playerId, accountData);
   }
-  
-  // Always save to old schema for backward compatibility during transition
-  const table = getPlayerTable(channelName);
-  const {
-    name,
-    location = 'Silverbrook',
-    level = 1,
-    xp = 0,
-    xp_to_next = 10,
-    max_hp = 100,
-    hp = 100,
-    mana = 0,
-    max_mana = 0,
-    gold = 0,
-    type = null,
-    inventory = ["Potion"],
-    pending = null,
-    combat = null,
-    skill_cd = 0,
-    step = 0,
-    is_player = true,
-    in_combat = false,
-    equipped = {
-      headgear: null, chest: null, legs: null, footwear: null,
-      hands: null, cape: null, off_hand: null, amulet: null,
-      ring1: null, ring2: null, belt: null, main_hand: null,
-      relic1: null, relic2: null, relic3: null
-    },
-    base_stats = {},
-    skills = { skills: {}, globalCooldown: 0 },
-    skill_points = 0,
-    travel_state = null,
-    active_quests = [],
-    completed_quests = [],
-    consumable_cooldowns = {},
-    dialogue_history = {},
-    reputation = { general: 0 },
-    unlocked_achievements = [],
-    achievement_progress = {},
-    achievement_unlock_dates = {},
-    achievement_points = 0,
-    unlocked_titles = [],
-    active_title = null,
-    stats = {},
-    dungeon_state = null,
-    completed_dungeons = [],
-    crafting_xp = 0,
-    known_recipes = [],
-    season_progress = {},
-    seasonal_challenges_completed = [],
-    // Permanent stats
-    passive_levels = {},
-    souls = 5,
-    legacy_points = 0,
-    account_stats = {},
-    total_deaths = 0,
-    total_kills = 0,
-    total_gold_earned = 0,
-    total_xp_earned = 0,
-    highest_level_reached = 1,
-    total_crits = 0,
-    // Roles array and name color
-    roles = ['viewer'],
-    nameColor = null,
-    selectedRoleBadge = null,
-    theme = 'crimson-knight',
-    // Abilities
-    unlocked_abilities = [],
-    equipped_abilities = [],
-    ability_cooldowns = {}
-  } = playerData;
-
-  await query(`
-    INSERT INTO ${table} (
-      player_id, name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
-      type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped,
-      base_stats, skills, skill_points, travel_state, active_quests, completed_quests,
-      consumable_cooldowns, dialogue_history, reputation, unlocked_achievements,
-      achievement_progress, achievement_unlock_dates, achievement_points,
-      unlocked_titles, active_title, stats, dungeon_state, completed_dungeons,
-      crafting_xp, known_recipes, season_progress, seasonal_challenges_completed,
-      passive_levels, souls, legacy_points, account_stats, total_deaths, total_kills,
-      total_gold_earned, total_xp_earned, highest_level_reached, total_crits, roles, name_color, selected_role_badge, theme,
-      unlocked_abilities, equipped_abilities, ability_cooldowns, updated_at
-    ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-      $12, $13, $14, $15, $16, $17, $18, $19, $20,
-      $21, $22, $23, $24, $25, $26,
-      $27, $28, $29, $30,
-      $31, $32, $33,
-      $34, $35, $36, $37, $38,
-      $39, $40, $41, $42,
-      $43, $44, $45, $46, $47, $48,
-      $49, $50, $51, $52, $53, $54, $55, $56,
-      $57, $58, $59, NOW()
-    )
-    ON CONFLICT(player_id) DO UPDATE SET
-      name=$2, location=$3, level=$4, xp=$5, xp_to_next=$6, max_hp=$7, hp=$8, mana=$9, max_mana=$10, gold=$11,
-      type=$12, inventory=$13, pending=$14, combat=$15, skill_cd=$16, step=$17, is_player=$18, in_combat=$19, equipped=$20,
-      base_stats=$21, skills=$22, skill_points=$23, travel_state=$24, active_quests=$25, completed_quests=$26,
-      consumable_cooldowns=$27, dialogue_history=$28, reputation=$29, unlocked_achievements=$30,
-      achievement_progress=$31, achievement_unlock_dates=$32, achievement_points=$33,
-      unlocked_titles=$34, active_title=$35, stats=$36, dungeon_state=$37, completed_dungeons=$38,
-      crafting_xp=$39, known_recipes=$40, season_progress=$41, seasonal_challenges_completed=$42,
-      passive_levels=$43, souls=$44, legacy_points=$45, account_stats=$46, total_deaths=$47, total_kills=$48,
-      total_gold_earned=$49, total_xp_earned=$50, highest_level_reached=$51, total_crits=$52, roles=$53, name_color=$54, selected_role_badge=$55, theme=$56,
-      unlocked_abilities=$57, equipped_abilities=$58, ability_cooldowns=$59, updated_at=NOW()
-  `, [
-    playerId, name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
-    type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
-    skill_cd, step, is_player, in_combat, JSON.stringify(equipped),
-    JSON.stringify(base_stats), JSON.stringify(skills), skill_points, JSON.stringify(travel_state),
-    JSON.stringify(active_quests), JSON.stringify(completed_quests),
-    JSON.stringify(consumable_cooldowns), JSON.stringify(dialogue_history), JSON.stringify(reputation),
-    JSON.stringify(unlocked_achievements),
-    JSON.stringify(achievement_progress), JSON.stringify(achievement_unlock_dates), achievement_points,
-    JSON.stringify(unlocked_titles), active_title, JSON.stringify(stats), JSON.stringify(dungeon_state),
-    JSON.stringify(completed_dungeons),
-    crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed),
-    JSON.stringify(passive_levels), souls, legacy_points, JSON.stringify(account_stats), total_deaths, total_kills,
-    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, JSON.stringify(roles), nameColor, selectedRoleBadge, theme,
-    JSON.stringify(unlocked_abilities), JSON.stringify(equipped_abilities), JSON.stringify(ability_cooldowns)
-  ]);
 }
 
 /**
@@ -890,7 +770,7 @@ async function loadPlayerProgress(playerId, channelName) {
   const useUnifiedSchema = await hasUnifiedSchema();
   
   if (useUnifiedSchema) {
-    // Try loading from unified schema first
+    // Try loading from unified schema
     const characterData = await loadCharacterUnified(playerId, channelName);
     
     if (characterData) {
@@ -918,83 +798,8 @@ async function loadPlayerProgress(playerId, channelName) {
     }
   }
   
-  // Fall back to old schema
-  const table = getPlayerTable(channelName);
-  const result = await query(`SELECT * FROM ${table} WHERE player_id = $1`, [playerId]);
-
-  if (!result.rows || result.rows.length === 0) {
-    return null;
-  }
-
-  const row = result.rows[0];
-
-  // Parse JSON fields and return complete character data
-  return {
-    name: row.name,
-    location: row.location,
-    level: row.level,
-    xp: row.xp,
-    xp_to_next: row.xp_to_next,
-    max_hp: row.max_hp,
-    hp: row.hp,
-    mana: row.mana || 0,
-    max_mana: row.max_mana || 0,
-    gold: row.gold,
-    type: row.type,
-    inventory: typeof row.inventory === 'string' ? JSON.parse(row.inventory) : row.inventory,
-    pending: row.pending ? (typeof row.pending === 'string' ? JSON.parse(row.pending) : row.pending) : null,
-    combat: row.combat ? (typeof row.combat === 'string' ? JSON.parse(row.combat) : row.combat) : null,
-    skill_cd: row.skill_cd,
-    step: row.step,
-    is_player: row.is_player,
-    in_combat: row.in_combat,
-    equipped: typeof row.equipped === 'string' ? JSON.parse(row.equipped) : row.equipped,
-    base_stats: typeof row.base_stats === 'string' ? JSON.parse(row.base_stats) : (row.base_stats || {}),
-    skills: typeof row.skills === 'string' ? JSON.parse(row.skills) : (row.skills || { skills: {}, globalCooldown: 0 }),
-    skill_points: row.skill_points || 0,
-    travel_state: row.travel_state ? (typeof row.travel_state === 'string' ? JSON.parse(row.travel_state) : row.travel_state) : null,
-    active_quests: typeof row.active_quests === 'string' ? JSON.parse(row.active_quests) : (row.active_quests || []),
-    completed_quests: typeof row.completed_quests === 'string' ? JSON.parse(row.completed_quests) : (row.completed_quests || []),
-    consumable_cooldowns: typeof row.consumable_cooldowns === 'string' ? JSON.parse(row.consumable_cooldowns) : (row.consumable_cooldowns || {}),
-    dialogue_history: typeof row.dialogue_history === 'string' ? JSON.parse(row.dialogue_history) : (row.dialogue_history || {}),
-    reputation: typeof row.reputation === 'string' ? JSON.parse(row.reputation) : (row.reputation || { general: 0 }),
-    unlocked_achievements: typeof row.unlocked_achievements === 'string' ? JSON.parse(row.unlocked_achievements) : (row.unlocked_achievements || []),
-    achievement_progress: typeof row.achievement_progress === 'string' ? JSON.parse(row.achievement_progress) : (row.achievement_progress || {}),
-    achievement_unlock_dates: typeof row.achievement_unlock_dates === 'string' ? JSON.parse(row.achievement_unlock_dates) : (row.achievement_unlock_dates || {}),
-    achievement_points: row.achievement_points || 0,
-    unlocked_titles: typeof row.unlocked_titles === 'string' ? JSON.parse(row.unlocked_titles) : (row.unlocked_titles || []),
-    active_title: row.active_title || null,
-    stats: typeof row.stats === 'string' ? JSON.parse(row.stats) : (row.stats || {}),
-    dungeon_state: row.dungeon_state ? (typeof row.dungeon_state === 'string' ? JSON.parse(row.dungeon_state) : row.dungeon_state) : null,
-    completed_dungeons: typeof row.completed_dungeons === 'string' ? JSON.parse(row.completed_dungeons) : (row.completed_dungeons || []),
-    crafting_xp: row.crafting_xp || 0,
-    known_recipes: typeof row.known_recipes === 'string' ? JSON.parse(row.known_recipes) : (row.known_recipes || []),
-    season_progress: typeof row.season_progress === 'string' ? JSON.parse(row.season_progress) : (row.season_progress || {}),
-    seasonal_challenges_completed: typeof row.seasonal_challenges_completed === 'string' ? JSON.parse(row.seasonal_challenges_completed) : (row.seasonal_challenges_completed || []),
-    // Bestiary
-    bestiary: typeof row.bestiary === 'string' ? JSON.parse(row.bestiary) : (row.bestiary || {}),
-    bestiary_unlocked: row.bestiary_unlocked || false,
-    // Permanent stats
-    passive_levels: typeof row.passive_levels === 'string' ? JSON.parse(row.passive_levels) : (row.passive_levels || {}),
-    souls: row.souls || 5,
-    legacy_points: row.legacy_points || 0,
-    account_stats: typeof row.account_stats === 'string' ? JSON.parse(row.account_stats) : (row.account_stats || {}),
-    total_deaths: row.total_deaths || 0,
-    total_kills: row.total_kills || 0,
-    total_gold_earned: row.total_gold_earned || 0,
-    total_xp_earned: row.total_xp_earned || 0,
-    highest_level_reached: row.highest_level_reached || 1,
-    total_crits: row.total_crits || 0,
-    // Roles array and name color
-    roles: typeof row.roles === 'string' ? JSON.parse(row.roles) : (row.roles || ['viewer']),
-    nameColor: row.name_color || null,
-    selectedRoleBadge: row.selected_role_badge || null,
-    theme: row.theme || 'crimson-knight',
-    // Abilities system
-    unlocked_abilities: typeof row.unlocked_abilities === 'string' ? JSON.parse(row.unlocked_abilities) : (row.unlocked_abilities || []),
-    equipped_abilities: typeof row.equipped_abilities === 'string' ? JSON.parse(row.equipped_abilities) : (row.equipped_abilities || []),
-    updated_at: row.updated_at
-  };
+  // No unified schema or character not found
+  return null;
 }
 
 /**
@@ -1109,20 +914,10 @@ async function deleteCharacter(playerId, channelName) {
     throw new Error(`Invalid channel: ${channelName}`);
   }
   
-  const tableName = getPlayerTable(channelName);
-  
-  // SECURITY: Additional validation - tableName must match expected pattern
-  // Note: Table names cannot be parameterized in SQL (PostgreSQL limitation)
-  // We use defense-in-depth: sanitization + whitelist + regex validation
-  if (!VALID_TABLE_NAME_PATTERN.test(tableName)) {
-    throw new Error(`Invalid table name format: ${tableName}`);
-  }
-  
-  // Using string interpolation for table name is required (SQL limitation)
-  // Player ID is properly parameterized ($1) to prevent SQL injection
+  // Player ID is properly parameterized to prevent SQL injection
   await query(
-    `DELETE FROM ${tableName} WHERE player_id = $1`,
-    [playerId]
+    `DELETE FROM characters WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
   );
   
   // Log deletion (sanitized for production)
@@ -1351,19 +1146,17 @@ async function updateUserRole(playerId, channelName, newRoles) {
     }
   }
   
-  const table = getPlayerTable(channelName);
-  
-  // Check if player exists first
+  // Check if player exists first in the unified characters table
   const existing = await query(
-    `SELECT player_id FROM ${table} WHERE player_id = $1`,
-    [playerId]
+    `SELECT player_id FROM characters WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
   );
   
   if (existing.rows.length > 0) {
     // Player exists, just update roles
     await query(
-      `UPDATE ${table} SET roles = $1, updated_at = NOW() WHERE player_id = $2`,
-      [JSON.stringify(rolesToSet), playerId]
+      `UPDATE characters SET roles = $1, updated_at = NOW() WHERE player_id = $2 AND channel_name = $3`,
+      [JSON.stringify(rolesToSet), playerId, channelName.toLowerCase()]
     );
   } else {
     // Player doesn't exist, get their display name from the players table
@@ -1378,9 +1171,9 @@ async function updateUserRole(playerId, channelName, newRoles) {
       // Uses DEFAULT_STARTING_LOCATION as the initial spawn point for players who haven't created a character yet
       // This allows the bot to track roles for users before they officially create a character through the web UI
       await query(
-        `INSERT INTO ${table} (player_id, name, location, roles, updated_at)
-         VALUES ($1, $2, $3, $4, NOW())`,
-        [playerId, displayName, DEFAULT_STARTING_LOCATION, JSON.stringify(rolesToSet)]
+        `INSERT INTO characters (player_id, channel_name, name, location, roles, updated_at)
+         VALUES ($1, $2, $3, $4, $5, NOW())`,
+        [playerId, channelName.toLowerCase(), displayName, DEFAULT_STARTING_LOCATION, JSON.stringify(rolesToSet)]
       );
     } else {
       // Player doesn't exist in global players table either - skip update
@@ -1396,10 +1189,9 @@ async function updateUserRole(playerId, channelName, newRoles) {
  * @returns {Promise<string>} User role or 'viewer' if not found
  */
 async function getUserRole(playerId, channelName) {
-  const table = getPlayerTable(channelName);
   const result = await query(
-    `SELECT roles FROM ${table} WHERE player_id = $1`,
-    [playerId]
+    `SELECT roles FROM characters WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
   );
 
   if (result.rows.length === 0) {
@@ -1429,20 +1221,22 @@ async function getUserRole(playerId, channelName) {
  * @returns {Promise<Array>} List of users with their roles
  */
 async function getChannelUsers(channelName, role = null) {
-  const table = getPlayerTable(channelName);
   let sql = `
-    SELECT t.player_id, t.role, t.updated_at as last_updated, p.display_name, t.level, t.gold
-    FROM ${table} t
-    LEFT JOIN players p ON t.player_id = p.id
+    SELECT c.player_id, c.roles, c.updated_at as last_updated, p.display_name, c.level, c.gold
+    FROM characters c
+    LEFT JOIN players p ON c.player_id = p.id
+    WHERE c.channel_name = $1
   `;
-  const params = [];
+  const params = [channelName.toLowerCase()];
 
   if (role) {
-    sql += ` WHERE t.role = $1`;
-    params.push(role);
+    // JSONB containment operator (@>) checks if roles array contains the specified role
+    // Roles are stored as JSONB arrays, e.g., ["viewer", "subscriber"]
+    sql += ` AND c.roles @> $2::jsonb`;
+    params.push(JSON.stringify([role]));
   }
 
-  sql += ` ORDER BY t.role DESC, t.level DESC`;
+  sql += ` ORDER BY c.level DESC`;
 
   const result = await query(sql, params);
   return result.rows;
@@ -1455,10 +1249,9 @@ async function getChannelUsers(channelName, role = null) {
  * @param {string} role - Role to set
  */
 async function setUserRole(playerId, channelName, role) {
-  const table = getPlayerTable(channelName);
   await query(
-    `UPDATE ${table} SET role = $1, updated_at = NOW() WHERE player_id = $2`,
-    [role, playerId]
+    `UPDATE characters SET roles = $1, updated_at = NOW() WHERE player_id = $2 AND channel_name = $3`,
+    [JSON.stringify([role]), playerId, channelName.toLowerCase()]
   );
 }
 
@@ -1643,7 +1436,23 @@ async function isBroadcasterAuthenticated(channelName) {
  * @param {any} value - New value
  */
 async function updatePlayerField(playerId, channelName, fieldName, value) {
-  const table = getPlayerTable(channelName);
+  // SECURITY: Validate field name against whitelist to prevent SQL injection
+  const allowedFields = [
+    'name', 'location', 'level', 'xp', 'xp_to_next', 'max_hp', 'hp', 'mana', 'max_mana', 'gold',
+    'type', 'inventory', 'pending', 'combat', 'skill_cd', 'step', 'is_player', 'in_combat', 'equipped',
+    'base_stats', 'skills', 'skill_points', 'travel_state', 'active_quests', 'completed_quests',
+    'consumable_cooldowns', 'dialogue_history', 'reputation', 'unlocked_achievements',
+    'achievement_progress', 'achievement_unlock_dates', 'achievement_points',
+    'unlocked_titles', 'active_title', 'stats', 'dungeon_state', 'completed_dungeons',
+    'crafting_xp', 'known_recipes', 'season_progress', 'seasonal_challenges_completed',
+    'bestiary', 'bestiary_unlocked', 'map_knowledge', 'roles', 'name_color', 'selected_role_badge', 
+    'theme', 'unlocked_abilities', 'equipped_abilities', 'ability_cooldowns',
+    'passive_levels', 'account_stats'
+  ];
+  
+  if (!allowedFields.includes(fieldName)) {
+    throw new Error(`Invalid field name: ${fieldName}. Field name must be in the whitelist.`);
+  }
   
   // For JSON/JSONB fields, stringify the value
   const jsonFields = ['inventory', 'equipped', 'base_stats', 'skills', 'active_quests', 
@@ -1651,15 +1460,16 @@ async function updatePlayerField(playerId, channelName, fieldName, value) {
     'unlocked_achievements', 'achievement_progress', 'achievement_unlock_dates',
     'unlocked_titles', 'stats', 'dungeon_state', 'completed_dungeons',
     'known_recipes', 'season_progress', 'seasonal_challenges_completed',
-    'passive_levels', 'account_stats', 'roles', 'bestiary'];
+    'passive_levels', 'account_stats', 'roles', 'bestiary', 'map_knowledge',
+    'unlocked_abilities', 'equipped_abilities', 'ability_cooldowns'];
   
   const finalValue = jsonFields.includes(fieldName) && typeof value === 'object' 
     ? JSON.stringify(value) 
     : value;
   
   await query(
-    `UPDATE ${table} SET ${fieldName} = $2, updated_at = NOW() WHERE player_id = $1`,
-    [playerId, finalValue]
+    `UPDATE characters SET ${fieldName} = $3, updated_at = NOW() WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase(), finalValue]
   );
 }
 
@@ -2115,9 +1925,9 @@ async function getAllPlayers() {
  *       preventing SQL injection. The function enforces format: players_{sanitized_channel}
  */
 async function getAllCharactersForChannel(channelName) {
-  const tableName = getPlayerTable(channelName); // Sanitized table name
   const result = await query(
-    `SELECT * FROM ${tableName} ORDER BY LOWER(name) ASC`
+    `SELECT * FROM characters WHERE channel_name = $1 ORDER BY LOWER(name) ASC`,
+    [channelName.toLowerCase()]
   );
   return result.rows;
 }
@@ -2185,18 +1995,10 @@ async function analyzeDatabase() {
   console.log('📊 Analyzing database tables...');
   
   try {
-    // Analyze global tables
+    // Analyze unified schema tables
     await query('ANALYZE players');
     await query('ANALYZE characters');
     await query('ANALYZE account_progress');
-    
-    // Analyze channel tables
-    const channels = getChannelList();
-    
-    for (const channel of channels) {
-      const tableName = getPlayerTable(channel);
-      await query(`ANALYZE ${tableName}`);
-    }
     
     console.log('✅ Database analysis complete');
   } catch (error) {
