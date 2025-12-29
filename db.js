@@ -23,6 +23,9 @@ const DEFAULT_STARTING_LOCATION = 'Silverbrook';
 const CHANNEL_LIST = process.env.CHANNELS ? 
   process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
 
+// Security: Table name validation pattern (shared across codebase)
+const VALID_TABLE_NAME_PATTERN = /^players_[a-z0-9_]+$/;
+
 /**
  * Load beta tester IDs from environment variable and Testers.txt
  * TESTERS env var should contain Twitch IDs (e.g., "32319902,12345678")
@@ -1098,10 +1101,34 @@ async function createCharacter(playerId, channelName, playerName, classType, loc
  * @param {string} channelName - Channel name
  */
 async function deleteCharacter(playerId, channelName) {
+  // SECURITY: Validate channel against whitelist
+  const validChannels = getChannelList();
+  if (!validChannels.includes(channelName.toLowerCase())) {
+    throw new Error(`Invalid channel: ${channelName}`);
+  }
+  
+  const tableName = getPlayerTable(channelName);
+  
+  // SECURITY: Additional validation - tableName must match expected pattern
+  // Note: Table names cannot be parameterized in SQL (PostgreSQL limitation)
+  // We use defense-in-depth: sanitization + whitelist + regex validation
+  if (!VALID_TABLE_NAME_PATTERN.test(tableName)) {
+    throw new Error(`Invalid table name format: ${tableName}`);
+  }
+  
+  // Using string interpolation for table name is required (SQL limitation)
+  // Player ID is properly parameterized ($1) to prevent SQL injection
   await query(
-    'DELETE FROM player_progress WHERE player_id = $1 AND channel_name = $2',
-    [playerId, channelName.toLowerCase()]
+    `DELETE FROM ${tableName} WHERE player_id = $1`,
+    [playerId]
   );
+  
+  // Log deletion (sanitized for production)
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`🗑️ Deleted character for ${playerId} in ${channelName}`);
+  } else {
+    console.log(`🗑️ Deleted character in ${channelName}`);
+  }
 }
 
 /**
@@ -2222,5 +2249,6 @@ module.exports = {
   // Constants
   ROLE_HIERARCHY,
   ROLE_COLORS,
-  DEFAULT_STARTING_LOCATION
+  DEFAULT_STARTING_LOCATION,
+  VALID_TABLE_NAME_PATTERN
 };
