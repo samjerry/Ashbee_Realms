@@ -5,7 +5,7 @@
   "nodes": [
     {
       "id": "character_selection",
-      "text": "Welcome, brave soul, to Ashbee Realms! I am Eldrin, and I've been guiding adventurers for many years. Before we begin your journey, tell me - what path calls to you? What role will you take in this vast world?",
+      "text": "Welcome, brave soul, to {world_name}! I am Eldrin, and I've been guiding adventurers for many years. Before we begin your journey, tell me - what path calls to you? What role will you take in this vast world?",
       "choices": [
         {
           "text": "Let me choose my class and role",
