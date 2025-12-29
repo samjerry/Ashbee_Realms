@@ -2048,6 +2048,15 @@ async function searchCharactersByName(searchTerm, channelName = null) {
 }
 
 /**
+ * Helper function to get list of configured channels
+ * Cached to avoid repeated environment variable parsing
+ */
+function getChannelList() {
+  if (!process.env.CHANNELS) return [];
+  return process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase());
+}
+
+/**
  * Analyze database tables for better query planning
  * Should be run periodically (e.g., daily)
  */
@@ -2061,10 +2070,9 @@ async function analyzeDatabase() {
     await query('ANALYZE account_progress');
     
     // Analyze channel tables
-    const CHANNELS = process.env.CHANNELS ? 
-      process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
+    const channels = getChannelList();
     
-    for (const channel of CHANNELS) {
+    for (const channel of channels) {
       const tableName = getPlayerTable(channel);
       await query(`ANALYZE ${tableName}`);
     }

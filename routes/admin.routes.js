@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const security = require('../middleware/security');
 
 // Create OperatorManager instance once for reuse
 const OperatorManager = require('../game/OperatorManager');

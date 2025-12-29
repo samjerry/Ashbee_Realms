@@ -50,6 +50,8 @@ const tutorialRoutes = require('./routes/tutorial.routes');
 const mapRoutes = require('./routes/map.routes');
 const adminRoutes = require('./routes/admin.routes');
 
+// Store interval IDs for cleanup on shutdown
+const intervals = [];
 
 // Default game state values
 const DEFAULT_GAME_STATE = {
@@ -311,13 +313,14 @@ app.get('/health', (req, res) => {
     }
     
     // Start database ANALYZE job (runs daily for query optimization)
-    setInterval(async () => {
+    const analyzeInterval = setInterval(async () => {
       try {
         await db.analyzeDatabase();
       } catch (error) {
         console.error('⚠️ Database ANALYZE job error:', error.message);
       }
     }, 86400000); // Run every 24 hours (86400000ms)
+    intervals.push(analyzeInterval);
     console.log('✅ Database ANALYZE job started (runs daily)');
     
     isReady = true;
@@ -1047,6 +1050,11 @@ process.on('unhandledRejection', (reason, promise) => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('📴 SIGTERM signal received: closing HTTP server');
+  
+  // Clear all intervals
+  intervals.forEach(intervalId => clearInterval(intervalId));
+  console.log('✅ Cleared all intervals');
+  
   server.close(() => {
     console.log('✅ HTTP server closed');
     db.close().then(() => {
@@ -1058,6 +1066,11 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   console.log('📴 SIGINT signal received: closing HTTP server');
+  
+  // Clear all intervals
+  intervals.forEach(intervalId => clearInterval(intervalId));
+  console.log('✅ Cleared all intervals');
+  
   server.close(() => {
     console.log('✅ HTTP server closed');
     db.close().then(() => {
