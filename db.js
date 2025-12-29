@@ -23,6 +23,9 @@ const DEFAULT_STARTING_LOCATION = 'Silverbrook';
 const CHANNEL_LIST = process.env.CHANNELS ? 
   process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
 
+// Security: Table name validation pattern (shared across codebase)
+const VALID_TABLE_NAME_PATTERN = /^players_[a-z0-9_]+$/;
+
 /**
  * Load beta tester IDs from environment variable and Testers.txt
  * TESTERS env var should contain Twitch IDs (e.g., "32319902,12345678")
@@ -1107,7 +1110,7 @@ async function deleteCharacter(playerId, channelName) {
   const tableName = getPlayerTable(channelName);
   
   // SECURITY: Additional validation - tableName must match expected pattern
-  if (!/^players_[a-z0-9_]+$/.test(tableName)) {
+  if (!VALID_TABLE_NAME_PATTERN.test(tableName)) {
     throw new Error(`Invalid table name format: ${tableName}`);
   }
   
@@ -2237,5 +2240,6 @@ module.exports = {
   // Constants
   ROLE_HIERARCHY,
   ROLE_COLORS,
-  DEFAULT_STARTING_LOCATION
+  DEFAULT_STARTING_LOCATION,
+  VALID_TABLE_NAME_PATTERN
 };

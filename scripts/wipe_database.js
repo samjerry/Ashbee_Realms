@@ -9,6 +9,9 @@
 require('dotenv').config();
 const db = require('../db');
 
+// Import table name validation pattern from db module
+const { VALID_TABLE_NAME_PATTERN } = db;
+
 async function wipeDatabase() {
   console.log('⚠️  WARNING: This will delete ALL player data!');
   console.log('⏳ Starting database wipe in 3 seconds...');
@@ -31,7 +34,7 @@ async function wipeDatabase() {
       const tableName = db.getPlayerTable(channel);
       
       // SECURITY: Validate table name format
-      if (!/^players_[a-z0-9_]+$/.test(tableName)) {
+      if (!VALID_TABLE_NAME_PATTERN.test(tableName)) {
         console.error(`❌ Invalid table name format: ${tableName}`);
         continue;
       }
@@ -95,7 +98,7 @@ async function wipeDatabase() {
       const tableName = db.getPlayerTable(channel);
       
       // SECURITY: Validate table name format
-      if (!/^players_[a-z0-9_]+$/.test(tableName)) {
+      if (!VALID_TABLE_NAME_PATTERN.test(tableName)) {
         console.error(`❌ Invalid table name format: ${tableName}`);
         continue;
       }

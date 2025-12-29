@@ -345,16 +345,19 @@ router.post('/create',
       // Check if character already exists
       const existing = await db.getCharacter(user.id, channelName);
       
-      console.log('🔍 Existing character check:', {
-        found: !!existing,
-        hasName: existing?.name,
-        hasType: existing?.type,
-        characterData: existing ? {
-          name: existing.name,
-          type: existing.type,
-          level: existing.level
-        } : null
-      });
+      // Debug logging (development only)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('🔍 Existing character check:', {
+          found: !!existing,
+          hasName: existing?.name,
+          hasType: existing?.type,
+          characterData: existing ? {
+            name: existing.name,
+            type: existing.type,
+            level: existing.level
+          } : null
+        });
+      }
       
       // IMPROVED: Check if character actually has data, not just if row exists
       // Allow recreation if character has no name/type (incomplete record)
