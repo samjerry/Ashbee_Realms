@@ -474,9 +474,23 @@ router.post('/dialogue/advance',
         );
         
         if (actionResult.tutorialComplete) {
-          // Mark tutorial as complete
+          // Mark tutorial as complete in character progress
           character.tutorialProgress.isActive = false;
           character.tutorialProgress.completedAt = Date.now();
+          
+          // Mark tutorial as complete in account_progress
+          try {
+            let accountProgress = await db.loadAccountProgress(user.id);
+            if (!accountProgress) {
+              accountProgress = {};
+            }
+            accountProgress.tutorial_completed = true;
+            accountProgress.username = accountProgress.username || character.name;
+            await db.saveAccountProgress(user.id, accountProgress);
+            console.log(`✅ Tutorial marked as completed for ${character.name}`);
+          } catch (error) {
+            console.error('Error marking tutorial complete in account_progress:', error);
+          }
         }
       }
       

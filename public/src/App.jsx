@@ -116,19 +116,27 @@ function App() {
       return;
     }
 
-    // Check if this is a new user (tutorial=true in URL)
+    // Check URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const isTutorial = urlParams.get('tutorial') === 'true';
+    const isCreate = urlParams.get('create') === 'true';
     
     if (isTutorial) {
-      // For new users, start with dialogue to select class/role
-      // Then show character creation
+      // New player - start tutorial with dialogue to select class/role
+      // Character created during tutorial will be the actual playable character
       const npcId = 'tutorial_mentor';
       const nodeId = 'character_selection';
       setTutorialDialogueData({ npcId, dialogueNodeId: nodeId });
       setShowTutorialDialogue(true);
       
       // Remove tutorial parameter from URL without reload
+      const newUrl = window.location.pathname + '?channel=' + (urlParams.get('channel') || '');
+      window.history.replaceState({}, '', newUrl);
+    } else if (isCreate) {
+      // Returning player who has completed tutorial - go straight to character creation
+      setShowCharacterCreation(true);
+      
+      // Remove create parameter from URL without reload
       const newUrl = window.location.pathname + '?channel=' + (urlParams.get('channel') || '');
       window.history.replaceState({}, '', newUrl);
     } else {

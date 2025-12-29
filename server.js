@@ -504,9 +504,19 @@ app.get('/auth/twitch/callback', async (req, res) => {
       const needsCharacterCreation = !existingCharacter || !existingCharacter.type || existingCharacter.type === 'Unknown';
       
       if (needsCharacterCreation) {
-        // No character exists or incomplete - redirect to tutorial/character creation
-        console.log(`📝 New player ${user.display_name} (type: ${existingCharacter?.type || 'none'}) - redirecting to character creation`);
-        return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+        // Check if player has completed tutorial before
+        const accountProgress = await db.loadAccountProgress(playerId);
+        const hasCompletedTutorial = accountProgress && accountProgress.tutorial_completed === true;
+        
+        if (hasCompletedTutorial) {
+          // Player has done tutorial before, send directly to character creation
+          console.log(`📝 Returning player ${user.display_name} - redirecting to character creation (tutorial already completed)`);
+          return res.redirect(`/adventure?create=true&channel=${encodeURIComponent(channel)}`);
+        } else {
+          // New player - send to tutorial which includes character creation
+          console.log(`📝 New player ${user.display_name} - redirecting to tutorial`);
+          return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+        }
       } else {
         // Character exists and is complete - redirect to main game
         console.log(`🎮 Existing player ${user.display_name} (${existingCharacter.type}) - redirecting to game`);
@@ -1013,9 +1023,19 @@ app.get('/adventure', async (req, res) => {
     // Character needs creation if: no record exists, no type/class set, or type is 'Unknown'
     const needsCharacterCreation = !character || !character.type || character.type === 'Unknown';
     
-    // If character doesn't exist or is incomplete and URL doesn't already have tutorial parameter, redirect with it
-    if (needsCharacterCreation && req.query.tutorial !== 'true') {
-      return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+    // If character doesn't exist or is incomplete and URL doesn't already have tutorial or create parameter, redirect appropriately
+    if (needsCharacterCreation && req.query.tutorial !== 'true' && req.query.create !== 'true') {
+      // Check if player has completed tutorial before
+      const accountProgress = await db.loadAccountProgress(req.session.user.id);
+      const hasCompletedTutorial = accountProgress && accountProgress.tutorial_completed === true;
+      
+      if (hasCompletedTutorial) {
+        // Returning player - skip tutorial, go to character creation
+        return res.redirect(`/adventure?create=true&channel=${encodeURIComponent(channel)}`);
+      } else {
+        // New player - go to tutorial
+        return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+      }
     }
   } catch (error) {
     console.error('Error checking character:', error);
