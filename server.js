@@ -206,7 +206,7 @@ let dbError = null;
 let initStartTime = Date.now();
 
 // Health check endpoint for Railway
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   const elapsed = ((Date.now() - initStartTime) / 1000).toFixed(1);
   
   if (!isReady) {
@@ -229,8 +229,30 @@ app.get('/health', (req, res) => {
     });
   }
   
-  console.log(`✅ Health check: OK (${elapsed}s since start)`);
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  // Quick schema validation
+  try {
+    const schemaCheck = await db.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'characters' 
+      AND column_name IN ('mana', 'max_mana')
+    `);
+    
+    const hasRequiredColumns = schemaCheck.rows.length === 2;
+    
+    console.log(`✅ Health check: OK (${elapsed}s since start)`);
+    res.status(200).json({ 
+      status: 'ok', 
+      schemaValid: hasRequiredColumns,
+      timestamp: new Date().toISOString() 
+    });
+  } catch (err) {
+    console.log(`✅ Health check: OK (${elapsed}s since start) - schema check skipped`);
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString() 
+    });
+  }
 });
 
 // Initialize database (PostgreSQL or SQLite)
@@ -258,6 +280,17 @@ app.get('/health', (req, res) => {
     
     clearTimeout(initTimeout); // Clear timeout on success
     console.log(`✅ Database initialized successfully in ${dbInitTime}s`);
+    
+    // Run mana column migration automatically
+    console.log('🔧 Running mana columns migration...');
+    try {
+      const { addManaColumns } = require('./scripts/add_mana_columns');
+      await addManaColumns();
+      console.log('✅ Mana columns migration complete');
+    } catch (manaErr) {
+      console.error('⚠️ Mana migration warning:', manaErr.message);
+      // Don't fail deployment - columns might already exist
+    }
     
     // Session management enhancements (PostgreSQL only)
     if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {

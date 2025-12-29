@@ -497,7 +497,19 @@ router.post('/create',
       });
     } catch (error) {
       console.error('Error creating character:', error);
-      res.status(500).json({ error: error.message || 'Failed to create character' });
+      
+      // Provide helpful error messages based on error type
+      if (error.message.includes('column') && error.message.includes('does not exist')) {
+        return res.status(500).json({ 
+          error: 'Database schema is missing required columns. The server administrator needs to run database migrations. Please try again later or contact support.',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+      }
+      
+      return res.status(500).json({ 
+        error: 'Failed to create character. Please try again.',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   });
 
