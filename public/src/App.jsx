@@ -116,51 +116,40 @@ function App() {
       return;
     }
 
-    // Check URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const isTutorial = urlParams.get('tutorial') === 'true';
-    const isCreate = urlParams.get('create') === 'true';
-    
-    if (isTutorial) {
-      // New player - start tutorial with dialogue to select class/role
-      // Character created during tutorial will be the actual playable character
-      const npcId = 'tutorial_mentor';
-      const nodeId = 'character_selection';
-      setTutorialDialogueData({ npcId, dialogueNodeId: nodeId });
-      setShowTutorialDialogue(true);
+    // Initialize game by fetching player data first
+    const initializeGame = async () => {
+      const success = await fetchPlayer();
+      const currentPlayer = useGameStore.getState().player;
       
-      // Remove tutorial parameter from URL without reload
-      const newUrl = window.location.pathname + '?channel=' + (urlParams.get('channel') || '');
-      window.history.replaceState({}, '', newUrl);
-    } else if (isCreate) {
-      // Returning player who has completed tutorial - go straight to character creation
-      setShowCharacterCreation(true);
-      
-      // Remove create parameter from URL without reload
-      const newUrl = window.location.pathname + '?channel=' + (urlParams.get('channel') || '');
-      window.history.replaceState({}, '', newUrl);
-    } else {
-      // Initialize game by fetching player data first, then setting up sockets
-      const initializeGame = async () => {
-        const success = await fetchPlayer();
-        if (success) {
-          setupSocketListeners();
-          
-          // Fetch world name for the channel
-          try {
-            const channelResponse = await fetch('/api/player/channel');
-            const channelData = await channelResponse.json();
-            const channel = channelData.channel || 'default';
-            await fetchWorldName(channel);
-          } catch (err) {
-            console.error('Failed to fetch world name:', err);
-          }
-        } else {
-          console.error('[App] Failed to fetch player data. WebSocket setup skipped.');
+      // If fetchPlayer returned false (404) or player is null, show character creation
+      if (!success || !currentPlayer) {
+        console.log('🆕 New player detected - showing character creation');
+        setShowCharacterCreation(true);
+        
+        // Remove tutorial parameter from URL if present
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('tutorial')) {
+          const newUrl = window.location.pathname + 
+            (urlParams.get('channel') ? `?channel=${urlParams.get('channel')}` : '');
+          window.history.replaceState({}, '', newUrl);
         }
-      };
-      initializeGame();
-    }
+        return;
+      }
+      
+      // Character exists - setup sockets and fetch world name
+      setupSocketListeners();
+      
+      try {
+        const channelResponse = await fetch('/api/player/channel');
+        const channelData = await channelResponse.json();
+        const channel = channelData.channel || 'default';
+        await fetchWorldName(channel);
+      } catch (err) {
+        console.error('Failed to fetch world name:', err);
+      }
+    };
+    
+    initializeGame();
   }, []);
 
   const handleCharacterCreation = async (characterData) => {

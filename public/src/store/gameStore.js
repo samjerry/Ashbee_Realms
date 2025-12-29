@@ -101,6 +101,18 @@ const useGameStore = create((set, get) => ({
       
       // Fetch player stats (server already verified auth to serve this page)
       const response = await fetch('/api/player/stats');
+      
+      // Handle case where character doesn't exist yet (404)
+      if (response.status === 404) {
+        console.log('📝 No character found - character creation needed');
+        set({ 
+          player: null, 
+          isLoading: false,
+          error: null // Clear any previous errors
+        });
+        return false; // Indicate no character exists (not an error)
+      }
+      
       if (!response.ok) {
         throw new Error('Failed to fetch player stats');
       }
@@ -113,7 +125,8 @@ const useGameStore = create((set, get) => ({
       set({ 
         player: data, 
         mapKnowledge: mapKnowledge,
-        isLoading: false 
+        isLoading: false,
+        error: null 
       });
 
       // Auto-fetch inventory/equipment after player loads
