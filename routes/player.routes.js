@@ -471,16 +471,17 @@ router.post('/create',
       // Save character with roles and color
       await db.saveCharacter(user.id, channelName, character);
       
-      // Save username to account_progress (but don't mark tutorial complete yet)
+      // Save username to account_progress and ensure tutorial_completed starts as false
       try {
         let accountProgress = await db.loadAccountProgress(user.id);
         if (!accountProgress) {
           accountProgress = {};
         }
         accountProgress.username = characterName;
-        // Note: tutorial_completed is NOT set here - it's set when tutorial finishes
+        // Explicitly set tutorial_completed to false for new characters
+        accountProgress.tutorial_completed = false;
         await db.saveAccountProgress(user.id, accountProgress);
-        console.log(`✅ Username saved to account progress: ${characterName}`);
+        console.log(`✅ Username saved to account progress: ${characterName} (tutorial_completed: false)`);
       } catch (error) {
         console.error('Error updating account progress:', error);
         // Don't fail character creation if account progress update fails
