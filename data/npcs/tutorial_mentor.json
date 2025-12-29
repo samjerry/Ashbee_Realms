@@ -1,0 +1,15 @@
+{
+  "id": "tutorial_mentor",
+  "name": "Eldrin the Guide",
+  "title": "Veteran Adventurer",
+  "description": "A weathered adventurer with kind eyes and countless stories. He's helped many beginners find their path in these dangerous lands.",
+  "location": "town_square",
+  "dialogue_tree": "tutorial_mentor_dialogue",
+  "role": "tutorial_guide",
+  "sprite": "elder_adventurer",
+  "always_available": true,
+  "friendly": true,
+  "greeting": "Ah, a fresh face! Welcome to the realm, young adventurer. I'm Eldrin, and I've been helping folks like you learn the ropes for many years now.",
+  "personality": "warm_mentor",
+  "icon": "🧙‍♂️"
+}

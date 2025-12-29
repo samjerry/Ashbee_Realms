@@ -1,173 +1,187 @@
 {
   "id": "tutorial_first_steps",
-  "name": "First Steps in Ashbee Realms",
-  "description": "Learn the basics of adventuring in Ashbee Realms. Your journey begins here!",
+  "name": "Eldrin's Training",
+  "description": "Eldrin the Guide is teaching you the ways of adventuring in this dangerous realm.",
   "type": "tutorial",
   "level_required": 1,
   "is_tutorial": true,
   "auto_accept": true,
+  "npc_guide": "tutorial_mentor",
   "steps": [
     {
-      "id": "step_1_welcome",
+      "id": "step_1_meet_eldrin",
       "order": 1,
-      "title": "Welcome, Adventurer!",
-      "description": "Welcome to Ashbee Realms! Let's get you started on your adventure.",
-      "instruction": "Click on your Character Sheet to view your stats and equipment.",
+      "title": "Meet Your Mentor",
+      "description": "A kind veteran adventurer wants to speak with you.",
+      "instruction": "Speak with Eldrin the Guide in Town Square",
+      "type": "dialogue",
+      "target": "tutorial_mentor",
+      "dialogue_node": "tutorial_start",
+      "reward": {
+        "xp": 10,
+        "gold": 5
+      },
+      "tip": "Eldrin will teach you everything you need to survive."
+    },
+    {
+      "id": "step_2_learn_lore",
+      "order": 2,
+      "title": "Understanding the Threat",
+      "description": "Learn about the dangers that lurk in Ashbee Realms.",
+      "instruction": "Learn about the monsters from Eldrin",
+      "type": "dialogue",
+      "target": "tutorial_mentor",
+      "dialogue_node": "world_lore",
+      "reward": {
+        "xp": 15,
+        "gold": 5
+      },
+      "triggers": ["open_bestiary"],
+      "tip": "Knowledge is your first weapon against danger."
+    },
+    {
+      "id": "step_3_check_stats",
+      "order": 3,
+      "title": "Know Your Strengths",
+      "description": "Understanding your abilities is crucial for survival.",
+      "instruction": "Open your Character Sheet as Eldrin instructed",
       "type": "ui_interaction",
       "target": "character_sheet",
+      "dialogue_completion_node": "stats_explained",
       "reward": {
         "xp": 10,
         "gold": 5
       },
-      "tip": "Your character sheet shows your stats, equipment, and active effects. Check it often!"
+      "tip": "Understanding your stats helps you choose the right battles."
     },
     {
-      "id": "step_2_inventory",
-      "order": 2,
-      "title": "Managing Your Inventory",
-      "description": "Learn how to manage items and equipment.",
-      "instruction": "Open your Inventory and view your starting gear.",
-      "type": "ui_interaction",
-      "target": "inventory",
-      "reward": {
-        "xp": 10,
-        "gold": 5
-      },
-      "tip": "You can equip, use, or sell items from your inventory. Rarity determines item quality!"
-    },
-    {
-      "id": "step_3_equip_item",
-      "order": 3,
-      "title": "Equipping Gear",
-      "description": "Equip your starting weapon to increase your combat power.",
-      "instruction": "Equip your starting weapon from the inventory.",
+      "id": "step_4_equip_weapon",
+      "order": 4,
+      "title": "Arm Yourself",
+      "description": "A warrior without a weapon is just a target.",
+      "instruction": "Equip the weapon Eldrin gave you",
       "type": "equip_item",
       "target": "weapon",
+      "dialogue_completion_node": "weapon_equipped",
       "reward": {
         "xp": 15,
         "gold": 10
       },
-      "tip": "Better gear makes you stronger! Equipment affects your stats directly."
+      "tip": "A warrior is only as good as their equipment."
     },
     {
-      "id": "step_4_explore",
-      "order": 4,
-      "title": "Exploring the World",
-      "description": "Time to venture out and explore Ashbee Realms!",
-      "instruction": "Open the Map and travel to Whispering Woods.",
+      "id": "step_5_first_hunt",
+      "order": 5,
+      "title": "Your First Hunt",
+      "description": "Eldrin has sent you on your first combat mission.",
+      "instruction": "Travel to Whispering Woods and find the Forest Slime",
       "type": "travel",
       "target": "whispering_woods",
+      "dialogue_preparation_node": "first_hunt",
       "reward": {
         "xp": 20,
         "gold": 10
       },
-      "tip": "Each location has different monsters, dangers, and rewards. Choose wisely!"
+      "tip": "Eldrin is counting on you. Don't let him down!"
     },
     {
-      "id": "step_5_first_combat",
-      "order": 5,
-      "title": "Your First Battle",
-      "description": "Encounter and defeat your first monster.",
-      "instruction": "Defeat a Forest Slime in combat.",
+      "id": "step_6_first_combat",
+      "order": 6,
+      "title": "Battle the Slime",
+      "description": "Prove yourself in your first real battle.",
+      "instruction": "Defeat the Forest Slime in combat",
       "type": "defeat_monster",
       "target": "forest_slime",
+      "dialogue_during_combat": "combat_encouragement",
+      "dialogue_after_combat": "victory_celebration",
       "reward": {
         "xp": 50,
         "gold": 25,
         "item": "minor_health_potion"
       },
-      "tip": "Use Attack to deal damage. Watch your HP and use potions when needed!"
+      "tip": "Use Attack to deal damage. Watch your HP!"
     },
     {
-      "id": "step_6_loot",
-      "order": 6,
-      "title": "Collecting Loot",
-      "description": "Defeated monsters drop valuable items and gold.",
-      "instruction": "Collect loot from your defeated enemy.",
-      "type": "collect_loot",
+      "id": "step_7_collect_loot",
+      "order": 7,
+      "title": "Claim Your Spoils",
+      "description": "Return to Eldrin with news of your victory.",
+      "instruction": "Return to Eldrin with news of your victory",
+      "type": "dialogue",
+      "target": "tutorial_mentor",
+      "dialogue_node": "victory_celebration",
       "reward": {
         "xp": 15,
         "gold": 10
       },
-      "tip": "Loot includes gold, items, and crafting materials. Don't leave treasure behind!"
+      "tip": "Every victory brings rewards. Treasure them!"
     },
     {
-      "id": "step_7_level_up",
-      "order": 7,
+      "id": "step_8_level_up",
+      "order": 8,
       "title": "Growing Stronger",
-      "description": "You've gained enough experience to level up!",
-      "instruction": "Reach Level 2 by gaining experience from combat.",
-      "type": "reach_level",
-      "target": 2,
+      "description": "Learn about character progression from your mentor.",
+      "instruction": "Speak with Eldrin about your growth",
+      "type": "dialogue",
+      "target": "tutorial_mentor",
+      "dialogue_node": "level_up_talk",
+      "condition": "level >= 2",
       "reward": {
         "xp": 0,
         "gold": 50,
         "item": "apprentice_health_potion"
       },
-      "tip": "Each level increases your stats and unlocks new abilities. Keep fighting to grow stronger!"
+      "tip": "Each level makes you more formidable."
     },
     {
-      "id": "step_8_quest_system",
-      "order": 8,
-      "title": "Accepting Quests",
-      "description": "Quests provide goals, rewards, and story progression.",
-      "instruction": "Open the Quest Log to see available quests.",
-      "type": "ui_interaction",
-      "target": "quest_log",
+      "id": "step_9_quest_system",
+      "order": 9,
+      "title": "The Path of Quests",
+      "description": "Eldrin teaches you about the quest system.",
+      "instruction": "Learn about quests from Eldrin",
+      "type": "dialogue",
+      "target": "tutorial_mentor",
+      "dialogue_node": "quest_introduction",
+      "triggers": ["open_quest_log"],
       "reward": {
         "xp": 20,
         "gold": 15
       },
-      "tip": "Complete quests for extra XP, gold, and unique rewards!"
+      "tip": "Quests give you purpose and great rewards."
     },
     {
-      "id": "step_9_merchant",
-      "order": 9,
-      "title": "Trading with Merchants",
-      "description": "NPCs can buy your items or sell you new gear.",
-      "instruction": "Find and interact with a merchant NPC.",
+      "id": "step_10_merchant",
+      "order": 10,
+      "title": "Trade and Prosper",
+      "description": "Learn the importance of merchants and trading.",
+      "instruction": "Find a merchant as Eldrin suggested",
       "type": "interact_npc",
       "target": "merchant",
+      "dialogue_preparation_node": "merchant_advice",
       "reward": {
         "xp": 25,
         "gold": 20
       },
-      "tip": "Merchants have different inventories. Some sell potions, others sell weapons or armor!"
+      "tip": "Not all power comes from combat alone."
     },
     {
-      "id": "step_10_complete",
-      "order": 10,
-      "title": "Tutorial Complete!",
-      "description": "You've learned the basics! Your adventure truly begins now.",
-      "instruction": "Continue exploring, fighting monsters, and completing quests!",
-      "type": "complete",
+      "id": "step_11_graduation",
+      "order": 11,
+      "title": "A Hero's Beginning",
+      "description": "Complete your training with Eldrin.",
+      "instruction": "Return to Eldrin for your final lesson",
+      "type": "dialogue",
+      "target": "tutorial_mentor",
+      "dialogue_node": "graduation",
       "reward": {
         "xp": 100,
         "gold": 100,
         "item": "adventurer_starter_pack",
         "title": "Novice Adventurer"
       },
-      "tip": "You're ready to explore dungeons, join raids, and become a legend. Good luck!"
+      "tip": "You're ready. The realm needs heroes like you."
     }
   ],
-  "rewards": {
-    "xp": 265,
-    "gold": 250,
-    "items": [
-      {
-        "id": "adventurer_starter_pack",
-        "quantity": 1
-      },
-      {
-        "id": "minor_health_potion",
-        "quantity": 3
-      },
-      {
-        "id": "apprentice_health_potion",
-        "quantity": 2
-      }
-    ],
-    "title": "Novice Adventurer"
-  },
-  "completion_message": "Congratulations! You've completed the tutorial and earned the title 'Novice Adventurer'. The world of Ashbee Realms awaits your exploration!"
+  "completion_dialogue": "graduation",
+  "completion_message": "Eldrin smiles proudly. 'You've learned well. Now go forth and make your mark on this world!'"
 }

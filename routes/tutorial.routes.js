@@ -383,4 +383,159 @@ router.post('/skip',
     }
   });
 
+/**
+ * GET /dialogue/:npcId/:nodeId
+ * Get specific dialogue node with response options
+ */
+router.get('/dialogue/:npcId/:nodeId', async (req, res) => {
+  try {
+    const npcId = sanitization.sanitizeInput(req.params.npcId, { maxLength: 100 });
+    const nodeId = sanitization.sanitizeInput(req.params.nodeId, { maxLength: 100 });
+    
+    const node = tutorialManager.getDialogueNode(npcId, nodeId);
+    
+    if (!node) {
+      return res.status(404).json({
+        success: false,
+        error: 'Dialogue node not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      node: {
+        id: node.id,
+        text: node.text,
+        choices: node.choices || [],
+        reward: node.reward || null,
+        action: node.action || null,
+        action_target: node.action_target || null,
+        condition: node.condition || null
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching dialogue node:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch dialogue node'
+    });
+  }
+});
+
+/**
+ * POST /dialogue/advance
+ * Advance to next dialogue node and trigger actions
+ */
+router.post('/dialogue/advance',
+  rateLimiter.middleware('default'),
+  security.auditLog('advance_dialogue'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const channel = getChannel(req);
+    const { npcId, currentNodeId, choiceIndex, nextNodeId } = req.body;
+    
+    if (!channel) {
+      return res.status(400).json({ error: 'No channel configured' });
+    }
+    
+    if (!npcId || !currentNodeId || choiceIndex === undefined) {
+      return res.status(400).json({ error: 'Missing required parameters' });
+    }
+    
+    try {
+      const character = await db.getCharacter(user.id, channel.toLowerCase());
+      
+      if (!character) {
+        return res.status(404).json({ error: 'Character not found' });
+      }
+      
+      const result = tutorialManager.advanceDialogue(
+        character, 
+        sanitization.sanitizeInput(npcId, { maxLength: 100 }),
+        sanitization.sanitizeInput(currentNodeId, { maxLength: 100 }),
+        choiceIndex
+      );
+      
+      if (!result.success) {
+        return res.status(400).json({
+          success: false,
+          error: result.error
+        });
+      }
+      
+      // Trigger any actions
+      if (result.action) {
+        const actionResult = tutorialManager.triggerDialogueAction(
+          result.action,
+          character,
+          result.actionTarget
+        );
+        
+        if (actionResult.tutorialComplete) {
+          // Mark tutorial as complete
+          character.tutorialProgress.isActive = false;
+          character.tutorialProgress.completedAt = Date.now();
+        }
+      }
+      
+      // Save character with dialogue history
+      await db.saveCharacter(user.id, channel.toLowerCase(), character);
+      
+      // Emit socket update
+      socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), character.toFrontend());
+      
+      res.json({
+        success: true,
+        nextNodeId: result.nextNodeId,
+        action: result.action,
+        actionTarget: result.actionTarget
+      });
+    } catch (error) {
+      console.error('Error advancing dialogue:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Failed to advance dialogue'
+      });
+    }
+  });
+
+/**
+ * GET /npc/:npcId
+ * Get tutorial NPC data
+ */
+router.get('/npc/:npcId', async (req, res) => {
+  try {
+    const npcId = sanitization.sanitizeInput(req.params.npcId, { maxLength: 100 });
+    const npc = tutorialManager.getNPC(npcId);
+    
+    if (!npc) {
+      return res.status(404).json({
+        success: false,
+        error: 'NPC not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      npc: {
+        id: npc.id,
+        name: npc.name,
+        title: npc.title,
+        description: npc.description,
+        icon: npc.icon,
+        greeting: npc.greeting,
+        personality: npc.personality
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching NPC data:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch NPC data'
+    });
+  }
+});
+
 module.exports = router;
