@@ -90,10 +90,20 @@ router.post('/settings', requireBroadcaster, async (req, res) => {
       return res.status(400).json({ error: 'Invalid season' });
     }
     
-    // Sanitize world name
-    const sanitizedWorldName = worldName 
-      ? worldName.trim().substring(0, 50) 
-      : 'Ashbee Realms';
+    // Sanitize world name - remove potentially harmful characters
+    let sanitizedWorldName = 'Ashbee Realms';
+    if (worldName) {
+      // Allow only alphanumeric, spaces, hyphens, apostrophes, and basic punctuation
+      sanitizedWorldName = worldName
+        .replace(/[^a-zA-Z0-9\s\-',.!]/g, '')
+        .trim()
+        .substring(0, 50);
+      
+      // If nothing left after sanitization, use default
+      if (!sanitizedWorldName) {
+        sanitizedWorldName = 'Ashbee Realms';
+      }
+    }
     
     // Update game state
     const updatedState = await db.setGameState(channel, {

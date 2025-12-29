@@ -1701,14 +1701,6 @@ async function setGameState(channelName, settings) {
       maintenance_mode = false
     } = settings;
     
-    // Check if record exists first
-    const existing = await query(
-      'SELECT channel_name FROM game_state WHERE channel_name = $1',
-      [channelName.toLowerCase()]
-    );
-    
-    const isUpdate = existing.rows.length > 0;
-    
     const result = await query(
       `INSERT INTO game_state (
         channel_name, weather, time_of_day, season, game_mode, 
@@ -1738,7 +1730,7 @@ async function setGameState(channelName, settings) {
       ]
     );
     
-    console.log(`${isUpdate ? '🔄 Updated' : '✨ Created'} game state for ${channelName}:`, settings);
+    console.log(`✅ Game state saved for ${channelName}:`, settings);
     return result.rows[0];
   } catch (error) {
     console.error('Error setting game state:', error);

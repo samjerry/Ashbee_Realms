@@ -8,7 +8,8 @@ const SetupView = () => {
     weather: 'Clear',
     timeOfDay: 'Day',
     season: 'Spring',
-    maintenanceMode: false
+    maintenanceMode: false,
+    activeEvent: null
   });
   
   const [originalSettings, setOriginalSettings] = useState(null);
@@ -59,8 +60,9 @@ const SetupView = () => {
       const data = await response.json();
       
       if (data.success) {
-        setSettings(data.settings);
-        setOriginalSettings(data.settings);
+        // Deep clone to avoid reference issues
+        setSettings(JSON.parse(JSON.stringify(data.settings)));
+        setOriginalSettings(JSON.parse(JSON.stringify(data.settings)));
         setIsExistingSetup(data.isExistingSetup);
         setChannel(data.channel);
       } else {
@@ -91,7 +93,8 @@ const SetupView = () => {
       
       if (data.success) {
         setSuccess(true);
-        setOriginalSettings(settings);
+        // Deep clone to avoid reference issues
+        setOriginalSettings(JSON.parse(JSON.stringify(settings)));
         setIsExistingSetup(true);
         setHasChanges(false);
         
@@ -110,7 +113,8 @@ const SetupView = () => {
 
   const handleReset = () => {
     if (originalSettings) {
-      setSettings(originalSettings);
+      // Deep clone to avoid reference issues
+      setSettings(JSON.parse(JSON.stringify(originalSettings)));
       setHasChanges(false);
     }
   };
