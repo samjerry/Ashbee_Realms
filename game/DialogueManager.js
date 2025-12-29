@@ -195,9 +195,10 @@ class DialogueManager {
    * Format node for display (process variables, etc.)
    * @param {Object} node - Node object
    * @param {Object} character - Character object
+   * @param {string} worldName - World name (defaults to 'Ashbee Realms')
    * @returns {Object} Formatted node
    */
-  formatNode(node, character) {
+  formatNode(node, character, worldName = 'Ashbee Realms') {
     let text = node.text || '';
 
     // Replace character-specific variables
@@ -206,6 +207,9 @@ class DialogueManager {
       text = text.replace(/\{player_level\}/g, character.level || 1);
       text = text.replace(/\{player_class\}/g, character.class || 'adventurer');
     }
+
+    // Replace world name
+    text = text.replace(/\{world_name\}/g, worldName);
 
     return {
       id: node.id,

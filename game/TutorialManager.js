@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
+const DialogueManager = require('./DialogueManager');
 
-class TutorialManager {
+class TutorialManager extends DialogueManager {
   constructor() {
+    super();
     this.tutorialQuest = null;
     this.tooltips = new Map();
     this.gameplayTips = [];
@@ -571,6 +573,18 @@ class TutorialManager {
     }
 
     return null;
+  }
+
+  /**
+   * Override formatNode to ensure world_name variable is always replaced
+   * @param {Object} node - Node object
+   * @param {Object} character - Character object
+   * @param {string} worldName - World name (defaults to 'Ashbee Realms')
+   * @returns {Object} Formatted node
+   */
+  formatNode(node, character, worldName = 'Ashbee Realms') {
+    // Call parent class formatNode which now handles world_name
+    return super.formatNode(node, character, worldName);
   }
 }
 

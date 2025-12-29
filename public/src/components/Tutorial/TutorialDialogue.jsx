@@ -91,12 +91,25 @@ const TutorialDialogue = ({
   };
 
   const replaceVariables = (text) => {
-    if (!text || !character) return text;
+    if (!text) return text;
     
-    return text
-      .replace(/\{player_name\}/g, character.name || 'traveler')
-      .replace(/\{player_level\}/g, character.level || 1)
-      .replace(/\{player_class\}/g, character.class || 'adventurer');
+    // World name - use hardcoded default for now
+    const worldName = 'Ashbee Realms';
+    
+    let result = text;
+    
+    // Replace character variables
+    if (character) {
+      result = result
+        .replace(/\{player_name\}/g, character.name || 'traveler')
+        .replace(/\{player_level\}/g, character.level || 1)
+        .replace(/\{player_class\}/g, character.class || 'adventurer');
+    }
+    
+    // Replace world name
+    result = result.replace(/\{world_name\}/g, worldName);
+    
+    return result;
   };
 
   const typewriterEffect = (text) => {
