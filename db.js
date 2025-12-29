@@ -1223,7 +1223,9 @@ async function getChannelUsers(channelName, role = null) {
   const params = [channelName.toLowerCase()];
 
   if (role) {
-    sql += ` AND c.roles @> $2`;
+    // JSONB containment operator (@>) checks if roles array contains the specified role
+    // Roles are stored as JSONB arrays, e.g., ["viewer", "subscriber"]
+    sql += ` AND c.roles @> $2::jsonb`;
     params.push(JSON.stringify([role]));
   }
 
@@ -1427,13 +1429,32 @@ async function isBroadcasterAuthenticated(channelName) {
  * @param {any} value - New value
  */
 async function updatePlayerField(playerId, channelName, fieldName, value) {
+  // SECURITY: Validate field name against whitelist to prevent SQL injection
+  const allowedFields = [
+    'name', 'location', 'level', 'xp', 'xp_to_next', 'max_hp', 'hp', 'mana', 'max_mana', 'gold',
+    'type', 'inventory', 'pending', 'combat', 'skill_cd', 'step', 'is_player', 'in_combat', 'equipped',
+    'base_stats', 'skills', 'skill_points', 'travel_state', 'active_quests', 'completed_quests',
+    'consumable_cooldowns', 'dialogue_history', 'reputation', 'unlocked_achievements',
+    'achievement_progress', 'achievement_unlock_dates', 'achievement_points',
+    'unlocked_titles', 'active_title', 'stats', 'dungeon_state', 'completed_dungeons',
+    'crafting_xp', 'known_recipes', 'season_progress', 'seasonal_challenges_completed',
+    'bestiary', 'bestiary_unlocked', 'map_knowledge', 'roles', 'name_color', 'selected_role_badge', 
+    'theme', 'unlocked_abilities', 'equipped_abilities', 'ability_cooldowns',
+    'passive_levels', 'account_stats'
+  ];
+  
+  if (!allowedFields.includes(fieldName)) {
+    throw new Error(`Invalid field name: ${fieldName}. Field name must be in the whitelist.`);
+  }
+  
   // For JSON/JSONB fields, stringify the value
   const jsonFields = ['inventory', 'equipped', 'base_stats', 'skills', 'active_quests', 
     'completed_quests', 'consumable_cooldowns', 'dialogue_history', 'reputation',
     'unlocked_achievements', 'achievement_progress', 'achievement_unlock_dates',
     'unlocked_titles', 'stats', 'dungeon_state', 'completed_dungeons',
     'known_recipes', 'season_progress', 'seasonal_challenges_completed',
-    'passive_levels', 'account_stats', 'roles', 'bestiary'];
+    'passive_levels', 'account_stats', 'roles', 'bestiary', 'map_knowledge',
+    'unlocked_abilities', 'equipped_abilities', 'ability_cooldowns'];
   
   const finalValue = jsonFields.includes(fieldName) && typeof value === 'object' 
     ? JSON.stringify(value) 
