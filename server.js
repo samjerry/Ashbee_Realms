@@ -414,6 +414,9 @@ app.get('/auth/twitch/callback', async (req, res) => {
     console.log('🔍 Checking character for channel:', channel);
     
     // Store session data
+    // Note: Both user.twitchId and session.twitch_id are needed:
+    // - user.twitchId: Used by application logic (existing)
+    // - twitch_id: Used by session table for cleanup queries (new)
     req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
     req.session.twitch_id = user.id;
     req.session.channel = channel;
@@ -648,6 +651,11 @@ app.get('/auth/broadcaster/callback',
     );
     
     // Store session data
+    // Note: Some fields appear duplicated but serve different purposes:
+    // - user.twitchId: Used by application logic (existing field)
+    // - twitch_id: Used by session table for cleanup queries (new field)
+    // - broadcasterChannel: Indicates this is a broadcaster session (existing)
+    // - channel: Used by session table for cleanup queries (new field)
     req.session.user = { id: playerId, displayName: broadcasterName, twitchId: broadcasterId };
     req.session.isBroadcaster = true;
     req.session.broadcasterChannel = channelName;
