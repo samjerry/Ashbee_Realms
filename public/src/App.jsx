@@ -15,6 +15,8 @@ import SettingsModal from './components/Settings/SettingsModal';
 import LoadingScreen from './components/Layout/LoadingScreen';
 import CharacterCreation from './components/Common/CharacterCreation';
 import SetupView from './components/Setup/SetupView';
+import TutorialDialogue from './components/Tutorial/TutorialDialogue';
+import { TutorialProgress } from './components/Tutorial/GameplayTips';
 
 function App() {
   const { 
@@ -23,6 +25,7 @@ function App() {
     showCombat, 
     showDialogue, 
     showSettings,
+    player,
     fetchPlayer,
     fetchWorldName,
     setupSocketListeners 
@@ -31,6 +34,8 @@ function App() {
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
   const [isCreatingCharacter, setIsCreatingCharacter] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
+  const [showTutorialDialogue, setShowTutorialDialogue] = useState(false);
+  const [tutorialDialogueData, setTutorialDialogueData] = useState(null);
 
   // Apply theme helper function
   const applyTheme = (themeId) => {
@@ -111,14 +116,28 @@ function App() {
       return;
     }
 
-    // Check if this is a new user (tutorial=true in URL)
+    // Check URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const isTutorial = urlParams.get('tutorial') === 'true';
+    const isCreate = urlParams.get('create') === 'true';
     
     if (isTutorial) {
-      setShowCharacterCreation(true);
+      // New player - start tutorial with dialogue to select class/role
+      // Character created during tutorial will be the actual playable character
+      const npcId = 'tutorial_mentor';
+      const nodeId = 'character_selection';
+      setTutorialDialogueData({ npcId, dialogueNodeId: nodeId });
+      setShowTutorialDialogue(true);
+      
       // Remove tutorial parameter from URL without reload
-      const newUrl = window.location.pathname;
+      const newUrl = window.location.pathname + '?channel=' + (urlParams.get('channel') || '');
+      window.history.replaceState({}, '', newUrl);
+    } else if (isCreate) {
+      // Returning player who has completed tutorial - go straight to character creation
+      setShowCharacterCreation(true);
+      
+      // Remove create parameter from URL without reload
+      const newUrl = window.location.pathname + '?channel=' + (urlParams.get('channel') || '');
       window.history.replaceState({}, '', newUrl);
     } else {
       // Initialize game by fetching player data first, then setting up sockets
@@ -184,6 +203,46 @@ function App() {
     }
   };
 
+  const handleOpenTutorialDialogue = (npcId, dialogueNodeId) => {
+    setTutorialDialogueData({ npcId, dialogueNodeId });
+    setShowTutorialDialogue(true);
+  };
+
+  const handleCloseTutorialDialogue = () => {
+    setShowTutorialDialogue(false);
+    setTutorialDialogueData(null);
+    // Refresh player data to update tutorial progress
+    fetchPlayer();
+  };
+
+  const handleDialogueAction = (action, target) => {
+    // Handle UI actions triggered by dialogue
+    switch (action) {
+      case 'open_character_creation':
+        // Show character creation modal
+        setShowCharacterCreation(true);
+        break;
+      case 'open_bestiary':
+        // Switch to bestiary tab and optionally filter by target monster
+        useGameStore.getState().setActiveTab('bestiary');
+        break;
+      case 'open_character_sheet':
+        useGameStore.getState().setActiveTab('character');
+        break;
+      case 'open_quest_log':
+        useGameStore.getState().setActiveTab('quests');
+        break;
+      default:
+        console.log('Dialogue action:', action, target);
+    }
+  };
+
+  const handleDialogueComplete = async () => {
+    // Tutorial complete - refresh player data
+    await fetchPlayer();
+    handleCloseTutorialDialogue();
+  };
+
   // Show broadcaster setup screen if on /setup route
   if (showSetup) {
     return <SetupView />;
@@ -232,6 +291,23 @@ function App() {
           {renderMainContent()}
         </main>
       </div>
+      
+      {/* Tutorial Progress Overlay - Only render if tutorial is active */}
+      {player?.tutorialProgress?.isActive && (
+        <TutorialProgress character={player} onOpenDialogue={handleOpenTutorialDialogue} />
+      )}
+      
+      {/* Tutorial Dialogue Modal */}
+      {showTutorialDialogue && tutorialDialogueData && (
+        <TutorialDialogue
+          npcId={tutorialDialogueData.npcId}
+          dialogueNodeId={tutorialDialogueData.dialogueNodeId}
+          character={player}
+          onClose={handleCloseTutorialDialogue}
+          onAction={handleDialogueAction}
+          onComplete={handleDialogueComplete}
+        />
+      )}
       
       {showDialogue && <DialogueModal />}
       {showSettings && <SettingsModal />}

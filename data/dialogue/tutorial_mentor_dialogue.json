@@ -1,0 +1,270 @@
+{
+  "dialogue_tree_id": "tutorial_mentor_dialogue",
+  "npc_id": "tutorial_mentor",
+  "npc_name": "Eldrin the Guide",
+  "nodes": [
+    {
+      "id": "character_selection",
+      "text": "Welcome, brave soul, to Ashbee Realms! I am Eldrin, and I've been guiding adventurers for many years. Before we begin your journey, tell me - what path calls to you? What role will you take in this vast world?",
+      "choices": [
+        {
+          "text": "Let me choose my class and role",
+          "next": "end",
+          "action": "open_character_creation"
+        }
+      ]
+    },
+    {
+      "id": "tutorial_start",
+      "text": "Ah, a fresh face! Welcome to Ashbee Realms, young {player_name}. These lands are filled with danger and opportunity in equal measure. I've been helping adventurers like yourself find their footing for many years. Shall we begin your training?",
+      "choices": [
+        {
+          "text": "Yes, please teach me everything I need to know!",
+          "next": "world_lore"
+        },
+        {
+          "text": "I've adventured before. Can we skip the basics?",
+          "next": "skip_tutorial_confirm"
+        },
+        {
+          "text": "Tell me about yourself first.",
+          "next": "about_eldrin"
+        }
+      ]
+    },
+    {
+      "id": "about_eldrin",
+      "text": "Me? Oh, I'm just an old warrior who's seen too many winters. I've battled dragons, explored ancient ruins, and survived more close calls than I care to count. These days, I find more satisfaction in passing on what I've learned. Now, ready to begin?",
+      "choices": [
+        {
+          "text": "Yes, let's start my training!",
+          "next": "world_lore"
+        },
+        {
+          "text": "I'd rather skip the tutorial.",
+          "next": "skip_tutorial_confirm"
+        }
+      ]
+    },
+    {
+      "id": "skip_tutorial_confirm",
+      "text": "Ah, a veteran then? Very well. But remember, even experienced adventurers can learn something new. The offer stands if you change your mind. Good luck out there!",
+      "choices": [
+        {
+          "text": "Actually, I'd like the training after all.",
+          "next": "world_lore"
+        },
+        {
+          "text": "I'll be fine on my own. Farewell!",
+          "next": "end",
+          "action": "skip_tutorial"
+        }
+      ]
+    },
+    {
+      "id": "world_lore",
+      "text": "Listen well, {player_name}. Ashbee Realms was once a peaceful land, but darkness has crept in. Monsters of all kinds now roam free - from simple slimes in the forests to ancient dragons in forgotten mountains. Your journey begins small, but who knows? Perhaps you'll be the hero to restore balance to these lands.",
+      "choices": [
+        {
+          "text": "What kinds of monsters will I face?",
+          "next": "monster_explanation"
+        },
+        {
+          "text": "How can I possibly defeat such creatures?",
+          "next": "survival_basics"
+        }
+      ],
+      "reward": {
+        "xp": 15,
+        "gold": 5
+      }
+    },
+    {
+      "id": "monster_explanation",
+      "text": "An excellent question! Every creature has strengths and weaknesses. I've documented many of them in the Bestiary - a compendium of monster knowledge. Let me show you an example: the Forest Slime. Simple, yes, but understanding even basic foes is crucial. Take a look.",
+      "choices": [
+        {
+          "text": "I've reviewed the Bestiary. What else should I know?",
+          "next": "survival_basics"
+        },
+        {
+          "text": "Tell me more about combat preparation.",
+          "next": "survival_basics"
+        }
+      ],
+      "action": "open_bestiary",
+      "action_target": "forest_slime",
+      "reward": {
+        "xp": 15,
+        "gold": 5
+      }
+    },
+    {
+      "id": "survival_basics",
+      "text": "Smart thinking! Survival starts with knowing yourself. Your Character Sheet shows your stats - Health, Strength, Intelligence, and more. Check it often. Also, I've prepared a weapon for you. Equipment makes all the difference between life and death out there.",
+      "choices": [
+        {
+          "text": "I've checked my stats. I'm ready!",
+          "next": "first_hunt"
+        },
+        {
+          "text": "What should I look for in my Character Sheet?",
+          "next": "stats_explained"
+        }
+      ],
+      "action": "open_character_sheet",
+      "reward": {
+        "xp": 10,
+        "gold": 5
+      }
+    },
+    {
+      "id": "stats_explained",
+      "text": "Your stats determine your capabilities. Health keeps you alive. Strength powers your melee attacks. Intelligence fuels magic. Agility affects dodging and critical hits. Defense reduces damage taken. As you level up, these will grow stronger. Now, let me give you that weapon I mentioned.",
+      "choices": [
+        {
+          "text": "I'll equip it right away!",
+          "next": "weapon_equipped"
+        }
+      ],
+      "reward": {
+        "xp": 10,
+        "gold": 5,
+        "item": "rusty_sword"
+      }
+    },
+    {
+      "id": "weapon_equipped",
+      "text": "Well done! A warrior without a weapon is just a target. Now you're properly armed, if modestly. You'll find better gear as you adventure. Speaking of which, it's time for your first real test.",
+      "choices": [
+        {
+          "text": "I'm ready. What's the test?",
+          "next": "first_hunt"
+        }
+      ]
+    },
+    {
+      "id": "first_hunt",
+      "text": "The Whispering Woods, just beyond town, are home to Forest Slimes. They're perfect for beginners - not too dangerous, but real combat nonetheless. Travel there, find one, and prove yourself. Remember: Attack to deal damage, watch your HP, and use potions if needed. I'll be here when you return.",
+      "choices": [
+        {
+          "text": "I'll head there now!",
+          "next": "end",
+          "action": "assign_quest_step"
+        },
+        {
+          "text": "Any combat tips before I go?",
+          "next": "combat_encouragement"
+        }
+      ],
+      "reward": {
+        "xp": 20,
+        "gold": 10
+      }
+    },
+    {
+      "id": "combat_encouragement",
+      "text": "Of course! In battle, use Attack for reliable damage. Skills consume mana but can turn the tide. Items like potions can save your life - don't be afraid to use them. And most importantly: watch the enemy's health bar and your own. Knowing when to push forward or heal is key.",
+      "choices": [
+        {
+          "text": "Got it. Time to hunt!",
+          "next": "end",
+          "action": "assign_quest_step"
+        }
+      ]
+    },
+    {
+      "id": "victory_celebration",
+      "text": "You did it! I knew you had potential. Your first victory is always special. Here, take this as a reward - you've earned it. But this is just the beginning, {player_name}. As you defeat more foes, you'll grow stronger through experience.",
+      "choices": [
+        {
+          "text": "How do I grow stronger?",
+          "next": "level_up_talk"
+        },
+        {
+          "text": "What should I do next?",
+          "next": "level_up_talk"
+        }
+      ],
+      "reward": {
+        "xp": 50,
+        "gold": 25,
+        "item": "minor_health_potion"
+      }
+    },
+    {
+      "id": "level_up_talk",
+      "text": "Experience points - or XP - are the currency of power. Earn enough, and you'll level up, increasing your stats and unlocking new abilities. Each monster defeated, each quest completed brings you closer to greatness. You're already on your way!",
+      "choices": [
+        {
+          "text": "Tell me about quests.",
+          "next": "quest_introduction"
+        },
+        {
+          "text": "What else should I know?",
+          "next": "quest_introduction"
+        }
+      ],
+      "reward": {
+        "xp": 0,
+        "gold": 50,
+        "item": "apprentice_health_potion"
+      },
+      "condition": "level >= 2"
+    },
+    {
+      "id": "quest_introduction",
+      "text": "Ah, quests! They're the lifeblood of an adventurer. Quests give you purpose, direction, and excellent rewards. Check your Quest Log regularly - it tracks your active missions, objectives, and progress. Complete them to earn gold, items, and reputation throughout the realm.",
+      "choices": [
+        {
+          "text": "I'll check my Quest Log now.",
+          "next": "merchant_advice"
+        },
+        {
+          "text": "What about merchants and trading?",
+          "next": "merchant_advice"
+        }
+      ],
+      "action": "open_quest_log",
+      "reward": {
+        "xp": 20,
+        "gold": 15
+      }
+    },
+    {
+      "id": "merchant_advice",
+      "text": "Excellent question! Gold without spending is just heavy metal. Merchants throughout the realm sell potions, equipment, and rare items. They also buy your unwanted loot. You'll find weapon smiths, alchemists, general traders - each with unique wares. Spend wisely, save for the good stuff!",
+      "choices": [
+        {
+          "text": "I'll seek out a merchant soon.",
+          "next": "graduation"
+        },
+        {
+          "text": "What's next in my training?",
+          "next": "graduation"
+        }
+      ],
+      "reward": {
+        "xp": 25,
+        "gold": 20
+      }
+    },
+    {
+      "id": "graduation",
+      "text": "You've learned well, {player_name}. You know the basics of combat, equipment, quests, and survival. The rest? That comes with experience. The realm is vast and full of mysteries. Go forth and make your mark! Remember, I'm always here if you need advice. May your blade stay sharp and your courage unwavering!",
+      "choices": [
+        {
+          "text": "Thank you, Eldrin. I won't forget your teachings!",
+          "next": "end",
+          "action": "complete_tutorial"
+        }
+      ],
+      "reward": {
+        "xp": 100,
+        "gold": 100,
+        "item": "adventurer_starter_pack",
+        "title": "Novice Adventurer"
+      }
+    }
+  ]
+}

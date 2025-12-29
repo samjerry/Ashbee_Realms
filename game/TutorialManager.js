@@ -6,6 +6,8 @@ class TutorialManager {
     this.tutorialQuest = null;
     this.tooltips = new Map();
     this.gameplayTips = [];
+    this.dialogueTrees = new Map();
+    this.npcData = new Map();
     this.loadTutorialData();
   }
 
@@ -33,6 +35,12 @@ class TutorialManager {
         const tipsData = JSON.parse(fs.readFileSync(tipsPath, 'utf8'));
         this.gameplayTips = tipsData.tips;
       }
+
+      // Load tutorial dialogue trees
+      this.loadDialogueTrees();
+      
+      // Load tutorial NPCs
+      this.loadTutorialNPCs();
 
       console.log('✅ Tutorial data loaded successfully');
     } catch (error) {
@@ -154,6 +162,12 @@ class TutorialManager {
     let shouldComplete = false;
 
     switch (currentStep.type) {
+      case 'dialogue':
+        shouldComplete = actionType === 'dialogue' && 
+          actionData.npcId === currentStep.target &&
+          actionData.nodeId === currentStep.dialogue_node;
+        break;
+      
       case 'ui_interaction':
         shouldComplete = actionType === 'ui_interaction' && actionData.target === currentStep.target;
         break;
@@ -334,6 +348,229 @@ class TutorialManager {
    */
   isInTutorial(character) {
     return character.tutorialProgress && character.tutorialProgress.isActive;
+  }
+
+  /**
+   * Load dialogue trees from dialogue folder
+   */
+  loadDialogueTrees() {
+    try {
+      const dialoguePath = path.join(__dirname, '../data/dialogue/tutorial_mentor_dialogue.json');
+      if (fs.existsSync(dialoguePath)) {
+        const fileContent = fs.readFileSync(dialoguePath, 'utf8');
+        const dialogueData = JSON.parse(fileContent);
+        this.dialogueTrees.set(dialogueData.dialogue_tree_id, dialogueData);
+        console.log('✅ Tutorial dialogue tree loaded');
+      }
+    } catch (error) {
+      console.error('❌ Error loading dialogue trees:', error);
+      if (error instanceof SyntaxError) {
+        console.error('Invalid JSON in dialogue file');
+      }
+    }
+  }
+
+  /**
+   * Load tutorial NPC data
+   */
+  loadTutorialNPCs() {
+    try {
+      const npcPath = path.join(__dirname, '../data/npcs/tutorial_mentor.json');
+      if (fs.existsSync(npcPath)) {
+        const fileContent = fs.readFileSync(npcPath, 'utf8');
+        const npcData = JSON.parse(fileContent);
+        this.npcData.set(npcData.id, npcData);
+        console.log('✅ Tutorial NPC loaded');
+      }
+    } catch (error) {
+      console.error('❌ Error loading tutorial NPCs:', error);
+      if (error instanceof SyntaxError) {
+        console.error('Invalid JSON in NPC file');
+      }
+    }
+  }
+
+  /**
+   * Get dialogue node by ID
+   * @param {string} npcId - NPC ID
+   * @param {string} nodeId - Dialogue node ID
+   * @returns {Object|null} Dialogue node or null
+   */
+  getDialogueNode(npcId, nodeId) {
+    const npc = this.npcData.get(npcId);
+    if (!npc) {
+      return null;
+    }
+
+    const dialogueTree = this.dialogueTrees.get(npc.dialogue_tree);
+    if (!dialogueTree) {
+      return null;
+    }
+
+    const node = dialogueTree.nodes.find(n => n.id === nodeId);
+    return node || null;
+  }
+
+  /**
+   * Get NPC data
+   * @param {string} npcId - NPC ID
+   * @returns {Object|null} NPC data or null
+   */
+  getNPC(npcId) {
+    return this.npcData.get(npcId) || null;
+  }
+
+  /**
+   * Advance dialogue and process choice
+   * @param {Object} character - Character object
+   * @param {string} npcId - NPC ID
+   * @param {string} currentNodeId - Current dialogue node ID
+   * @param {number} choiceIndex - Index of selected choice
+   * @returns {Object} Result of dialogue advancement
+   */
+  advanceDialogue(character, npcId, currentNodeId, choiceIndex) {
+    const currentNode = this.getDialogueNode(npcId, currentNodeId);
+    
+    if (!currentNode) {
+      return {
+        success: false,
+        error: 'Current dialogue node not found'
+      };
+    }
+
+    if (!currentNode.choices || choiceIndex >= currentNode.choices.length) {
+      return {
+        success: false,
+        error: 'Invalid choice index'
+      };
+    }
+
+    const choice = currentNode.choices[choiceIndex];
+
+    // Record dialogue interaction
+    if (!character.dialogueHistory) {
+      character.dialogueHistory = {};
+    }
+    if (!character.dialogueHistory[npcId]) {
+      character.dialogueHistory[npcId] = {
+        nodes: [],
+        lastInteraction: Date.now()
+      };
+    }
+    character.dialogueHistory[npcId].nodes.push({
+      nodeId: currentNodeId,
+      choiceIndex,
+      timestamp: Date.now()
+    });
+    character.dialogueHistory[npcId].lastInteraction = Date.now();
+
+    return {
+      success: true,
+      nextNodeId: choice.next,
+      action: choice.action || currentNode.action,
+      actionTarget: choice.action_target || currentNode.action_target
+    };
+  }
+
+  /**
+   * Trigger dialogue action
+   * @param {string} action - Action to trigger
+   * @param {Object} character - Character object
+   * @param {string} actionTarget - Optional action target
+   * @returns {Object} Action result
+   */
+  triggerDialogueAction(action, character, actionTarget = null) {
+    const result = {
+      success: true,
+      action,
+      actionTarget
+    };
+
+    switch (action) {
+      case 'open_character_creation':
+        result.uiAction = 'open_character_creation';
+        break;
+      
+      case 'open_bestiary':
+        result.uiAction = 'open_bestiary';
+        result.targetMonster = actionTarget || 'forest_slime';
+        break;
+      
+      case 'open_character_sheet':
+        result.uiAction = 'open_character_sheet';
+        break;
+      
+      case 'open_quest_log':
+        result.uiAction = 'open_quest_log';
+        break;
+      
+      case 'assign_quest_step':
+        // Handled by step completion
+        break;
+      
+      case 'skip_tutorial':
+        return this.skipTutorial(character);
+      
+      case 'complete_tutorial':
+        // Mark tutorial as complete
+        if (character.tutorialProgress) {
+          character.tutorialProgress.isActive = false;
+          character.tutorialProgress.completedAt = Date.now();
+        }
+        result.tutorialComplete = true;
+        break;
+      
+      default:
+        result.success = false;
+        result.error = `Unknown action: ${action}`;
+    }
+
+    return result;
+  }
+
+  /**
+   * Check if dialogue node conditions are met
+   * @param {Object} character - Character object
+   * @param {string} condition - Condition string
+   * @returns {boolean} True if condition is met
+   */
+  checkDialogueConditions(character, condition) {
+    if (!condition) {
+      return true;
+    }
+
+    // Parse simple conditions like "level >= 2"
+    const levelMatch = condition.match(/level\s*>=\s*(\d+)/);
+    if (levelMatch) {
+      const requiredLevel = parseInt(levelMatch[1]);
+      return character.level >= requiredLevel;
+    }
+
+    // Add more condition types as needed
+    return true;
+  }
+
+  /**
+   * Check if current tutorial step requires dialogue
+   * @param {Object} character - Character object
+   * @returns {Object|null} Dialogue requirement or null
+   */
+  getCurrentDialogueRequirement(character) {
+    const currentStep = this.getCurrentStep(character);
+    
+    if (!currentStep) {
+      return null;
+    }
+
+    if (currentStep.type === 'dialogue') {
+      return {
+        npcId: currentStep.target,
+        nodeId: currentStep.dialogue_node,
+        stepId: currentStep.id
+      };
+    }
+
+    return null;
   }
 }
 

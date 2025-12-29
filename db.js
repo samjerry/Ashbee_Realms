@@ -253,6 +253,8 @@ async function initPostgres() {
     -- Account-wide progression table (NEW) - separate from character-specific data
     CREATE TABLE IF NOT EXISTS account_progress (
       player_id TEXT PRIMARY KEY,
+      username TEXT,
+      tutorial_completed BOOLEAN DEFAULT false,
       passive_levels JSONB DEFAULT '{}',
       souls INTEGER DEFAULT 5,
       legacy_points INTEGER DEFAULT 0,
@@ -2018,6 +2020,8 @@ async function loadAccountProgress(playerId) {
 
   const row = result.rows[0];
   return {
+    username: row.username || null,
+    tutorial_completed: row.tutorial_completed || false,
     passive_levels: typeof row.passive_levels === 'string' ? JSON.parse(row.passive_levels) : (row.passive_levels || {}),
     souls: row.souls || 5,
     legacy_points: row.legacy_points || 0,
@@ -2038,6 +2042,8 @@ async function loadAccountProgress(playerId) {
  */
 async function saveAccountProgress(playerId, progressData) {
   const {
+    username = null,
+    tutorial_completed = false,
     passive_levels = {},
     souls = 5,
     legacy_points = 0,
@@ -2052,26 +2058,30 @@ async function saveAccountProgress(playerId, progressData) {
 
   await query(`
     INSERT INTO account_progress (
-      player_id, passive_levels, souls, legacy_points, account_stats,
+      player_id, username, tutorial_completed, passive_levels, souls, legacy_points, account_stats,
       total_deaths, total_kills, total_gold_earned, total_xp_earned,
       highest_level_reached, total_crits, updated_at
     ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW()
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
     )
     ON CONFLICT (player_id) DO UPDATE SET
-      passive_levels = $2,
-      souls = $3,
-      legacy_points = $4,
-      account_stats = $5,
-      total_deaths = $6,
-      total_kills = $7,
-      total_gold_earned = $8,
-      total_xp_earned = $9,
-      highest_level_reached = $10,
-      total_crits = $11,
+      username = COALESCE($2, account_progress.username),
+      tutorial_completed = $3,
+      passive_levels = $4,
+      souls = $5,
+      legacy_points = $6,
+      account_stats = $7,
+      total_deaths = $8,
+      total_kills = $9,
+      total_gold_earned = $10,
+      total_xp_earned = $11,
+      highest_level_reached = $12,
+      total_crits = $13,
       updated_at = NOW()
   `, [
     playerId,
+    username,
+    tutorial_completed,
     JSON.stringify(passive_levels),
     souls,
     legacy_points,
