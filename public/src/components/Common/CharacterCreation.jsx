@@ -15,6 +15,8 @@ export default function CharacterCreation({ onComplete }) {
   const [selectedRoleBadge, setSelectedRoleBadge] = useState(null);
   const [displayName, setDisplayName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [classes, setClasses] = useState([]);
+  const [isLoadingClasses, setIsLoadingClasses] = useState(true);
 
   // Fetch user's Twitch roles and display name on mount
   useEffect(() => {
@@ -56,6 +58,85 @@ export default function CharacterCreation({ onComplete }) {
       });
   }, []);
 
+  // Fetch classes from API on component mount
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await fetch('/api/classes');
+        const data = await response.json();
+        if (data.success && data.classes) {
+          // Map API response to component format
+          const formattedClasses = data.classes.map(cls => ({
+            id: cls.id,
+            name: cls.name,
+            icon: getClassIcon(cls.id),
+            color: getClassColor(cls.id),
+            description: cls.description,
+            stats: cls.startingStats,
+            playstyle: getClassPlaystyle(cls.id),
+            startingGear: getStartingGear(cls.id)
+          }));
+          setClasses(formattedClasses);
+        }
+      } catch (error) {
+        console.error('Failed to load classes:', error);
+      } finally {
+        setIsLoadingClasses(false);
+      }
+    };
+    
+    fetchClasses();
+  }, []);
+
+  // Helper functions for UI data not in API
+  const getClassIcon = (classId) => {
+    const icons = {
+      warrior: Sword,
+      mage: Sparkles,
+      rogue: Swords,
+      cleric: Heart,
+      ranger: Target,
+      paladin: Shield
+    };
+    return icons[classId] || Sword;
+  };
+
+  const getClassColor = (classId) => {
+    const colors = {
+      warrior: 'red',
+      mage: 'blue',
+      rogue: 'purple',
+      cleric: 'white',
+      ranger: 'green',
+      paladin: 'yellow'
+    };
+    return colors[classId] || 'white';
+  };
+
+  const getClassPlaystyle = (classId) => {
+    const playstyles = {
+      warrior: 'Tank and deal massive physical damage',
+      mage: 'Cast powerful spells from range',
+      rogue: 'Strike fast with critical hits',
+      cleric: 'Support with healing and buffs',
+      ranger: 'Balanced combat and utility',
+      paladin: 'Tank, heal, and smite with holy power'
+    };
+    return playstyles[classId] || '';
+  };
+
+  const getStartingGear = (classId) => {
+    const gear = {
+      warrior: 'Iron Sword, Leather Armor, Wooden Shield',
+      mage: 'Wooden Staff, Apprentice Robes, Mana Crystal',
+      rogue: 'Dual Daggers, Leather Vest, Lockpicks',
+      cleric: 'Mace, Chainmail, Holy Symbol',
+      ranger: 'Longbow, Leather Armor, Quiver of Arrows',
+      paladin: 'Iron Mace, Chainmail Vest, Holy Symbol'
+    };
+    return gear[classId] || '';
+  };
+
   // Get the icon for the selected role badge
   const getRoleIcon = (role) => {
     const icons = {
@@ -89,105 +170,6 @@ export default function CharacterCreation({ onComplete }) {
     );
   };
 
-  const classes = [
-    {
-      id: 'warrior',
-      name: 'Warrior',
-      icon: Sword,
-      color: 'red',
-      description: 'Battle-hardened veterans forged in the crucible of war. Warriors command the frontlines with unmatched strength and endurance, wielding steel with devastating precision while shrugging off blows that would fell lesser combatants.',
-      stats: { 
-        strength: 9, 
-        dexterity: 3, 
-        constitution: 8, 
-        intelligence: 1, 
-        wisdom: 4 
-      },
-      playstyle: 'Tank and deal massive physical damage',
-      startingGear: 'Iron Sword, Leather Armor, Wooden Shield'
-    },
-    {
-      id: 'mage',
-      name: 'Mage',
-      icon: Sparkles,
-      color: 'blue',
-      description: 'Scholars of the arcane arts who bend reality itself to their will. Though physically frail, mages command devastating elemental forces and reality-warping spells that can obliterate enemies from afar with overwhelming magical power.',
-      stats: { 
-        strength: 1, 
-        dexterity: 3, 
-        constitution: 4, 
-        intelligence: 9, 
-        wisdom: 8 
-      },
-      playstyle: 'Cast powerful spells from range',
-      startingGear:  'Wooden Staff, Apprentice Robes, Mana Crystal'
-    },
-    {
-      id: 'rogue',
-      name: 'Rogue',
-      icon:  Swords,
-      color: 'purple',
-      description: 'Masters of shadow and subterfuge who strike with lethal precision. These deadly assassins rely on lightning-fast reflexes, cunning tactics, and devastating critical strikes to eliminate their foes before they even know danger lurks.',
-      stats: { 
-        strength: 4, 
-        dexterity: 9, 
-        constitution: 6, 
-        intelligence: 3, 
-        wisdom: 3 
-      },
-      playstyle: 'Strike fast with critical hits',
-      startingGear:  'Dual Daggers, Leather Vest, Lockpicks'
-    },
-    {
-      id: 'cleric',
-      name: 'Cleric',
-      icon:  Heart,
-      color: 'white',
-      description: 'Chosen vessels of divine grace who channel sacred power to protect and preserve life. Clerics serve as beacons of hope on the battlefield, mending grievous wounds while smiting the wicked with holy righteousness.',
-      stats: { 
-        strength: 4, 
-        dexterity: 3, 
-        constitution: 7, 
-        intelligence: 2, 
-        wisdom: 9 
-      },
-      playstyle: 'Support with healing and buffs',
-      startingGear: 'Mace, Chainmail, Holy Symbol'
-    },
-    {
-      id: 'ranger',
-      name: 'Ranger',
-      icon: Target,
-      color: 'green',
-      description: 'Elite wilderness scouts and master archers who never miss their mark. Rangers blend deadly accuracy with survival instincts honed in the wild, tracking prey with patience before unleashing a devastating volley of arrows.',
-      stats:  { 
-        strength: 3, 
-        dexterity: 9, 
-        constitution: 5, 
-        intelligence: 3, 
-        wisdom: 5 
-      },
-      playstyle: 'Balanced combat and utility',
-      startingGear:  'Longbow, Leather Armor, Quiver of Arrows'
-    },
-    {
-      id: 'paladin',
-      name: 'Paladin',
-      icon:  Shield,
-      color: 'yellow',
-      description: 'Righteous champions sworn to uphold justice and defend the innocent. These holy knights unite martial excellence with divine magic, standing as unbreakable bulwarks while healing allies and smiting evil with sacred fury. (Requested by PalaJen)',
-      stats: { 
-        strength: 6, 
-        dexterity: 1, 
-        constitution: 8, 
-        intelligence: 3, 
-        wisdom: 7 
-      },
-      playstyle: 'Tank, heal, and smite with holy power',
-      startingGear: 'Iron Mace, Chainmail Vest, Holy Symbol'
-    }
-  ];
-
   const handleComplete = () => {
     if (selectedClass && selectedRoleBadge) {
       const roleColor = getRoleColor(selectedRoleBadge);
@@ -217,13 +199,15 @@ export default function CharacterCreation({ onComplete }) {
     yellow: 'border-yellow-400 bg-yellow-800/40 ring-2 ring-yellow-400'
   };
 
-  // Show loading screen while fetching user data
-  if (isLoading) {
+  // Show loading screen while fetching user data or classes
+  if (isLoading || isLoadingClasses) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary-500 mb-4"></div>
-          <h2 className="text-2xl font-bold text-white mb-2">Loading Your Profile...</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">
+            {isLoadingClasses ? 'Loading Classes...' : 'Loading Your Profile...'}
+          </h2>
           <p className="text-gray-400">Fetching your Twitch information</p>
         </div>
       </div>
