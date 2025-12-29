@@ -60,7 +60,7 @@ const MapView = () => {
             <Map size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white">World Map</h1>
-              <p className="text-sm sm:text-base text-gray-400">Explore the world of {worldName}</p>
+              <p className="text-sm sm:text-base text-gray-400">Explore {worldName}</p>
             </div>
           </div>
           
