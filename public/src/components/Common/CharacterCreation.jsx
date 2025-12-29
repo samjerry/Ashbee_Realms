@@ -6,8 +6,10 @@
 import React, { useState, useEffect } from 'react';
 import { Sword, Shield, Sparkles, Swords, Heart, Crown, Award, Gem, Star, User, Eye, Beaker, Target } from 'lucide-react';
 import { getRoleBadges as getRoleBadgesHelper } from '../../utils/roleHelpers';
+import useGameStore from '../../store/gameStore';
 
 export default function CharacterCreation({ onComplete }) {
+  const worldName = useGameStore((state) => state.worldName);
   const [selectedClass, setSelectedClass] = useState(null);
   const [userRoles, setUserRoles] = useState(null);
   const [selectedRoleBadge, setSelectedRoleBadge] = useState(null);
@@ -234,7 +236,7 @@ export default function CharacterCreation({ onComplete }) {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">Create Your Character</h1>
-          <p className="text-gray-400">Choose your class and begin your journey in Ashbee Realms</p>
+          <p className="text-gray-400">Choose your class and begin your journey in {worldName}</p>
         </div>
 
         {/* Role Display and Selection */}

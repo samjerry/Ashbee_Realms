@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { User, Sword, Shield, Wand2, Heart, Zap, ArrowRight, Info } from 'lucide-react';
+import useGameStore from '../../store/gameStore';
 
 const CharacterCreationFlow = ({ onComplete, onSkip }) => {
+  const worldName = useGameStore((state) => state.worldName);
   const [step, setStep] = useState(1);
   const [characterData, setCharacterData] = useState({
     name: '',
@@ -106,7 +108,7 @@ const CharacterCreationFlow = ({ onComplete, onSkip }) => {
         {/* Header */}
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-6">
           <h1 className="text-3xl font-bold text-white mb-2">Create Your Character</h1>
-          <p className="text-white/80">Begin your adventure in Ashbee Realms</p>
+          <p className="text-white/80">Begin your adventure in {worldName}</p>
         </div>
 
         {/* Progress Bar */}
@@ -281,7 +283,7 @@ const CharacterCreationFlow = ({ onComplete, onSkip }) => {
                 <div className="flex items-start gap-3">
                   <Info className="text-yellow-400 flex-shrink-0" size={20} />
                   <div>
-                    <h4 className="text-yellow-300 font-semibold mb-1">New to Ashbee Realms?</h4>
+                    <h4 className="text-yellow-300 font-semibold mb-1">New to {worldName}?</h4>
                     <p className="text-sm text-yellow-200/80">
                       The tutorial teaches combat, exploration, quests, and progression. 
                       You can skip it if you're an experienced player. Tutorial can be replayed from settings!

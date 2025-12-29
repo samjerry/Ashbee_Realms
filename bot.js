@@ -133,7 +133,41 @@ async function initializeBot() {
       }
       
       if (msg === '!setup') {
-        client.say(channel, `🔧 Broadcaster setup: ${BASE_URL}/auth/broadcaster?channel=${channelName}`);
+        client.say(channel, `🔧 Broadcaster setup: ${BASE_URL}/auth/broadcaster?channel=${channelName} - Customize your world name, game mode, and more!`);
+        return;
+      }
+      
+      // !worldname command for broadcasters
+      if (msg.startsWith('!worldname')) {
+        // Only broadcaster can use this
+        if (!tags.badges?.broadcaster) {
+          return; // Silently ignore for non-broadcasters
+        }
+        
+        const args = message.trim().split(/\s+/).slice(1);
+        const newWorldName = args.join(' ');
+        
+        if (!newWorldName) {
+          // Show current world name
+          db.getWorldName(channelName).then(currentWorldName => {
+            client.say(channel, 
+              `🌍 Current world name: "${currentWorldName}". ` +
+              `Change it with: !worldname <new name>`
+            );
+          }).catch(err => {
+            console.error('Error getting world name:', err);
+            client.say(channel, `❌ Failed to get world name. Please try again.`);
+          });
+          return;
+        }
+        
+        // Set new world name
+        db.setWorldName(channelName, newWorldName).then(() => {
+          client.say(channel, `✅ World name updated to "${newWorldName}"!`);
+        }).catch(err => {
+          console.error('Error setting world name:', err);
+          client.say(channel, `❌ Failed to update world name. Please try again.`);
+        });
         return;
       }
 

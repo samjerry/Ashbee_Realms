@@ -72,7 +72,7 @@ const THEMES = [
 ];
 
 const SettingsModal = () => {
-  const { showSettings, closeSettings, player, setPlayer } = useGameStore();
+  const { showSettings, closeSettings, player, worldName, setPlayer } = useGameStore();
   const [settings, setSettings] = useState({
     volume: 70,
     sfxVolume: 80,
@@ -449,7 +449,7 @@ const SettingsModal = () => {
           <div className="border-t border-dark-700 pt-6">
             <h2 className="text-xl font-bold text-white mb-3">About</h2>
             <div className="space-y-2 text-sm text-gray-400">
-              <p>Ashbee Realms v1.0.0</p>
+              <p>{worldName} v1.0.0</p>
               <p>A Twitch-integrated RPG adventure</p>
               <p className="pt-3 border-t border-dark-800">
                 Made with ❤️ by MarrowOfAlbion
