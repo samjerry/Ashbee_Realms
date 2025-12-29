@@ -49,6 +49,7 @@ const leaderboardsRoutes = require('./routes/leaderboards.routes');
 const tutorialRoutes = require('./routes/tutorial.routes');
 const mapRoutes = require('./routes/map.routes');
 const adminRoutes = require('./routes/admin.routes');
+const setupRoutes = require('./routes/setup.routes');
 
 // Store interval IDs for cleanup on shutdown
 const intervals = [];
@@ -1063,6 +1064,7 @@ app.use('/api/leaderboards', leaderboardsRoutes);
 app.use('/api/tutorial', tutorialRoutes);
 app.use('/api/map', mapRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/setup', setupRoutes);
 console.log('✅ Route modules mounted and ready (WebSocket initialized)');
 // ==================== END ROUTE MODULES ====================
 
