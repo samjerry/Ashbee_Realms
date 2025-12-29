@@ -20,6 +20,9 @@ const useGameStore = create((set, get) => ({
     maintenanceMode: false
   },
   
+  // World name
+  worldName: 'Ashbee Realms',
+  
   // UI state
   activeTab: 'character',
   showCombat: false,
@@ -324,6 +327,21 @@ const useGameStore = create((set, get) => ({
       get().fetchPlayer();
     } catch (error) {
       console.error('Failed to equip item:', error);
+    }
+  },
+  
+  // World name actions
+  setWorldName: (worldName) => set({ worldName }),
+  
+  fetchWorldName: async (channel) => {
+    try {
+      const response = await fetch(`/api/setup/world-name?channel=${channel}`);
+      const data = await response.json();
+      if (data.success) {
+        set({ worldName: data.worldName });
+      }
+    } catch (error) {
+      console.error('Failed to fetch world name:', error);
     }
   },
   
