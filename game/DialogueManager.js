@@ -56,9 +56,10 @@ class DialogueManager {
    * @param {string} npcId - NPC ID
    * @param {Object} character - Character object
    * @param {string} conversationId - Conversation ID (optional, defaults to first available)
+   * @param {string} worldName - World name (optional, defaults to 'Ashbee Realms')
    * @returns {Object} Conversation start result
    */
-  startConversation(npcId, character, conversationId = null) {
+  startConversation(npcId, character, conversationId = null, worldName = 'Ashbee Realms') {
     const dialogue = this.getDialogue(npcId);
     
     if (!dialogue) {
@@ -106,8 +107,7 @@ class DialogueManager {
       };
     }
 
-    // Format node with default world name (Ashbee Realms)
-    // The worldName parameter is optional and defaults to 'Ashbee Realms'
+    // Format node with custom world name
     return {
       success: true,
       npc: {
@@ -119,7 +119,7 @@ class DialogueManager {
         id: conversationId,
         currentNode: startNode.id
       },
-      node: this.formatNode(startNode, character)
+      node: this.formatNode(startNode, character, worldName)
     };
   }
 
@@ -130,9 +130,10 @@ class DialogueManager {
    * @param {string} currentNodeId - Current node ID
    * @param {number} choiceIndex - Index of choice made
    * @param {Object} character - Character object
+   * @param {string} worldName - World name (optional, defaults to 'Ashbee Realms')
    * @returns {Object} Choice result
    */
-  makeChoice(npcId, conversationId, currentNodeId, choiceIndex, character) {
+  makeChoice(npcId, conversationId, currentNodeId, choiceIndex, character, worldName = 'Ashbee Realms') {
     const currentNode = this.getNode(npcId, conversationId, currentNodeId);
     
     if (!currentNode) {
@@ -185,12 +186,11 @@ class DialogueManager {
       };
     }
 
-    // Format node with default world name (Ashbee Realms)
-    // The worldName parameter is optional and defaults to 'Ashbee Realms'
+    // Format node with custom world name
     return {
       success: true,
       conversationEnded: false,
-      node: this.formatNode(nextNode, character),
+      node: this.formatNode(nextNode, character, worldName),
       effects
     };
   }
