@@ -137,6 +137,10 @@ const TutorialDialogue = ({
     console.log('📖 [Frontend] Typewriter processed text:', processedText);
     let index = 0;
     
+    // Display first character immediately
+    setDisplayText(processedText[0] || '');
+    index = 1;
+    
     const interval = setInterval(() => {
       if (index < processedText.length) {
         setDisplayText(prev => prev + processedText[index]);
