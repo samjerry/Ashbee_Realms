@@ -149,25 +149,31 @@ async function initializeBot() {
         
         if (!newWorldName) {
           // Show current world name
-          db.getWorldName(channelName).then(currentWorldName => {
-            client.say(channel, 
-              `🌍 Current world name: "${currentWorldName}". ` +
-              `Change it with: !worldname <new name>`
-            );
-          }).catch(err => {
-            console.error('Error getting world name:', err);
-            client.say(channel, `❌ Failed to get world name. Please try again.`);
-          });
+          (async () => {
+            try {
+              const currentWorldName = await db.getWorldName(channelName);
+              client.say(channel, 
+                `🌍 Current world name: "${currentWorldName}". ` +
+                `Change it with: !worldname <new name>`
+              );
+            } catch (err) {
+              console.error('Error getting world name:', err);
+              client.say(channel, `❌ Failed to get world name. Please try again.`);
+            }
+          })();
           return;
         }
         
         // Set new world name
-        db.setWorldName(channelName, newWorldName).then(() => {
-          client.say(channel, `✅ World name updated to "${newWorldName}"!`);
-        }).catch(err => {
-          console.error('Error setting world name:', err);
-          client.say(channel, `❌ Failed to update world name. Please try again.`);
-        });
+        (async () => {
+          try {
+            await db.setWorldName(channelName, newWorldName);
+            client.say(channel, `✅ World name updated to "${newWorldName}"!`);
+          } catch (err) {
+            console.error('Error setting world name:', err);
+            client.say(channel, `❌ Failed to update world name. Please try again.`);
+          }
+        })();
         return;
       }
 

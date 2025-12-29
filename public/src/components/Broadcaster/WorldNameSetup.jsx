@@ -40,6 +40,11 @@ const WorldNameSetup = ({ channel }) => {
         body: JSON.stringify({ worldName })
       });
 
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({ error: 'Server error' }));
+        throw new Error(data.error || 'Failed to save world name');
+      }
+
       const data = await response.json();
 
       if (data.success) {
@@ -49,7 +54,7 @@ const WorldNameSetup = ({ channel }) => {
         setError(data.error || 'Failed to save world name');
       }
     } catch (err) {
-      setError('Network error');
+      setError(err.message || 'Network error');
     } finally {
       setSaving(false);
     }

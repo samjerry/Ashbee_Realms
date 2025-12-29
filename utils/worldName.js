@@ -7,7 +7,7 @@
 function replaceWorldName(text, worldName = 'Ashbee Realms') {
   if (!text) return text;
   
-  // Replace all variations
+  // Replace all variations using replaceAll to avoid ReDoS
   const replacements = [
     ['Ashbee Realms', worldName],
     ['Ashbee_Realms', worldName.replace(/\s+/g, '_')],
@@ -17,7 +17,8 @@ function replaceWorldName(text, worldName = 'Ashbee Realms') {
   
   let result = text;
   for (const [from, to] of replacements) {
-    result = result.replace(new RegExp(from, 'g'), to);
+    // Use replaceAll for safe string replacement
+    result = result.replaceAll(from, to);
   }
   
   return result;

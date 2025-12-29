@@ -918,6 +918,11 @@ app.post('/api/setup/world-name',
   // Validate world name (alphanumeric, spaces, basic punctuation)
   const sanitizedWorldName = worldName.trim().substring(0, 50); // Max 50 chars
   
+  // Check for valid characters only (alphanumeric, spaces, hyphens, underscores, apostrophes, and basic punctuation)
+  if (!/^[a-zA-Z0-9\s\-_'.,!?]+$/.test(sanitizedWorldName)) {
+    return res.status(400).json({ error: 'World name contains invalid characters. Only letters, numbers, spaces, and basic punctuation allowed.' });
+  }
+  
   try {
     await db.setWorldName(channel, sanitizedWorldName);
     res.json({ success: true, worldName: sanitizedWorldName });
