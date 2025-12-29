@@ -3,24 +3,19 @@ const router = express.Router();
 const db = require('../db');
 const security = require('../middleware/security');
 
+// Create OperatorManager instance once for reuse
+const OperatorManager = require('../game/OperatorManager');
+const operatorMgr = new OperatorManager();
+
 /**
  * Middleware to check if user is admin/operator
  * Uses the OperatorManager permission system to check for admin access
  */
-function requireAdmin(req, res, next) {
+async function requireAdmin(req, res, next) {
   const user = req.session.user;
   if (!user) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
-  
-  // Check if user has operator/admin role in the database
-  // We'll check against the creator role which has the highest permissions
-  // This integrates with the existing operator permission system
-  const OperatorManager = require('../game/OperatorManager');
-  const operatorMgr = new OperatorManager();
-  
-  // For admin API endpoints, we require at least MODERATOR level permissions
-  // This can be adjusted based on security requirements
   
   // Get user's role from session or use 'viewer' as default
   const userRole = req.session.userRole || 'viewer';
@@ -31,7 +26,7 @@ function requireAdmin(req, res, next) {
   
   // For admin endpoints that don't require a specific channel, we check if user is creator
   // Creator role has global access across all channels
-  if (userRole.toLowerCase() === 'creator' || username.toLowerCase() === 'marrowofalbion') {
+  if (userRole.toLowerCase() === 'creator') {
     req.isAdmin = true;
     req.adminLevel = 'CREATOR';
     return next();
@@ -39,28 +34,27 @@ function requireAdmin(req, res, next) {
   
   // If channel is provided, check permissions for that channel
   if (channel) {
-    db.getUserRole(user.id, channel.toLowerCase())
-      .then(channelRole => {
-        const permissionLevel = operatorMgr.getPermissionLevel(
-          username,
-          channel.toLowerCase(),
-          channelRole
-        );
-        
-        // Allow MODERATOR level and above for admin endpoints
-        if (permissionLevel >= operatorMgr.PERMISSION_LEVELS.MODERATOR) {
-          req.isAdmin = true;
-          req.adminLevel = permissionLevel >= operatorMgr.PERMISSION_LEVELS.CREATOR ? 'CREATOR' :
-                          permissionLevel >= operatorMgr.PERMISSION_LEVELS.STREAMER ? 'STREAMER' : 'MODERATOR';
-          return next();
-        }
-        
-        return res.status(403).json({ error: 'Admin access required' });
-      })
-      .catch(error => {
-        console.error('Error checking admin permissions:', error);
-        res.status(500).json({ error: 'Failed to verify permissions' });
-      });
+    try {
+      const channelRole = await db.getUserRole(user.id, channel.toLowerCase());
+      const permissionLevel = operatorMgr.getPermissionLevel(
+        username,
+        channel.toLowerCase(),
+        channelRole
+      );
+      
+      // Allow MODERATOR level and above for admin endpoints
+      if (permissionLevel >= operatorMgr.PERMISSION_LEVELS.MODERATOR) {
+        req.isAdmin = true;
+        req.adminLevel = permissionLevel >= operatorMgr.PERMISSION_LEVELS.CREATOR ? 'CREATOR' :
+                        permissionLevel >= operatorMgr.PERMISSION_LEVELS.STREAMER ? 'STREAMER' : 'MODERATOR';
+        return next();
+      }
+      
+      return res.status(403).json({ error: 'Admin access required' });
+    } catch (error) {
+      console.error('Error checking admin permissions:', error);
+      return res.status(500).json({ error: 'Failed to verify permissions' });
+    }
   } else {
     // No channel provided and user is not creator - deny access
     return res.status(403).json({ 

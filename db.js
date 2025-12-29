@@ -1989,9 +1989,11 @@ async function getAllPlayers() {
 /**
  * Get all characters for a channel (admin function)
  * Returns characters sorted alphabetically by name
+ * NOTE: Table name is sanitized via getPlayerTable() which removes all non-alphanumeric chars
+ *       preventing SQL injection. The function enforces format: players_{sanitized_channel}
  */
 async function getAllCharactersForChannel(channelName) {
-  const tableName = getPlayerTable(channelName);
+  const tableName = getPlayerTable(channelName); // Sanitized table name
   const result = await query(
     `SELECT * FROM ${tableName} ORDER BY LOWER(name) ASC`
   );
