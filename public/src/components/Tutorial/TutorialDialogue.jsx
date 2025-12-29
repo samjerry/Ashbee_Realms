@@ -137,16 +137,14 @@ const TutorialDialogue = ({
     console.log('📖 [Frontend] Typewriter processed text:', processedText);
     
     // Handle empty strings
-    if (!processedText || processedText.length === 0) {
+    if (!processedText) {
       setIsTyping(false);
       return () => {};
     }
     
-    let index = 0;
-    
     // Display first character immediately
     setDisplayText(processedText[0]);
-    index = 1;
+    let index = 1;
     
     const interval = setInterval(() => {
       if (index < processedText.length) {
