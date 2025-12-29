@@ -430,7 +430,7 @@ router.get('/dialogue/:npcId/:nodeId', async (req, res) => {
       success: true,
       node: {
         id: formattedNode.id,
-        text: formattedNode.text,  // ✅ PROCESSED text with variables replaced
+        text: formattedNode.text,  // Processed text with variables replaced
         choices: formattedNode.choices || [],
         reward: formattedNode.reward || null,
         action: node.action || null,

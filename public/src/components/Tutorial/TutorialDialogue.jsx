@@ -105,14 +105,14 @@ const TutorialDialogue = ({
   const replaceVariables = (text) => {
     if (!text) return text;
     
-    // ✅ Backend should have ALREADY replaced all variables
+    // Backend should have already replaced all variables
     // This function is now just a safety fallback
     
     let result = text;
     
     // Only replace if variables still exist (shouldn't happen if backend works correctly)
     if (result.includes('{')) {
-      console.warn('⚠️ Variables found in dialogue text - backend should have replaced these');
+      console.warn('[TutorialDialogue] Variables found in dialogue text - backend should have replaced these');
       
       // Use world name from hook (already extracted at component level)
       const fallbackWorldName = worldName || 'Ashbee Realms';
