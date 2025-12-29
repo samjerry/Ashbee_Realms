@@ -57,14 +57,24 @@ const TutorialDialogue = ({
     setIsLoading(true);
     setError(null);
     
+    console.log('📖 [TutorialDialogue] Loading dialogue node:', { npcId, nodeId });
+    
     try {
       const response = await fetch(`/api/tutorial/dialogue/${npcId}/${nodeId}`);
       const data = await response.json();
       
+      console.log('📖 [TutorialDialogue] Dialogue response:', { 
+        success: data.success, 
+        hasNode: !!data.node, 
+        error: data.error 
+      });
+      
       if (!data.success) {
+        console.error('❌ [TutorialDialogue] Dialogue loading failed:', data.error);
         throw new Error(data.error || 'Failed to load dialogue');
       }
       
+      console.log('✅ [TutorialDialogue] Dialogue node loaded:', data.node.id);
       setCurrentNode(data.node);
       setDialogueHistory(prev => [...prev, { nodeId, text: data.node.text }]);
       
@@ -73,7 +83,7 @@ const TutorialDialogue = ({
         // Rewards will be granted when advancing
       }
     } catch (error) {
-      console.error('Error loading dialogue:', error);
+      console.error('❌ [TutorialDialogue] Error loading dialogue:', error);
       setError(error.message);
     } finally {
       setIsLoading(false);

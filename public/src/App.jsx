@@ -132,8 +132,8 @@ function App() {
       if (isTutorial && !currentPlayer) {
         console.log('🎓 [App] Tutorial mode detected - showing tutorial dialogue');
         setShowTutorialDialogue(true);
-        // Open with character_selection dialogue
-        setTutorialDialogueData({ npcId: 'eldrin', dialogueNodeId: 'character_selection' });
+        // Open with character_selection dialogue using correct NPC ID
+        setTutorialDialogueData({ npcId: 'tutorial_mentor', dialogueNodeId: 'character_selection' });
         return;
       }
       
