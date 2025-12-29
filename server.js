@@ -48,6 +48,8 @@ const operatorRoutes = require('./routes/operator.routes');
 const leaderboardsRoutes = require('./routes/leaderboards.routes');
 const tutorialRoutes = require('./routes/tutorial.routes');
 const mapRoutes = require('./routes/map.routes');
+const adminRoutes = require('./routes/admin.routes');
+
 
 // Default game state values
 const DEFAULT_GAME_STATE = {
@@ -307,6 +309,16 @@ app.get('/health', (req, res) => {
         // Don't fail deployment if session setup has issues
       }
     }
+    
+    // Start database ANALYZE job (runs daily for query optimization)
+    setInterval(async () => {
+      try {
+        await db.analyzeDatabase();
+      } catch (error) {
+        console.error('⚠️ Database ANALYZE job error:', error.message);
+      }
+    }, 86400000); // Run every 24 hours (86400000ms)
+    console.log('✅ Database ANALYZE job started (runs daily)');
     
     isReady = true;
   } catch (err) {
@@ -991,6 +1003,7 @@ app.use('/api/operator', operatorRoutes);
 app.use('/api/leaderboards', leaderboardsRoutes);
 app.use('/api/tutorial', tutorialRoutes);
 app.use('/api/map', mapRoutes);
+app.use('/api/admin', adminRoutes);
 console.log('✅ Route modules mounted and ready (WebSocket initialized)');
 // ==================== END ROUTE MODULES ====================
 

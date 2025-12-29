@@ -269,6 +269,12 @@ async function initPostgres() {
     CREATE INDEX IF NOT EXISTS idx_characters_inventory ON characters USING gin(inventory);
     CREATE INDEX IF NOT EXISTS idx_characters_name_search ON characters USING gin(to_tsvector('english', name));
     CREATE INDEX IF NOT EXISTS idx_characters_in_combat ON characters(in_combat) WHERE in_combat = true;
+    
+    -- Sorting indexes for admin queries (case-insensitive)
+    CREATE INDEX IF NOT EXISTS idx_players_display_name ON players(LOWER(display_name));
+    CREATE INDEX IF NOT EXISTS idx_characters_name ON characters(LOWER(name));
+    CREATE INDEX IF NOT EXISTS idx_characters_name_channel ON characters(channel_name, LOWER(name));
+    CREATE INDEX IF NOT EXISTS idx_account_progress_player ON account_progress(player_id);
   `);
   
   // Get list of channels from environment
@@ -1967,6 +1973,106 @@ async function saveAccountProgress(playerId, progressData) {
   ]);
 }
 
+// ===== ADMIN QUERY FUNCTIONS =====
+
+/**
+ * Get all players (admin function)
+ * Returns players sorted alphabetically by display name
+ */
+async function getAllPlayers() {
+  const result = await query(
+    'SELECT * FROM players ORDER BY LOWER(display_name) ASC'
+  );
+  return result.rows;
+}
+
+/**
+ * Get all characters for a channel (admin function)
+ * Returns characters sorted alphabetically by name
+ */
+async function getAllCharactersForChannel(channelName) {
+  const tableName = getPlayerTable(channelName);
+  const result = await query(
+    `SELECT * FROM ${tableName} ORDER BY LOWER(name) ASC`
+  );
+  return result.rows;
+}
+
+/**
+ * Get all characters across all channels (admin function)
+ * Returns characters sorted by channel, then by name
+ */
+async function getAllCharacters() {
+  const result = await query(
+    'SELECT * FROM characters ORDER BY channel_name ASC, LOWER(name) ASC'
+  );
+  return result.rows;
+}
+
+/**
+ * Search players by name (admin function)
+ * Case-insensitive search with alphabetical results
+ */
+async function searchPlayersByName(searchTerm) {
+  const result = await query(
+    `SELECT * FROM players 
+     WHERE LOWER(display_name) LIKE LOWER($1) 
+     ORDER BY LOWER(display_name) ASC`,
+    [`%${searchTerm}%`]
+  );
+  return result.rows;
+}
+
+/**
+ * Search characters by name (admin function)
+ */
+async function searchCharactersByName(searchTerm, channelName = null) {
+  let sql, params;
+  
+  if (channelName) {
+    sql = `SELECT * FROM characters 
+           WHERE channel_name = $1 AND LOWER(name) LIKE LOWER($2)
+           ORDER BY LOWER(name) ASC`;
+    params = [channelName, `%${searchTerm}%`];
+  } else {
+    sql = `SELECT * FROM characters 
+           WHERE LOWER(name) LIKE LOWER($1)
+           ORDER BY channel_name ASC, LOWER(name) ASC`;
+    params = [`%${searchTerm}%`];
+  }
+  
+  const result = await query(sql, params);
+  return result.rows;
+}
+
+/**
+ * Analyze database tables for better query planning
+ * Should be run periodically (e.g., daily)
+ */
+async function analyzeDatabase() {
+  console.log('📊 Analyzing database tables...');
+  
+  try {
+    // Analyze global tables
+    await query('ANALYZE players');
+    await query('ANALYZE characters');
+    await query('ANALYZE account_progress');
+    
+    // Analyze channel tables
+    const CHANNELS = process.env.CHANNELS ? 
+      process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
+    
+    for (const channel of CHANNELS) {
+      const tableName = getPlayerTable(channel);
+      await query(`ANALYZE ${tableName}`);
+    }
+    
+    console.log('✅ Database analysis complete');
+  } catch (error) {
+    console.error('❌ Database analysis failed:', error);
+  }
+}
+
 module.exports = {
   initDB,
   query,
@@ -2010,6 +2116,13 @@ module.exports = {
   saveCharacterUnified,
   loadAccountProgress,
   saveAccountProgress,
+  // Admin query functions
+  getAllPlayers,
+  getAllCharacters,
+  getAllCharactersForChannel,
+  searchPlayersByName,
+  searchCharactersByName,
+  analyzeDatabase,
   // Constants
   ROLE_HIERARCHY,
   ROLE_COLORS,
