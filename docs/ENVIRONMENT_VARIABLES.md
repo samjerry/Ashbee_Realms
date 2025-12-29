@@ -41,6 +41,14 @@
   - Format: `12345678,87654321`
   - Users in this list get the 'tester' role
 
+### Admin Access
+Admin API access is controlled through database roles, not environment variables:
+- **CREATOR role**: Full access to all admin endpoints and channels
+- **STREAMER role**: Access to admin endpoints for their channel
+- **MODERATOR role**: Access to admin endpoints for their channel
+
+See [ADMIN_API.md](ADMIN_API.md) for details on admin endpoints and permissions.
+
 ## Redis Integration (Optional - Future Enhancement)
 
 When Redis is implemented, these variables will be available:
