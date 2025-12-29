@@ -1851,20 +1851,24 @@ async function loadAccountProgress(playerId) {
  * @param {Object} progressData - Account progress data
  */
 async function saveAccountProgress(playerId, progressData) {
-  const {
-    username = null,
-    tutorial_completed = false,
-    passive_levels = {},
-    souls = 5,
-    legacy_points = 0,
-    account_stats = {},
-    total_deaths = 0,
-    total_kills = 0,
-    total_gold_earned = 0,
-    total_xp_earned = 0,
-    highest_level_reached = 1,
-    total_crits = 0
-  } = progressData;
+  // Load existing data first to merge properly
+  const existing = await loadAccountProgress(playerId);
+  
+  // Merge new data with existing, using defaults only for missing fields
+  const merged = {
+    username: progressData.username ?? existing?.username ?? null,
+    tutorial_completed: progressData.tutorial_completed ?? existing?.tutorial_completed ?? false,
+    passive_levels: progressData.passive_levels ?? existing?.passive_levels ?? {},
+    souls: progressData.souls ?? existing?.souls ?? 5,
+    legacy_points: progressData.legacy_points ?? existing?.legacy_points ?? 0,
+    account_stats: progressData.account_stats ?? existing?.account_stats ?? {},
+    total_deaths: progressData.total_deaths ?? existing?.total_deaths ?? 0,
+    total_kills: progressData.total_kills ?? existing?.total_kills ?? 0,
+    total_gold_earned: progressData.total_gold_earned ?? existing?.total_gold_earned ?? 0,
+    total_xp_earned: progressData.total_xp_earned ?? existing?.total_xp_earned ?? 0,
+    highest_level_reached: progressData.highest_level_reached ?? existing?.highest_level_reached ?? 1,
+    total_crits: progressData.total_crits ?? existing?.total_crits ?? 0
+  };
 
   await query(`
     INSERT INTO account_progress (
@@ -1890,18 +1894,18 @@ async function saveAccountProgress(playerId, progressData) {
       updated_at = NOW()
   `, [
     playerId,
-    username,
-    tutorial_completed,
-    JSON.stringify(passive_levels),
-    souls,
-    legacy_points,
-    JSON.stringify(account_stats),
-    total_deaths,
-    total_kills,
-    total_gold_earned,
-    total_xp_earned,
-    highest_level_reached,
-    total_crits
+    merged.username,
+    merged.tutorial_completed,
+    JSON.stringify(merged.passive_levels),
+    merged.souls,
+    merged.legacy_points,
+    JSON.stringify(merged.account_stats),
+    merged.total_deaths,
+    merged.total_kills,
+    merged.total_gold_earned,
+    merged.total_xp_earned,
+    merged.highest_level_reached,
+    merged.total_crits
   ]);
 }
 
