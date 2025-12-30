@@ -142,9 +142,7 @@ const TutorialDialogue = ({
       return () => {};
     }
     
-    // Display first character immediately
-    setDisplayText(processedText[0]);
-    let index = 1;
+    let index = 0;
     
     const interval = setInterval(() => {
       if (index < processedText.length) {
