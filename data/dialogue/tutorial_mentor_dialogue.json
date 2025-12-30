@@ -16,7 +16,7 @@
     },
     {
       "id": "tutorial_start",
-      "text": "Ah, a fresh face! Welcome to Ashbee Realms, young {player_name}. These lands are filled with danger and opportunity in equal measure. I've been helping adventurers like yourself find their footing for many years. Shall we begin your training?",
+      "text": "Ah, a fresh face! Welcome to {world_name}, young {player_name}. These lands are filled with danger and opportunity in equal measure. I've been helping adventurers like yourself find their footing for many years. Shall we begin your training?",
       "choices": [
         {
           "text": "Yes, please teach me everything I need to know!",
@@ -34,7 +34,7 @@
     },
     {
       "id": "about_eldrin",
-      "text": "Me? Oh, I'm just an old warrior who's seen too many winters. I've battled dragons, explored ancient ruins, and survived more close calls than I care to count. These days, I find more satisfaction in passing on what I've learned. Now, ready to begin?",
+      "text": "Me? Oh, I'm just an old wizard who's seen too many winters. I've battled dragons, explored ancient ruins, and survived more close calls than I care to count. These days, I find more satisfaction in passing on what I've learned. Now, ready to begin?",
       "choices": [
         {
           "text": "Yes, let's start my training!",
@@ -63,7 +63,7 @@
     },
     {
       "id": "world_lore",
-      "text": "Listen well, {player_name}. Ashbee Realms was once a peaceful land, but darkness has crept in. Monsters of all kinds now roam free - from simple slimes in the forests to ancient dragons in forgotten mountains. Your journey begins small, but who knows? Perhaps you'll be the hero to restore balance to these lands.",
+      "text": "Listen well, {player_name}. {world_name} was once a peaceful land, but darkness has crept in. Monsters of all kinds now roam free - from simple slimes in the forests to ancient dragons in forgotten mountains. Your journey begins small, but who knows? Perhaps you'll be the hero to restore balance to these lands.",
       "choices": [
         {
           "text": "What kinds of monsters will I face?",
@@ -135,7 +135,7 @@
     },
     {
       "id": "weapon_equipped",
-      "text": "Well done! A warrior without a weapon is just a target. Now you're properly armed, if modestly. You'll find better gear as you adventure. Speaking of which, it's time for your first real test.",
+      "text": "Well done! An adventurer without a weapon is just a target. Now you're properly armed, if modestly. You'll find better gear as you adventure. Speaking of which, it's time for your first real test.",
       "choices": [
         {
           "text": "I'm ready. What's the test?",
