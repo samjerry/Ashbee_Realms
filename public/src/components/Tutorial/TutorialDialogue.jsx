@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, ChevronRight, SkipForward } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 
@@ -31,6 +31,7 @@ const TutorialDialogue = ({
   const [enableTypewriter, setEnableTypewriter] = useState(
     localStorage.getItem('enableTypewriter') !== 'false'
   );
+  const typewriterIntervalRef = useRef(null);
 
   useEffect(() => {
     if (npcId && dialogueNodeId) {
@@ -39,16 +40,30 @@ const TutorialDialogue = ({
     }
   }, [npcId, dialogueNodeId]);
 
-  useEffect(() => {
+  us// Clear any existing typewriter interval
+    if (typewriterIntervalRef.current) {
+      clearInterval(typewriterIntervalRef.current);
+      typewriterIntervalRef.current = null;
+    }
+    
     if (currentNode && enableTypewriter) {
-      const cleanup = typewriterEffect(currentNode.text);
-      return cleanup; // Cleanup interval on unmount or dependency change
+      typewriterEffect(currentNode.text);
     } else if (currentNode) {
       const processedText = replaceVariables(currentNode.text);
       console.log('📖 [Frontend] Display text (no typewriter):', processedText);
       setDisplayText(processedText);
       setIsTyping(false);
     }
+    
+    // Cleanup function
+    return () => {
+      if (typewriterIntervalRef.current) {
+        clearInterval(typewriterIntervalRef.current);
+        typewriterIntervalRef.current = null;
+      }ction
+    return () => {
+      setIsTyping(false);
+    };
   }, [currentNode, enableTypewriter]);
 
   const loadNPCData = async (npcId) => {
@@ -131,31 +146,37 @@ const TutorialDialogue = ({
   };
 
   const typewriterEffect = (text) => {
-    setIsTyping(true);
     const processedText = replaceVariables(text);
     console.log('📖 [Frontend] Typewriter processed text:', processedText);
     
     // Handle empty strings
     if (!processedText) {
       setDisplayText('');
-      setIsTyping(false);
-      return () => {};
-    }
-    
-    // Start with empty and let the interval handle all characters from index 0
-    setDisplayText('');
-    let index = 0;
-    
-    const interval = setInterval(() => {
-      if (index < processedText.length) {
-        setDisplayText(prev => prev + processedText[index]);
-        index++;
+    typewriterIntervalRef.current = setInterval(() => {
+      currentIndex++;
+      if (currentIndex <= processedText.length) {
+        setDisplayText(processedText.substring(0, currentIndex));
       } else {
         setIsTyping(false);
+        if (typewriterIntervalRef.current) {
+          clearInterval(typewriterIntervalRef.current);
+          typewriterIntervalRef.current = null;
+        }
+      }
+    }, 20); // Typing speed: 20ms per character
+      if (currentIndex <= processedText.length) {
+        setDisplayText(processedText.substring(0, currentIndex));
+      } else {
+        setIsTyping(false);
+      if (typewriterIntervalRef.current) {
+        clearInterval(typewriterIntervalRef.current);
+        typewriterIntervalRef.current = null;
+      }
         clearInterval(interval);
       }
     }, 20); // Typing speed: 20ms per character
     
+    // Store interval for cleanup
     return () => clearInterval(interval);
   };
 
