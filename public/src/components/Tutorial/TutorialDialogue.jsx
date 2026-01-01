@@ -146,11 +146,14 @@ const TutorialDialogue = ({
   };
 
   const typewriterEffect = (text) => {
+    console.log('📖 [Typewriter] Starting typewriter effect with text:', text);
     const processedText = replaceVariables(text);
-    console.log('📖 [Frontend] Typewriter processed text:', processedText);
+    console.log('📖 [Typewriter] Processed text:', processedText);
+    console.log('📖 [Typewriter] Text length:', processedText?.length);
     
     // Handle empty strings
     if (!processedText) {
+      console.log('⚠️ [Typewriter] No text to display');
       setDisplayText('');
       setIsTyping(false);
       return;
@@ -159,14 +162,19 @@ const TutorialDialogue = ({
     // Reset state
     setDisplayText('');
     setIsTyping(true);
+    console.log('📖 [Typewriter] Starting interval...');
     
     let currentIndex = 0;
     
     typewriterIntervalRef.current = setInterval(() => {
       currentIndex++;
+      const slice = processedText.substring(0, currentIndex);
+      console.log(`📖 [Typewriter] Tick ${currentIndex}/${processedText.length}: "${slice}"`);
+      
       if (currentIndex <= processedText.length) {
-        setDisplayText(processedText.substring(0, currentIndex));
+        setDisplayText(slice);
       } else {
+        console.log('✅ [Typewriter] Complete');
         setIsTyping(false);
         if (typewriterIntervalRef.current) {
           clearInterval(typewriterIntervalRef.current);
@@ -174,6 +182,8 @@ const TutorialDialogue = ({
         }
       }
     }, 20); // Typing speed: 20ms per character
+    
+    console.log('📖 [Typewriter] Interval ID:', typewriterIntervalRef.current);
   };
 
   const skipTypewriter = () => {
