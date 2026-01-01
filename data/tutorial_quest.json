@@ -34,7 +34,7 @@
       "dialogue_node": "tutorial_start",
       "reward": {
         "xp": 10,
-        "gold": 5
+        "gold": 3
       },
       "tip": "Eldrin will teach you everything you need to survive."
     },
@@ -49,7 +49,7 @@
       "dialogue_node": "world_lore",
       "reward": {
         "xp": 15,
-        "gold": 5
+        "gold": 3
       },
       "triggers": ["open_bestiary"],
       "tip": "Knowledge is your first weapon against danger."
@@ -65,7 +65,7 @@
       "dialogue_completion_node": "stats_explained",
       "reward": {
         "xp": 10,
-        "gold": 5
+        "gold": 2
       },
       "tip": "Understanding your stats helps you choose the right battles."
     },
@@ -80,7 +80,7 @@
       "dialogue_completion_node": "weapon_equipped",
       "reward": {
         "xp": 15,
-        "gold": 10
+        "gold": 5
       },
       "tip": "A warrior is only as good as their equipment."
     },
@@ -95,7 +95,7 @@
       "dialogue_preparation_node": "first_hunt",
       "reward": {
         "xp": 20,
-        "gold": 10
+        "gold": 5
       },
       "tip": "Eldrin is counting on you. Don't let him down!"
     },
@@ -111,7 +111,7 @@
       "dialogue_after_combat": "victory_celebration",
       "reward": {
         "xp": 50,
-        "gold": 25,
+        "gold": 15,
         "item": "minor_health_potion"
       },
       "tip": "Use Attack to deal damage. Watch your HP!"
@@ -127,7 +127,7 @@
       "dialogue_node": "victory_celebration",
       "reward": {
         "xp": 15,
-        "gold": 10
+        "gold": 5
       },
       "tip": "Every victory brings rewards. Treasure them!"
     },
@@ -142,8 +142,8 @@
       "dialogue_node": "level_up_talk",
       "condition": "level >= 2",
       "reward": {
-        "xp": 0,
-        "gold": 50,
+        "xp": 20,
+        "gold": 20,
         "item": "apprentice_health_potion"
       },
       "tip": "Each level makes you more formidable."
@@ -160,7 +160,7 @@
       "triggers": ["open_quest_log"],
       "reward": {
         "xp": 20,
-        "gold": 15
+        "gold": 8
       },
       "tip": "Quests give you purpose and great rewards."
     },
@@ -175,7 +175,7 @@
       "dialogue_preparation_node": "merchant_advice",
       "reward": {
         "xp": 25,
-        "gold": 20
+        "gold": 10
       },
       "tip": "Not all power comes from combat alone."
     },
@@ -190,7 +190,7 @@
       "dialogue_node": "graduation",
       "reward": {
         "xp": 100,
-        "gold": 100,
+        "gold": 50,
         "item": "adventurer_starter_pack",
         "title": "Novice Adventurer"
       },
