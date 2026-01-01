@@ -112,9 +112,10 @@ const GameplayTipsPanel = ({ context = 'general', autoRotate = true }) => {
   );
 };
 
-const TutorialProgress = ({ character }) => {
+const TutorialProgress = ({ character, onOpenDialogue }) => {
   const [progress, setProgress] = useState(null);
   const [currentStep, setCurrentStep] = useState(null);
+  const [dialogueRequired, setDialogueRequired] = useState(null);
 
   useEffect(() => {
     if (character) {
@@ -129,9 +130,26 @@ const TutorialProgress = ({ character }) => {
       if (data.success) {
         setProgress(data.progress);
         setCurrentStep(data.currentStep);
+        
+        // Check if current step requires dialogue
+        if (data.currentStep && data.currentStep.type === 'dialogue') {
+          setDialogueRequired({
+            npcId: data.currentStep.target,
+            nodeId: data.currentStep.dialogue_node,
+            stepId: data.currentStep.id
+          });
+        } else {
+          setDialogueRequired(null);
+        }
       }
     } catch (error) {
       console.error('Failed to fetch tutorial progress:', error);
+    }
+  };
+
+  const handleOpenDialogue = () => {
+    if (dialogueRequired && onOpenDialogue) {
+      onOpenDialogue(dialogueRequired.npcId, dialogueRequired.nodeId);
     }
   };
 
@@ -155,6 +173,17 @@ const TutorialProgress = ({ character }) => {
           <div className="p-4">
             <h4 className="text-white font-semibold mb-2">{currentStep.title}</h4>
             <p className="text-gray-300 text-sm mb-3">{currentStep.instruction}</p>
+            
+            {/* Dialogue Button */}
+            {dialogueRequired && (
+              <button
+                onClick={handleOpenDialogue}
+                className="w-full mb-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <span className="text-xl">💬</span>
+                <span>Talk to Eldrin</span>
+              </button>
+            )}
             
             {/* Rewards Preview */}
             <div className="bg-dark-800 rounded p-2 text-xs">

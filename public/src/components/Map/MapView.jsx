@@ -5,7 +5,7 @@ import WorldMapGrid from './WorldMapGrid';
 import BiomeExplorer from './BiomeExplorer';
 
 const MapView = () => {
-  const { availableLocations, currentLocation, player, mapKnowledge, fetchLocations, fetchMapKnowledge, travelTo } = useGameStore();
+  const { availableLocations, currentLocation, player, mapKnowledge, worldName, fetchLocations, fetchMapKnowledge, travelTo } = useGameStore();
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [viewMode, setViewMode] = useState('locations'); // 'locations', 'grid', 'biome-explore'
   const [showFilter, setShowFilter] = useState('all'); // 'all', 'discovered', 'undiscovered'
@@ -60,7 +60,7 @@ const MapView = () => {
             <Map size={24} className="sm:w-8 sm:h-8 text-primary-500 flex-shrink-0" />
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-white">World Map</h1>
-              <p className="text-sm sm:text-base text-gray-400">Explore the world of Ashbee Realms</p>
+              <p className="text-sm sm:text-base text-gray-400">Explore {worldName}</p>
             </div>
           </div>
           

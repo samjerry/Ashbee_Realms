@@ -9,7 +9,7 @@ Files of interest
 - `bot.js` — tmi.js bot that responds to `!adventure` and sends announcements.
 - `server.js` — Express server with Twitch OAuth flows, API endpoints, SQLite player state, and announcement cooldowns.
 - `get-bot-token.js` — OAuth token generator script (uses official Authorization Code flow).
-- `public/index.html` + `public/app.js` — tiny frontend.
+- `public/index.html` + `public/src/main.jsx` + `public/src/App.jsx` — React-based frontend.
 - `.env.example` — environment variables template; copy to `.env` and fill in values.
 
 Setup (Windows PowerShell)

@@ -56,9 +56,10 @@ class DialogueManager {
    * @param {string} npcId - NPC ID
    * @param {Object} character - Character object
    * @param {string} conversationId - Conversation ID (optional, defaults to first available)
+   * @param {string} worldName - World name (optional, defaults to 'Ashbee Realms')
    * @returns {Object} Conversation start result
    */
-  startConversation(npcId, character, conversationId = null) {
+  startConversation(npcId, character, conversationId = null, worldName = 'Ashbee Realms') {
     const dialogue = this.getDialogue(npcId);
     
     if (!dialogue) {
@@ -106,6 +107,7 @@ class DialogueManager {
       };
     }
 
+    // Format node with custom world name
     return {
       success: true,
       npc: {
@@ -117,7 +119,7 @@ class DialogueManager {
         id: conversationId,
         currentNode: startNode.id
       },
-      node: this.formatNode(startNode, character)
+      node: this.formatNode(startNode, character, worldName)
     };
   }
 
@@ -128,9 +130,10 @@ class DialogueManager {
    * @param {string} currentNodeId - Current node ID
    * @param {number} choiceIndex - Index of choice made
    * @param {Object} character - Character object
+   * @param {string} worldName - World name (optional, defaults to 'Ashbee Realms')
    * @returns {Object} Choice result
    */
-  makeChoice(npcId, conversationId, currentNodeId, choiceIndex, character) {
+  makeChoice(npcId, conversationId, currentNodeId, choiceIndex, character, worldName = 'Ashbee Realms') {
     const currentNode = this.getNode(npcId, conversationId, currentNodeId);
     
     if (!currentNode) {
@@ -183,10 +186,11 @@ class DialogueManager {
       };
     }
 
+    // Format node with custom world name
     return {
       success: true,
       conversationEnded: false,
-      node: this.formatNode(nextNode, character),
+      node: this.formatNode(nextNode, character, worldName),
       effects
     };
   }
@@ -195,9 +199,14 @@ class DialogueManager {
    * Format node for display (process variables, etc.)
    * @param {Object} node - Node object
    * @param {Object} character - Character object
+   * @param {string} worldName - World name (defaults to 'Ashbee Realms')
    * @returns {Object} Formatted node
+   * 
+   * Note: This method is used by the backend DialogueManager when serving dialogue 
+   * through the /api/dialogue routes. The tutorial system uses /api/tutorial routes
+   * which return raw nodes, so the frontend must handle variable replacement.
    */
-  formatNode(node, character) {
+  formatNode(node, character, worldName = 'Ashbee Realms') {
     let text = node.text || '';
 
     // Replace character-specific variables
@@ -206,6 +215,9 @@ class DialogueManager {
       text = text.replace(/\{player_level\}/g, character.level || 1);
       text = text.replace(/\{player_class\}/g, character.class || 'adventurer');
     }
+
+    // Replace world name
+    text = text.replace(/\{world_name\}/g, worldName);
 
     return {
       id: node.id,

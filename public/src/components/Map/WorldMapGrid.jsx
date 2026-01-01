@@ -69,7 +69,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
         </div>
 
         {/* Coordinate Labels - Top */}
-        <div className="flex mb-0">
+        <div className="flex gap-1 mb-0">
           <div className="w-8 sm:w-10"></div>
           {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
             <div
@@ -116,7 +116,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
         </div>
 
         {/* Coordinate Labels - Bottom */}
-        <div className="flex mt-0">
+        <div className="flex gap-1 mt-0">
           <div className="w-8 sm:w-10"></div>
           {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
             <div

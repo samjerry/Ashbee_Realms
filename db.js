@@ -19,6 +19,13 @@ const ROLE_COLORS = {
 };
 const DEFAULT_STARTING_LOCATION = 'Silverbrook';
 
+// Cache channel list at module level since env vars don't change at runtime
+const CHANNEL_LIST = process.env.CHANNELS ? 
+  process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
+
+// Security: Table name validation pattern (shared across codebase)
+const VALID_TABLE_NAME_PATTERN = /^players_[a-z0-9_]+$/;
+
 /**
  * Load beta tester IDs from environment variable and Testers.txt
  * TESTERS env var should contain Twitch IDs (e.g., "32319902,12345678")
@@ -181,6 +188,102 @@ async function initPostgres() {
     CREATE INDEX IF NOT EXISTS idx_audit_log_channel ON operator_audit_log(channel_name);
     CREATE INDEX IF NOT EXISTS idx_audit_log_operator ON operator_audit_log(operator_id);
     CREATE INDEX IF NOT EXISTS idx_audit_log_executed ON operator_audit_log(executed_at DESC);
+    
+    -- Unified characters table (NEW) - replaces per-channel player tables
+    CREATE TABLE IF NOT EXISTS characters (
+      player_id TEXT NOT NULL,
+      channel_name TEXT NOT NULL,
+      name TEXT NOT NULL,
+      location TEXT NOT NULL DEFAULT 'Silverbrook',
+      level INTEGER DEFAULT 1,
+      xp INTEGER DEFAULT 0,
+      xp_to_next INTEGER DEFAULT 10,
+      max_hp INTEGER DEFAULT 100,
+      hp INTEGER DEFAULT 100,
+      mana INTEGER DEFAULT 100,
+      max_mana INTEGER DEFAULT 100,
+      gold INTEGER DEFAULT 0,
+      type TEXT,
+      inventory JSONB DEFAULT '["Potion"]',
+      pending JSONB,
+      combat JSONB,
+      skill_cd INTEGER DEFAULT 0,
+      step INTEGER DEFAULT 0,
+      is_player BOOLEAN DEFAULT true,
+      in_combat BOOLEAN DEFAULT false,
+      equipped JSONB DEFAULT '{"headgear":null,"armor":null,"legs":null,"footwear":null,"hands":null,"cape":null,"off_hand":null,"amulet":null,"ring1":null,"ring2":null,"belt":null,"main_hand":null,"relic1":null,"relic2":null,"relic3":null}',
+      base_stats JSONB DEFAULT '{}',
+      skills JSONB DEFAULT '{"skills":{},"globalCooldown":0}',
+      skill_points INTEGER DEFAULT 0,
+      travel_state JSONB DEFAULT NULL,
+      active_quests JSONB DEFAULT '[]',
+      completed_quests JSONB DEFAULT '[]',
+      consumable_cooldowns JSONB DEFAULT '{}',
+      dialogue_history JSONB DEFAULT '{}',
+      reputation JSONB DEFAULT '{"general":0}',
+      unlocked_achievements JSONB DEFAULT '[]',
+      achievement_progress JSONB DEFAULT '{}',
+      achievement_unlock_dates JSONB DEFAULT '{}',
+      achievement_points INTEGER DEFAULT 0,
+      unlocked_titles JSONB DEFAULT '[]',
+      active_title TEXT DEFAULT NULL,
+      stats JSONB DEFAULT '{"totalKills":0,"bossKills":0,"criticalHits":0,"highestDamage":0,"deaths":0,"locationsVisited":[],"biomesVisited":[],"totalGoldEarned":0,"totalGoldSpent":0,"mysteriesSolved":0}',
+      dungeon_state JSONB DEFAULT NULL,
+      completed_dungeons JSONB DEFAULT '[]',
+      crafting_xp INTEGER DEFAULT 0,
+      known_recipes JSONB DEFAULT '[]',
+      season_progress JSONB DEFAULT '{}',
+      seasonal_challenges_completed JSONB DEFAULT '[]',
+      bestiary JSONB DEFAULT '{}',
+      bestiary_unlocked BOOLEAN DEFAULT false,
+      map_knowledge JSONB DEFAULT '{"discovered_regions":["town_square"],"explored_sublocations":{"town_square":["inn","shop","blacksmith","temple"]},"visited_coordinates":[[5,5]],"discovered_coordinates":[[5,5]],"discovery_timestamp":{},"exploration_percentage":0}',
+      roles JSONB DEFAULT '["viewer"]',
+      name_color TEXT DEFAULT NULL,
+      selected_role_badge TEXT DEFAULT NULL,
+      theme TEXT DEFAULT 'crimson-knight',
+      unlocked_abilities JSONB DEFAULT '[]',
+      equipped_abilities JSONB DEFAULT '[]',
+      ability_cooldowns JSONB DEFAULT '{}',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY(player_id, channel_name),
+      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
+    );
+    
+    -- Account-wide progression table (NEW) - separate from character-specific data
+    CREATE TABLE IF NOT EXISTS account_progress (
+      player_id TEXT PRIMARY KEY,
+      username TEXT,
+      tutorial_completed BOOLEAN DEFAULT false,
+      passive_levels JSONB DEFAULT '{}',
+      souls INTEGER DEFAULT 5,
+      legacy_points INTEGER DEFAULT 0,
+      account_stats JSONB DEFAULT '{}',
+      total_deaths INTEGER DEFAULT 0,
+      total_kills INTEGER DEFAULT 0,
+      total_gold_earned BIGINT DEFAULT 0,
+      total_xp_earned BIGINT DEFAULT 0,
+      highest_level_reached INTEGER DEFAULT 1,
+      total_crits INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(player_id) REFERENCES players(id) ON DELETE CASCADE
+    );
+    
+    -- Performance indexes for new tables
+    CREATE INDEX IF NOT EXISTS idx_characters_channel_player ON characters(channel_name, player_id);
+    CREATE INDEX IF NOT EXISTS idx_characters_location ON characters(location);
+    CREATE INDEX IF NOT EXISTS idx_characters_level_channel ON characters(channel_name, level DESC);
+    CREATE INDEX IF NOT EXISTS idx_characters_gold_channel ON characters(channel_name, gold DESC);
+    CREATE INDEX IF NOT EXISTS idx_characters_inventory ON characters USING gin(inventory);
+    CREATE INDEX IF NOT EXISTS idx_characters_name_search ON characters USING gin(to_tsvector('english', name));
+    CREATE INDEX IF NOT EXISTS idx_characters_in_combat ON characters(in_combat) WHERE in_combat = true;
+    
+    -- Sorting indexes for admin queries (case-insensitive)
+    CREATE INDEX IF NOT EXISTS idx_players_display_name ON players(LOWER(display_name));
+    CREATE INDEX IF NOT EXISTS idx_characters_name ON characters(LOWER(name));
+    CREATE INDEX IF NOT EXISTS idx_characters_name_channel ON characters(channel_name, LOWER(name));
+    CREATE INDEX IF NOT EXISTS idx_account_progress_player ON account_progress(player_id);
   `);
   
   // Get list of channels from environment
@@ -496,6 +599,49 @@ async function initPostgres() {
     END $$;
   `);
   
+  // Migration: Add world_name column to game_state table if it doesn't exist
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'game_state' AND column_name = 'world_name'
+      ) THEN
+        ALTER TABLE game_state ADD COLUMN world_name TEXT DEFAULT 'Ashbee Realms';
+      END IF;
+    END $$;
+  `);
+  
+  // Migration: Add username column to account_progress table if it doesn't exist
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'account_progress' AND column_name = 'username'
+      ) THEN
+        ALTER TABLE account_progress ADD COLUMN username TEXT DEFAULT NULL;
+        RAISE NOTICE 'Added username column to account_progress';
+      END IF;
+    END $$;
+  `);
+  console.log('✅ account_progress.username column verified');
+
+  // Migration: Ensure tutorial_completed column exists with proper default
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'account_progress' AND column_name = 'tutorial_completed'
+      ) THEN
+        ALTER TABLE account_progress ADD COLUMN tutorial_completed BOOLEAN DEFAULT false;
+        RAISE NOTICE 'Added tutorial_completed column to account_progress';
+      END IF;
+    END $$;
+  `);
+  console.log('✅ account_progress.tutorial_completed column verified');
+  
   console.log(`✅ Tables created/verified in ${Date.now() - tableStart}ms`);
   
   const tableTime = ((Date.now() - tableStart) / 1000).toFixed(2);
@@ -531,17 +677,13 @@ async function syncTesterRoles() {
     const CHANNELS = process.env.CHANNELS ? process.env.CHANNELS.split(',').map(ch => ch.trim().toLowerCase()) : [];
     
     for (const channel of CHANNELS) {
-      // SECURITY: getPlayerTable() sanitizes channel name, removing all non-alphanumeric characters
-      // to prevent SQL injection. Table name format: players_{sanitized_channel}
-      const tableName = getPlayerTable(channel);
-      
       // For each beta tester, check if they have a character and update their roles
       for (const testerId of BETA_TESTERS) {
         try {
-          // Query to find character by player_id (parameterized to prevent SQL injection)
+          // Query to find character by player_id and channel_name (parameterized to prevent SQL injection)
           const result = await db.query(
-            `SELECT player_id, name, roles FROM ${tableName} WHERE player_id = $1`,
-            [testerId]
+            `SELECT player_id, name, roles FROM characters WHERE player_id = $1 AND channel_name = $2`,
+            [testerId, channel]
           );
           
           if (result.rows.length > 0) {
@@ -554,8 +696,8 @@ async function syncTesterRoles() {
               
               // Update the character's roles (parameterized to prevent SQL injection)
               await db.query(
-                `UPDATE ${tableName} SET roles = $1 WHERE player_id = $2`,
-                [JSON.stringify(updatedRoles), testerId]
+                `UPDATE characters SET roles = $1 WHERE player_id = $2 AND channel_name = $3`,
+                [JSON.stringify(updatedRoles), testerId, channel]
               );
               
               totalUpdated++;
@@ -581,6 +723,13 @@ async function syncTesterRoles() {
 
 // Helper function to get channel-specific player table name
 // SECURITY: Table name is sanitized to prevent SQL injection
+/**
+ * Get sanitized table name for a channel's player data
+ * @deprecated This function is deprecated. Use the unified 'characters' table instead.
+ * This function is kept only for backward compatibility with migration scripts.
+ * @param {string} channelName - Channel name
+ * @returns {string} Sanitized table name
+ */
 function getPlayerTable(channelName) {
   if (!channelName) {
     throw new Error('Channel name is required');
@@ -609,217 +758,78 @@ async function all(sql, params = []) {
 
 /**
  * Save or update player progress
+ * Saves to both old and new schema for backward compatibility
  * @param {string} playerId - The player's unique ID
  * @param {string} channelName - The streamer's channel name (lowercase)
  * @param {object} playerData - Player data object with all fields
  */
 async function savePlayerProgress(playerId, channelName, playerData) {
-  const table = getPlayerTable(channelName);
-  const {
-    name,
-    location = 'Silverbrook',
-    level = 1,
-    xp = 0,
-    xp_to_next = 10,
-    max_hp = 100,
-    hp = 100,
-    mana = 0,
-    max_mana = 0,
-    gold = 0,
-    type = null,
-    inventory = ["Potion"],
-    pending = null,
-    combat = null,
-    skill_cd = 0,
-    step = 0,
-    is_player = true,
-    in_combat = false,
-    equipped = {
-      headgear: null, chest: null, legs: null, footwear: null,
-      hands: null, cape: null, off_hand: null, amulet: null,
-      ring1: null, ring2: null, belt: null, main_hand: null,
-      relic1: null, relic2: null, relic3: null
-    },
-    base_stats = {},
-    skills = { skills: {}, globalCooldown: 0 },
-    skill_points = 0,
-    travel_state = null,
-    active_quests = [],
-    completed_quests = [],
-    consumable_cooldowns = {},
-    dialogue_history = {},
-    reputation = { general: 0 },
-    unlocked_achievements = [],
-    achievement_progress = {},
-    achievement_unlock_dates = {},
-    achievement_points = 0,
-    unlocked_titles = [],
-    active_title = null,
-    stats = {},
-    dungeon_state = null,
-    completed_dungeons = [],
-    crafting_xp = 0,
-    known_recipes = [],
-    season_progress = {},
-    seasonal_challenges_completed = [],
-    // Permanent stats
-    passive_levels = {},
-    souls = 5,
-    legacy_points = 0,
-    account_stats = {},
-    total_deaths = 0,
-    total_kills = 0,
-    total_gold_earned = 0,
-    total_xp_earned = 0,
-    highest_level_reached = 1,
-    total_crits = 0,
-    // Roles array and name color
-    roles = ['viewer'],
-    nameColor = null,
-    selectedRoleBadge = null,
-    theme = 'crimson-knight',
-    // Abilities
-    unlocked_abilities = [],
-    equipped_abilities = [],
-    ability_cooldowns = {}
-  } = playerData;
-
-  await query(`
-    INSERT INTO ${table} (
-      player_id, name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
-      type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped,
-      base_stats, skills, skill_points, travel_state, active_quests, completed_quests,
-      consumable_cooldowns, dialogue_history, reputation, unlocked_achievements,
-      achievement_progress, achievement_unlock_dates, achievement_points,
-      unlocked_titles, active_title, stats, dungeon_state, completed_dungeons,
-      crafting_xp, known_recipes, season_progress, seasonal_challenges_completed,
-      passive_levels, souls, legacy_points, account_stats, total_deaths, total_kills,
-      total_gold_earned, total_xp_earned, highest_level_reached, total_crits, roles, name_color, selected_role_badge, theme,
-      unlocked_abilities, equipped_abilities, ability_cooldowns, updated_at
-    ) VALUES (
-      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-      $12, $13, $14, $15, $16, $17, $18, $19, $20,
-      $21, $22, $23, $24, $25, $26,
-      $27, $28, $29, $30,
-      $31, $32, $33,
-      $34, $35, $36, $37, $38,
-      $39, $40, $41, $42,
-      $43, $44, $45, $46, $47, $48,
-      $49, $50, $51, $52, $53, $54, $55, $56,
-      $57, $58, $59, NOW()
-    )
-    ON CONFLICT(player_id) DO UPDATE SET
-      name=$2, location=$3, level=$4, xp=$5, xp_to_next=$6, max_hp=$7, hp=$8, mana=$9, max_mana=$10, gold=$11,
-      type=$12, inventory=$13, pending=$14, combat=$15, skill_cd=$16, step=$17, is_player=$18, in_combat=$19, equipped=$20,
-      base_stats=$21, skills=$22, skill_points=$23, travel_state=$24, active_quests=$25, completed_quests=$26,
-      consumable_cooldowns=$27, dialogue_history=$28, reputation=$29, unlocked_achievements=$30,
-      achievement_progress=$31, achievement_unlock_dates=$32, achievement_points=$33,
-      unlocked_titles=$34, active_title=$35, stats=$36, dungeon_state=$37, completed_dungeons=$38,
-      crafting_xp=$39, known_recipes=$40, season_progress=$41, seasonal_challenges_completed=$42,
-      passive_levels=$43, souls=$44, legacy_points=$45, account_stats=$46, total_deaths=$47, total_kills=$48,
-      total_gold_earned=$49, total_xp_earned=$50, highest_level_reached=$51, total_crits=$52, roles=$53, name_color=$54, selected_role_badge=$55, theme=$56,
-      unlocked_abilities=$57, equipped_abilities=$58, ability_cooldowns=$59, updated_at=NOW()
-  `, [
-    playerId, name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
-    type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
-    skill_cd, step, is_player, in_combat, JSON.stringify(equipped),
-    JSON.stringify(base_stats), JSON.stringify(skills), skill_points, JSON.stringify(travel_state),
-    JSON.stringify(active_quests), JSON.stringify(completed_quests),
-    JSON.stringify(consumable_cooldowns), JSON.stringify(dialogue_history), JSON.stringify(reputation),
-    JSON.stringify(unlocked_achievements),
-    JSON.stringify(achievement_progress), JSON.stringify(achievement_unlock_dates), achievement_points,
-    JSON.stringify(unlocked_titles), active_title, JSON.stringify(stats), JSON.stringify(dungeon_state),
-    JSON.stringify(completed_dungeons),
-    crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed),
-    JSON.stringify(passive_levels), souls, legacy_points, JSON.stringify(account_stats), total_deaths, total_kills,
-    total_gold_earned, total_xp_earned, highest_level_reached, total_crits, JSON.stringify(roles), nameColor, selectedRoleBadge, theme,
-    JSON.stringify(unlocked_abilities), JSON.stringify(equipped_abilities), JSON.stringify(ability_cooldowns)
-  ]);
+  // Check if unified schema is available
+  const useUnifiedSchema = await hasUnifiedSchema();
+  
+  if (useUnifiedSchema) {
+    // Save to unified schema (new)
+    await saveCharacterUnified(playerId, channelName, playerData);
+    
+    // Also save account-wide data to account_progress table
+    const accountData = {
+      passive_levels: playerData.passive_levels || {},
+      souls: playerData.souls || 5,
+      legacy_points: playerData.legacy_points || 0,
+      account_stats: playerData.account_stats || {},
+      total_deaths: playerData.total_deaths || 0,
+      total_kills: playerData.total_kills || 0,
+      total_gold_earned: playerData.total_gold_earned || 0,
+      total_xp_earned: playerData.total_xp_earned || 0,
+      highest_level_reached: playerData.highest_level_reached || 1,
+      total_crits: playerData.total_crits || 0
+    };
+    await saveAccountProgress(playerId, accountData);
+  }
 }
 
 /**
  * Load player progress from database
+ * Tries unified schema first, falls back to old schema for backward compatibility
  * @param {string} playerId - The player's unique ID
  * @param {string} channelName - The streamer's channel name (lowercase)
  * @returns {object|null} Player data or null if not found
  */
 async function loadPlayerProgress(playerId, channelName) {
-  const table = getPlayerTable(channelName);
-  const result = await query(`SELECT * FROM ${table} WHERE player_id = $1`, [playerId]);
-
-  if (!result.rows || result.rows.length === 0) {
-    return null;
+  // Check if unified schema is available
+  const useUnifiedSchema = await hasUnifiedSchema();
+  
+  if (useUnifiedSchema) {
+    // Try loading from unified schema
+    const characterData = await loadCharacterUnified(playerId, channelName);
+    
+    if (characterData) {
+      // Load account progress and merge it
+      const accountProgress = await loadAccountProgress(playerId);
+      
+      if (accountProgress) {
+        // Merge account-wide data into character data
+        return {
+          ...characterData,
+          passive_levels: accountProgress.passive_levels,
+          souls: accountProgress.souls,
+          legacy_points: accountProgress.legacy_points,
+          account_stats: accountProgress.account_stats,
+          total_deaths: accountProgress.total_deaths,
+          total_kills: accountProgress.total_kills,
+          total_gold_earned: accountProgress.total_gold_earned,
+          total_xp_earned: accountProgress.total_xp_earned,
+          highest_level_reached: accountProgress.highest_level_reached,
+          total_crits: accountProgress.total_crits
+        };
+      }
+      
+      return characterData;
+    }
   }
-
-  const row = result.rows[0];
-
-  // Parse JSON fields and return complete character data
-  return {
-    name: row.name,
-    location: row.location,
-    level: row.level,
-    xp: row.xp,
-    xp_to_next: row.xp_to_next,
-    max_hp: row.max_hp,
-    hp: row.hp,
-    mana: row.mana || 0,
-    max_mana: row.max_mana || 0,
-    gold: row.gold,
-    type: row.type,
-    inventory: typeof row.inventory === 'string' ? JSON.parse(row.inventory) : row.inventory,
-    pending: row.pending ? (typeof row.pending === 'string' ? JSON.parse(row.pending) : row.pending) : null,
-    combat: row.combat ? (typeof row.combat === 'string' ? JSON.parse(row.combat) : row.combat) : null,
-    skill_cd: row.skill_cd,
-    step: row.step,
-    is_player: row.is_player,
-    in_combat: row.in_combat,
-    equipped: typeof row.equipped === 'string' ? JSON.parse(row.equipped) : row.equipped,
-    base_stats: typeof row.base_stats === 'string' ? JSON.parse(row.base_stats) : (row.base_stats || {}),
-    skills: typeof row.skills === 'string' ? JSON.parse(row.skills) : (row.skills || { skills: {}, globalCooldown: 0 }),
-    skill_points: row.skill_points || 0,
-    travel_state: row.travel_state ? (typeof row.travel_state === 'string' ? JSON.parse(row.travel_state) : row.travel_state) : null,
-    active_quests: typeof row.active_quests === 'string' ? JSON.parse(row.active_quests) : (row.active_quests || []),
-    completed_quests: typeof row.completed_quests === 'string' ? JSON.parse(row.completed_quests) : (row.completed_quests || []),
-    consumable_cooldowns: typeof row.consumable_cooldowns === 'string' ? JSON.parse(row.consumable_cooldowns) : (row.consumable_cooldowns || {}),
-    dialogue_history: typeof row.dialogue_history === 'string' ? JSON.parse(row.dialogue_history) : (row.dialogue_history || {}),
-    reputation: typeof row.reputation === 'string' ? JSON.parse(row.reputation) : (row.reputation || { general: 0 }),
-    unlocked_achievements: typeof row.unlocked_achievements === 'string' ? JSON.parse(row.unlocked_achievements) : (row.unlocked_achievements || []),
-    achievement_progress: typeof row.achievement_progress === 'string' ? JSON.parse(row.achievement_progress) : (row.achievement_progress || {}),
-    achievement_unlock_dates: typeof row.achievement_unlock_dates === 'string' ? JSON.parse(row.achievement_unlock_dates) : (row.achievement_unlock_dates || {}),
-    achievement_points: row.achievement_points || 0,
-    unlocked_titles: typeof row.unlocked_titles === 'string' ? JSON.parse(row.unlocked_titles) : (row.unlocked_titles || []),
-    active_title: row.active_title || null,
-    stats: typeof row.stats === 'string' ? JSON.parse(row.stats) : (row.stats || {}),
-    dungeon_state: row.dungeon_state ? (typeof row.dungeon_state === 'string' ? JSON.parse(row.dungeon_state) : row.dungeon_state) : null,
-    completed_dungeons: typeof row.completed_dungeons === 'string' ? JSON.parse(row.completed_dungeons) : (row.completed_dungeons || []),
-    crafting_xp: row.crafting_xp || 0,
-    known_recipes: typeof row.known_recipes === 'string' ? JSON.parse(row.known_recipes) : (row.known_recipes || []),
-    season_progress: typeof row.season_progress === 'string' ? JSON.parse(row.season_progress) : (row.season_progress || {}),
-    seasonal_challenges_completed: typeof row.seasonal_challenges_completed === 'string' ? JSON.parse(row.seasonal_challenges_completed) : (row.seasonal_challenges_completed || []),
-    // Bestiary
-    bestiary: typeof row.bestiary === 'string' ? JSON.parse(row.bestiary) : (row.bestiary || {}),
-    bestiary_unlocked: row.bestiary_unlocked || false,
-    // Permanent stats
-    passive_levels: typeof row.passive_levels === 'string' ? JSON.parse(row.passive_levels) : (row.passive_levels || {}),
-    souls: row.souls || 5,
-    legacy_points: row.legacy_points || 0,
-    account_stats: typeof row.account_stats === 'string' ? JSON.parse(row.account_stats) : (row.account_stats || {}),
-    total_deaths: row.total_deaths || 0,
-    total_kills: row.total_kills || 0,
-    total_gold_earned: row.total_gold_earned || 0,
-    total_xp_earned: row.total_xp_earned || 0,
-    highest_level_reached: row.highest_level_reached || 1,
-    total_crits: row.total_crits || 0,
-    // Roles array and name color
-    roles: typeof row.roles === 'string' ? JSON.parse(row.roles) : (row.roles || ['viewer']),
-    nameColor: row.name_color || null,
-    selectedRoleBadge: row.selected_role_badge || null,
-    theme: row.theme || 'crimson-knight',
-    // Abilities system
-    unlocked_abilities: typeof row.unlocked_abilities === 'string' ? JSON.parse(row.unlocked_abilities) : (row.unlocked_abilities || []),
-    equipped_abilities: typeof row.equipped_abilities === 'string' ? JSON.parse(row.equipped_abilities) : (row.equipped_abilities || []),
-    updated_at: row.updated_at
-  };
+  
+  // No unified schema or character not found
+  return null;
 }
 
 /**
@@ -928,10 +938,24 @@ async function createCharacter(playerId, channelName, playerName, classType, loc
  * @param {string} channelName - Channel name
  */
 async function deleteCharacter(playerId, channelName) {
+  // SECURITY: Validate channel against whitelist
+  const validChannels = getChannelList();
+  if (!validChannels.includes(channelName.toLowerCase())) {
+    throw new Error(`Invalid channel: ${channelName}`);
+  }
+  
+  // Player ID is properly parameterized to prevent SQL injection
   await query(
-    'DELETE FROM player_progress WHERE player_id = $1 AND channel_name = $2',
+    `DELETE FROM characters WHERE player_id = $1 AND channel_name = $2`,
     [playerId, channelName.toLowerCase()]
   );
+  
+  // Log deletion (sanitized for production)
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`🗑️ Deleted character for ${playerId} in ${channelName}`);
+  } else {
+    console.log(`🗑️ Deleted character in ${channelName}`);
+  }
 }
 
 /**
@@ -1152,19 +1176,17 @@ async function updateUserRole(playerId, channelName, newRoles) {
     }
   }
   
-  const table = getPlayerTable(channelName);
-  
-  // Check if player exists first
+  // Check if player exists first in the unified characters table
   const existing = await query(
-    `SELECT player_id FROM ${table} WHERE player_id = $1`,
-    [playerId]
+    `SELECT player_id FROM characters WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
   );
   
   if (existing.rows.length > 0) {
     // Player exists, just update roles
     await query(
-      `UPDATE ${table} SET roles = $1, updated_at = NOW() WHERE player_id = $2`,
-      [JSON.stringify(rolesToSet), playerId]
+      `UPDATE characters SET roles = $1, updated_at = NOW() WHERE player_id = $2 AND channel_name = $3`,
+      [JSON.stringify(rolesToSet), playerId, channelName.toLowerCase()]
     );
   } else {
     // Player doesn't exist, get their display name from the players table
@@ -1179,9 +1201,9 @@ async function updateUserRole(playerId, channelName, newRoles) {
       // Uses DEFAULT_STARTING_LOCATION as the initial spawn point for players who haven't created a character yet
       // This allows the bot to track roles for users before they officially create a character through the web UI
       await query(
-        `INSERT INTO ${table} (player_id, name, location, roles, updated_at)
-         VALUES ($1, $2, $3, $4, NOW())`,
-        [playerId, displayName, DEFAULT_STARTING_LOCATION, JSON.stringify(rolesToSet)]
+        `INSERT INTO characters (player_id, channel_name, name, location, roles, updated_at)
+         VALUES ($1, $2, $3, $4, $5, NOW())`,
+        [playerId, channelName.toLowerCase(), displayName, DEFAULT_STARTING_LOCATION, JSON.stringify(rolesToSet)]
       );
     } else {
       // Player doesn't exist in global players table either - skip update
@@ -1197,10 +1219,9 @@ async function updateUserRole(playerId, channelName, newRoles) {
  * @returns {Promise<string>} User role or 'viewer' if not found
  */
 async function getUserRole(playerId, channelName) {
-  const table = getPlayerTable(channelName);
   const result = await query(
-    `SELECT roles FROM ${table} WHERE player_id = $1`,
-    [playerId]
+    `SELECT roles FROM characters WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
   );
 
   if (result.rows.length === 0) {
@@ -1230,20 +1251,22 @@ async function getUserRole(playerId, channelName) {
  * @returns {Promise<Array>} List of users with their roles
  */
 async function getChannelUsers(channelName, role = null) {
-  const table = getPlayerTable(channelName);
   let sql = `
-    SELECT t.player_id, t.role, t.updated_at as last_updated, p.display_name, t.level, t.gold
-    FROM ${table} t
-    LEFT JOIN players p ON t.player_id = p.id
+    SELECT c.player_id, c.roles, c.updated_at as last_updated, p.display_name, c.level, c.gold
+    FROM characters c
+    LEFT JOIN players p ON c.player_id = p.id
+    WHERE c.channel_name = $1
   `;
-  const params = [];
+  const params = [channelName.toLowerCase()];
 
   if (role) {
-    sql += ` WHERE t.role = $1`;
-    params.push(role);
+    // JSONB containment operator (@>) checks if roles array contains the specified role
+    // Roles are stored as JSONB arrays, e.g., ["viewer", "subscriber"]
+    sql += ` AND c.roles @> $2::jsonb`;
+    params.push(JSON.stringify([role]));
   }
 
-  sql += ` ORDER BY t.role DESC, t.level DESC`;
+  sql += ` ORDER BY c.level DESC`;
 
   const result = await query(sql, params);
   return result.rows;
@@ -1256,10 +1279,9 @@ async function getChannelUsers(channelName, role = null) {
  * @param {string} role - Role to set
  */
 async function setUserRole(playerId, channelName, role) {
-  const table = getPlayerTable(channelName);
   await query(
-    `UPDATE ${table} SET role = $1, updated_at = NOW() WHERE player_id = $2`,
-    [role, playerId]
+    `UPDATE characters SET roles = $1, updated_at = NOW() WHERE player_id = $2 AND channel_name = $3`,
+    [JSON.stringify([role]), playerId, channelName.toLowerCase()]
   );
 }
 
@@ -1444,7 +1466,23 @@ async function isBroadcasterAuthenticated(channelName) {
  * @param {any} value - New value
  */
 async function updatePlayerField(playerId, channelName, fieldName, value) {
-  const table = getPlayerTable(channelName);
+  // SECURITY: Validate field name against whitelist to prevent SQL injection
+  const allowedFields = [
+    'name', 'location', 'level', 'xp', 'xp_to_next', 'max_hp', 'hp', 'mana', 'max_mana', 'gold',
+    'type', 'inventory', 'pending', 'combat', 'skill_cd', 'step', 'is_player', 'in_combat', 'equipped',
+    'base_stats', 'skills', 'skill_points', 'travel_state', 'active_quests', 'completed_quests',
+    'consumable_cooldowns', 'dialogue_history', 'reputation', 'unlocked_achievements',
+    'achievement_progress', 'achievement_unlock_dates', 'achievement_points',
+    'unlocked_titles', 'active_title', 'stats', 'dungeon_state', 'completed_dungeons',
+    'crafting_xp', 'known_recipes', 'season_progress', 'seasonal_challenges_completed',
+    'bestiary', 'bestiary_unlocked', 'map_knowledge', 'roles', 'name_color', 'selected_role_badge', 
+    'theme', 'unlocked_abilities', 'equipped_abilities', 'ability_cooldowns',
+    'passive_levels', 'account_stats'
+  ];
+  
+  if (!allowedFields.includes(fieldName)) {
+    throw new Error(`Invalid field name: ${fieldName}. Field name must be in the whitelist.`);
+  }
   
   // For JSON/JSONB fields, stringify the value
   const jsonFields = ['inventory', 'equipped', 'base_stats', 'skills', 'active_quests', 
@@ -1452,15 +1490,16 @@ async function updatePlayerField(playerId, channelName, fieldName, value) {
     'unlocked_achievements', 'achievement_progress', 'achievement_unlock_dates',
     'unlocked_titles', 'stats', 'dungeon_state', 'completed_dungeons',
     'known_recipes', 'season_progress', 'seasonal_challenges_completed',
-    'passive_levels', 'account_stats', 'roles', 'bestiary'];
+    'passive_levels', 'account_stats', 'roles', 'bestiary', 'map_knowledge',
+    'unlocked_abilities', 'equipped_abilities', 'ability_cooldowns'];
   
   const finalValue = jsonFields.includes(fieldName) && typeof value === 'object' 
     ? JSON.stringify(value) 
     : value;
   
   await query(
-    `UPDATE ${table} SET ${fieldName} = $2, updated_at = NOW() WHERE player_id = $1`,
-    [playerId, finalValue]
+    `UPDATE characters SET ${fieldName} = $3, updated_at = NOW() WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase(), finalValue]
   );
 }
 
@@ -1476,6 +1515,12 @@ async function getPlayerProgress(playerId, channelName) {
  * @param {string} channelName - Channel name
  * @returns {Object|null} Game state object or null if not found
  */
+/**
+ * Get game state for a channel
+ * Returns all settings or default values if not set
+ * @param {string} channelName - Channel name
+ * @returns {Object} Game state with defaults
+ */
 async function getGameState(channelName) {
   try {
     const result = await query(
@@ -1487,8 +1532,19 @@ async function getGameState(channelName) {
       return result.rows[0];
     }
     
-    // If no game state exists, create default one
-    return null;
+    // Return defaults if no state exists
+    return {
+      channel_name: channelName.toLowerCase(),
+      weather: 'Clear',
+      time_of_day: 'Day',
+      season: 'Spring',
+      game_mode: 'softcore',
+      world_name: 'Ashbee Realms',
+      active_event: null,
+      maintenance_mode: false,
+      last_broadcast: null,
+      last_updated: null
+    };
   } catch (error) {
     console.error('Error getting game state:', error);
     throw error;
@@ -1497,32 +1553,501 @@ async function getGameState(channelName) {
 
 /**
  * Set/update game state for a channel
+ * Uses UPSERT to update existing or create new
  * @param {string} channelName - Channel name
- * @param {Object} gameState - Game state object with weather, time_of_day, season, game_mode
+ * @param {Object} settings - Game settings object
  * @returns {Object} Updated game state
  */
-async function setGameState(channelName, gameState) {
+async function setGameState(channelName, settings) {
   try {
-    const { weather, time_of_day, season, game_mode } = gameState;
+    const {
+      weather = 'Clear',
+      time_of_day = 'Day',
+      season = 'Spring',
+      game_mode = 'softcore',
+      world_name = 'Ashbee Realms',
+      active_event = null,
+      maintenance_mode = false
+    } = settings;
     
     const result = await query(
-      `INSERT INTO game_state (channel_name, weather, time_of_day, season, game_mode, last_updated)
-       VALUES ($1, $2, $3, $4, $5, NOW())
-       ON CONFLICT (channel_name) 
-       DO UPDATE SET 
-         weather = $2,
-         time_of_day = $3,
-         season = $4,
-         game_mode = $5,
-         last_updated = NOW()
-       RETURNING *`,
-      [channelName.toLowerCase(), weather, time_of_day, season, game_mode]
+      `INSERT INTO game_state (
+        channel_name, weather, time_of_day, season, game_mode, 
+        world_name, active_event, maintenance_mode, last_updated
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
+      ON CONFLICT (channel_name) 
+      DO UPDATE SET
+        weather = $2,
+        time_of_day = $3,
+        season = $4,
+        game_mode = $5,
+        world_name = $6,
+        active_event = $7,
+        maintenance_mode = $8,
+        last_updated = NOW()
+      RETURNING *`,
+      [
+        channelName.toLowerCase(),
+        weather,
+        time_of_day,
+        season,
+        game_mode,
+        world_name,
+        active_event,
+        maintenance_mode
+      ]
     );
     
+    console.log(`✅ Game state saved for ${channelName}:`, settings);
     return result.rows[0];
   } catch (error) {
     console.error('Error setting game state:', error);
     throw error;
+  }
+}
+
+/**
+ * Set world name for a channel
+ * @param {string} channelName - Channel name
+ * @param {string} worldName - Custom world name
+ */
+async function setWorldName(channelName, worldName) {
+  await query(
+    `INSERT INTO game_state (channel_name, world_name, last_updated)
+     VALUES ($1, $2, NOW())
+     ON CONFLICT (channel_name) 
+     DO UPDATE SET world_name = $2, last_updated = NOW()`,
+    [channelName.toLowerCase(), worldName]
+  );
+  console.log(`🌍 World name set to "${worldName}" for ${channelName}`);
+}
+
+/**
+ * Get world name for a channel
+ * @param {string} channelName - Channel name
+ * @returns {string} World name or default
+ */
+async function getWorldName(channelName) {
+  const gameState = await getGameState(channelName.toLowerCase());
+  return gameState?.world_name || 'Ashbee Realms';
+}
+
+// ===== UNIFIED SCHEMA HELPER FUNCTIONS =====
+
+/**
+ * Check if unified schema is available
+ * @returns {Promise<boolean>} True if characters table exists
+ */
+async function hasUnifiedSchema() {
+  try {
+    const result = await query(`
+      SELECT EXISTS (
+        SELECT 1 FROM information_schema.tables 
+        WHERE table_name = 'characters'
+      )
+    `);
+    return result.rows[0].exists;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Load character from unified schema
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @returns {Object|null} Character data or null if not found
+ */
+async function loadCharacterUnified(playerId, channelName) {
+  const result = await query(
+    `SELECT * FROM characters WHERE player_id = $1 AND channel_name = $2`,
+    [playerId, channelName.toLowerCase()]
+  );
+
+  if (!result.rows || result.rows.length === 0) {
+    return null;
+  }
+
+  const row = result.rows[0];
+
+  // Parse JSON fields and return complete character data
+  return {
+    name: row.name,
+    location: row.location,
+    level: row.level,
+    xp: row.xp,
+    xp_to_next: row.xp_to_next,
+    max_hp: row.max_hp,
+    hp: row.hp,
+    mana: row.mana || 0,
+    max_mana: row.max_mana || 0,
+    gold: row.gold,
+    type: row.type,
+    inventory: typeof row.inventory === 'string' ? JSON.parse(row.inventory) : row.inventory,
+    pending: row.pending ? (typeof row.pending === 'string' ? JSON.parse(row.pending) : row.pending) : null,
+    combat: row.combat ? (typeof row.combat === 'string' ? JSON.parse(row.combat) : row.combat) : null,
+    skill_cd: row.skill_cd,
+    step: row.step,
+    is_player: row.is_player,
+    in_combat: row.in_combat,
+    equipped: typeof row.equipped === 'string' ? JSON.parse(row.equipped) : row.equipped,
+    base_stats: typeof row.base_stats === 'string' ? JSON.parse(row.base_stats) : (row.base_stats || {}),
+    skills: typeof row.skills === 'string' ? JSON.parse(row.skills) : (row.skills || { skills: {}, globalCooldown: 0 }),
+    skill_points: row.skill_points || 0,
+    travel_state: row.travel_state ? (typeof row.travel_state === 'string' ? JSON.parse(row.travel_state) : row.travel_state) : null,
+    active_quests: typeof row.active_quests === 'string' ? JSON.parse(row.active_quests) : (row.active_quests || []),
+    completed_quests: typeof row.completed_quests === 'string' ? JSON.parse(row.completed_quests) : (row.completed_quests || []),
+    consumable_cooldowns: typeof row.consumable_cooldowns === 'string' ? JSON.parse(row.consumable_cooldowns) : (row.consumable_cooldowns || {}),
+    dialogue_history: typeof row.dialogue_history === 'string' ? JSON.parse(row.dialogue_history) : (row.dialogue_history || {}),
+    reputation: typeof row.reputation === 'string' ? JSON.parse(row.reputation) : (row.reputation || { general: 0 }),
+    unlocked_achievements: typeof row.unlocked_achievements === 'string' ? JSON.parse(row.unlocked_achievements) : (row.unlocked_achievements || []),
+    achievement_progress: typeof row.achievement_progress === 'string' ? JSON.parse(row.achievement_progress) : (row.achievement_progress || {}),
+    achievement_unlock_dates: typeof row.achievement_unlock_dates === 'string' ? JSON.parse(row.achievement_unlock_dates) : (row.achievement_unlock_dates || {}),
+    achievement_points: row.achievement_points || 0,
+    unlocked_titles: typeof row.unlocked_titles === 'string' ? JSON.parse(row.unlocked_titles) : (row.unlocked_titles || []),
+    active_title: row.active_title || null,
+    stats: typeof row.stats === 'string' ? JSON.parse(row.stats) : (row.stats || {}),
+    dungeon_state: row.dungeon_state ? (typeof row.dungeon_state === 'string' ? JSON.parse(row.dungeon_state) : row.dungeon_state) : null,
+    completed_dungeons: typeof row.completed_dungeons === 'string' ? JSON.parse(row.completed_dungeons) : (row.completed_dungeons || []),
+    crafting_xp: row.crafting_xp || 0,
+    known_recipes: typeof row.known_recipes === 'string' ? JSON.parse(row.known_recipes) : (row.known_recipes || []),
+    season_progress: typeof row.season_progress === 'string' ? JSON.parse(row.season_progress) : (row.season_progress || {}),
+    seasonal_challenges_completed: typeof row.seasonal_challenges_completed === 'string' ? JSON.parse(row.seasonal_challenges_completed) : (row.seasonal_challenges_completed || []),
+    bestiary: typeof row.bestiary === 'string' ? JSON.parse(row.bestiary) : (row.bestiary || {}),
+    bestiary_unlocked: row.bestiary_unlocked || false,
+    map_knowledge: typeof row.map_knowledge === 'string' ? JSON.parse(row.map_knowledge) : (row.map_knowledge || {}),
+    roles: typeof row.roles === 'string' ? JSON.parse(row.roles) : (row.roles || ['viewer']),
+    nameColor: row.name_color || null,
+    selectedRoleBadge: row.selected_role_badge || null,
+    theme: row.theme || 'crimson-knight',
+    unlocked_abilities: typeof row.unlocked_abilities === 'string' ? JSON.parse(row.unlocked_abilities) : (row.unlocked_abilities || []),
+    equipped_abilities: typeof row.equipped_abilities === 'string' ? JSON.parse(row.equipped_abilities) : (row.equipped_abilities || []),
+    ability_cooldowns: typeof row.ability_cooldowns === 'string' ? JSON.parse(row.ability_cooldowns) : (row.ability_cooldowns || {}),
+    updated_at: row.updated_at
+  };
+}
+
+/**
+ * Save character to unified schema
+ * @param {string} playerId - Player ID
+ * @param {string} channelName - Channel name
+ * @param {Object} playerData - Character data
+ */
+async function saveCharacterUnified(playerId, channelName, playerData) {
+  const {
+    name,
+    location = 'Silverbrook',
+    level = 1,
+    xp = 0,
+    xp_to_next = 10,
+    max_hp = 100,
+    hp = 100,
+    mana = 0,
+    max_mana = 0,
+    gold = 0,
+    type = null,
+    inventory = ["Potion"],
+    pending = null,
+    combat = null,
+    skill_cd = 0,
+    step = 0,
+    is_player = true,
+    in_combat = false,
+    equipped = {
+      headgear: null, chest: null, legs: null, footwear: null,
+      hands: null, cape: null, off_hand: null, amulet: null,
+      ring1: null, ring2: null, belt: null, main_hand: null,
+      relic1: null, relic2: null, relic3: null
+    },
+    base_stats = {},
+    skills = { skills: {}, globalCooldown: 0 },
+    skill_points = 0,
+    travel_state = null,
+    active_quests = [],
+    completed_quests = [],
+    consumable_cooldowns = {},
+    dialogue_history = {},
+    reputation = { general: 0 },
+    unlocked_achievements = [],
+    achievement_progress = {},
+    achievement_unlock_dates = {},
+    achievement_points = 0,
+    unlocked_titles = [],
+    active_title = null,
+    stats = {},
+    dungeon_state = null,
+    completed_dungeons = [],
+    crafting_xp = 0,
+    known_recipes = [],
+    season_progress = {},
+    seasonal_challenges_completed = [],
+    bestiary = {},
+    bestiary_unlocked = false,
+    map_knowledge = {},
+    roles = ['viewer'],
+    nameColor = null,
+    selectedRoleBadge = null,
+    theme = 'crimson-knight',
+    unlocked_abilities = [],
+    equipped_abilities = [],
+    ability_cooldowns = {}
+  } = playerData;
+
+  await query(`
+    INSERT INTO characters (
+      player_id, channel_name, name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
+      type, inventory, pending, combat, skill_cd, step, is_player, in_combat, equipped,
+      base_stats, skills, skill_points, travel_state, active_quests, completed_quests,
+      consumable_cooldowns, dialogue_history, reputation, unlocked_achievements,
+      achievement_progress, achievement_unlock_dates, achievement_points,
+      unlocked_titles, active_title, stats, dungeon_state, completed_dungeons,
+      crafting_xp, known_recipes, season_progress, seasonal_challenges_completed,
+      bestiary, bestiary_unlocked, map_knowledge, roles, name_color, selected_role_badge, theme,
+      unlocked_abilities, equipped_abilities, ability_cooldowns, updated_at
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,
+      $13, $14, $15, $16, $17, $18, $19, $20, $21,
+      $22, $23, $24, $25, $26, $27,
+      $28, $29, $30, $31,
+      $32, $33, $34,
+      $35, $36, $37, $38, $39,
+      $40, $41, $42, $43,
+      $44, $45, $46, $47, $48, $49, $50,
+      $51, $52, $53, NOW()
+    )
+    ON CONFLICT(player_id, channel_name) DO UPDATE SET
+      name=$3, location=$4, level=$5, xp=$6, xp_to_next=$7, max_hp=$8, hp=$9, mana=$10, max_mana=$11, gold=$12,
+      type=$13, inventory=$14, pending=$15, combat=$16, skill_cd=$17, step=$18, is_player=$19, in_combat=$20, equipped=$21,
+      base_stats=$22, skills=$23, skill_points=$24, travel_state=$25, active_quests=$26, completed_quests=$27,
+      consumable_cooldowns=$28, dialogue_history=$29, reputation=$30, unlocked_achievements=$31,
+      achievement_progress=$32, achievement_unlock_dates=$33, achievement_points=$34,
+      unlocked_titles=$35, active_title=$36, stats=$37, dungeon_state=$38, completed_dungeons=$39,
+      crafting_xp=$40, known_recipes=$41, season_progress=$42, seasonal_challenges_completed=$43,
+      bestiary=$44, bestiary_unlocked=$45, map_knowledge=$46, roles=$47, name_color=$48, selected_role_badge=$49, theme=$50,
+      unlocked_abilities=$51, equipped_abilities=$52, ability_cooldowns=$53, updated_at=NOW()
+  `, [
+    playerId, channelName.toLowerCase(), name, location, level, xp, xp_to_next, max_hp, hp, mana, max_mana, gold,
+    type, JSON.stringify(inventory), JSON.stringify(pending), JSON.stringify(combat),
+    skill_cd, step, is_player, in_combat, JSON.stringify(equipped),
+    JSON.stringify(base_stats), JSON.stringify(skills), skill_points, JSON.stringify(travel_state),
+    JSON.stringify(active_quests), JSON.stringify(completed_quests),
+    JSON.stringify(consumable_cooldowns), JSON.stringify(dialogue_history), JSON.stringify(reputation),
+    JSON.stringify(unlocked_achievements),
+    JSON.stringify(achievement_progress), JSON.stringify(achievement_unlock_dates), achievement_points,
+    JSON.stringify(unlocked_titles), active_title, JSON.stringify(stats), JSON.stringify(dungeon_state),
+    JSON.stringify(completed_dungeons),
+    crafting_xp, JSON.stringify(known_recipes), JSON.stringify(season_progress), JSON.stringify(seasonal_challenges_completed),
+    JSON.stringify(bestiary), bestiary_unlocked, JSON.stringify(map_knowledge), JSON.stringify(roles), nameColor, selectedRoleBadge, theme,
+    JSON.stringify(unlocked_abilities), JSON.stringify(equipped_abilities), JSON.stringify(ability_cooldowns)
+  ]);
+}
+
+/**
+ * Load account progress from unified schema
+ * @param {string} playerId - Player ID
+ * @returns {Object|null} Account progress data or null if not found
+ */
+async function loadAccountProgress(playerId) {
+  const result = await query(
+    `SELECT * FROM account_progress WHERE player_id = $1`,
+    [playerId]
+  );
+
+  if (!result.rows || result.rows.length === 0) {
+    return null;
+  }
+
+  const row = result.rows[0];
+  return {
+    username: row.username || null,
+    tutorial_completed: row.tutorial_completed || false,
+    passive_levels: typeof row.passive_levels === 'string' ? JSON.parse(row.passive_levels) : (row.passive_levels || {}),
+    souls: row.souls || 5,
+    legacy_points: row.legacy_points || 0,
+    account_stats: typeof row.account_stats === 'string' ? JSON.parse(row.account_stats) : (row.account_stats || {}),
+    total_deaths: row.total_deaths || 0,
+    total_kills: row.total_kills || 0,
+    total_gold_earned: row.total_gold_earned || 0,
+    total_xp_earned: row.total_xp_earned || 0,
+    highest_level_reached: row.highest_level_reached || 1,
+    total_crits: row.total_crits || 0
+  };
+}
+
+/**
+ * Save account progress to unified schema
+ * @param {string} playerId - Player ID
+ * @param {Object} progressData - Account progress data
+ */
+async function saveAccountProgress(playerId, progressData) {
+  // Load existing data first to merge properly
+  const existing = await loadAccountProgress(playerId);
+  
+  // Merge new data with existing, using defaults only for missing fields
+  const merged = {
+    username: progressData.username ?? existing?.username ?? null,
+    tutorial_completed: progressData.tutorial_completed ?? existing?.tutorial_completed ?? false,
+    passive_levels: progressData.passive_levels ?? existing?.passive_levels ?? {},
+    souls: progressData.souls ?? existing?.souls ?? 5,
+    legacy_points: progressData.legacy_points ?? existing?.legacy_points ?? 0,
+    account_stats: progressData.account_stats ?? existing?.account_stats ?? {},
+    total_deaths: progressData.total_deaths ?? existing?.total_deaths ?? 0,
+    total_kills: progressData.total_kills ?? existing?.total_kills ?? 0,
+    total_gold_earned: progressData.total_gold_earned ?? existing?.total_gold_earned ?? 0,
+    total_xp_earned: progressData.total_xp_earned ?? existing?.total_xp_earned ?? 0,
+    highest_level_reached: progressData.highest_level_reached ?? existing?.highest_level_reached ?? 1,
+    total_crits: progressData.total_crits ?? existing?.total_crits ?? 0
+  };
+
+  try {
+    await query(`
+      INSERT INTO account_progress (
+        player_id, username, tutorial_completed, passive_levels, souls, legacy_points, account_stats,
+        total_deaths, total_kills, total_gold_earned, total_xp_earned,
+        highest_level_reached, total_crits, updated_at
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
+      )
+      ON CONFLICT (player_id) DO UPDATE SET
+        username = COALESCE($2, account_progress.username),
+        tutorial_completed = $3,
+        passive_levels = $4,
+        souls = $5,
+        legacy_points = $6,
+        account_stats = $7,
+        total_deaths = $8,
+        total_kills = $9,
+        total_gold_earned = $10,
+        total_xp_earned = $11,
+        highest_level_reached = $12,
+        total_crits = $13,
+        updated_at = NOW()
+    `, [
+      playerId,
+      merged.username,
+      merged.tutorial_completed,
+      JSON.stringify(merged.passive_levels),
+      merged.souls,
+      merged.legacy_points,
+      JSON.stringify(merged.account_stats),
+      merged.total_deaths,
+      merged.total_kills,
+      merged.total_gold_earned,
+      merged.total_xp_earned,
+      merged.highest_level_reached,
+      merged.total_crits
+    ]);
+  } catch (error) {
+    // Enhanced error reporting for missing columns
+    if (error.code === '42703') {
+      console.error('❌ Database schema error: Missing column in account_progress table');
+      console.error('   Run: node scripts/migrate_account_progress.js');
+      console.error('   Original error:', error.message);
+      throw new Error('Database schema is incomplete. Please run migration: node scripts/migrate_account_progress.js');
+    }
+    throw error;
+  }
+}
+
+// ===== ADMIN QUERY FUNCTIONS =====
+
+/**
+ * Get all players (admin function)
+ * Returns players sorted alphabetically by display name
+ */
+async function getAllPlayers() {
+  const result = await query(
+    'SELECT * FROM players ORDER BY LOWER(display_name) ASC'
+  );
+  return result.rows;
+}
+
+/**
+ * Get all characters for a channel (admin function)
+ * Returns characters sorted alphabetically by name
+ * NOTE: Table name is sanitized via getPlayerTable() which removes all non-alphanumeric chars
+ *       preventing SQL injection. The function enforces format: players_{sanitized_channel}
+ */
+async function getAllCharactersForChannel(channelName) {
+  const result = await query(
+    `SELECT * FROM characters WHERE channel_name = $1 ORDER BY LOWER(name) ASC`,
+    [channelName.toLowerCase()]
+  );
+  return result.rows;
+}
+
+/**
+ * Get all characters across all channels (admin function)
+ * Returns characters sorted by channel, then by name
+ */
+async function getAllCharacters() {
+  const result = await query(
+    'SELECT * FROM characters ORDER BY channel_name ASC, LOWER(name) ASC'
+  );
+  return result.rows;
+}
+
+/**
+ * Search players by name (admin function)
+ * Case-insensitive search with alphabetical results
+ */
+async function searchPlayersByName(searchTerm) {
+  const result = await query(
+    `SELECT * FROM players 
+     WHERE LOWER(display_name) LIKE LOWER($1) 
+     ORDER BY LOWER(display_name) ASC`,
+    [`%${searchTerm}%`]
+  );
+  return result.rows;
+}
+
+/**
+ * Search characters by name (admin function)
+ */
+async function searchCharactersByName(searchTerm, channelName = null) {
+  let sql, params;
+  
+  if (channelName) {
+    sql = `SELECT * FROM characters 
+           WHERE channel_name = $1 AND LOWER(name) LIKE LOWER($2)
+           ORDER BY LOWER(name) ASC`;
+    params = [channelName, `%${searchTerm}%`];
+  } else {
+    sql = `SELECT * FROM characters 
+           WHERE LOWER(name) LIKE LOWER($1)
+           ORDER BY channel_name ASC, LOWER(name) ASC`;
+    params = [`%${searchTerm}%`];
+  }
+  
+  const result = await query(sql, params);
+  return result.rows;
+}
+
+/**
+ * Helper function to get list of configured channels
+ * Returns cached channel list from module-level constant
+ */
+function getChannelList() {
+  return CHANNEL_LIST;
+}
+
+/**
+ * Analyze database tables for better query planning
+ * Should be run periodically (e.g., daily)
+ */
+async function analyzeDatabase() {
+  console.log('📊 Analyzing database tables...');
+  
+  try {
+    // Analyze unified schema tables
+    await query('ANALYZE players');
+    await query('ANALYZE characters');
+    await query('ANALYZE account_progress');
+    
+    console.log('✅ Database analysis complete');
+  } catch (error) {
+    console.error('❌ Database analysis failed:', error);
   }
 }
 
@@ -1563,8 +2088,24 @@ module.exports = {
   // Game state management
   getGameState,
   setGameState,
+  setWorldName,
+  getWorldName,
+  // Unified schema functions (NEW)
+  hasUnifiedSchema,
+  loadCharacterUnified,
+  saveCharacterUnified,
+  loadAccountProgress,
+  saveAccountProgress,
+  // Admin query functions
+  getAllPlayers,
+  getAllCharacters,
+  getAllCharactersForChannel,
+  searchPlayersByName,
+  searchCharactersByName,
+  analyzeDatabase,
   // Constants
   ROLE_HIERARCHY,
   ROLE_COLORS,
-  DEFAULT_STARTING_LOCATION
+  DEFAULT_STARTING_LOCATION,
+  VALID_TABLE_NAME_PATTERN
 };

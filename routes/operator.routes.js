@@ -214,7 +214,6 @@ router.post('/execute',
  */
 router.get('/players', checkOperatorAccess, async (req, res) => {
   try {
-    const table = db.getPlayerTable(req.channelName);
     const result = await db.query(
       `SELECT 
         player_id, 
@@ -227,9 +226,11 @@ router.get('/players', checkOperatorAccess, async (req, res) => {
         roles,
         name_color as "nameColor",
         selected_role_badge as "selectedRoleBadge"
-       FROM ${table}
+       FROM characters
+       WHERE channel_name = $1
        ORDER BY level DESC, name ASC 
-       LIMIT 100`
+       LIMIT 100`,
+      [req.channelName.toLowerCase()]
     );
 
     res.json({ players: result.rows });

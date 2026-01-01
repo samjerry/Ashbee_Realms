@@ -14,7 +14,9 @@ import BestiaryView from './components/Bestiary/BestiaryView';
 import SettingsModal from './components/Settings/SettingsModal';
 import LoadingScreen from './components/Layout/LoadingScreen';
 import CharacterCreation from './components/Common/CharacterCreation';
-import BroadcasterSetup from './components/Broadcaster/BroadcasterSetup';
+import SetupView from './components/Setup/SetupView';
+import TutorialDialogue from './components/Tutorial/TutorialDialogue';
+import { TutorialProgress } from './components/Tutorial/GameplayTips';
 
 function App() {
   const { 
@@ -23,13 +25,19 @@ function App() {
     showCombat, 
     showDialogue, 
     showSettings,
+    player,
     fetchPlayer,
+    fetchWorldName,
     setupSocketListeners 
   } = useGameStore();
 
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
   const [isCreatingCharacter, setIsCreatingCharacter] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
+  const [showTutorialDialogue, setShowTutorialDialogue] = useState(false);
+  const [tutorialDialogueData, setTutorialDialogueData] = useState(null);
+  const [isInTutorial, setIsInTutorial] = useState(false); // Track if we're in tutorial flow
+  const [shouldContinueTutorial, setShouldContinueTutorial] = useState(false); // Flag to continue tutorial after character creation
 
   // Apply theme helper function
   const applyTheme = (themeId) => {
@@ -110,28 +118,72 @@ function App() {
       return;
     }
 
-    // Check if this is a new user (tutorial=true in URL)
+    // Check URL parameters FIRST
     const urlParams = new URLSearchParams(window.location.search);
     const isTutorial = urlParams.get('tutorial') === 'true';
+    const isCreate = urlParams.get('create') === 'true';
+    console.log('🔍 [App] URL parameters parsed:', { isTutorial, isCreate, url: window.location.href });
+
+    // Initialize game by fetching player data first
+    const initializeGame = async () => {
+      await fetchPlayer();
+      const currentPlayer = useGameStore.getState().player;
+      console.log('🔍 [App] Player fetched:', { hasPlayer: !!currentPlayer });
+      console.log('🎓 [App] Tutorial state:', { isInTutorial, isTutorial, isCreate });
+      
+      // Handle tutorial parameter - new players
+      if (isTutorial && !currentPlayer) {
+        console.log('🎓 [App] Tutorial mode detected - showing tutorial dialogue');
+        setIsInTutorial(true); // Mark that we're in tutorial flow
+        setShowTutorialDialogue(true);
+        // Open with character_selection dialogue using correct NPC ID
+        setTutorialDialogueData({ npcId: 'tutorial_mentor', dialogueNodeId: 'character_selection' });
+        return;
+      }
+      
+      // Handle create parameter - returning players
+      if (isCreate && !currentPlayer) {
+        console.log('📝 [App] Create mode detected - showing character creation (tutorial skipped)');
+        setShowCharacterCreation(true);
+        return;
+      }
+      
+      // If player is null and no URL params, show character creation as fallback
+      if (!currentPlayer) {
+        console.log('🆕 [App] New player detected (no params) - showing character creation');
+        setShowCharacterCreation(true);
+        return;
+      }
+      
+      // Character exists - setup sockets and fetch world name
+      console.log('✅ [App] Character exists - setting up game');
+      setupSocketListeners();
+      
+      try {
+        const channelResponse = await fetch('/api/player/channel');
+        const channelData = await channelResponse.json();
+        const channel = channelData.channel || 'default';
+        await fetchWorldName(channel);
+      } catch (err) {
+        console.error('Failed to fetch world name:', err);
+      }
+    };
     
-    if (isTutorial) {
-      setShowCharacterCreation(true);
-      // Remove tutorial parameter from URL without reload
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, '', newUrl);
-    } else {
-      // Initialize game by fetching player data first, then setting up sockets
-      const initializeGame = async () => {
-        const success = await fetchPlayer();
-        if (success) {
-          setupSocketListeners();
-        } else {
-          console.error('[App] Failed to fetch player data. WebSocket setup skipped.');
-        }
-      };
-      initializeGame();
-    }
+    initializeGame();
   }, []);
+
+  // Handle tutorial continuation after character creation
+  useEffect(() => {
+    if (shouldContinueTutorial && player && !showCharacterCreation) {
+      console.log('🎓 [App] Continuing tutorial after character creation');
+      setShouldContinueTutorial(false); // Reset flag
+      setShowTutorialDialogue(true);
+      setTutorialDialogueData({
+        npcId: 'tutorial_mentor',
+        dialogueNodeId: 'tutorial_start'
+      });
+    }
+  }, [shouldContinueTutorial, player, showCharacterCreation]);
 
   const handleCharacterCreation = async (characterData) => {
     setIsCreatingCharacter(true);
@@ -160,22 +212,77 @@ function App() {
       }
 
       const data = await response.json();
-      console.log('Character created successfully:', data);
+      console.log('✅ [App] Character created successfully:', data);
       
       // Hide character creation and fetch player data
       setShowCharacterCreation(false);
       await fetchPlayer();
+      
+      // If we're in tutorial mode, set flag to continue tutorial
+      if (isInTutorial) {
+        console.log('🎓 [App] Character created during tutorial - will advance to tutorial_start');
+        setShouldContinueTutorial(true); // Set flag - useEffect will handle opening dialogue
+      }
     } catch (error) {
-      console.error('Character creation failed:', error);
+      console.error('❌ [App] Character creation failed:', error);
       alert(`Failed to create character: ${error.message}`);
     } finally {
       setIsCreatingCharacter(false);
     }
   };
 
+  const handleOpenTutorialDialogue = (npcId, dialogueNodeId) => {
+    console.log('📖 [App] Opening tutorial dialogue:', { npcId, dialogueNodeId });
+    setTutorialDialogueData({ npcId, dialogueNodeId });
+    setShowTutorialDialogue(true);
+  };
+
+  const handleCloseTutorialDialogue = () => {
+    console.log('📖 [App] Closing tutorial dialogue');
+    setShowTutorialDialogue(false);
+    setTutorialDialogueData(null);
+    // Refresh player data to update tutorial progress
+    fetchPlayer();
+  };
+
+  const handleDialogueAction = (action, target) => {
+    console.log('🎬 [App] Dialogue action triggered:', { action, target });
+    // Handle UI actions triggered by dialogue
+    switch (action) {
+      case 'open_character_creation':
+        // Show character creation modal
+        console.log('🎬 [App] Opening character creation from dialogue');
+        setShowTutorialDialogue(false); // Close dialogue
+        setShowCharacterCreation(true); // Open character creation
+        // isInTutorial state remains true - will be checked in handleCharacterCreation
+        break;
+      case 'open_bestiary':
+        // Switch to bestiary tab and optionally filter by target monster
+        console.log('🎬 [App] Opening bestiary from dialogue');
+        useGameStore.getState().setActiveTab('bestiary');
+        break;
+      case 'open_character_sheet':
+        console.log('🎬 [App] Opening character sheet from dialogue');
+        useGameStore.getState().setActiveTab('character');
+        break;
+      case 'open_quest_log':
+        console.log('🎬 [App] Opening quest log from dialogue');
+        useGameStore.getState().setActiveTab('quests');
+        break;
+      default:
+        console.log('🎬 [App] Unknown dialogue action:', action, target);
+    }
+  };
+
+  const handleDialogueComplete = async () => {
+    // Tutorial complete - refresh player data
+    await fetchPlayer();
+    handleCloseTutorialDialogue();
+  };
+
   // Show broadcaster setup screen if on /setup route
   if (showSetup) {
-    return <BroadcasterSetup />;
+    return <SetupView />;
   }
 
   // Show character creation screen for new users
@@ -221,6 +328,23 @@ function App() {
           {renderMainContent()}
         </main>
       </div>
+      
+      {/* Tutorial Progress Overlay - Only render if tutorial is active */}
+      {player?.tutorialProgress?.isActive && (
+        <TutorialProgress character={player} onOpenDialogue={handleOpenTutorialDialogue} />
+      )}
+      
+      {/* Tutorial Dialogue Modal */}
+      {showTutorialDialogue && tutorialDialogueData && (
+        <TutorialDialogue
+          npcId={tutorialDialogueData.npcId}
+          dialogueNodeId={tutorialDialogueData.dialogueNodeId}
+          character={player}
+          onClose={handleCloseTutorialDialogue}
+          onAction={handleDialogueAction}
+          onComplete={handleDialogueComplete}
+        />
+      )}
       
       {showDialogue && <DialogueModal />}
       {showSettings && <SettingsModal />}

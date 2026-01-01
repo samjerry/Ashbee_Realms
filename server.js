@@ -17,6 +17,7 @@ const { fetchUserRolesFromTwitch } = require('./utils/twitchRoleChecker');
 const security = require('./middleware/security');
 const validation = require('./middleware/validation');
 const sanitization = require('./middleware/sanitization');
+const sessionMiddleware = require('./middleware/session');
 const rateLimiter = require('./utils/rateLimiter');
 
 // Import route modules
@@ -47,6 +48,11 @@ const operatorRoutes = require('./routes/operator.routes');
 const leaderboardsRoutes = require('./routes/leaderboards.routes');
 const tutorialRoutes = require('./routes/tutorial.routes');
 const mapRoutes = require('./routes/map.routes');
+const adminRoutes = require('./routes/admin.routes');
+const setupRoutes = require('./routes/setup.routes');
+
+// Store interval IDs for cleanup on shutdown
+const intervals = [];
 
 // Default game state values
 const DEFAULT_GAME_STATE = {
@@ -158,11 +164,41 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres'))
 
 app.use(session(sessionConfig));
 
+/**
+ * Helper function to clean up old sessions for a user/channel combination
+ * Deletes all sessions for the same twitch_id and channel except the current one
+ * @param {string} twitchId - User's Twitch ID
+ * @param {string} channel - Channel name
+ * @param {string} currentSessionId - Current session ID to preserve
+ */
+async function cleanupOldSessions(twitchId, channel, currentSessionId) {
+  if (!process.env.DATABASE_URL || !process.env.DATABASE_URL.startsWith('postgres')) {
+    return; // Only for PostgreSQL
+  }
+  
+  try {
+    await db.query(
+      'DELETE FROM session WHERE twitch_id = $1 AND channel = $2 AND sid != $3',
+      [twitchId, channel, currentSessionId]
+    );
+    console.log(`🗑️ Cleaned up old sessions for user ${twitchId} on channel ${channel}`);
+  } catch (err) {
+    console.error('⚠️ Failed to cleanup old sessions:', err.message);
+    // Don't throw - session cleanup failure shouldn't break login
+  }
+}
+
 // Attach CSRF token to session
 app.use(security.attachCsrfToken);
 
 // Detect suspicious activity (after session, before routes)
 app.use(security.detectSuspiciousActivity);
+
+// Update session activity tracking for authenticated users
+app.use(sessionMiddleware.updateSessionActivity);
+
+// Ensure session metadata is set
+app.use(sessionMiddleware.ensureSessionMetadata);
 
 // Track initialization state
 let isReady = false;
@@ -170,7 +206,7 @@ let dbError = null;
 let initStartTime = Date.now();
 
 // Health check endpoint for Railway
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   const elapsed = ((Date.now() - initStartTime) / 1000).toFixed(1);
   
   if (!isReady) {
@@ -193,8 +229,30 @@ app.get('/health', (req, res) => {
     });
   }
   
-  console.log(`✅ Health check: OK (${elapsed}s since start)`);
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  // Quick schema validation
+  try {
+    const schemaCheck = await db.query(`
+      SELECT column_name 
+      FROM information_schema.columns 
+      WHERE table_name = 'characters' 
+      AND column_name IN ('mana', 'max_mana')
+    `);
+    
+    const hasRequiredColumns = schemaCheck.rows.length === 2;
+    
+    console.log(`✅ Health check: OK (${elapsed}s since start)`);
+    res.status(200).json({ 
+      status: 'ok', 
+      schemaValid: hasRequiredColumns,
+      timestamp: new Date().toISOString() 
+    });
+  } catch (err) {
+    console.log(`✅ Health check: OK (${elapsed}s since start) - schema check skipped`);
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString() 
+    });
+  }
 });
 
 // Initialize database (PostgreSQL or SQLite)
@@ -222,6 +280,94 @@ app.get('/health', (req, res) => {
     
     clearTimeout(initTimeout); // Clear timeout on success
     console.log(`✅ Database initialized successfully in ${dbInitTime}s`);
+    
+    // Run mana column migration automatically
+    console.log('🔧 Running mana columns migration...');
+    try {
+      const { addManaColumns } = require('./scripts/add_mana_columns');
+      await addManaColumns();
+      console.log('✅ Mana columns migration complete');
+    } catch (manaErr) {
+      console.error('⚠️ Mana migration warning:', manaErr.message);
+      // Don't fail deployment - columns might already exist
+    }
+    
+    // Run account_progress migration automatically
+    console.log('🔧 Running account_progress migration...');
+    try {
+      const { migrateAccountProgress } = require('./scripts/migrate_account_progress');
+      await migrateAccountProgress();
+      console.log('✅ account_progress migration complete');
+    } catch (accountErr) {
+      console.error('⚠️ account_progress migration warning:', accountErr.message);
+      // Don't fail deployment - columns might already exist
+    }
+    
+    // Session management enhancements (PostgreSQL only)
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
+      try {
+        // 1. Extend session table schema with custom columns
+        console.log('🔧 Extending session table schema...');
+        
+        // Add columns separately for better error handling
+        await db.query('ALTER TABLE session ADD COLUMN IF NOT EXISTS twitch_id VARCHAR(255)');
+        await db.query('ALTER TABLE session ADD COLUMN IF NOT EXISTS channel VARCHAR(255)');
+        await db.query('ALTER TABLE session ADD COLUMN IF NOT EXISTS player_id VARCHAR(255)');
+        await db.query('ALTER TABLE session ADD COLUMN IF NOT EXISTS last_activity TIMESTAMP DEFAULT NOW()');
+        await db.query('CREATE INDEX IF NOT EXISTS idx_session_twitch_channel ON session(twitch_id, channel)');
+        await db.query('CREATE INDEX IF NOT EXISTS idx_session_player_channel ON session(player_id, channel)');
+        await db.query('CREATE INDEX IF NOT EXISTS idx_session_last_activity ON session(last_activity)');
+        
+        console.log('✅ Session table schema extended');
+        
+        // 2. Wipe all sessions on deployment (optional via env var)
+        // Default is true for backward compatibility (fresh sessions on deployment)
+        const wipeSessionsOnDeploy = process.env.WIPE_SESSIONS_ON_DEPLOY !== 'false';
+        
+        if (wipeSessionsOnDeploy) {
+          console.log('🗑️ Wiping session table on deployment...');
+          await db.query('TRUNCATE TABLE session');
+          console.log('✅ Session table wiped - fresh sessions on deployment (all users will need to re-login)');
+        } else {
+          console.log('ℹ️ Session wipe skipped (WIPE_SESSIONS_ON_DEPLOY=false)');
+        }
+        
+        // 3. Start scheduled session cleanup job
+        // Remove expired sessions every 60 seconds
+        const SESSION_TTL = parseInt(process.env.SESSION_TTL || '86400', 10); // Default: 24 hours
+        setInterval(async () => {
+          try {
+            const expiryTime = new Date(Date.now() - SESSION_TTL * 1000);
+            const result = await db.query(
+              'DELETE FROM session WHERE last_activity < $1 OR (last_activity IS NULL AND expire < NOW())',
+              [expiryTime]
+            );
+            if (result.rowCount > 0) {
+              console.log(`🗑️ Cleaned up ${result.rowCount} expired session(s)`);
+            }
+          } catch (err) {
+            console.error('⚠️ Session cleanup error:', err.message);
+          }
+        }, 60000); // Run every 60 seconds
+        
+        console.log(`✅ Session cleanup job started (TTL: ${SESSION_TTL}s, interval: 60s)`);
+      } catch (sessionErr) {
+        console.error('⚠️ Session setup warning:', sessionErr.message);
+        // Don't fail deployment if session setup has issues
+      }
+    }
+    
+    // Start database ANALYZE job (runs daily for query optimization)
+    const analyzeInterval = setInterval(async () => {
+      try {
+        await db.analyzeDatabase();
+      } catch (error) {
+        console.error('⚠️ Database ANALYZE job error:', error.message);
+      }
+    }, 86400000); // Run every 24 hours (86400000ms)
+    intervals.push(analyzeInterval);
+    console.log('✅ Database ANALYZE job started (runs daily)');
+    
     isReady = true;
   } catch (err) {
     clearTimeout(initTimeout); // Clear timeout on error
@@ -355,9 +501,6 @@ app.get('/auth/twitch/callback', async (req, res) => {
       [playerId, user.id, user.display_name, access_token, refresh_token]
     );
 
-    req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
-    console.log('✅ User logged in:', playerId);
-    
     // Get the channel from session (set during /auth/twitch) or fall back to env
     let channel = req.session.oauthChannel;
     if (!channel) {
@@ -366,28 +509,77 @@ app.get('/auth/twitch/callback', async (req, res) => {
     }
     console.log('🔍 Checking character for channel:', channel);
     
+    // Store session data
+    // Note: Both user.twitchId and session.twitch_id are needed:
+    // - user.twitchId: Used by application logic (existing)
+    // - twitch_id: Used by session table for cleanup queries (new)
+    // - player_id: Used by session table for player-specific cleanup (new)
+    req.session.user = { id: playerId, displayName: user.display_name, twitchId: user.id };
+    req.session.twitch_id = user.id;
+    req.session.player_id = playerId;
+    req.session.channel = channel;
+    console.log('✅ User logged in:', playerId);
+    
+    // Update session table with twitch_id, player_id, channel, and last_activity (PostgreSQL only)
+    // Do this BEFORE cleanup to ensure the new session exists in the database
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
+      try {
+        await db.query(
+          'UPDATE session SET twitch_id = $1, player_id = $2, channel = $3, last_activity = NOW() WHERE sid = $4',
+          [user.id, playerId, channel, req.sessionID]
+        );
+        
+        // Clean up old sessions for this user/channel combination
+        // Done after session metadata is updated to avoid race conditions
+        await cleanupOldSessions(user.id, channel, req.sessionID);
+      } catch (err) {
+        console.error('⚠️ Failed to update session metadata or cleanup:', err.message);
+      }
+    }
+    
     // Clear the oauthChannel from session now that we've used it
     delete req.session.oauthChannel;
     
     // Check if player has a character in this channel
     try {
+      console.log(`🔍 [OAuth] Checking character for player: ${user.display_name} (ID: ${playerId}), channel: ${channel}`);
       const existingCharacter = await db.loadPlayerProgress(playerId, channel);
       
       // Character needs creation if: no record exists, no type/class set, or type is 'Unknown'
       const needsCharacterCreation = !existingCharacter || !existingCharacter.type || existingCharacter.type === 'Unknown';
+      console.log(`🔍 [OAuth] Character exists: ${!!existingCharacter}, needs creation: ${needsCharacterCreation}`);
+      if (existingCharacter) {
+        console.log(`🔍 [OAuth] Character type: ${existingCharacter.type}`);
+      }
       
       if (needsCharacterCreation) {
-        // No character exists or incomplete - redirect to tutorial/character creation
-        console.log(`📝 New player ${user.display_name} (type: ${existingCharacter?.type || 'none'}) - redirecting to character creation`);
-        return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+        // Check if player has completed tutorial before
+        const accountProgress = await db.loadAccountProgress(playerId);
+        const hasCompletedTutorial = accountProgress && accountProgress.tutorial_completed === true;
+        console.log(`🔍 [OAuth] Account progress loaded: ${!!accountProgress}`);
+        console.log(`🔍 [OAuth] tutorial_completed flag: ${hasCompletedTutorial}`);
+        
+        if (hasCompletedTutorial) {
+          // Player has done tutorial before, send directly to character creation
+          console.log(`📝 [OAuth] Returning player ${user.display_name} - redirecting to character creation (tutorial already completed)`);
+          console.log(`🔀 [OAuth] Redirect URL: /adventure?create=true&channel=${encodeURIComponent(channel)}`);
+          return res.redirect(`/adventure?create=true&channel=${encodeURIComponent(channel)}`);
+        } else {
+          // New player - send to tutorial which includes character creation
+          console.log(`📝 [OAuth] New player ${user.display_name} - redirecting to tutorial`);
+          console.log(`🔀 [OAuth] Redirect URL: /adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+          return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+        }
       } else {
         // Character exists and is complete - redirect to main game
-        console.log(`🎮 Existing player ${user.display_name} (${existingCharacter.type}) - redirecting to game`);
+        console.log(`🎮 [OAuth] Existing player ${user.display_name} (${existingCharacter.type}) - redirecting to game`);
+        console.log(`🔀 [OAuth] Redirect URL: /adventure?channel=${encodeURIComponent(channel)}`);
         return res.redirect(`/adventure?channel=${encodeURIComponent(channel)}`);
       }
     } catch (err) {
-      console.error('Error checking character:', err);
+      console.error('❌ [OAuth] Error checking character:', err);
       // On error, redirect to character creation to be safe
+      console.log(`🔀 [OAuth] Error fallback - redirecting to: /adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
       return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
     }
   }catch(err){
@@ -577,21 +769,49 @@ app.get('/auth/broadcaster/callback',
       [playerId, broadcasterId, broadcasterName, access_token, refresh_token]
     );
     
+    // Store session data
+    // Note: Some fields appear duplicated but serve different purposes:
+    // - user.twitchId: Used by application logic (existing field)
+    // - twitch_id: Used by session table for cleanup queries (new field)
+    // - player_id: Used by session table for player-specific cleanup (new field)
+    // - broadcasterChannel: Indicates this is a broadcaster session (existing)
+    // - channel: Used by session table for cleanup queries (new field)
     req.session.user = { id: playerId, displayName: broadcasterName, twitchId: broadcasterId };
     req.session.isBroadcaster = true;
     req.session.broadcasterChannel = channelName;
+    req.session.twitch_id = broadcasterId;
+    req.session.player_id = playerId;
+    req.session.channel = channelName;
     
-    // Check if game state has already been set up
-    const gameState = await db.getGameState(channelName);
-    
-    // If game state exists, go to adventure; otherwise go to setup
-    if (gameState) {
-      console.log(`✅ Game state already configured for ${channelName}, redirecting to adventure`);
-      res.redirect('/adventure?broadcaster=authenticated');
-    } else {
-      console.log(`📝 No game state found for ${channelName}, redirecting to setup`);
-      res.redirect('/setup');
+    // Update session table with twitch_id, player_id, channel, and last_activity (PostgreSQL only)
+    // Do this BEFORE cleanup to ensure the new session exists in the database
+    if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
+      try {
+        await db.query(
+          'UPDATE session SET twitch_id = $1, player_id = $2, channel = $3, last_activity = NOW() WHERE sid = $4',
+          [broadcasterId, playerId, channelName, req.sessionID]
+        );
+        
+        // Clean up old sessions for this broadcaster/channel combination
+        // Done after session metadata is updated to avoid race conditions
+        await cleanupOldSessions(broadcasterId, channelName, req.sessionID);
+      } catch (err) {
+        console.error('⚠️ Failed to update session metadata or cleanup:', err.message);
+      }
     }
+    
+    // IMPORTANT: Always redirect to /setup after broadcaster OAuth
+    // The setup page handles both new setup and editing existing settings
+    console.log(`✅ Broadcaster ${broadcasterName} authenticated, redirecting to setup`);
+    
+    // Save session before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('❌ Failed to save session data during broadcaster authentication:', err);
+        return res.status(500).send('Failed to save session data. Please try the !setup command again.');
+      }
+      res.redirect('/setup');
+    });
   } catch (err) {
     console.error('❌ Broadcaster OAuth callback error:', err.response?.data || err.message);
     res.status(500).send(`Broadcaster authentication failed: ${err.response?.data?.message || err.message}`);
@@ -644,15 +864,7 @@ app.get('/api/game-state', async (req, res) => {
   if (!channelName) return res.status(400).json({ error: 'Channel parameter required' });
 
   try {
-    let gameState = await db.getGameState(channelName.toLowerCase());
-    
-    // If no game state exists, return defaults
-    if (!gameState) {
-      gameState = {
-        channel_name: channelName.toLowerCase(),
-        ...DEFAULT_GAME_STATE
-      };
-    }
+    const gameState = await db.getGameState(channelName.toLowerCase());
     
     res.json({ gameState });
   } catch (error) {
@@ -702,8 +914,8 @@ app.post('/api/game-state',
   }
 
   try {
-    // Get current game state or use defaults
-    let currentState = await db.getGameState(channel.toLowerCase()) || DEFAULT_GAME_STATE;
+    // Get current game state (returns defaults if not set)
+    const currentState = await db.getGameState(channel.toLowerCase());
 
     // Update only provided fields
     const updatedState = {
@@ -723,13 +935,75 @@ app.post('/api/game-state',
   }
 });
 
+/**
+ * GET /api/setup/world-name
+ * Get world name for a channel
+ */
+app.get('/api/setup/world-name', async (req, res) => {
+  const { channel } = req.query;
+  if (!channel) return res.status(400).json({ error: 'Channel required' });
+  
+  try {
+    const worldName = await db.getWorldName(channel.toLowerCase());
+    res.json({ 
+      success: true, 
+      worldName: worldName
+    });
+  } catch (error) {
+    console.error('Error getting world name:', error);
+    res.status(500).json({ error: 'Failed to get world name' });
+  }
+});
+
+/**
+ * POST /api/setup/world-name
+ * Set world name for a channel (broadcaster only)
+ */
+app.post('/api/setup/world-name',
+  rateLimiter.middleware('strict'),
+  async (req, res) => {
+  const user = req.session.user;
+  if (!user || !req.session.isBroadcaster) {
+    return res.status(403).json({ error: 'Only broadcasters can set world name' });
+  }
+  
+  const { worldName } = req.body;
+  const channel = req.session.broadcasterChannel;
+  
+  if (!worldName || worldName.trim().length === 0) {
+    return res.status(400).json({ error: 'World name cannot be empty' });
+  }
+  
+  // Validate world name (alphanumeric, spaces, basic punctuation)
+  const sanitizedWorldName = worldName.trim().substring(0, 50); // Max 50 chars
+  
+  // Check for valid characters only (alphanumeric, spaces, hyphens, underscores, apostrophes, and basic punctuation)
+  if (!/^[a-zA-Z0-9\s\-_'.,!?]+$/.test(sanitizedWorldName)) {
+    return res.status(400).json({ error: 'World name contains invalid characters. Only letters, numbers, spaces, and basic punctuation allowed.' });
+  }
+  
+  try {
+    await db.setWorldName(channel, sanitizedWorldName);
+    res.json({ success: true, worldName: sanitizedWorldName });
+  } catch (error) {
+    console.error('Error setting world name:', error);
+    res.status(500).json({ error: 'Failed to set world name' });
+  }
+});
+
 // ==================== API ROUTES (Pre-WebSocket) ====================
 // Mount auth routes early (before WebSocket) since they don't emit events
 app.use('/api/auth', authRoutes);
 
 app.get('/api/me', (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: 'Not logged in' });
-  res.json({ user: req.session.user });
+  res.json({ 
+    user: {
+      ...req.session.user,
+      isBroadcaster: req.session.isBroadcaster || false,
+      broadcasterChannel: req.session.broadcasterChannel || null
+    }
+  });
 });
 
 // ==================== ROOT ROUTES ====================
@@ -749,14 +1023,28 @@ app.get('/', (req, res) => {
 
 // Setup route - broadcaster game setup (requires broadcaster auth)
 app.get('/setup', async (req, res) => {
+  console.log('📋 /setup route accessed', {
+    hasUser: !!req.session.user,
+    isBroadcaster: req.session.isBroadcaster,
+    channel: req.session.broadcasterChannel,
+    sessionID: req.sessionID
+  });
+  
+  // Check if user is logged in
   if (!req.session.user) {
+    console.log('❌ No user in session, redirecting to login');
+    req.session.returnTo = '/setup';
     return res.redirect('/');
   }
   
+  // IMPORTANT: Broadcasters should ALWAYS be able to access setup
   // Only broadcasters can access setup
   if (!req.session.isBroadcaster) {
+    console.log(`⚠️ Non-broadcaster ${req.session.user.displayName} attempted to access /setup`);
     return res.redirect('/adventure');
   }
+  
+  console.log(`✅ Serving setup page to broadcaster ${req.session.user.displayName}`);
   
   // Serve the setup page (same React app, will show setup component based on route)
   if (process.env.NODE_ENV === 'production') {
@@ -790,9 +1078,19 @@ app.get('/adventure', async (req, res) => {
     // Character needs creation if: no record exists, no type/class set, or type is 'Unknown'
     const needsCharacterCreation = !character || !character.type || character.type === 'Unknown';
     
-    // If character doesn't exist or is incomplete and URL doesn't already have tutorial parameter, redirect with it
-    if (needsCharacterCreation && req.query.tutorial !== 'true') {
-      return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+    // If character doesn't exist or is incomplete and URL doesn't already have tutorial or create parameter, redirect appropriately
+    if (needsCharacterCreation && req.query.tutorial !== 'true' && req.query.create !== 'true') {
+      // Check if player has completed tutorial before
+      const accountProgress = await db.loadAccountProgress(req.session.user.id);
+      const hasCompletedTutorial = accountProgress && accountProgress.tutorial_completed === true;
+      
+      if (hasCompletedTutorial) {
+        // Returning player - skip tutorial, go to character creation
+        return res.redirect(`/adventure?create=true&channel=${encodeURIComponent(channel)}`);
+      } else {
+        // New player - go to tutorial
+        return res.redirect(`/adventure?tutorial=true&channel=${encodeURIComponent(channel)}`);
+      }
     }
   } catch (error) {
     console.error('Error checking character:', error);
@@ -853,6 +1151,8 @@ app.use('/api/operator', operatorRoutes);
 app.use('/api/leaderboards', leaderboardsRoutes);
 app.use('/api/tutorial', tutorialRoutes);
 app.use('/api/map', mapRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/setup', setupRoutes);
 console.log('✅ Route modules mounted and ready (WebSocket initialized)');
 // ==================== END ROUTE MODULES ====================
 
@@ -896,6 +1196,11 @@ process.on('unhandledRejection', (reason, promise) => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('📴 SIGTERM signal received: closing HTTP server');
+  
+  // Clear all intervals
+  intervals.forEach(intervalId => clearInterval(intervalId));
+  console.log('✅ Cleared all intervals');
+  
   server.close(() => {
     console.log('✅ HTTP server closed');
     db.close().then(() => {
@@ -907,6 +1212,11 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   console.log('📴 SIGINT signal received: closing HTTP server');
+  
+  // Clear all intervals
+  intervals.forEach(intervalId => clearInterval(intervalId));
+  console.log('✅ Cleared all intervals');
+  
   server.close(() => {
     console.log('✅ HTTP server closed');
     db.close().then(() => {

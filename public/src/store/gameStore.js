@@ -20,6 +20,9 @@ const useGameStore = create((set, get) => ({
     maintenanceMode: false
   },
   
+  // World name
+  worldName: 'Ashbee Realms',
+  
   // UI state
   activeTab: 'character',
   showCombat: false,
@@ -98,6 +101,18 @@ const useGameStore = create((set, get) => ({
       
       // Fetch player stats (server already verified auth to serve this page)
       const response = await fetch('/api/player/stats');
+      
+      // Handle case where character doesn't exist yet (404)
+      if (response.status === 404) {
+        console.log('📝 No character found - character creation needed');
+        set({ 
+          player: null, 
+          isLoading: false,
+          error: null // Clear any previous errors
+        });
+        return false; // Indicate no character exists (not an error)
+      }
+      
       if (!response.ok) {
         throw new Error('Failed to fetch player stats');
       }
@@ -110,7 +125,8 @@ const useGameStore = create((set, get) => ({
       set({ 
         player: data, 
         mapKnowledge: mapKnowledge,
-        isLoading: false 
+        isLoading: false,
+        error: null 
       });
 
       // Auto-fetch inventory/equipment after player loads
@@ -120,6 +136,10 @@ const useGameStore = create((set, get) => ({
       } catch (err) {
         console.error('Failed to auto-fetch inventory on player load:', err);
       }
+      
+      // Note: World name is now handled by backend dialogue processing
+      // The /api/tutorial/dialogue/:npcId/:nodeId route fetches and replaces {world_name}
+      // so frontend doesn't need to fetch it separately
 
       return true; // Indicate success
     } catch (error) {
@@ -324,6 +344,21 @@ const useGameStore = create((set, get) => ({
       get().fetchPlayer();
     } catch (error) {
       console.error('Failed to equip item:', error);
+    }
+  },
+  
+  // World name actions
+  setWorldName: (worldName) => set({ worldName }),
+  
+  fetchWorldName: async (channel) => {
+    try {
+      const response = await fetch(`/api/setup/world-name?channel=${channel}`);
+      const data = await response.json();
+      if (data.success) {
+        set({ worldName: data.worldName });
+      }
+    } catch (error) {
+      console.error('Failed to fetch world name:', error);
     }
   },
   

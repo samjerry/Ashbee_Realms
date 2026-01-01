@@ -319,6 +319,16 @@ router.post('/create',
     const rawCharacterName = user.displayName || user.display_name || 'Adventurer';
     const characterName = sanitization.sanitizeCharacterName(rawCharacterName);
     
+    // Log creation request (development only)
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('📝 Character creation request:', {
+        userId: user.id,
+        channel: channelName,
+        classType,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
     // Validate nameColor if provided
     let validatedColor = null;
     if (nameColor) {
@@ -337,8 +347,38 @@ router.post('/create',
     try {
       // Check if character already exists
       const existing = await db.getCharacter(user.id, channelName);
+      
+      // Debug logging (development only)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('🔍 Existing character check:', {
+          found: !!existing,
+          hasName: existing?.name,
+          hasType: existing?.type,
+          characterData: existing ? {
+            name: existing.name,
+            type: existing.type,
+            level: existing.level
+          } : null
+        });
+      }
+      
+      // IMPROVED: Check if character actually has data, not just if row exists
+      // Allow recreation if character has no name/type (incomplete record)
+      if (existing && existing.name && existing.type) {
+        console.log(`❌ Character creation blocked: ${user.id} already has character "${existing.name}" in ${channelName}`);
+        return res.status(400).json({ 
+          error: 'Character already exists for this channel',
+          existingCharacter: {
+            name: existing.name,
+            type: existing.type,
+            level: existing.level
+          }
+        });
+      }
+      
+      // If we get here, either no character exists or it's incomplete
       if (existing) {
-        return res.status(400).json({ error: 'Character already exists for this channel' });
+        console.log(`⚠️ Incomplete character found for ${user.id} in ${channelName}, will overwrite`);
       }
       
       // Check if user has existing roles from previous activity (e.g., Twitch chat)
@@ -431,6 +471,43 @@ router.post('/create',
       // Save character with roles and color
       await db.saveCharacter(user.id, channelName, character);
       
+      // Save username to account_progress and ensure tutorial_completed starts as false
+      try {
+        let accountProgress = await db.loadAccountProgress(user.id);
+        
+        // If no account progress exists, create default object with all required fields
+        if (!accountProgress) {
+          accountProgress = {
+            username: characterName,
+            tutorial_completed: false,
+            passive_levels: {},
+            souls: 5,
+            legacy_points: 0,
+            account_stats: {},
+            total_deaths: 0,
+            total_kills: 0,
+            total_gold_earned: 0,
+            total_xp_earned: 0,
+            highest_level_reached: 1,
+            total_crits: 0
+          };
+        } else {
+          // Update existing account progress - only change username and tutorial_completed
+          accountProgress = {
+            ...accountProgress,
+            username: characterName,
+            tutorial_completed: false
+          };
+        }
+        
+        await db.saveAccountProgress(user.id, accountProgress);
+        console.log(`✅ Username saved to account progress: ${characterName} (tutorial_completed: false)`);
+      } catch (error) {
+        console.error('Error updating account progress:', error);
+        console.error('Full error details:', error.stack);
+        // Don't fail character creation if account progress update fails
+      }
+      
       // Emit WebSocket update for new character creation
       socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
       
@@ -441,7 +518,60 @@ router.post('/create',
       });
     } catch (error) {
       console.error('Error creating character:', error);
-      res.status(500).json({ error: error.message || 'Failed to create character' });
+      
+      // Provide helpful error messages based on error type
+      // PostgreSQL error code 42703 = undefined_column
+      if (error.code === '42703' || (error.message && error.message.includes('column') && error.message.includes('does not exist'))) {
+        return res.status(500).json({ 
+          error: 'Database schema is missing required columns. The server administrator needs to run database migrations. Please try again later or contact support.',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+      }
+      
+      return res.status(500).json({ 
+        error: 'Failed to create character. Please try again.',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
+    }
+  });
+
+/**
+ * DELETE /character/force
+ * Forcefully delete a character (allows recreation)
+ */
+router.delete('/character/force',
+  security.requireAuth,
+  rateLimiter.middleware('strict'),
+  security.auditLog('force_delete_character'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) return res.status(401).json({ error: 'Not logged in' });
+    
+    const { channel } = req.body;
+    if (!channel) {
+      return res.status(400).json({ error: 'Channel required' });
+    }
+    
+    try {
+      const channelName = channel.toLowerCase();
+      
+      // Delete character
+      await db.deleteCharacter(user.id, channelName);
+      
+      // Log deletion (sanitized for production)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`🗑️ Force deleted character for ${user.id} in ${channelName}`);
+      } else {
+        console.log(`🗑️ Force deleted character in ${channelName}`);
+      }
+      
+      res.json({ 
+        success: true, 
+        message: 'Character deleted successfully' 
+      });
+    } catch (error) {
+      console.error('Error force deleting character:', error);
+      res.status(500).json({ error: 'Failed to delete character' });
     }
   });
 
