@@ -41,7 +41,7 @@ const TutorialDialogue = ({
   }, [npcId, dialogueNodeId]);
 
   useEffect(() => {
-    // Clear any existing typewriter interval
+    // Clear any existing typewriter interval at the start
     if (typewriterIntervalRef.current) {
       clearInterval(typewriterIntervalRef.current);
       typewriterIntervalRef.current = null;
@@ -56,11 +56,11 @@ const TutorialDialogue = ({
       setIsTyping(false);
     }
     
-    // Cleanup function
+    // Cleanup function - capture the current interval ID
+    const currentIntervalId = typewriterIntervalRef.current;
     return () => {
-      if (typewriterIntervalRef.current) {
-        clearInterval(typewriterIntervalRef.current);
-        typewriterIntervalRef.current = null;
+      if (currentIntervalId) {
+        clearInterval(currentIntervalId);
       }
       setIsTyping(false);
     };
