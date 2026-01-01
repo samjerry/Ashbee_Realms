@@ -41,20 +41,16 @@ const TutorialDialogue = ({
   }, [npcId, dialogueNodeId]);
 
   useEffect(() => {
-    console.log('📖 [Effect] Running with currentNode:', currentNode?.id, 'enableTypewriter:', enableTypewriter);
-    
     if (currentNode && enableTypewriter) {
       typewriterEffect(currentNode.text);
     } else if (currentNode) {
       const processedText = replaceVariables(currentNode.text);
-      console.log('📖 [Frontend] Display text (no typewriter):', processedText);
       setDisplayText(processedText);
       setIsTyping(false);
     }
     
     // Cleanup on unmount or when dependencies change
     return () => {
-      console.log('📖 [Effect] Cleanup running - clearing timeout:', typewriterIntervalRef.current);
       if (typewriterIntervalRef.current) {
         clearTimeout(typewriterIntervalRef.current);
         typewriterIntervalRef.current = null;
@@ -79,25 +75,14 @@ const TutorialDialogue = ({
     setIsLoading(true);
     setError(null);
     
-    console.log('📖 [TutorialDialogue] Loading dialogue node:', { npcId, nodeId });
-    
     try {
       const response = await fetch(`/api/tutorial/dialogue/${npcId}/${nodeId}`);
       const data = await response.json();
-      
-      console.log('📖 [TutorialDialogue] Dialogue response:', { 
-        success: data.success, 
-        hasNode: !!data.node, 
-        error: data.error 
-      });
       
       if (!data.success) {
         console.error('❌ [TutorialDialogue] Dialogue loading failed:', data.error);
         throw new Error(data.error || 'Failed to load dialogue');
       }
-      
-      console.log('✅ [TutorialDialogue] Dialogue node loaded:', data.node.id);
-      console.log('📖 [Frontend] Received text from API:', data.node.text);
       
       setCurrentNode(data.node);
       setDialogueHistory(prev => [...prev, { nodeId, text: data.node.text }]);
@@ -143,22 +128,16 @@ const TutorialDialogue = ({
   };
 
   const typewriterEffect = (text) => {
-    console.log('📖 [Typewriter] Starting typewriter effect with text:', text);
-    
-    // Clear any existing interval first
+    // Clear any existing timeout first
     if (typewriterIntervalRef.current) {
-      console.log('📖 [Typewriter] Clearing existing interval:', typewriterIntervalRef.current);
-      clearInterval(typewriterIntervalRef.current);
+      clearTimeout(typewriterIntervalRef.current);
       typewriterIntervalRef.current = null;
     }
     
     const processedText = replaceVariables(text);
-    console.log('📖 [Typewriter] Processed text:', processedText);
-    console.log('📖 [Typewriter] Text length:', processedText?.length);
     
     // Handle empty strings
     if (!processedText) {
-      console.log('⚠️ [Typewriter] No text to display');
       setDisplayText('');
       setIsTyping(false);
       return;
@@ -167,21 +146,18 @@ const TutorialDialogue = ({
     // Reset state
     setDisplayText('');
     setIsTyping(true);
-    console.log('📖 [Typewriter] Starting typewriter animation...');
     
     let currentIndex = 0;
     
     const typeNextChar = () => {
       currentIndex++;
       const slice = processedText.substring(0, currentIndex);
-      console.log(`📖 [Typewriter] Tick ${currentIndex}/${processedText.length}: "${slice.substring(0, 20)}..."`);
       
       setDisplayText(slice);
       
       if (currentIndex < processedText.length) {
         typewriterIntervalRef.current = setTimeout(typeNextChar, 20);
       } else {
-        console.log('✅ [Typewriter] Complete');
         setIsTyping(false);
         typewriterIntervalRef.current = null;
       }
@@ -189,7 +165,6 @@ const TutorialDialogue = ({
     
     // Start the animation
     typewriterIntervalRef.current = setTimeout(typeNextChar, 20);
-    console.log('📖 [Typewriter] Initial timeout ID:', typewriterIntervalRef.current);
   };
 
   const skipTypewriter = () => {
