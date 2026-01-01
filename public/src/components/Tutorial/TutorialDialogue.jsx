@@ -40,7 +40,8 @@ const TutorialDialogue = ({
     }
   }, [npcId, dialogueNodeId]);
 
-  us// Clear any existing typewriter interval
+  useEffect(() => {
+    // Clear any existing typewriter interval
     if (typewriterIntervalRef.current) {
       clearInterval(typewriterIntervalRef.current);
       typewriterIntervalRef.current = null;
@@ -60,8 +61,7 @@ const TutorialDialogue = ({
       if (typewriterIntervalRef.current) {
         clearInterval(typewriterIntervalRef.current);
         typewriterIntervalRef.current = null;
-      }ction
-    return () => {
+      }
       setIsTyping(false);
     };
   }, [currentNode, enableTypewriter]);
@@ -152,6 +152,16 @@ const TutorialDialogue = ({
     // Handle empty strings
     if (!processedText) {
       setDisplayText('');
+      setIsTyping(false);
+      return;
+    }
+    
+    // Reset state
+    setDisplayText('');
+    setIsTyping(true);
+    
+    let currentIndex = 0;
+    
     typewriterIntervalRef.current = setInterval(() => {
       currentIndex++;
       if (currentIndex <= processedText.length) {
@@ -164,20 +174,6 @@ const TutorialDialogue = ({
         }
       }
     }, 20); // Typing speed: 20ms per character
-      if (currentIndex <= processedText.length) {
-        setDisplayText(processedText.substring(0, currentIndex));
-      } else {
-        setIsTyping(false);
-      if (typewriterIntervalRef.current) {
-        clearInterval(typewriterIntervalRef.current);
-        typewriterIntervalRef.current = null;
-      }
-        clearInterval(interval);
-      }
-    }, 20); // Typing speed: 20ms per character
-    
-    // Store interval for cleanup
-    return () => clearInterval(interval);
   };
 
   const skipTypewriter = () => {
@@ -186,7 +182,11 @@ const TutorialDialogue = ({
       setIsTyping(false);
     }
   };
-
+if (typewriterIntervalRef.current) {
+        clearInterval(typewriterIntervalRef.current);
+        typewriterIntervalRef.current = null;
+      }
+      
   const handleChoice = async (choice, choiceIndex) => {
     // Trigger action if specified
     if (currentNode.action) {
