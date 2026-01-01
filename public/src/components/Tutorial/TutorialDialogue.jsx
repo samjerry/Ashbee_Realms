@@ -41,6 +41,8 @@ const TutorialDialogue = ({
   }, [npcId, dialogueNodeId]);
 
   useEffect(() => {
+    console.log('📖 [Effect] Running with currentNode:', currentNode?.id, 'enableTypewriter:', enableTypewriter);
+    
     if (currentNode && enableTypewriter) {
       typewriterEffect(currentNode.text);
     } else if (currentNode) {
@@ -49,6 +51,16 @@ const TutorialDialogue = ({
       setDisplayText(processedText);
       setIsTyping(false);
     }
+    
+    // Cleanup on unmount or when dependencies change
+    return () => {
+      console.log('📖 [Effect] Cleanup running - clearing interval:', typewriterIntervalRef.current);
+      if (typewriterIntervalRef.current) {
+        clearInterval(typewriterIntervalRef.current);
+        typewriterIntervalRef.current = null;
+      }
+      setIsTyping(false);
+    };
   }, [currentNode, enableTypewriter]);
 
   const loadNPCData = async (npcId) => {
