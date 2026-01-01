@@ -41,12 +41,6 @@ const TutorialDialogue = ({
   }, [npcId, dialogueNodeId]);
 
   useEffect(() => {
-    // Clear any existing typewriter interval at the start
-    if (typewriterIntervalRef.current) {
-      clearInterval(typewriterIntervalRef.current);
-      typewriterIntervalRef.current = null;
-    }
-    
     if (currentNode && enableTypewriter) {
       typewriterEffect(currentNode.text);
     } else if (currentNode) {
@@ -55,15 +49,6 @@ const TutorialDialogue = ({
       setDisplayText(processedText);
       setIsTyping(false);
     }
-    
-    // Cleanup function - capture the current interval ID
-    const currentIntervalId = typewriterIntervalRef.current;
-    return () => {
-      if (currentIntervalId) {
-        clearInterval(currentIntervalId);
-      }
-      setIsTyping(false);
-    };
   }, [currentNode, enableTypewriter]);
 
   const loadNPCData = async (npcId) => {
@@ -147,6 +132,14 @@ const TutorialDialogue = ({
 
   const typewriterEffect = (text) => {
     console.log('📖 [Typewriter] Starting typewriter effect with text:', text);
+    
+    // Clear any existing interval first
+    if (typewriterIntervalRef.current) {
+      console.log('📖 [Typewriter] Clearing existing interval:', typewriterIntervalRef.current);
+      clearInterval(typewriterIntervalRef.current);
+      typewriterIntervalRef.current = null;
+    }
+    
     const processedText = replaceVariables(text);
     console.log('📖 [Typewriter] Processed text:', processedText);
     console.log('📖 [Typewriter] Text length:', processedText?.length);
