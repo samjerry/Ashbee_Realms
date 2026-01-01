@@ -14,7 +14,7 @@
         "burn_damage": 6,
         "burn_duration": 4
       },
-      "value": 250
+      "value": 3000
     },
     {
       "id": "archmage_staff",
@@ -30,7 +30,7 @@
       "passive": {
         "spell_power": 0.5
       },
-      "value": 350
+      "value": 3500
     },
     {
       "id": "dragon_bone_sword",
@@ -43,7 +43,7 @@
         "attack": 32,
         "magic": 12
       },
-      "value": 400
+      "value": 3800
     },
     {
       "id": "blade_of_elements",
@@ -60,7 +60,7 @@
         "ice_damage": 10,
         "lightning_damage": 10
       },
-      "value": 500
+      "value": 4500
     },
     {
       "id": "orb_of_storms",
@@ -76,7 +76,7 @@
       "passive": {
         "storm_control": true
       },
-      "value": 420
+      "value": 3600
     },
     {
       "id": "staff_of_life",
@@ -92,7 +92,7 @@
       "passive": {
         "heal_on_kill": 10
       },
-      "value": 380
+      "value": 3200
     },
     {
       "id": "sword_of_truth",
@@ -108,7 +108,7 @@
         "true_strike": true,
         "detect_lies": true
       },
-      "value": 550
+      "value": 4200
     },
     {
       "id": "dragonslayer",
@@ -126,7 +126,7 @@
         "bonus_vs_dragons": 2,
         "lifesteal": 0.15
       },
-      "value": 2000
+      "value": 4000
     }
   ]
 }

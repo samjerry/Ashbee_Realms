@@ -170,7 +170,7 @@
           "passive": {
             "mana_regen": 2
           },
-          "value": 50
+          "value": 220
         },
         {
           "id": "ring_of_protection",
@@ -185,7 +185,7 @@
           "passive": {
             "magic_resist": 0.20
           },
-          "value": 55
+          "value": 230
         },
         {
           "id": "ring_of_elemental_mastery",
@@ -199,7 +199,7 @@
             "ice_damage": 4,
             "lightning_damage": 4
           },
-          "value": 650
+          "value": 280
         },
         {
           "id": "band_of_berserker",
@@ -215,7 +215,7 @@
             "crit_chance": 0.12,
             "damage_bonus": 5
           },
-          "value": 580
+          "value": 270
         },
         {
           "id": "signet_of_archmage",
@@ -231,7 +231,7 @@
             "spell_power": 0.08,
             "magic_damage": 6
           },
-          "value": 720
+          "value": 290
         },
         {
           "id": "ring_of_shadows",
@@ -245,7 +245,7 @@
             "void_damage": 6,
             "phase_shift": 0.10
           },
-          "value": 680
+          "value": 280
         },
         {
           "id": "ring_of_power",
@@ -259,7 +259,7 @@
             "magic": 8,
             "agility": 8
           },
-          "value": 700
+          "value": 290
         }
       ],
       "epic": [
@@ -619,7 +619,7 @@
             "auto_revive_once": true,
             "fire_immunity": true
           },
-          "value": 2500
+          "value": 9500
         }
       ],
       "mythic": []

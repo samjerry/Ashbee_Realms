@@ -10,7 +10,7 @@
       "stats": {
         "attack": 14
       },
-      "value": 45
+      "value": 220
     },
     {
       "id": "enchanted_dagger",
@@ -26,7 +26,7 @@
         "bleed_damage": 2,
         "bleed_duration": 3
       },
-      "value": 25
+      "value": 240
     },
     {
       "id": "wand_of_fire",
@@ -42,7 +42,7 @@
       "passive": {
         "fire_damage": 5
       },
-      "value": 70
+      "value": 250
     },
     {
       "id": "battle_axe",
@@ -57,7 +57,7 @@
       "passive": {
         "armor_penetration": 0.15
       },
-      "value": 65
+      "value": 270
     },
     {
       "id": "poison_dagger",
@@ -73,7 +73,7 @@
         "poison_damage": 4,
         "poison_duration": 5
       },
-      "value": 55
+      "value": 260
     },
     {
       "id": "thunder_hammer",
@@ -88,7 +88,7 @@
       "passive": {
         "lightning_damage": 7
       },
-      "value": 75
+      "value": 280
     },
     {
       "id": "crystal_bow",
@@ -103,7 +103,7 @@
       "passive": {
         "piercing": true
       },
-      "value": 80
+      "value": 290
     },
     {
       "id": "vampire_fang",
@@ -118,7 +118,7 @@
       "passive": {
         "life_steal": 0.15
       },
-      "value": 65
+      "value": 270
     },
     {
       "id": "reaper_scythe",
@@ -135,7 +135,7 @@
         "cleave_damage": 0.25,
         "crit_chance": 0.05
       },
-      "value": 85
+      "value": 300
     },
     {
       "id": "flame_tongue_sword",
@@ -150,7 +150,7 @@
       "passive": {
         "fire_damage": 7
       },
-      "value": 780
+      "value": 310
     },
     {
       "id": "frost_bite_axe",
@@ -166,7 +166,7 @@
         "ice_damage": 7,
         "stun_chance": 0.15
       },
-      "value": 650
+      "value": 320
     },
     {
       "id": "storm_caller_staff",
@@ -182,7 +182,7 @@
       "passive": {
         "lightning_damage": 7
       },
-      "value": 850
+      "value": 330
     },
     {
       "id": "soul_reaper_scythe",
@@ -198,7 +198,7 @@
         "soul_damage": 6,
         "undead_bonus": 0.2
       },
-      "value": 900
+      "value": 340
     },
     {
       "id": "vampire_fang_dagger",
@@ -214,7 +214,7 @@
         "life_steal": 0.2,
         "piercing": true
       },
-      "value": 420
+      "value": 300
     },
     {
       "id": "flamebrand",
@@ -232,7 +232,7 @@
         "fire_damage": 5,
         "burn_chance": 0.25
       },
-      "value": 500
+      "value": 280
     },
     {
       "id": "staff_of_storms",
@@ -249,7 +249,7 @@
         "spell_power": 0.2,
         "lightning_chance": 0.3
       },
-      "value": 600
+      "value": 320
     }
   ]
 }

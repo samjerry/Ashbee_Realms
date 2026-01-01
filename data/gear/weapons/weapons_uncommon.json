@@ -138,7 +138,7 @@
         "attack": 9,
         "strength": 2
       },
-      "value": 100
+      "value": 35
     },
     {
       "id": "orcish_axe",
@@ -154,7 +154,7 @@
       "passive": {
         "armor_penetration": 0.15
       },
-      "value": 150
+      "value": 45
     },
     {
       "id": "war_scythe",
@@ -170,7 +170,7 @@
       "passive": {
         "cleave_damage": 0.15
       },
-      "value": 45
+      "value": 30
     }
   ]
 }
