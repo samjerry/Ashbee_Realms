@@ -54,9 +54,9 @@ const TutorialDialogue = ({
     
     // Cleanup on unmount or when dependencies change
     return () => {
-      console.log('📖 [Effect] Cleanup running - clearing interval:', typewriterIntervalRef.current);
+      console.log('📖 [Effect] Cleanup running - clearing timeout:', typewriterIntervalRef.current);
       if (typewriterIntervalRef.current) {
-        clearInterval(typewriterIntervalRef.current);
+        clearTimeout(typewriterIntervalRef.current);
         typewriterIntervalRef.current = null;
       }
       setIsTyping(false);
@@ -167,41 +167,42 @@ const TutorialDialogue = ({
     // Reset state
     setDisplayText('');
     setIsTyping(true);
-    console.log('📖 [Typewriter] Starting interval...');
+    console.log('📖 [Typewriter] Starting typewriter animation...');
     
     let currentIndex = 0;
     
-    typewriterIntervalRef.current = setInterval(() => {
+    const typeNextChar = () => {
       currentIndex++;
       const slice = processedText.substring(0, currentIndex);
-      console.log(`📖 [Typewriter] Tick ${currentIndex}/${processedText.length}: "${slice}"`);
+      console.log(`📖 [Typewriter] Tick ${currentIndex}/${processedText.length}: "${slice.substring(0, 20)}..."`);
       
-      if (currentIndex <= processedText.length) {
-        setDisplayText(slice);
+      setDisplayText(slice);
+      
+      if (currentIndex < processedText.length) {
+        typewriterIntervalRef.current = setTimeout(typeNextChar, 20);
       } else {
         console.log('✅ [Typewriter] Complete');
         setIsTyping(false);
-        if (typewriterIntervalRef.current) {
-          clearInterval(typewriterIntervalRef.current);
-          typewriterIntervalRef.current = null;
-        }
+        typewriterIntervalRef.current = null;
       }
-    }, 20); // Typing speed: 20ms per character
+    };
     
-    console.log('📖 [Typewriter] Interval ID:', typewriterIntervalRef.current);
+    // Start the animation
+    typewriterIntervalRef.current = setTimeout(typeNextChar, 20);
+    console.log('📖 [Typewriter] Initial timeout ID:', typewriterIntervalRef.current);
   };
 
   const skipTypewriter = () => {
     if (isTyping && currentNode) {
+      if (typewriterIntervalRef.current) {
+        clearTimeout(typewriterIntervalRef.current);
+        typewriterIntervalRef.current = null;
+      }
       setDisplayText(replaceVariables(currentNode.text));
       setIsTyping(false);
     }
   };
-if (typewriterIntervalRef.current) {
-        clearInterval(typewriterIntervalRef.current);
-        typewriterIntervalRef.current = null;
-      }
-      
+
   const handleChoice = async (choice, choiceIndex) => {
     // Trigger action if specified
     if (currentNode.action) {
