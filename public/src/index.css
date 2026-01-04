@@ -246,9 +246,8 @@
 
 .grid-cell.undiscovered .fog-overlay {
   font-family: monospace;
-  font-size: 0.75rem;
+  font-size: 5rem;
   color: #333;
-  user-select: none;
 }
 
 .grid-cell.discovered {
