@@ -683,16 +683,38 @@ router.get('/stats', async (req, res) => {
       }
     }
     
+    // Check if character has excess XP and should level up
+    let levelUpData = null;
+    if (character.xp >= character.xpToNext) {
+      const ProgressionManager = require('../game/ProgressionManager');
+      const progressionMgr = new ProgressionManager();
+      const xpResult = progressionMgr.addXP(character, 0); // Process with 0 XP to trigger level-ups from existing XP
+      
+      if (xpResult.levelsGained > 0) {
+        needsSave = true;
+        levelUpData = {
+          newLevel: character.level,
+          levelsGained: xpResult.levelsGained,
+          xp: character.xp,
+          xpToNext: character.xpToNext,
+          skillPoints: xpResult.totalSkillPoints,
+          newMaxHp: character.maxHp,
+          statsGained: xpResult.levelUpRewards[xpResult.levelUpRewards.length - 1]?.statsGained || {}
+        };
+      }
+    }
+    
     // Save if we made any fixes
     if (needsSave || rolesUpdated) {
       await db.saveCharacter(user.id, channelName, character);
       
       // Emit WebSocket update for the fix
-      socketHandler.emitPlayerUpdate(character.name, channelName, {
-        selectedRoleBadge: character.selectedRoleBadge,
-        nameColor: character.nameColor,
-        roles: character.roles
-      });
+      socketHandler.emitPlayerUpdate(character.name, channelName, character.toFrontend());
+      
+      // If character leveled up, emit level-up event
+      if (levelUpData) {
+        socketHandler.emitLevelUp(character.name, channelName, levelUpData);
+      }
     }
     
     const statsBreakdown = character.getStatsBreakdown();
