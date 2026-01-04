@@ -44,16 +44,6 @@ const Header = () => {
   // Get player icon based on role
   const PlayerIcon = getPrimaryRoleIcon(player.roles);
 
-  // Get HP bar color class based on percentage
-  const getHpBarClass = () => {
-    if (hpPercent > 50) return 'hp-fill hp-fill-high';
-    if (hpPercent > 30) return 'hp-fill hp-fill-medium';
-    return 'hp-fill hp-fill-low';
-  };
-
-  // Get player icon based on role
-  const PlayerIcon = getPrimaryRoleIcon(player.roles);
-
   return (
     <>
       <header className="bg-dark-900 border-b border-dark-700 px-3 sm:px-6 py-3 sm:py-4">
