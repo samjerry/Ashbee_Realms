@@ -73,7 +73,7 @@ const BiomeGridCell = ({
         onMouseLeave={handleMouseLeave}
         title={isHovered ? `[${coordinate[0]}, ${coordinate[1]}]` : ''}
       >
-        <div className="fog-overlay">░░░</div>
+        <div className="fog-overlay">░░░░░░░░░░</div>
         {distance <= 3 && (
           <div className={`danger-shimmer ${shimmerClass} ${shimmerColor}`}></div>
         )}
@@ -95,7 +95,7 @@ const BiomeGridCell = ({
         onMouseLeave={handleMouseLeave}
         title={isHovered && scoutedData ? `${scoutedData.terrain_hint} - ${scoutedData.danger_hint} danger` : '???'}
       >
-        <div className="fog-overlay thin">▓▓▓</div>
+        <div className="fog-overlay thin">▓▓▓▓▓▓▓▓▓▓</div>
         <div className="danger-badge">{dangerIndicator}</div>
         <div className="mystery-text">???</div>
         <div className="coordinate-label">{coordinate[0]},{coordinate[1]}</div>

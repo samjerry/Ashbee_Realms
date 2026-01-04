@@ -25,7 +25,7 @@ const GridCell = ({ coordinate, biome, isDiscovered, isPlayerHere, onClick }) =>
         className="grid-cell undiscovered"
         title="Undiscovered region"
       >
-        <div className="fog-overlay">░░░</div>
+        <div className="fog-overlay">░░░░░░░░░░</div>
       </div>
     );
   }
