@@ -746,8 +746,11 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                               </div>
                             );
                           }
-                          // Skip rendering confirm param - it will be handled normally below
-                          return null;
+                          // For deleteCharacter, skip the channel param (auto-filled) but allow confirm param to render normally
+                          if (param.name === 'channel') {
+                            return null; // Hidden field, already set via updateParam
+                          }
+                          // Let confirm param fall through to normal rendering
                         }
                         
                         // Player ID selector (existing - for other commands)
