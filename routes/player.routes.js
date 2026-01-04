@@ -735,6 +735,7 @@ router.get('/stats', async (req, res) => {
       roles: character.roles || ['viewer'],
       selectedRoleBadge: character.selectedRoleBadge || null,
       channel: channelName,
+      levelUpData: levelUpData, // Include level-up data if character just leveled up
       stats: {
         attack: finalStats.attack,
         defense: finalStats.defense,

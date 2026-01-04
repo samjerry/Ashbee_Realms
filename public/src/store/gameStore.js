@@ -128,11 +128,17 @@ const useGameStore = create((set, get) => ({
       // Extract map knowledge and set it separately
       const mapKnowledge = data.map_knowledge || null;
       
+      // Check if character just leveled up during stats fetch
+      const levelUpData = data.levelUpData || null;
+      
       set({ 
         player: data, 
         mapKnowledge: mapKnowledge,
         isLoading: false,
-        error: null 
+        error: null,
+        // If there's level-up data, show the modal
+        levelUpData: levelUpData,
+        showLevelUp: levelUpData ? true : false
       });
 
       // Auto-fetch inventory/equipment after player loads
