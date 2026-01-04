@@ -3,7 +3,7 @@
   "name": "Eldrin the Guide",
   "title": "Veteran Adventurer",
   "description": "A weathered adventurer with kind eyes and countless stories. He's helped many beginners find their path in these dangerous lands.",
-  "location": "town_square",
+  "location": "brindlewatch",
   "dialogue_tree": "tutorial_mentor_dialogue",
   "role": "tutorial_guide",
   "sprite": "elder_adventurer",

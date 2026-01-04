@@ -35,7 +35,7 @@ const MapView = () => {
   // Add discovery status to locations
   const locationsWithDiscovery = (availableLocations || []).map(loc => ({
     ...loc,
-    discovered: mapKnowledge?.discovered_regions?.includes(loc.id) || loc.id === 'town_square', // Town square always discovered
+    discovered: mapKnowledge?.discovered_regions?.includes(loc.id) || loc.id === 'brindlewatch', // Brindlewatch always discovered
     exploredSublocations: mapKnowledge?.explored_sublocations?.[loc.id] || []
   }));
 
@@ -143,7 +143,7 @@ const MapView = () => {
       {/* Biome Explorer View */}
       {viewMode === 'biome-explore' && player?.channel && (
         <BiomeExplorer 
-          biomeId={currentLocation || 'town_square'} 
+          biomeId={currentLocation || 'brindlewatch'} 
           channel={player.channel}
         />
       )}

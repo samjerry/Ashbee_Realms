@@ -21,7 +21,7 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
     if (!biomeEntry) return false; // Empty cell
     
     const [biomeId, _] = biomeEntry;
-    return mapKnowledge?.discovered_regions?.includes(biomeId) || biomeId === 'town_square';
+    return mapKnowledge?.discovered_regions?.includes(biomeId) || biomeId === 'brindlewatch';
   };
   
   // Helper to check if player is at coordinate

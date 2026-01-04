@@ -82,7 +82,7 @@ router.get('/available-here', async (req, res) => {
     }
 
     const character = await db.getCharacter(userId, channel);
-    const playerLocation = character.location || 'town_square';
+    const playerLocation = character.location || 'brindlewatch';
     
     const raids = raidMgr.getRaidsAtLocation(playerLocation);
     res.json({ 
@@ -131,7 +131,7 @@ router.post('/lobby/create', async (req, res) => {
     }
 
     const character = await db.getCharacter(userId, channel);
-    const playerLocation = character.location || 'town_square';
+    const playerLocation = character.location || 'brindlewatch';
     
     const leader = {
       id: userId,

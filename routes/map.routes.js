@@ -86,7 +86,7 @@ router.get('/grid', requireAuth, async (req, res) => {
     }
 
     const mapKnowledge = character.map_knowledge || mapKnowledgeMgr.initializeMapKnowledge();
-    const currentBiome = mapKnowledge.current_biome || 'town_square';
+    const currentBiome = mapKnowledge.current_biome || 'brindlewatch';
     const biomeGrid = biomeGridsConfig[currentBiome];
     
     if (!biomeGrid) {

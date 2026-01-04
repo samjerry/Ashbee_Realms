@@ -158,7 +158,7 @@ class CharacterInitializer {
    * @param {string} location - Starting location
    * @returns {Object} Complete character data object
    */
-  static createCharacterData(playerName, classType, location = "Town Square") {
+  static createCharacterData(playerName, classType, location = "Brindlewatch") {
     if (!CharacterInitializer.isValidClass(classType)) {
       throw new Error(`Invalid class type: ${classType}`);
     }

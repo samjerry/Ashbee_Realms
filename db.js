@@ -840,7 +840,7 @@ async function loadPlayerProgress(playerId, channelName) {
  * @param {string} startLocation - Starting location
  * @param {number} baseMaxHp - Base max HP value
  */
-async function initializeNewPlayer(playerId, channelName, playerName, startLocation = "Town Square", baseMaxHp = 100) {
+async function initializeNewPlayer(playerId, channelName, playerName, startLocation = "Brindlewatch", baseMaxHp = 100) {
   const defaultPlayer = {
     name: playerName,
     location: startLocation,
@@ -912,7 +912,7 @@ async function saveCharacter(playerId, channelName, character) {
  * @param {string} location - Starting location
  * @returns {Character} New character instance
  */
-async function createCharacter(playerId, channelName, playerName, classType, location = "Town Square") {
+async function createCharacter(playerId, channelName, playerName, classType, location = "Brindlewatch") {
   try {
     const Character = require('./game/Character');
     const character = Character.createNew(playerName, classType, location);

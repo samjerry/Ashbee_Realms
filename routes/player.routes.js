@@ -45,7 +45,7 @@ router.get('/progress', async (req, res) => {
     let progress = await db.loadPlayerProgress(user.id, channelName.toLowerCase());
     
     if (!progress) {
-      progress = await db.initializeNewPlayer(user.id, channelName.toLowerCase(), user.displayName, "Town Square", 100);
+      progress = await db.initializeNewPlayer(user.id, channelName.toLowerCase(), user.displayName, "Brindlewatch", 100);
     }
 
     progress.channel = channelName;

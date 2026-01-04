@@ -11,7 +11,7 @@ import MapActions from './MapActions';
  * @param {string} props.biomeId - Biome to explore
  * @param {string} props.channel - Channel name for API calls
  */
-const BiomeExplorer = ({ biomeId = 'town_square', channel }) => {
+const BiomeExplorer = ({ biomeId = 'brindlewatch', channel }) => {
   const [gridConfig, setGridConfig] = useState(null);
   const [playerKnowledge, setPlayerKnowledge] = useState(null);
   const [selectedTile, setSelectedTile] = useState(null);

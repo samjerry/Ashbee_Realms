@@ -19,20 +19,20 @@ class MapKnowledgeManager {
   static initializeMapKnowledge() {
     const now = new Date().toISOString();
     return {
-      discovered_regions: ['town_square'], // Town square is always known
+      discovered_regions: [], // Start with no regions discovered - achievements should only count exploration
       explored_sublocations: {
-        'town_square': ['inn', 'shop', 'blacksmith', 'temple']
+        'brindlewatch': ['inn', 'shop', 'blacksmith', 'temple']
       },
-      visited_coordinates: [[3, 3]], // Town square at center
+      visited_coordinates: [[3, 3]], // Brindlewatch at center
       discovered_coordinates: [[3, 3]], // Grid coordinates discovered
       discovery_timestamp: {
-        'town_square': now,
+        'brindlewatch': now,
         '3,3': now
       },
       exploration_percentage: 0, // Will be calculated when needed
-      current_biome: 'town_square',
+      current_biome: 'brindlewatch',
       biome_map_knowledge: {
-        'town_square': {
+        'brindlewatch': {
           discovered_tiles: [[3, 3]], // Starting position
           scouted_tiles: {},
           fog_hints: {},

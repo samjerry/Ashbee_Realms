@@ -48,7 +48,7 @@ class Character {
     this.maxMana = data.max_mana;
     
     this.gold = data.gold || 0;
-    this.location = data.location || "Town Square";
+    this.location = data.location || "Brindlewatch";
     this.inCombat = data.in_combat || false;
     this.combat = data.combat || null;
     this.skillCd = data.skill_cd || 0;
@@ -761,7 +761,7 @@ class Character {
    * @param {string} location - Starting location
    * @returns {Character} New character instance
    */
-  static createNew(playerName, classType, location = "Town Square") {
+  static createNew(playerName, classType, location = "Brindlewatch") {
     const classes = loadData('classes');
     
     if (!classes || !classes.classes || !classes.classes[classType]) {
@@ -808,7 +808,7 @@ class Character {
       startingInventory.push(...classStartingItems[classType]);
     }
 
-    // Initialize map knowledge with town_square discovered
+    // Initialize map knowledge with brindlewatch discovered
     const MapKnowledgeManager = require('./MapKnowledgeManager');
     const initialMapKnowledge = MapKnowledgeManager.initializeMapKnowledge();
 

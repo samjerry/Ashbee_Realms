@@ -163,7 +163,7 @@ class ProgressionManager {
       goldLost: 0,
       xpLost: 0,
       soulsAwarded: 0,
-      respawnLocation: 'Town Square',
+      respawnLocation: 'Brindlewatch',
       permanentStatsRetained: permanentStats
     };
 
@@ -198,7 +198,7 @@ class ProgressionManager {
       character.gold = Math.max(0, character.gold - goldLoss);
       character.xp = Math.max(0, character.xp - xpLoss);
       character.hp = Math.floor(character.maxHp * 0.5); // Respawn with 50% HP
-      character.location = 'Town Square';
+      character.location = 'Brindlewatch';
       character.inCombat = false;
       character.combat = null;
 
@@ -210,7 +210,7 @@ class ProgressionManager {
         gold: character.gold,
         xp: character.xp
       };
-      result.message = `You died and lost ${goldLoss} gold and ${xpLoss} XP. You gained ${soulsAwarded} souls. You respawn in Town Square with 50% HP.`;
+      result.message = `You died and lost ${goldLoss} gold and ${xpLoss} XP. You gained ${soulsAwarded} souls. You respawn in Brindlewatch with 50% HP.`;
     }
 
     return result;
@@ -223,13 +223,13 @@ class ProgressionManager {
    */
   respawn(character) {
     character.hp = Math.floor(character.maxHp * 0.5);
-    character.location = 'Town Square';
+    character.location = 'Brindlewatch';
     character.inCombat = false;
     character.combat = null;
 
     return {
       success: true,
-      message: `${character.name} respawns in Town Square with ${character.hp}/${character.maxHp} HP.`,
+      message: `${character.name} respawns in Brindlewatch with ${character.hp}/${character.maxHp} HP.`,
       hp: character.hp,
       maxHp: character.maxHp,
       location: character.location
