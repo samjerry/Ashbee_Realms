@@ -615,6 +615,31 @@ router.get('/stats', async (req, res) => {
       return res.status(404).json({ error: 'Character not found' });
     }
     
+    // Sync roles (add creator/tester if applicable)
+    const displayName = user.displayName || user.display_name || character.name;
+    let roles = character.roles || ['viewer'];
+    let rolesUpdated = false;
+    
+    // Check if this is MarrowOfAlbion (game creator) - add creator role if not present
+    if (displayName.toLowerCase() === 'marrowofalbion' || displayName.toLowerCase() === 'marrowofalb1on') {
+      if (!roles.includes('creator')) {
+        roles = ['creator', ...roles.filter(r => r !== 'viewer')];
+        rolesUpdated = true;
+      }
+    }
+    
+    // Check if user is a beta tester - add tester role if not present
+    if (db.isBetaTester(user.id) && !roles.includes('tester')) {
+      roles = [...roles, 'tester'];
+      rolesUpdated = true;
+    }
+    
+    // Persist role changes
+    if (rolesUpdated) {
+      character.roles = roles;
+      console.log(`✅ Synced roles for ${displayName} in /stats:`, roles);
+    }
+    
     // Auto-fix: If nameColor and selectedRoleBadge don't match, try to sync them
     let needsSave = false;
     console.log(`🔍 Checking role badge sync for ${character.name}: nameColor=${character.nameColor}, selectedRoleBadge=${character.selectedRoleBadge}, roles=${JSON.stringify(character.roles)}`);
@@ -673,15 +698,19 @@ router.get('/stats', async (req, res) => {
     }
     
     // Save if we made any fixes
-    if (needsSave) {
-      console.log(`💾 Saving character with updated selectedRoleBadge: ${character.selectedRoleBadge}`);
+    if (needsSave || rolesUpdated) {
+      console.log(`💾 Saving character with updated data - needsSave: ${needsSave}, rolesUpdated: ${rolesUpdated}`);
+      if (needsSave) console.log(`   - selectedRoleBadge: ${character.selectedRoleBadge}, nameColor: ${character.nameColor}`);
+      if (rolesUpdated) console.log(`   - roles: ${JSON.stringify(character.roles)}`);
+      
       await db.saveCharacter(user.id, channelName, character);
       console.log(`✅ Character saved successfully`);
       
       // Emit WebSocket update for the fix
       socketHandler.emitPlayerUpdate(character.name, channelName, {
         selectedRoleBadge: character.selectedRoleBadge,
-        nameColor: character.nameColor
+        nameColor: character.nameColor,
+        roles: character.roles
       });
     }
     
