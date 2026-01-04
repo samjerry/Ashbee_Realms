@@ -12,6 +12,7 @@ import DialogueModal from './components/Dialogue/DialogueModal';
 import AchievementTracker from './components/Achievements/AchievementTracker';
 import BestiaryView from './components/Bestiary/BestiaryView';
 import SettingsModal from './components/Settings/SettingsModal';
+import LevelUpModal from './components/Common/LevelUpModal';
 import LoadingScreen from './components/Layout/LoadingScreen';
 import CharacterCreation from './components/Common/CharacterCreation';
 import SetupView from './components/Setup/SetupView';
@@ -25,10 +26,13 @@ function App() {
     showCombat, 
     showDialogue, 
     showSettings,
+    showLevelUp,
+    levelUpData,
     player,
     fetchPlayer,
     fetchWorldName,
-    setupSocketListeners 
+    setupSocketListeners,
+    closeLevelUp
   } = useGameStore();
 
   const [showCharacterCreation, setShowCharacterCreation] = useState(false);
@@ -348,6 +352,9 @@ function App() {
       
       {showDialogue && <DialogueModal />}
       {showSettings && <SettingsModal />}
+      {showLevelUp && levelUpData && (
+        <LevelUpModal levelUpData={levelUpData} onClose={closeLevelUp} />
+      )}
     </div>
   );
 }

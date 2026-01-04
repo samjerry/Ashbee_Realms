@@ -407,24 +407,46 @@ class Character {
    * @returns {Object} Result with levelUp flag and new level
    */
   gainXP(amount) {
+    // Add XP
     this.xp += amount;
     let leveledUp = false;
     let levelsGained = 0;
 
+    // Check for level ups - handle multiple levels if enough XP
     while (this.xp >= this.xpToNext) {
+      // Subtract XP threshold from current XP (remainder carries over to next level)
       this.xp -= this.xpToNext;
+      
+      // Increase level
       this.level++;
       levelsGained++;
       leveledUp = true;
-      this.xpToNext = Math.floor(this.xpToNext * 1.5); // 50% increase per level
-      this.skillPoints++; // Award skill point on level up
+      
+      // Calculate new XP requirement (50% increase per level)
+      this.xpToNext = Math.floor(this.xpToNext * 1.5);
+      
+      // Award skill point on level up
+      if (this.skillPoints !== undefined) {
+        this.skillPoints++;
+      } else {
+        this.skillPoints = 1;
+      }
     }
 
     if (leveledUp) {
-      // Recalculate max HP and fully heal on level up
+      // Recalculate stats based on new level (stats are calculated dynamically from level)
       const finalStats = this.getFinalStats();
+      
+      // Update max HP based on new level
       this.maxHp = finalStats.maxHp;
+      
+      // Fully heal on level up
       this.hp = this.maxHp;
+      
+      // Also heal mana to full if character has mana
+      if (this.maxMana !== undefined) {
+        this.mana = this.maxMana;
+      }
     }
 
     return {

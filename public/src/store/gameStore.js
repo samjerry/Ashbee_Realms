@@ -40,6 +40,10 @@ const useGameStore = create((set, get) => ({
   showStatusNotification: false,
   statusNotificationTimer: null,
   
+  // Level up modal
+  levelUpData: null,
+  showLevelUp: false,
+  
   // Quest state
   activeQuests: [],
   
@@ -89,6 +93,8 @@ const useGameStore = create((set, get) => ({
   openSettings: () => set({ showSettings: true, isMobileMenuOpen: false }),
   
   closeSettings: () => set({ showSettings: false }),
+  
+  closeLevelUp: () => set({ showLevelUp: false, levelUpData: null }),
   
   setPlayer: (player) => set({ player, isLoading: false }),
   
@@ -536,10 +542,13 @@ const useGameStore = create((set, get) => ({
     
     socket.on('player:levelup', (data) => {
       console.log('🎉 Level up!', data);
+      
+      // Update player level and XP
       set((state) => ({ 
-        player: { ...state.player, level: data.newLevel, xp: data.xp }
+        player: { ...state.player, level: data.newLevel, xp: data.xp, xpToNext: data.xpToNext },
+        levelUpData: data,
+        showLevelUp: true
       }));
-      // Show level up animation
     });
     
     // Combat updates

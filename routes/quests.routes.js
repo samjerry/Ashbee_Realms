@@ -332,11 +332,19 @@ router.post('/complete', async (req, res) => {
       const progressionMgr = new ProgressionManager();
       const xpResult = progressionMgr.addXP(character, result.rewards.xp);
       
-      if (xpResult.leveledUp) {
+      if (xpResult.levelsGained > 0) {
         result.levelUp = {
           newLevel: character.level,
-          statsGained: xpResult.statsGained
+          levelsGained: xpResult.levelsGained,
+          xp: character.xp,
+          xpToNext: character.xpToNext,
+          skillPoints: xpResult.totalSkillPoints,
+          newMaxHp: character.maxHp,
+          statsGained: xpResult.levelUpRewards[xpResult.levelUpRewards.length - 1]?.statsGained || {}
         };
+        
+        // Emit level-up specific event
+        socketHandler.emitLevelUp(character.name, channel.toLowerCase(), result.levelUp);
       }
     }
 

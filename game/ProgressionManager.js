@@ -56,18 +56,22 @@ class ProgressionManager {
       totalSkillPoints: 0
     };
 
+    // Add XP to character
     character.xp += xpGained;
 
-    // Check for level ups
+    // Check for level ups - handle multiple levels if enough XP
     while (character.level < maxLevel && character.xp >= character.xpToNext) {
+      // Subtract XP threshold from current XP (remainder carries over)
       character.xp -= character.xpToNext;
+      
+      // Increase level
       character.level++;
       result.levelsGained++;
 
-      // Calculate stats gained this level
+      // Calculate stats gained this level (based on class stat distribution)
       const statsGained = this.calculateStatsGainedOnLevelUp(character.classType);
       
-      // Calculate new XP requirement
+      // Calculate new XP requirement for next level
       character.xpToNext = this.calculateXPToNextLevel(character.level);
 
       // Award skill point
@@ -77,17 +81,24 @@ class ProgressionManager {
       // Update character's skill points
       if (character.skillPoints !== undefined) {
         character.skillPoints += skillPointsGained;
+      } else {
+        character.skillPoints = skillPointsGained;
       }
 
-      // Heal to full on level up
+      // Heal to full on level up and update maxHp
       const finalStats = character.getFinalStats();
       character.maxHp = finalStats.maxHp;
       character.hp = character.maxHp;
+      
+      // Also heal mana to full if character has mana
+      if (character.maxMana !== undefined) {
+        character.mana = character.maxMana;
+      }
 
       // Award legacy points on level milestones (10, 20, 30, 40, 50)
       let legacyPointsAwarded = 0;
-      if (character.level % 10 === 0 && permanentStats) {
-        legacyPointsAwarded = this.passiveManager.awardLegacyPoints(permanentStats, 1);
+      if (character.level % 10 === 0 && this.passiveManager && this.permanentStats) {
+        legacyPointsAwarded = this.passiveManager.awardLegacyPoints(this.permanentStats, 1);
       }
 
       result.levelUpRewards.push({

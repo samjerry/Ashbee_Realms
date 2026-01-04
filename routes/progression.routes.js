@@ -77,14 +77,29 @@ router.post('/add-xp',
       // Save updated character
       await db.saveCharacter(user.id, channel.toLowerCase(), character);
       
-      // Emit update
+      // Emit general player update
       socketHandler.emitPlayerUpdate(character.name, channel.toLowerCase(), {
         level: character.level,
         xp: character.xp,
         xpToNext: character.xpToNext,
         hp: character.hp,
-        maxHp: character.maxHp
+        maxHp: character.maxHp,
+        skillPoints: character.skillPoints
       });
+      
+      // If player leveled up, emit level-up specific event with stat details
+      if (result.levelsGained > 0) {
+        const levelUpEventData = {
+          newLevel: character.level,
+          levelsGained: result.levelsGained,
+          xp: character.xp,
+          xpToNext: character.xpToNext,
+          skillPoints: result.totalSkillPoints,
+          newMaxHp: character.maxHp,
+          statsGained: result.levelUpRewards[result.levelUpRewards.length - 1]?.statsGained || {}
+        };
+        socketHandler.emitLevelUp(character.name, channel.toLowerCase(), levelUpEventData);
+      }
 
       res.json({
         success: true,
