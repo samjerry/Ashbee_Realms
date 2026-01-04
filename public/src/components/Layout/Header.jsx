@@ -42,7 +42,7 @@ const Header = () => {
   };
 
   // Get player icon based on role
-  const PlayerIcon = getPrimaryRoleIcon(player.roles);
+  const PlayerIcon = getPrimaryRoleIcon(player.roles, player.selectedRoleBadge);
 
   return (
     <>
