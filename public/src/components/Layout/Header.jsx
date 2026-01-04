@@ -135,7 +135,7 @@ const Header = () => {
                 </div>
                 <div className="xp-bar">
                   <div
-                    className={getHpBarClass()}
+                    className="xp-fill"
                     style={{ width: `${xpPercent}%` }}
                   />
                 </div>
