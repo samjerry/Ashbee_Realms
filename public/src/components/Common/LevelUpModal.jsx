@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { TrendingUp, Star, Heart, Zap, Shield, Sparkles, X } from 'lucide-react';
 
 const LevelUpModal = ({ levelUpData, onClose }) => {
   const [show, setShow] = useState(false);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     // Trigger animation after mount
     setTimeout(() => setShow(true), 50);
+    
+    // Apply theme-based gradient background
+    if (modalRef.current) {
+      modalRef.current.style.background = 'linear-gradient(to bottom right, var(--modal-from), var(--modal-via), var(--modal-to))';
+      modalRef.current.style.borderColor = 'var(--modal-border)';
+    }
   }, []);
 
   if (!levelUpData) return null;
@@ -18,54 +25,73 @@ const LevelUpModal = ({ levelUpData, onClose }) => {
     setTimeout(onClose, 300);
   };
 
+  // Use CSS variables that are set by the theme system
+  const themeStyles = {
+    '--modal-from': 'rgb(var(--color-primary-900) / 1)',
+    '--modal-via': 'rgb(var(--color-primary-800) / 1)',
+    '--modal-to': 'rgb(var(--color-primary-900) / 1)',
+    '--modal-border': 'rgb(var(--color-primary-400) / 1)',
+    '--modal-sparkle': 'rgb(var(--color-primary-400) / 1)',
+    '--modal-text-main': 'rgb(var(--color-primary-100) / 1)',
+    '--modal-text-sub': 'rgb(var(--color-primary-200) / 1)',
+    '--modal-text-accent': 'rgb(var(--color-primary-300) / 1)',
+    '--modal-btn-from': 'rgb(var(--color-primary-600) / 1)',
+    '--modal-btn-to': 'rgb(var(--color-primary-500) / 1)',
+    '--modal-btn-hover-from': 'rgb(var(--color-primary-500) / 1)',
+    '--modal-btn-hover-to': 'rgb(var(--color-primary-400) / 1)',
+  };
+
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 animate-fadeIn">
       <div 
-        className={`relative bg-gradient-to-br from-yellow-900 via-yellow-800 to-yellow-900 rounded-xl border-4 border-yellow-400 shadow-2xl max-w-md w-full transform transition-all duration-300 ${
+        ref={modalRef}
+        style={themeStyles}
+        className={`relative rounded-xl border-4 shadow-2xl max-w-md w-full transform transition-all duration-300 ${
           show ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
         }`}
       >
         {/* Sparkle effects */}
-        <div className="absolute -top-8 -left-8 text-yellow-400 animate-bounce">
+        <div className="absolute -top-8 -left-8 animate-bounce" style={{ color: 'var(--modal-sparkle)' }}>
           <Sparkles size={48} />
         </div>
-        <div className="absolute -top-8 -right-8 text-yellow-400 animate-bounce animation-delay-200">
+        <div className="absolute -top-8 -right-8 animate-bounce animation-delay-200" style={{ color: 'var(--modal-sparkle)' }}>
           <Sparkles size={48} />
         </div>
-        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-yellow-400 animate-bounce animation-delay-400">
+        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce animation-delay-400" style={{ color: 'var(--modal-sparkle)' }}>
           <Sparkles size={48} />
         </div>
 
         {/* Close button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-yellow-200 hover:text-white transition-colors z-10"
+          className="absolute top-4 right-4 transition-colors z-10 hover:text-white"
+          style={{ color: 'var(--modal-text-sub)' }}
         >
           <X size={24} />
         </button>
 
         {/* Header */}
-        <div className="text-center py-8 px-6 border-b-4 border-yellow-400/50">
+        <div className="text-center py-8 px-6 border-b-4" style={{ borderColor: 'rgba(var(--color-primary-400) / 0.5)' }}>
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <Star className="text-yellow-400 animate-pulse" size={80} />
+              <Star className="animate-pulse" size={80} style={{ color: 'var(--modal-sparkle)' }} />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-4xl font-bold text-yellow-900">{newLevel}</span>
+                <span className="text-4xl font-bold" style={{ color: 'var(--modal-from)' }}>{newLevel}</span>
               </div>
             </div>
           </div>
-          <h2 className="text-4xl font-bold text-yellow-100 mb-2 animate-pulse">
+          <h2 className="text-4xl font-bold mb-2 animate-pulse" style={{ color: 'var(--modal-text-main)' }}>
             LEVEL UP!
           </h2>
-          <p className="text-xl text-yellow-200">
+          <p className="text-xl" style={{ color: 'var(--modal-text-sub)' }}>
             {levelsGained > 1 ? `+${levelsGained} Levels!` : `Level ${newLevel} Reached!`}
           </p>
         </div>
 
         {/* Stats Display */}
         <div className="p-6 space-y-4">
-          <div className="bg-black/30 rounded-lg p-4 border border-yellow-400/30">
-            <h3 className="text-lg font-bold text-yellow-300 mb-3 flex items-center gap-2">
+          <div className="bg-black/30 rounded-lg p-4 border" style={{ borderColor: 'rgba(var(--color-primary-400) / 0.3)' }}>
+            <h3 className="text-lg font-bold mb-3 flex items-center gap-2" style={{ color: 'var(--modal-text-accent)' }}>
               <TrendingUp size={20} />
               Stat Increases
             </h3>
@@ -144,7 +170,16 @@ const LevelUpModal = ({ levelUpData, onClose }) => {
         <div className="p-6 pt-0">
           <button
             onClick={handleClose}
-            className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg"
+            className="w-full text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg"
+            style={{
+              background: 'linear-gradient(to right, var(--modal-btn-from), var(--modal-btn-to))',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(to right, var(--modal-btn-hover-from), var(--modal-btn-hover-to))';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(to right, var(--modal-btn-from), var(--modal-btn-to))';
+            }}
           >
             Continue Adventure
           </button>
