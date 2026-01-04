@@ -291,9 +291,20 @@ class DialogueManager {
       const hasItem = character.inventory?.items && 
                       character.inventory.items[itemId] && 
                       character.inventory.items[itemId] > 0;
+      
+      // Try to get item name for better display
+      let itemName = itemId;
+      if (!hasItem && character.inventory?.items) {
+        // Look for item in inventory to get its name
+        const inventoryItem = Object.values(character.inventory.items || {}).find(i => i && i.id === itemId);
+        if (inventoryItem && inventoryItem.name) {
+          itemName = inventoryItem.name;
+        }
+      }
+      
       return {
         success: hasItem,
-        reason: hasItem ? null : `Requires item: ${itemId}`
+        reason: hasItem ? null : `Requires item: ${itemName}`
       };
     }
 
@@ -441,7 +452,16 @@ class DialogueManager {
 
     // Grant items
     if (node.reward.items) {
-      rewards.items = node.reward.items;
+      // Convert item IDs to item objects with names for better display
+      const LootGenerator = require('./LootGenerator');
+      const lootGen = new LootGenerator();
+      rewards.items = node.reward.items.map(itemId => {
+        const itemName = lootGen.getItemName(itemId);
+        return {
+          id: itemId,
+          name: itemName
+        };
+      });
       // Items would be added to inventory here
     }
 

@@ -410,9 +410,12 @@ class AchievementManager {
     }
     
     if (rewards.items) {
+      const LootGenerator = require('./LootGenerator');
+      const lootGen = new LootGenerator();
       for (const itemId of rewards.items) {
-        character.inventory.addItem({ id: itemId });
-        granted.items.push(itemId);
+        const itemName = lootGen.getItemName(itemId);
+        character.inventory.addItem({ id: itemId, name: itemName });
+        granted.items.push(itemName); // Store name for display
       }
     }
     

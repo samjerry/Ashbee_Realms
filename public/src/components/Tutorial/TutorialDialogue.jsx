@@ -382,7 +382,11 @@ const TutorialDialogue = ({
                     <span className="text-yellow-400">+{currentNode.reward.gold} Gold</span>
                   )}
                   {currentNode.reward.item && (
-                    <span className="text-blue-400">Item: {currentNode.reward.item}</span>
+                    <span className="text-blue-400">
+                      Item: {typeof currentNode.reward.item === 'object' 
+                        ? currentNode.reward.item.name || currentNode.reward.item.id 
+                        : currentNode.reward.item}
+                    </span>
                   )}
                   {currentNode.reward.title && (
                     <span className="text-purple-400">Title: {currentNode.reward.title}</span>

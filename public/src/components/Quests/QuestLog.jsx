@@ -168,7 +168,9 @@ const QuestLog = () => {
                           <p className="text-gray-400 mb-1">Items:</p>
                           <ul className="space-y-1 ml-4">
                             {selectedQuest.rewards.items.map((item, index) => (
-                              <li key={index} className="text-blue-400">{item}</li>
+                              <li key={index} className="text-blue-400">
+                                {typeof item === 'object' ? (item.name || item.id) : item}
+                              </li>
                             ))}
                           </ul>
                         </div>

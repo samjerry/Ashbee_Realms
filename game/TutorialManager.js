@@ -111,8 +111,12 @@ class TutorialManager extends DialogueManager {
     };
 
     if (currentStep.reward.item) {
+      const LootGenerator = require('./LootGenerator');
+      const lootGen = new LootGenerator();
+      const itemName = lootGen.getItemName(currentStep.reward.item);
       rewards.items.push({
         id: currentStep.reward.item,
+        name: itemName,
         quantity: currentStep.reward.itemQuantity || 1
       });
     }

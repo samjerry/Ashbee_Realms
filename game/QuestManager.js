@@ -213,7 +213,19 @@ class QuestManager {
     if (quest.rewards) {
       rewards.xp = quest.rewards.xp || 0;
       rewards.gold = quest.rewards.gold || 0;
-      rewards.items = quest.rewards.items || [];
+      
+      // Convert item IDs to item objects with names for better display
+      const itemIds = quest.rewards.items || [];
+      const LootGenerator = require('./LootGenerator');
+      const lootGen = new LootGenerator();
+      rewards.items = itemIds.map(itemId => {
+        const itemName = lootGen.getItemName(itemId);
+        return {
+          id: itemId,
+          name: itemName
+        };
+      });
+      
       rewards.reputation = quest.rewards.reputation || null;
       rewards.title = quest.rewards.title || null;
       rewards.unlocks = quest.rewards.unlocks || [];
@@ -223,9 +235,10 @@ class QuestManager {
     character.gold += rewards.gold;
 
     // Add items to inventory
-    rewards.items.forEach(itemId => {
+    rewards.items.forEach(item => {
       try {
-        character.inventory.addItem({ id: itemId, name: itemId, stackable: false });
+        // Item already has name from above conversion
+        character.inventory.addItem({ id: item.id, name: item.name, stackable: false });
       } catch (err) {
         // Inventory full or error
       }
