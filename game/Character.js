@@ -28,7 +28,18 @@ class Character {
     this.classType = data.type;
     this.level = data.level || 1;
     this.xp = data.xp || 0;
-    this.xpToNext = data.xp_to_next || 10;
+    
+    // Calculate proper XP requirement if not provided
+    if (data.xp_to_next) {
+      this.xpToNext = data.xp_to_next;
+    } else {
+      // Calculate using the same formula as ProgressionManager
+      const constants = loadData('constants')?.constants || {};
+      const baseXP = constants.BASE_XP_TO_LEVEL || 100;
+      const scaling = constants.XP_SCALING || 1.5;
+      this.xpToNext = Math.floor(baseXP * Math.pow(this.level, scaling));
+    }
+    
     this.hp = data.hp;
     this.maxHp = data.max_hp;
     
