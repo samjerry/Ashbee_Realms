@@ -82,8 +82,6 @@ export function getRoleBadges(roles, selectedRoleBadge = null) {
  * @returns {Component} Lucide icon component
  */
 export function getPrimaryRoleIcon(roles, selectedRoleBadge = null) {
-  console.log(`🎭 getPrimaryRoleIcon called: roles=${JSON.stringify(roles)}, selectedRoleBadge=${selectedRoleBadge}`);
-  
   // If a specific badge is selected and valid
   if (selectedRoleBadge && ROLE_CONFIG[selectedRoleBadge]) {
     // Check if user has the role OR if they're a creator (creators can use any role appearance)
@@ -91,14 +89,12 @@ export function getPrimaryRoleIcon(roles, selectedRoleBadge = null) {
     const isCreator = roles?.includes('creator');
     
     if (hasRole || isCreator) {
-      console.log(`✅ Using selected role badge: ${selectedRoleBadge} (hasRole: ${hasRole}, isCreator: ${isCreator})`);
       return ROLE_CONFIG[selectedRoleBadge].Icon;
     }
   }
   
   // Otherwise use primary role
   const primaryRole = getPrimaryRole(roles);
-  console.log(`⚠️ Falling back to primary role: ${primaryRole} (selectedRoleBadge was ${selectedRoleBadge})`);
   return ROLE_CONFIG[primaryRole]?.Icon || User;
 }
 
