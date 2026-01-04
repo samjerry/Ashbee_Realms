@@ -574,39 +574,11 @@ router.get('/data/player-stats', checkOperatorAccess, async (req, res) => {
 });
 
 /**
- * GET /channels
- * Get list of all channels with characters (CREATOR ONLY)
+ * GET /data/channels
+ * Get list of all channels with characters (for channel selection in deleteCharacter)
  */
-router.get('/channels', async (req, res) => {
-  const user = req.session.user;
-  if (!user) {
-    return res.status(401).json({ error: 'Not logged in' });
-  }
-
+router.get('/data/channels', checkOperatorAccess, async (req, res) => {
   try {
-    // Check if user is a creator (highest permission level)
-    // For security, we check across all channels they might have access to
-    const channelList = db.getChannelList();
-    let isCreator = false;
-    
-    for (const channel of channelList) {
-      const userRole = await db.getUserRole(user.id, channel);
-      const permissionLevel = operatorMgr.getPermissionLevel(
-        user.displayName,
-        channel,
-        userRole
-      );
-      
-      if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) {
-        isCreator = true;
-        break;
-      }
-    }
-
-    if (!isCreator) {
-      return res.status(403).json({ error: 'Access denied: Creator permissions required' });
-    }
-
     // Get all channels that have characters
     const result = await db.query(
       `SELECT DISTINCT channel_name, COUNT(*) as character_count
@@ -616,8 +588,9 @@ router.get('/channels', async (req, res) => {
     );
 
     const channels = result.rows.map(row => ({
-      name: row.channel_name,
-      characterCount: parseInt(row.character_count)
+      value: row.channel_name,
+      label: `${row.channel_name} (${row.character_count} characters)`,
+      count: parseInt(row.character_count)
     }));
 
     res.json({ channels });
@@ -628,41 +601,14 @@ router.get('/channels', async (req, res) => {
 });
 
 /**
- * GET /channel-characters
- * Get all characters in a specific channel (CREATOR ONLY)
+ * GET /data/channel-characters
+ * Get all characters in a specific channel (for character selection in deleteCharacter)
  */
-router.get('/channel-characters', async (req, res) => {
-  const user = req.session.user;
-  if (!user) {
-    return res.status(401).json({ error: 'Not logged in' });
-  }
-
-  const { channel } = req.query;
-  if (!channel) {
-    return res.status(400).json({ error: 'Channel parameter required' });
-  }
-
+router.get('/data/channel-characters', checkOperatorAccess, async (req, res) => {
   try {
-    // Check if user is a creator
-    const channelList = db.getChannelList();
-    let isCreator = false;
-    
-    for (const ch of channelList) {
-      const userRole = await db.getUserRole(user.id, ch);
-      const permissionLevel = operatorMgr.getPermissionLevel(
-        user.displayName,
-        ch,
-        userRole
-      );
-      
-      if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) {
-        isCreator = true;
-        break;
-      }
-    }
-
-    if (!isCreator) {
-      return res.status(403).json({ error: 'Access denied: Creator permissions required' });
+    const { channel } = req.query;
+    if (!channel) {
+      return res.status(400).json({ error: 'Channel parameter required' });
     }
 
     // Get all characters in the channel
@@ -672,11 +618,7 @@ router.get('/channel-characters', async (req, res) => {
         name,
         level,
         gold,
-        location,
-        hp,
-        max_hp,
-        created_at,
-        last_active
+        location
        FROM characters
        WHERE channel_name = $1
        ORDER BY name ASC`,
@@ -684,109 +626,20 @@ router.get('/channel-characters', async (req, res) => {
     );
 
     const characters = result.rows.map(row => ({
+      value: row.player_id,
+      label: `${row.name} (Lv${row.level} - ${row.location})`,
       playerId: row.player_id,
       name: row.name,
       level: row.level,
       gold: row.gold,
-      location: row.location,
-      hp: row.hp,
-      maxHp: row.max_hp,
-      createdAt: row.created_at,
-      lastActive: row.last_active
+      location: row.location
     }));
 
-    res.json({ characters, channel: channel.toLowerCase() });
+    res.json({ characters });
   } catch (error) {
     console.error('Error fetching channel characters:', error);
     res.status(500).json({ error: 'Failed to fetch characters' });
   }
 });
-
-/**
- * DELETE /delete-character
- * Delete a specific character from a channel (CREATOR ONLY)
- */
-router.delete('/delete-character', 
-  security.auditLog('operator_delete_character'),
-  async (req, res) => {
-    const user = req.session.user;
-    if (!user) {
-      return res.status(401).json({ error: 'Not logged in' });
-    }
-
-    const { channel, playerId, characterName } = req.body;
-    if (!channel || !playerId) {
-      return res.status(400).json({ error: 'Channel and playerId are required' });
-    }
-
-    try {
-      // Check if user is a creator
-      const channelList = db.getChannelList();
-      let isCreator = false;
-      
-      for (const ch of channelList) {
-        const userRole = await db.getUserRole(user.id, ch);
-        const permissionLevel = operatorMgr.getPermissionLevel(
-          user.displayName,
-          ch,
-          userRole
-        );
-        
-        if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) {
-          isCreator = true;
-          break;
-        }
-      }
-
-      if (!isCreator) {
-        return res.status(403).json({ error: 'Access denied: Creator permissions required' });
-      }
-
-      // Delete the character
-      await db.deleteCharacter(playerId, channel.toLowerCase());
-
-      // Log the action
-      await db.logOperatorAction(
-        user.id,
-        user.displayName,
-        channel.toLowerCase(),
-        'delete_character',
-        { playerId, characterName },
-        true
-      );
-
-      // Emit WebSocket event to notify the player if they're connected
-      if (characterName) {
-        socketHandler.emitToPlayer(characterName, channel.toLowerCase(), 'character:deleted', {
-          message: 'Your character has been deleted by an operator.'
-        });
-      }
-
-      res.json({ 
-        success: true, 
-        message: `Character ${characterName || playerId} deleted from ${channel}` 
-      });
-    } catch (error) {
-      console.error('Error deleting character:', error);
-      
-      // Log the failed action
-      try {
-        await db.logOperatorAction(
-          user.id,
-          user.displayName,
-          channel.toLowerCase(),
-          'delete_character',
-          { playerId, characterName },
-          false,
-          error.message
-        );
-      } catch (logError) {
-        console.error('Error logging failed deletion:', logError);
-      }
-
-      res.status(500).json({ error: 'Failed to delete character' });
-    }
-  }
-);
 
 module.exports = router;

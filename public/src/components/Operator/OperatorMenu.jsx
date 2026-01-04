@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Shield, Crown, Star, X, Search, Eye, AlertTriangle, Zap, Users, Settings, Database, Trash2 } from 'lucide-react';
+import { Shield, Crown, Star, X, Search, Eye, AlertTriangle, Zap, Users, Settings, Database } from 'lucide-react';
 import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
-import CharacterDeletionPanel from './CharacterDeletionPanel';
 
 /**
  * OperatorMenu - Admin panel for moderators and streamers
@@ -31,7 +30,11 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
   const [itemSearchTerm, setItemSearchTerm] = useState('');
   const [selectedRarity, setSelectedRarity] = useState('ALL');
   const [selectedItemCategory, setSelectedItemCategory] = useState('consumables');
-  const [showDeletionPanel, setShowDeletionPanel] = useState(false);
+  
+  // Delete character specific states
+  const [availableChannels, setAvailableChannels] = useState(null);
+  const [channelCharacters, setChannelCharacters] = useState(null);
+  const [selectedChannelForDelete, setSelectedChannelForDelete] = useState('');
 
   // Command categories for better organization
   const COMMAND_CATEGORIES = {
@@ -104,7 +107,21 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
     if (cmdName === 'spawnEncounter') {
       loadEncounters();
     }
+    
+    // Load channels for deleteCharacter command
+    if (cmdName === 'deleteCharacter') {
+      loadAvailableChannels();
+    }
   }, [selectedCommand]);
+
+  // Load characters when channel is selected for deleteCharacter
+  useEffect(() => {
+    if (selectedCommand === 'deleteCharacter' && selectedChannelForDelete) {
+      loadChannelCharacters(selectedChannelForDelete);
+    } else {
+      setChannelCharacters(null);
+    }
+  }, [selectedCommand, selectedChannelForDelete]);
 
   // Load player-specific data when playerId is set
   useEffect(() => {
@@ -252,6 +269,36 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
     }
   };
 
+  const loadAvailableChannels = async () => {
+    if (availableChannels) return; // Cache
+    try {
+      setLoadingData(true);
+      const response = await axios.get(`/api/operator/data/channels?channel=${channelName}`);
+      setAvailableChannels(response.data.channels);
+    } catch (error) {
+      console.error('Failed to load channels:', error);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+  const loadChannelCharacters = async (targetChannel) => {
+    if (!targetChannel) return;
+    try {
+      setLoadingData(true);
+      // The backend endpoint uses 'channel' query param for both auth and target
+      const response = await axios.get(`/api/operator/data/channel-characters`, {
+        params: { channel: targetChannel }
+      });
+      setChannelCharacters(response.data.characters);
+    } catch (error) {
+      console.error('Failed to load channel characters:', error);
+      setChannelCharacters([]);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
   const executeCommand = async () => {
     setExecuting(true);
     setMessage(null);
@@ -290,6 +337,9 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
     setItemSearchTerm('');
     setSelectedRarity('ALL');
     setSelectedItemCategory('consumables');
+    // Reset delete character states
+    setSelectedChannelForDelete('');
+    setChannelCharacters(null);
   };
 
   const updateParam = (paramName, value) => {
@@ -410,24 +460,12 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              {operatorStatus.level === 'CREATOR' && (
-                <button
-                  onClick={() => setShowDeletionPanel(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
-                  title="Delete characters from any channel"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  <span className="hidden sm:inline">Delete Character</span>
-                </button>
-              )}
-              <button
-                onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </div>
         </div>
 
@@ -620,7 +658,95 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                     {commands[selectedCommand].params.map((param) => {
                       // Render special parameter types with smart selectors
                       const renderParamInput = () => {
-                        // Player ID selector (existing)
+                        // Special handling for deleteCharacter command
+                        if (selectedCommand === 'deleteCharacter') {
+                          if (param.name === 'playerId') {
+                            return (
+                              <div className="space-y-4">
+                                {/* Step 1: Channel Selection */}
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    1. Select Channel
+                                  </label>
+                                  <select
+                                    value={selectedChannelForDelete}
+                                    onChange={(e) => {
+                                      setSelectedChannelForDelete(e.target.value);
+                                      updateParam('playerId', ''); // Reset playerId when channel changes
+                                    }}
+                                    className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 border border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all"
+                                  >
+                                    <option value="">Select a channel...</option>
+                                    {loadingData && !availableChannels ? (
+                                      <option disabled>Loading channels...</option>
+                                    ) : (
+                                      availableChannels?.map((ch) => (
+                                        <option key={ch.value} value={ch.value}>
+                                          {ch.label}
+                                        </option>
+                                      ))
+                                    )}
+                                  </select>
+                                </div>
+
+                                {/* Step 2: Character Selection */}
+                                {selectedChannelForDelete && (
+                                  <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                      2. Select Character to Delete
+                                    </label>
+                                    <select
+                                      value={commandParams.playerId || ''}
+                                      onChange={(e) => updateParam('playerId', e.target.value)}
+                                      className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 border border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all"
+                                    >
+                                      <option value="">Select a character...</option>
+                                      {loadingData && !channelCharacters ? (
+                                        <option disabled>Loading characters...</option>
+                                      ) : channelCharacters && channelCharacters.length === 0 ? (
+                                        <option disabled>No characters in this channel</option>
+                                      ) : (
+                                        channelCharacters?.map((char) => (
+                                          <option key={char.value} value={char.value}>
+                                            {char.label}
+                                          </option>
+                                        ))
+                                      )}
+                                    </select>
+                                    
+                                    {/* Character details preview */}
+                                    {commandParams.playerId && channelCharacters && (
+                                      <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+                                        {(() => {
+                                          const selectedChar = channelCharacters.find(c => c.value === commandParams.playerId);
+                                          if (selectedChar) {
+                                            return (
+                                              <div className="space-y-1 text-sm">
+                                                <div className="font-bold text-red-400 flex items-center gap-2">
+                                                  <AlertTriangle className="w-4 h-4" />
+                                                  Selected Character Details
+                                                </div>
+                                                <div className="text-gray-300">Name: <span className="text-white">{selectedChar.name}</span></div>
+                                                <div className="text-gray-300">Level: <span className="text-white">{selectedChar.level}</span></div>
+                                                <div className="text-gray-300">Gold: <span className="text-yellow-400">{selectedChar.gold}g</span></div>
+                                                <div className="text-gray-300">Location: <span className="text-white">{selectedChar.location}</span></div>
+                                              </div>
+                                            );
+                                          }
+                                          return null;
+                                        })()}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                          // Skip rendering confirm param - it will be handled normally below
+                          return null;
+                        }
+                        
+                        // Player ID selector (existing - for other commands)
                         if (param.name === 'playerId') {
                           return (
                             <div>
@@ -1230,12 +1356,6 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
           </div>
         </div>
       </div>
-
-      {/* Character Deletion Panel */}
-      <CharacterDeletionPanel
-        isOpen={showDeletionPanel}
-        onClose={() => setShowDeletionPanel(false)}
-      />
     </div>
   );
 };
