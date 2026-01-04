@@ -573,4 +573,220 @@ router.get('/data/player-stats', checkOperatorAccess, async (req, res) => {
   }
 });
 
+/**
+ * GET /channels
+ * Get list of all channels with characters (CREATOR ONLY)
+ */
+router.get('/channels', async (req, res) => {
+  const user = req.session.user;
+  if (!user) {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  try {
+    // Check if user is a creator (highest permission level)
+    // For security, we check across all channels they might have access to
+    const channelList = db.getChannelList();
+    let isCreator = false;
+    
+    for (const channel of channelList) {
+      const userRole = await db.getUserRole(user.id, channel);
+      const permissionLevel = operatorMgr.getPermissionLevel(
+        user.displayName,
+        channel,
+        userRole
+      );
+      
+      if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) {
+        isCreator = true;
+        break;
+      }
+    }
+
+    if (!isCreator) {
+      return res.status(403).json({ error: 'Access denied: Creator permissions required' });
+    }
+
+    // Get all channels that have characters
+    const result = await db.query(
+      `SELECT DISTINCT channel_name, COUNT(*) as character_count
+       FROM characters
+       GROUP BY channel_name
+       ORDER BY channel_name ASC`
+    );
+
+    const channels = result.rows.map(row => ({
+      name: row.channel_name,
+      characterCount: parseInt(row.character_count)
+    }));
+
+    res.json({ channels });
+  } catch (error) {
+    console.error('Error fetching channels:', error);
+    res.status(500).json({ error: 'Failed to fetch channels' });
+  }
+});
+
+/**
+ * GET /channel-characters
+ * Get all characters in a specific channel (CREATOR ONLY)
+ */
+router.get('/channel-characters', async (req, res) => {
+  const user = req.session.user;
+  if (!user) {
+    return res.status(401).json({ error: 'Not logged in' });
+  }
+
+  const { channel } = req.query;
+  if (!channel) {
+    return res.status(400).json({ error: 'Channel parameter required' });
+  }
+
+  try {
+    // Check if user is a creator
+    const channelList = db.getChannelList();
+    let isCreator = false;
+    
+    for (const ch of channelList) {
+      const userRole = await db.getUserRole(user.id, ch);
+      const permissionLevel = operatorMgr.getPermissionLevel(
+        user.displayName,
+        ch,
+        userRole
+      );
+      
+      if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) {
+        isCreator = true;
+        break;
+      }
+    }
+
+    if (!isCreator) {
+      return res.status(403).json({ error: 'Access denied: Creator permissions required' });
+    }
+
+    // Get all characters in the channel
+    const result = await db.query(
+      `SELECT 
+        player_id,
+        name,
+        level,
+        gold,
+        location,
+        hp,
+        max_hp,
+        created_at,
+        last_active
+       FROM characters
+       WHERE channel_name = $1
+       ORDER BY name ASC`,
+      [channel.toLowerCase()]
+    );
+
+    const characters = result.rows.map(row => ({
+      playerId: row.player_id,
+      name: row.name,
+      level: row.level,
+      gold: row.gold,
+      location: row.location,
+      hp: row.hp,
+      maxHp: row.max_hp,
+      createdAt: row.created_at,
+      lastActive: row.last_active
+    }));
+
+    res.json({ characters, channel: channel.toLowerCase() });
+  } catch (error) {
+    console.error('Error fetching channel characters:', error);
+    res.status(500).json({ error: 'Failed to fetch characters' });
+  }
+});
+
+/**
+ * DELETE /delete-character
+ * Delete a specific character from a channel (CREATOR ONLY)
+ */
+router.delete('/delete-character', 
+  security.auditLog('operator_delete_character'),
+  async (req, res) => {
+    const user = req.session.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not logged in' });
+    }
+
+    const { channel, playerId, characterName } = req.body;
+    if (!channel || !playerId) {
+      return res.status(400).json({ error: 'Channel and playerId are required' });
+    }
+
+    try {
+      // Check if user is a creator
+      const channelList = db.getChannelList();
+      let isCreator = false;
+      
+      for (const ch of channelList) {
+        const userRole = await db.getUserRole(user.id, ch);
+        const permissionLevel = operatorMgr.getPermissionLevel(
+          user.displayName,
+          ch,
+          userRole
+        );
+        
+        if (permissionLevel === operatorMgr.PERMISSION_LEVELS.CREATOR) {
+          isCreator = true;
+          break;
+        }
+      }
+
+      if (!isCreator) {
+        return res.status(403).json({ error: 'Access denied: Creator permissions required' });
+      }
+
+      // Delete the character
+      await db.deleteCharacter(playerId, channel.toLowerCase());
+
+      // Log the action
+      await db.logOperatorAction(
+        user.id,
+        user.displayName,
+        channel.toLowerCase(),
+        'delete_character',
+        { playerId, characterName },
+        true
+      );
+
+      // Emit WebSocket event to notify the player if they're connected
+      if (characterName) {
+        socketHandler.emitToPlayer(characterName, channel.toLowerCase(), 'character:deleted', {
+          message: 'Your character has been deleted by an operator.'
+        });
+      }
+
+      res.json({ 
+        success: true, 
+        message: `Character ${characterName || playerId} deleted from ${channel}` 
+      });
+    } catch (error) {
+      console.error('Error deleting character:', error);
+      
+      // Log the failed action
+      try {
+        await db.logOperatorAction(
+          user.id,
+          user.displayName,
+          channel.toLowerCase(),
+          'delete_character',
+          { playerId, characterName },
+          false,
+          error.message
+        );
+      } catch (logError) {
+        console.error('Error logging failed deletion:', logError);
+      }
+
+      res.status(500).json({ error: 'Failed to delete character' });
+    }
+  }
+);
+
 module.exports = router;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Shield, Crown, Star, X, Search, Eye, AlertTriangle, Zap, Users, Settings, Database } from 'lucide-react';
+import { Shield, Crown, Star, X, Search, Eye, AlertTriangle, Zap, Users, Settings, Database, Trash2 } from 'lucide-react';
 import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
+import CharacterDeletionPanel from './CharacterDeletionPanel';
 
 /**
  * OperatorMenu - Admin panel for moderators and streamers
@@ -30,6 +31,7 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
   const [itemSearchTerm, setItemSearchTerm] = useState('');
   const [selectedRarity, setSelectedRarity] = useState('ALL');
   const [selectedItemCategory, setSelectedItemCategory] = useState('consumables');
+  const [showDeletionPanel, setShowDeletionPanel] = useState(false);
 
   // Command categories for better organization
   const COMMAND_CATEGORIES = {
@@ -408,12 +410,24 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
+            <div className="flex items-center gap-2">
+              {operatorStatus.level === 'CREATOR' && (
+                <button
+                  onClick={() => setShowDeletionPanel(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors"
+                  title="Delete characters from any channel"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Delete Character</span>
+                </button>
+              )}
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1216,6 +1230,12 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
           </div>
         </div>
       </div>
+
+      {/* Character Deletion Panel */}
+      <CharacterDeletionPanel
+        isOpen={showDeletionPanel}
+        onClose={() => setShowDeletionPanel(false)}
+      />
     </div>
   );
 };

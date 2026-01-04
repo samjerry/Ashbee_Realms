@@ -2103,6 +2103,7 @@ module.exports = {
   searchPlayersByName,
   searchCharactersByName,
   analyzeDatabase,
+  getChannelList,
   // Constants
   ROLE_HIERARCHY,
   ROLE_COLORS,
