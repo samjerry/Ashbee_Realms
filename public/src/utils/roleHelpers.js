@@ -77,13 +77,17 @@ export function getRoleBadges(roles, selectedRoleBadge = null) {
  * @returns {Component} Lucide icon component
  */
 export function getPrimaryRoleIcon(roles, selectedRoleBadge = null) {
+  console.log(`🎭 getPrimaryRoleIcon called: roles=${JSON.stringify(roles)}, selectedRoleBadge=${selectedRoleBadge}`);
+  
   // If a specific badge is selected and valid, use that
   if (selectedRoleBadge && roles?.includes(selectedRoleBadge) && ROLE_CONFIG[selectedRoleBadge]) {
+    console.log(`✅ Using selected role badge: ${selectedRoleBadge}`);
     return ROLE_CONFIG[selectedRoleBadge].Icon;
   }
   
   // Otherwise use primary role
   const primaryRole = getPrimaryRole(roles);
+  console.log(`⚠️ Falling back to primary role: ${primaryRole} (selectedRoleBadge was ${selectedRoleBadge})`);
   return ROLE_CONFIG[primaryRole]?.Icon || User;
 }
 
