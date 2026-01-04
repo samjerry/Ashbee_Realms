@@ -1015,7 +1015,8 @@ class OperatorManager {
         name: 'Delete Character',
         description: '⚠️ DANGER: Permanently delete a player character',
         params: [
-          { name: 'playerId', type: 'string', required: true, placeholder: 'Player name' },
+          { name: 'playerId', type: 'string', required: true, placeholder: 'Player ID (from channel selection)' },
+          { name: 'channel', type: 'string', required: false, placeholder: 'Target channel (auto-filled)' },
           { name: 'confirm', type: 'string', required: true, placeholder: 'Type DELETE to confirm' }
         ],
         level: 'CREATOR',
@@ -1275,9 +1276,11 @@ class OperatorManager {
               error: 'Confirmation required: type DELETE to confirm'
             };
           }
+          // Use params.channel if provided (for cross-channel deletion), otherwise use current channelName
+          const targetChannel = params.channel || channelName;
           result = await this.deleteCharacter(
             params.playerId,
-            channelName,
+            targetChannel,
             db
           );
           break;

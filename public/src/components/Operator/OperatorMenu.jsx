@@ -673,6 +673,7 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                                     onChange={(e) => {
                                       setSelectedChannelForDelete(e.target.value);
                                       updateParam('playerId', ''); // Reset playerId when channel changes
+                                      updateParam('channel', e.target.value); // Set the target channel
                                     }}
                                     className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 border border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all"
                                   >
@@ -697,7 +698,10 @@ const OperatorMenu = ({ isOpen, onClose, channelName }) => {
                                     </label>
                                     <select
                                       value={commandParams.playerId || ''}
-                                      onChange={(e) => updateParam('playerId', e.target.value)}
+                                      onChange={(e) => {
+                                        updateParam('playerId', e.target.value);
+                                        updateParam('channel', selectedChannelForDelete); // Set the target channel
+                                      }}
                                       className="w-full bg-gray-700 text-white rounded-lg px-4 py-2.5 border border-gray-600 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all"
                                     >
                                       <option value="">Select a character...</option>
