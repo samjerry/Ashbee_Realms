@@ -43,12 +43,17 @@ export function getRoleBadges(roles, selectedRoleBadge = null) {
     return [{ role: 'viewer', ...ROLE_CONFIG.viewer }];
   }
   
+  const isCreator = roles.includes('creator');
+  
   // If a specific badge is selected, return only that one
-  if (selectedRoleBadge && roles.includes(selectedRoleBadge)) {
-    return [{ role: selectedRoleBadge, ...ROLE_CONFIG[selectedRoleBadge] }];
+  if (selectedRoleBadge && ROLE_CONFIG[selectedRoleBadge]) {
+    // Check if user has the role OR if they're a creator (creators can use any role appearance)
+    if (roles.includes(selectedRoleBadge) || isCreator) {
+      return [{ role: selectedRoleBadge, ...ROLE_CONFIG[selectedRoleBadge] }];
+    }
   }
   
-  // If selectedRoleBadge is provided but not in roles, use primary role
+  // If selectedRoleBadge is provided but not valid, use primary role
   if (selectedRoleBadge) {
     const primaryRole = getPrimaryRole(roles);
     return [{ role: primaryRole, ...ROLE_CONFIG[primaryRole] }];
@@ -79,10 +84,16 @@ export function getRoleBadges(roles, selectedRoleBadge = null) {
 export function getPrimaryRoleIcon(roles, selectedRoleBadge = null) {
   console.log(`🎭 getPrimaryRoleIcon called: roles=${JSON.stringify(roles)}, selectedRoleBadge=${selectedRoleBadge}`);
   
-  // If a specific badge is selected and valid, use that
-  if (selectedRoleBadge && roles?.includes(selectedRoleBadge) && ROLE_CONFIG[selectedRoleBadge]) {
-    console.log(`✅ Using selected role badge: ${selectedRoleBadge}`);
-    return ROLE_CONFIG[selectedRoleBadge].Icon;
+  // If a specific badge is selected and valid
+  if (selectedRoleBadge && ROLE_CONFIG[selectedRoleBadge]) {
+    // Check if user has the role OR if they're a creator (creators can use any role appearance)
+    const hasRole = roles?.includes(selectedRoleBadge);
+    const isCreator = roles?.includes('creator');
+    
+    if (hasRole || isCreator) {
+      console.log(`✅ Using selected role badge: ${selectedRoleBadge} (hasRole: ${hasRole}, isCreator: ${isCreator})`);
+      return ROLE_CONFIG[selectedRoleBadge].Icon;
+    }
   }
   
   // Otherwise use primary role
