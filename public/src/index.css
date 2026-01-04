@@ -129,7 +129,7 @@
   }
   
   .xp-fill {
-    @apply h-full bg-gradient-to-r from-green-600 to-green-500 transition-all duration-300;
+    @apply h-full bg-gradient-to-r from-yellow-600 to-yellow-500 transition-all duration-300;
   }
   
   /* Rarity Colors - Based on specifications */
