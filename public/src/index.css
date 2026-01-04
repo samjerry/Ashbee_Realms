@@ -93,7 +93,8 @@
   }
   
   .stat-bar {
-    @apply h-6 rounded-full overflow-hidden bg-dark-900;
+    @apply h-6 rounded-full overflow-hidden;
+    background-color: #374151; /* gray-700 - visible grey background */
   }
   
   .hp-bar {
