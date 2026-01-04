@@ -20,8 +20,12 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
     
     if (!biomeEntry) return false; // Empty cell
     
-    const [biomeId, _] = biomeEntry;
-    return mapKnowledge?.discovered_regions?.includes(biomeId) || biomeId === 'brindlewatch';
+    // Check if coordinate is in discovered_coordinates array
+    const discovered = mapKnowledge?.discovered_coordinates?.some(
+      coord => coord[0] === x && coord[1] === y
+    );
+    
+    return discovered || false;
   };
   
   // Helper to check if player is at coordinate
