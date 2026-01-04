@@ -490,6 +490,44 @@ router.post('/dialogue/advance',
         });
       }
       
+      // Process current node rewards before advancing
+      const currentNode = tutorialManager.getDialogueNode(npcId, currentNodeId);
+      if (currentNode && currentNode.reward) {
+        const { loadData } = require('../data/data_loader');
+        const LootGenerator = require('../game/LootGenerator');
+        const lootGen = new LootGenerator();
+        
+        // Grant XP
+        if (currentNode.reward.xp) {
+          character.xp += currentNode.reward.xp;
+        }
+        
+        // Grant gold
+        if (currentNode.reward.gold) {
+          character.gold += currentNode.reward.gold;
+        }
+        
+        // Grant item
+        if (currentNode.reward.item) {
+          let itemId = currentNode.reward.item;
+          
+          // Handle starter_weapon placeholder
+          if (itemId === 'starter_weapon' && character.class) {
+            const classesData = loadData('classes');
+            const playerClass = classesData?.classes?.[character.class];
+            if (playerClass && playerClass.starting_equipment && playerClass.starting_equipment.main_hand) {
+              itemId = playerClass.starting_equipment.main_hand;
+            } else {
+              itemId = 'rusty_sword'; // Fallback
+            }
+          }
+          
+          const itemName = lootGen.getItemName(itemId);
+          character.inventory.addItem(itemId, currentNode.reward.itemQuantity || 1);
+          console.log(`✨ Gave ${character.name} reward item: ${itemName} (${itemId})`);
+        }
+      }
+      
       // Trigger any actions
       if (result.action) {
         const actionResult = tutorialManager.triggerDialogueAction(

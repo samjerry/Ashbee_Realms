@@ -219,11 +219,41 @@ class DialogueManager {
     // Replace world name
     text = text.replace(/\{world_name\}/g, worldName);
 
+    // Format reward to include item names instead of IDs
+    let formattedReward = node.reward || null;
+    if (formattedReward && formattedReward.item) {
+      const LootGenerator = require('./LootGenerator');
+      const lootGen = new LootGenerator();
+      
+      let itemId = formattedReward.item;
+      
+      // Handle special "starter_weapon" placeholder
+      if (itemId === 'starter_weapon' && character && character.class) {
+        const { loadData } = require('../data/data_loader');
+        const classesData = loadData('classes');
+        const playerClass = classesData?.classes?.[character.class];
+        
+        if (playerClass && playerClass.starting_equipment && playerClass.starting_equipment.main_hand) {
+          itemId = playerClass.starting_equipment.main_hand;
+        } else {
+          // Fallback to rusty_sword if class not found
+          itemId = 'rusty_sword';
+        }
+      }
+      
+      const itemName = lootGen.getItemName(itemId);
+      formattedReward = {
+        ...formattedReward,
+        item: itemName,
+        itemId: itemId // Keep actual ID for backend processing
+      };
+    }
+
     return {
       id: node.id,
       text,
       choices: node.choices || [],
-      reward: node.reward || null,
+      reward: formattedReward,
       unlocks: node.unlocks || [],
       effect: node.effect || null
     };
