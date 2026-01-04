@@ -617,24 +617,72 @@ router.get('/stats', async (req, res) => {
     
     // Auto-fix: If nameColor and selectedRoleBadge don't match, try to sync them
     let needsSave = false;
+    console.log(`🔍 Checking role badge sync for ${character.name}: nameColor=${character.nameColor}, selectedRoleBadge=${character.selectedRoleBadge}, roles=${JSON.stringify(character.roles)}`);
+    
+    // Case 1: Both exist but don't match
     if (character.nameColor && character.selectedRoleBadge) {
       const selectedRoleColor = db.ROLE_COLORS[character.selectedRoleBadge];
+      console.log(`🔍 Selected role color: ${selectedRoleColor} (expected: ${character.nameColor})`);
+      
       if (selectedRoleColor && selectedRoleColor !== character.nameColor) {
         // They don't match - try to find role that matches nameColor
         const matchingRole = (character.roles || ['viewer']).find(role => 
           db.ROLE_COLORS[role] === character.nameColor
         );
+        console.log(`🔍 Matching role for color ${character.nameColor}: ${matchingRole}`);
+        
         if (matchingRole) {
           console.log(`🔧 Auto-fixing mismatched role badge for ${character.name}: ${character.selectedRoleBadge} -> ${matchingRole} to match nameColor ${character.nameColor}`);
           character.selectedRoleBadge = matchingRole;
           needsSave = true;
+        } else {
+          console.log(`⚠️ No matching role found for nameColor ${character.nameColor} in roles: ${JSON.stringify(character.roles)}`);
         }
+      } else {
+        console.log(`✅ Role badge and name color already match`);
       }
+    } 
+    // Case 2: nameColor exists but selectedRoleBadge is null - set it based on color
+    else if (character.nameColor && !character.selectedRoleBadge) {
+      const matchingRole = (character.roles || ['viewer']).find(role => 
+        db.ROLE_COLORS[role] === character.nameColor
+      );
+      if (matchingRole) {
+        console.log(`🔧 Setting missing selectedRoleBadge to match nameColor ${character.nameColor}: ${matchingRole}`);
+        character.selectedRoleBadge = matchingRole;
+        needsSave = true;
+      } else {
+        // Fallback to primary role
+        const primaryRole = db.ROLE_HIERARCHY.find(r => (character.roles || ['viewer']).includes(r)) || 'viewer';
+        console.log(`🔧 Setting selectedRoleBadge to primary role (no color match): ${primaryRole}`);
+        character.selectedRoleBadge = primaryRole;
+        needsSave = true;
+      }
+    }
+    // Case 3: selectedRoleBadge exists but nameColor doesn't - set color based on badge
+    else if (!character.nameColor && character.selectedRoleBadge) {
+      const roleColor = db.ROLE_COLORS[character.selectedRoleBadge];
+      if (roleColor) {
+        console.log(`🔧 Setting missing nameColor to match selectedRoleBadge ${character.selectedRoleBadge}: ${roleColor}`);
+        character.nameColor = roleColor;
+        needsSave = true;
+      }
+    }
+    else {
+      console.log(`⚠️ Missing both nameColor and selectedRoleBadge - will use defaults`);
     }
     
     // Save if we made any fixes
     if (needsSave) {
+      console.log(`💾 Saving character with updated selectedRoleBadge: ${character.selectedRoleBadge}`);
       await db.saveCharacter(user.id, channelName, character);
+      console.log(`✅ Character saved successfully`);
+      
+      // Emit WebSocket update for the fix
+      socketHandler.emitPlayerUpdate(character.name, channelName, {
+        selectedRoleBadge: character.selectedRoleBadge,
+        nameColor: character.nameColor
+      });
     }
     
     const statsBreakdown = character.getStatsBreakdown();
