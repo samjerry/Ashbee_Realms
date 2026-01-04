@@ -28,7 +28,7 @@
       "order": 1,
       "title": "Meet Your Mentor",
       "description": "A kind veteran adventurer wants to speak with you.",
-      "instruction": "Speak with Eldrin the Guide in Town Square",
+      "instruction": "Speak with Eldrin the Guide in Brindlewatch",
       "type": "dialogue",
       "target": "tutorial_mentor",
       "dialogue_node": "tutorial_start",

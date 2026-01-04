@@ -251,7 +251,7 @@ class ConsumableManager {
     if (consumable.effect.includes('teleport')) {
       return {
         type: 'teleport',
-        destination: context.destination || 'town_square'
+        destination: context.destination || 'brindlewatch'
       };
     }
     

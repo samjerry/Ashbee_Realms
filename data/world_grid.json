@@ -4,7 +4,7 @@
     "height": 10
   },
   "biome_coordinates": {
-    "town_square": {
+    "brindlewatch": {
       "x": 5,
       "y": 5,
       "abbreviation": "TS",
@@ -153,11 +153,11 @@
     }
   },
   "adjacency_map": {
-    "town_square": ["whispering_woods", "highland_reaches", "twilight_wetlands", "ashen_barrens"],
-    "whispering_woods": ["town_square", "goblin_tunnels", "crystalline_caverns"],
-    "twilight_wetlands": ["town_square", "cursed_swamp", "verdant_expanse"],
-    "highland_reaches": ["town_square", "crystalline_caverns", "ancient_crypts"],
-    "ashen_barrens": ["town_square", "forsaken_ruins", "clockwork_citadel"],
+    "brindlewatch": ["whispering_woods", "highland_reaches", "twilight_wetlands", "ashen_barrens"],
+    "whispering_woods": ["brindlewatch", "goblin_tunnels", "crystalline_caverns"],
+    "twilight_wetlands": ["brindlewatch", "cursed_swamp", "verdant_expanse"],
+    "highland_reaches": ["brindlewatch", "crystalline_caverns", "ancient_crypts"],
+    "ashen_barrens": ["brindlewatch", "forsaken_ruins", "clockwork_citadel"],
     "goblin_tunnels": ["whispering_woods", "deep_caverns", "verdant_expanse"],
     "deep_caverns": ["goblin_tunnels", "frozen_wastes", "crystalline_caverns"],
     "ancient_crypts": ["highland_reaches", "forsaken_ruins"],

@@ -119,7 +119,7 @@
         "description": "An elegant elf displaying gleaming armor sets and protective gear",
         "greeting": "Protection is not a luxury—it's a necessity. Let me outfit you properly.",
         "merchant_type": "armor",
-        "spawn_locations": ["town_square", "forsaken_ruins", "highland_reaches"],
+        "spawn_locations": ["brindlewatch", "forsaken_ruins", "highland_reaches"],
         "spawn_chance": 0.1,
         "inventory_theme": "armor_defense",
         "stock": {
@@ -189,7 +189,7 @@
         "description": "A halfling woman with a magnifying glass examining sparkling accessories",
         "greeting": "Jewelry, trinkets, and magical baubles! Everything shiny and powerful!",
         "merchant_type": "accessories",
-        "spawn_locations": ["town_square", "highland_reaches", "twilight_wetlands"],
+        "spawn_locations": ["brindlewatch", "highland_reaches", "twilight_wetlands"],
         "spawn_chance": 0.08,
         "inventory_theme": "accessories_jewelry",
         "stock": {
@@ -223,7 +223,7 @@
         "description": "A portly man with flour-dusted apron and friendly smile",
         "greeting": "Fresh bread, hearty stews, and travel rations! Fill your belly before the road!",
         "merchant_type": "food",
-        "spawn_locations": ["town_square", "whispering_woods", "highland_reaches"],
+        "spawn_locations": ["brindlewatch", "whispering_woods", "highland_reaches"],
         "spawn_chance": 0.12,
         "inventory_theme": "food_provisions",
         "stock": {
@@ -257,7 +257,7 @@
         "description": "An elderly wizard surrounded by floating scrolls and ancient tomes",
         "greeting": "Magical scrolls and mystical tomes! Knowledge is power, literally!",
         "merchant_type": "scrolls",
-        "spawn_locations": ["forsaken_ruins", "ancient_library", "town_square"],
+        "spawn_locations": ["forsaken_ruins", "ancient_library", "brindlewatch"],
         "spawn_chance": 0.08,
         "inventory_theme": "scrolls_magic",
         "stock": {
@@ -325,7 +325,7 @@
         "description": "A mystical elf with glowing hands, surrounded by magical auras",
         "greeting": "Enchantments, blessings, and magical enhancements! I can make your gear legendary!",
         "merchant_type": "enchantments",
-        "spawn_locations": ["town_square", "ancient_library", "forsaken_ruins"],
+        "spawn_locations": ["brindlewatch", "ancient_library", "forsaken_ruins"],
         "spawn_chance": 0.07,
         "inventory_theme": "enchantments_magic",
         "stock": {
@@ -458,7 +458,7 @@
         "description": "A jolly innkeeper with a perpetual smile and frothy mug",
         "greeting": "Welcome to my tavern! Drinks, stories, and good company!",
         "merchant_type": "tavern",
-        "spawn_locations": ["town_square", "highland_reaches"],
+        "spawn_locations": ["brindlewatch", "highland_reaches"],
         "spawn_chance": 0.13,
         "inventory_theme": "drinks_social",
         "stock": {
@@ -525,7 +525,7 @@
         "description": "A kind priest in white robes, radiating holy energy",
         "greeting": "Blessings upon you, child. May the Light guide your path.",
         "merchant_type": "holy",
-        "spawn_locations": ["town_square", "ancient_library", "highland_reaches"],
+        "spawn_locations": ["brindlewatch", "ancient_library", "highland_reaches"],
         "spawn_chance": 0.09,
         "inventory_theme": "holy_divine",
         "stock": {
@@ -560,7 +560,7 @@
         "name": "Elder Thorne",
         "description": "The wise village elder with a long gray beard and kind eyes",
         "greeting": "Ah, you've arrived. Welcome to Ashbee Realms, traveler. Dark times are upon us...",
-        "spawn_locations": ["town_square", "village_center"],
+        "spawn_locations": ["brindlewatch", "village_center"],
         "spawn_chance": 1.0,
         "quest": {
           "type": "story",
@@ -687,8 +687,8 @@
         "spawn_chance": 0.08,
         "quest": {
           "type": "escort",
-          "objective": "Lead child to Town Square",
-          "destination": "town_square",
+          "objective": "Lead child to Brindlewatch",
+          "destination": "brindlewatch",
           "reward": {
             "gold": 30,
             "xp": 40,
@@ -757,7 +757,7 @@
         "name": "Elder Theron",
         "description": "A weathered old man leaning on a gnarled staff",
         "greeting": "Young adventurer... our village is in grave danger.",
-        "spawn_locations": ["town_square", "forsaken_hamlet"],
+        "spawn_locations": ["brindlewatch", "forsaken_hamlet"],
         "spawn_chance": 0.1,
         "quest": {
           "type": "kill",
@@ -1601,7 +1601,7 @@
         "name": "Village Storyteller",
         "description": "An old woman with twinkling eyes, always ready with a tale or riddle",
         "greeting": "Ah, a new face! Let's see if you're as clever as you look!",
-        "spawn_locations": ["town_square", "inn", "forsaken_hamlet"],
+        "spawn_locations": ["brindlewatch", "inn", "forsaken_hamlet"],
         "spawn_chance": 0.12,
         "riddles": [
           {
@@ -1631,7 +1631,7 @@
         "name": "Wandering Bard",
         "description": "A charismatic musician with a lute slung over his shoulder",
         "greeting": "Ho there! Care for a riddle? Get it right and I'll sing your praises!",
-        "spawn_locations": ["town_square", "inn", "abandoned_market", "highland_reaches"],
+        "spawn_locations": ["brindlewatch", "inn", "abandoned_market", "highland_reaches"],
         "spawn_chance": 0.11,
         "riddles": [
           {
@@ -1655,7 +1655,7 @@
         "name": "Masked Fool",
         "description": "A jester in a porcelain mask, juggling impossible objects",
         "greeting": "Haha! The joke's on you... unless you can answer my riddle!",
-        "spawn_locations": ["lost_amphitheater", "abandoned_market", "town_square"],
+        "spawn_locations": ["lost_amphitheater", "abandoned_market", "brindlewatch"],
         "spawn_chance": 0.09,
         "riddles": [
           {
@@ -1727,7 +1727,7 @@
         "name": "Lantern-Bearer Child",
         "description": "A young child carrying an oversized lantern that never dims",
         "greeting": "Mama says I should test people before helping them! Here's a riddle!",
-        "spawn_locations": ["town_square", "inn", "whispering_woods"],
+        "spawn_locations": ["brindlewatch", "inn", "whispering_woods"],
         "spawn_chance": 0.1,
         "riddles": [
           {
@@ -1751,7 +1751,7 @@
         "name": "Blind Poet",
         "description": "An elderly blind man who sees more than those with sight",
         "greeting": "Darkness teaches one to see with the mind. Answer my riddle.",
-        "spawn_locations": ["town_square", "inn", "lost_amphitheater"],
+        "spawn_locations": ["brindlewatch", "inn", "lost_amphitheater"],
         "spawn_chance": 0.08,
         "riddles": [
           {
@@ -1775,7 +1775,7 @@
         "name": "Wandering Cobbler",
         "description": "A cheerful cobbler with patches on his clothes and worn boots",
         "greeting": "A good pair of boots will take you far! But first, a riddle!",
-        "spawn_locations": ["town_square", "abandoned_market", "rolling_hills"],
+        "spawn_locations": ["brindlewatch", "abandoned_market", "rolling_hills"],
         "spawn_chance": 0.09,
         "riddles": [
           {
@@ -2039,7 +2039,7 @@
         "name": "Lyra the Songstress",
         "description": "A beautiful woman with a lute, singing a haunting melody",
         "greeting": "Well met, traveler! Care to hear a song? Or perhaps you have a tale to share?",
-        "spawn_locations": ["town_square", "inn", "abandoned_market", "highland_reaches"],
+        "spawn_locations": ["brindlewatch", "inn", "abandoned_market", "highland_reaches"],
         "spawn_chance": 0.15,
         "encounter_type": "entertainment",
         "services": [
@@ -2094,3 +2094,4 @@
     ]
   }
 }
+

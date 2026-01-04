@@ -93,7 +93,7 @@
       "name": "Highland Militia",
       "description": "Brave defenders of human settlements, standing against the darkness",
       "alignment": "good",
-      "territory": ["highland_reaches", "town_square", "fortified_village"],
+      "territory": ["highland_reaches", "brindlewatch", "fortified_village"],
       "headquarters": "militia_hall",
       "leader": "commander_aldric_ironheart",
       "enemy_factions": ["goblin_clans", "bandit_brotherhood", "undead_legion"],

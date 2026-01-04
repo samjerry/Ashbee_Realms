@@ -197,7 +197,7 @@ router.post('/explore-tile', requireAuth, async (req, res) => {
     }
 
     let mapKnowledge = character.map_knowledge || mapKnowledgeMgr.initializeMapKnowledge();
-    const currentBiome = biome_id || mapKnowledge.current_biome || 'town_square';
+    const currentBiome = biome_id || mapKnowledge.current_biome || 'brindlewatch';
     
     if (!mapKnowledge.biome_map_knowledge?.[currentBiome]) {
       mapKnowledge = mapKnowledgeMgr.initializeBiomeEntry(mapKnowledge, currentBiome);
@@ -234,7 +234,7 @@ router.post('/move', requireAuth, async (req, res) => {
     character.position = { x, y };
     
     let mapKnowledge = character.map_knowledge || mapKnowledgeMgr.initializeMapKnowledge();
-    const currentBiome = biome_id || mapKnowledge.current_biome || 'town_square';
+    const currentBiome = biome_id || mapKnowledge.current_biome || 'brindlewatch';
     
     if (!mapKnowledge.biome_map_knowledge?.[currentBiome]) {
       mapKnowledge = mapKnowledgeMgr.initializeBiomeEntry(mapKnowledge, currentBiome);
