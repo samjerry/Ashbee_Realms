@@ -101,7 +101,19 @@
   }
   
   .hp-fill {
-    @apply h-full bg-gradient-to-r from-primary-600 to-primary-500 transition-all duration-300;
+    @apply h-full transition-all duration-300;
+  }
+  
+  .hp-fill-high {
+    @apply bg-gradient-to-r from-green-600 to-green-500;
+  }
+  
+  .hp-fill-medium {
+    @apply bg-gradient-to-r from-orange-600 to-orange-500;
+  }
+  
+  .hp-fill-low {
+    @apply bg-gradient-to-r from-red-600 to-red-500;
   }
   
   .mana-bar {

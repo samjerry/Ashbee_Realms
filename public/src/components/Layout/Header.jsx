@@ -2,7 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Heart, Droplet, TrendingUp, Coins, Shield, Menu } from 'lucide-react';
 import useGameStore from '../../store/gameStore';
 import axios from 'axios';
-import { getRoleBadges, getPlayerNameColor } from '../../utils/roleHelpers';
+import { getRoleBadges, getPlayerNameColor, getPrimaryRoleIcon } from '../../utils/roleHelpers';
 
 // Lazy load OperatorMenu for code splitting
 const OperatorMenu = lazy(() => import('../Operator/OperatorMenu'));
@@ -34,6 +34,26 @@ const Header = () => {
   const manaPercent = player.mana ? (player.mana / player.maxMana) * 100 : 0;
   const xpPercent = (player.xp / player.xpToNextLevel) * 100;
 
+  // Get HP bar color class based on percentage
+  const getHpBarClass = () => {
+    if (hpPercent > 50) return 'hp-fill hp-fill-high';
+    if (hpPercent > 30) return 'hp-fill hp-fill-medium';
+    return 'hp-fill hp-fill-low';
+  };
+
+  // Get player icon based on role
+  const PlayerIcon = getPrimaryRoleIcon(player.roles);
+
+  // Get HP bar color class based on percentage
+  const getHpBarClass = () => {
+    if (hpPercent > 50) return 'hp-fill hp-fill-high';
+    if (hpPercent > 30) return 'hp-fill hp-fill-medium';
+    return 'hp-fill hp-fill-low';
+  };
+
+  // Get player icon based on role
+  const PlayerIcon = getPrimaryRoleIcon(player.roles);
+
   return (
     <>
       <header className="bg-dark-900 border-b border-dark-700 px-3 sm:px-6 py-3 sm:py-4">
@@ -51,8 +71,11 @@ const Header = () => {
 
             {/* Player info */}
             <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg flex-shrink-0">
-                {player.level}
+              <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-full flex items-center justify-center text-white flex-shrink-0">
+                <PlayerIcon size={20} className="sm:w-6 sm:h-6" />
+                <span className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-dark-900 border-2 border-primary-500 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold">
+                  {player.level}
+                </span>
               </div>
               <div className="min-w-0">
                 <h2 className="text-sm sm:text-lg font-bold truncate flex items-center gap-1" style={{ color: getPlayerNameColor(player.nameColor, player.roles) }}>
@@ -82,7 +105,7 @@ const Header = () => {
                 </div>
                 <div className="hp-bar">
                   <div
-                    className="hp-fill"
+                    className={getHpBarClass()}
                     style={{ width: `${hpPercent}%` }}
                   />
                 </div>
@@ -122,7 +145,7 @@ const Header = () => {
                 </div>
                 <div className="xp-bar">
                   <div
-                    className="xp-fill"
+                    className={getHpBarClass()}
                     style={{ width: `${xpPercent}%` }}
                   />
                 </div>
