@@ -1,9 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
 import GridCell from './GridCell';
 import worldGrid from '../../data/world_grid.json';
 
 const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation }) => {
+  // Pan and zoom state
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  
+  const viewportRef = useRef(null);
+
   // Create a lookup map for biomes by ID for O(1) access
   const biomeMap = useMemo(() => {
     const map = new Map();
@@ -55,6 +63,89 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
     };
   };
 
+  // Handle zoom with mouse wheel - useCallback to ensure stable reference for event listener
+  const handleWheel = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const delta = -e.deltaY * 0.001;
+    setZoom(prevZoom => Math.min(Math.max(0.3, prevZoom + delta), 3));
+  }, []);
+
+  // Handle pan start
+  const handleMouseDown = (e) => {
+    if (e.button === 0) { // Left mouse button
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+    }
+  };
+
+  // Handle pan move
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setPan({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  // Handle pan end
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Center on player position
+  const centerOnPlayer = () => {
+    if (currentLocation && viewportRef.current) {
+      const coords = worldGrid.biome_coordinates[currentLocation.id];
+      if (!coords) return;
+
+      const viewportWidth = viewportRef.current.clientWidth;
+      const viewportHeight = viewportRef.current.clientHeight;
+      const cellSize = 80 * zoom; // Approximate cell size
+      
+      // Calculate the position to center the player
+      const playerX = coords.x * cellSize;
+      const playerY = coords.y * cellSize;
+      
+      setPan({
+        x: viewportWidth / 2 - playerX - cellSize / 2,
+        y: viewportHeight / 2 - playerY - cellSize / 2
+      });
+    }
+  };
+
+  // Reset view
+  const resetView = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
+  // Attach mouse up listener globally to handle drag end outside viewport
+  useEffect(() => {
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => window.removeEventListener('mouseup', handleMouseUp);
+  }, []);
+
+  // Attach wheel listener with passive: false to allow preventDefault
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (viewport) {
+      const wheelHandler = (e) => {
+        handleWheel(e);
+      };
+      viewport.addEventListener('wheel', wheelHandler, { passive: false });
+      return () => viewport.removeEventListener('wheel', wheelHandler);
+    }
+  }, [handleWheel]);
+
+  // Center on player when map loads
+  useEffect(() => {
+    if (currentLocation) {
+      setTimeout(centerOnPlayer, 100);
+    }
+  }, [currentLocation?.id]);
+
   return (
     <div className="space-y-4">
       {/* Grid Container */}
@@ -70,75 +161,128 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
           <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
             ╚═══════════════════════════════════╝
           </h2>
-        </div>
-
-        {/* Coordinate Labels - Top */}
-        <div className="flex gap-0 mb-0">
-          <div className="w-8 sm:w-10"></div>
-          {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
-            <div
-              key={`top-${x}`}
-              className="flex-1 text-center text-xs sm:text-sm text-gray-400 font-mono"
+          
+          {/* Zoom Controls */}
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <span className="text-xs text-gray-400">Zoom: {(zoom * 100).toFixed(0)}%</span>
+            <button 
+              onClick={centerOnPlayer}
+              className="px-2 py-1 text-xs bg-primary-600 hover:bg-primary-700 rounded transition"
+              title="Center on player"
             >
-              {x}
-            </div>
-          ))}
+              Center
+            </button>
+            <button 
+              onClick={resetView}
+              className="px-2 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition"
+              title="Reset view"
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
-        {/* Grid */}
-        <div className="space-y-0">
-          {Array.from({ length: worldGrid.grid_size.height }).map((_, y) => (
-            <div key={y} className="flex gap-0">
-              {/* Y-axis label */}
-              <div className="w-8 sm:w-10 flex items-center justify-center text-xs sm:text-sm text-gray-400 font-mono">
-                {y}
-              </div>
-              
-              {/* Grid cells */}
-              {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => {
-                const biome = getBiomeAtCoordinate(x, y);
-                const discovered = isCoordinateDiscovered(x, y);
-                const playerHere = isPlayerAt(x, y);
-                
-                return (
-                  <div
-                    key={`${x}-${y}`}
-                    className="flex-1"
-                  >
-                    <GridCell
-                      coordinate={[x, y]}
-                      biome={biome}
-                      isDiscovered={discovered}
-                      isPlayerHere={playerHere}
-                      onClick={() => biome && discovered && onSelectLocation && onSelectLocation(biome)}
-                    />
+        {/* Viewport Container */}
+        <div 
+          ref={viewportRef}
+          className="grid-viewport"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          style={{
+            width: '100%',
+            height: '600px',
+            overflow: 'hidden',
+            position: 'relative',
+            border: '2px solid #2a2a2a',
+            borderRadius: '8px',
+            cursor: isDragging ? 'grabbing' : 'grab',
+            userSelect: 'none',
+            background: '#050505'
+          }}
+        >
+          {/* Pannable and Zoomable Container */}
+          <div 
+            style={{ 
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transformOrigin: '0 0',
+              transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+              display: 'inline-block',
+              position: 'absolute',
+              pointerEvents: isDragging ? 'none' : 'auto'
+            }}
+          >
+            {/* Coordinate Labels - Top */}
+            <div className="flex gap-0 mb-0">
+              <div className="w-8 sm:w-10"></div>
+              {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
+                <div
+                  key={`top-${x}`}
+                  className="flex-1 text-center text-xs sm:text-sm text-gray-400 font-mono"
+                  style={{ minWidth: '60px' }}
+                >
+                  {x}
+                </div>
+              ))}
+            </div>
+
+            {/* Grid */}
+            <div className="space-y-0">
+              {Array.from({ length: worldGrid.grid_size.height }).map((_, y) => (
+                <div key={y} className="flex gap-0">
+                  {/* Y-axis label */}
+                  <div className="w-8 sm:w-10 flex items-center justify-center text-xs sm:text-sm text-gray-400 font-mono">
+                    {y}
                   </div>
-                );
-              })}
+                  
+                  {/* Grid cells */}
+                  {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => {
+                    const biome = getBiomeAtCoordinate(x, y);
+                    const discovered = isCoordinateDiscovered(x, y);
+                    const playerHere = isPlayerAt(x, y);
+                    
+                    return (
+                      <div
+                        key={`${x}-${y}`}
+                        className="flex-1"
+                        style={{ minWidth: '60px' }}
+                      >
+                        <GridCell
+                          coordinate={[x, y]}
+                          biome={biome}
+                          isDiscovered={discovered}
+                          isPlayerHere={playerHere}
+                          onClick={() => biome && discovered && onSelectLocation && onSelectLocation(biome)}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Coordinate Labels - Bottom */}
-        <div className="flex gap-0 mt-0">
-          <div className="w-8 sm:w-10"></div>
-          {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
-            <div
-              key={`bottom-${x}`}
-              className="flex-1 text-center text-xs sm:text-sm text-gray-400 font-mono"
-            >
-              {x}
+            {/* Coordinate Labels - Bottom */}
+            <div className="flex gap-0 mt-0">
+              <div className="w-8 sm:w-10"></div>
+              {Array.from({ length: worldGrid.grid_size.width }).map((_, x) => (
+                <div
+                  key={`bottom-${x}`}
+                  className="flex-1 text-center text-xs sm:text-sm text-gray-400 font-mono"
+                  style={{ minWidth: '60px' }}
+                >
+                  {x}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Compass */}
-        <div className="mt-4 text-center font-mono text-gray-400 text-xs sm:text-sm">
-          <div>N</div>
-          <div>↑</div>
-          <div>W ← + → E</div>
-          <div>↓</div>
-          <div>S</div>
+            {/* Compass */}
+            <div className="mt-4 text-center font-mono text-gray-400 text-xs sm:text-sm">
+              <div>N</div>
+              <div>↑</div>
+              <div>W ← + → E</div>
+              <div>↓</div>
+              <div>S</div>
+            </div>
+          </div>
         </div>
       </div>
 
