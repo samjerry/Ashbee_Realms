@@ -129,7 +129,74 @@ const BiomeGridMap = ({
     window.addEventListener('mouseup', handleMouseUp);
     return () => window.removeEventListener('mouseup', handleMouseUp);
   }, []);
-<div className="flex items-center justify-between">
+
+  // Center on player when grid loads
+  useEffect(() => {
+    if (playerPosition) {
+      setTimeout(centerOnPlayer, 100);
+    }
+  }, [biomeId, playerPosition]);
+
+  // Generate grid cells
+  const renderGrid = () => {
+    const cells = [];
+    
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const coordinate = [x, y];
+        const key = coordToKey(coordinate);
+        const tileData = tile_locations[key];
+        
+        cells.push(
+          <BiomeGridCell
+            key={key}
+            coordinate={coordinate}
+            tileData={tileData}
+            biomeKnowledge={playerKnowledge}
+            playerPosition={playerPosition}
+            onClick={onTileClick}
+            onHover={handleTileHover}
+          />
+        );
+      }
+    }
+    
+    return cells;
+  };
+
+  // Render coordinate labels
+  const renderXAxisLabels = () => {
+    const labels = [];
+    for (let x = 0; x < width; x++) {
+      labels.push(
+        <div key={`x-${x}`} className="axis-label">
+          {x}
+        </div>
+      );
+    }
+    return labels;
+  };
+
+  const renderYAxisLabels = () => {
+    const labels = [];
+    for (let y = 0; y < height; y++) {
+      labels.push(
+        <div key={`y-${y}`} className="axis-label">
+          {y}
+        </div>
+      );
+    }
+    return labels;
+  };
+
+  return (
+    <div className="biome-grid-container">
+      {/* Header */}
+      <div className="biome-header">
+        <h2 className="text-2xl font-bold mb-2">
+          Exploring: {biomeId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+        </h2>
+        <div className="flex items-center justify-between">
           {playerPosition && (
             <p className="text-sm text-gray-400">
               Position: [{playerPosition[0]}, {playerPosition[1]}]
@@ -232,73 +299,6 @@ const BiomeGridMap = ({
             >
               {renderGrid()}
             </div>
-        </div>
-      );
-    }
-    return labels;
-  };
-
-  return (
-    <div className="biome-grid-container">
-      {/* Header */}
-      <div className="biome-header">
-        <h2 className="text-2xl font-bold mb-2">
-          Exploring: {biomeId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-        </h2>
-        {playerPosition && (
-          <p className="text-sm text-gray-400">
-            Current Position: [{playerPosition[0]}, {playerPosition[1]}]
-          </p>
-        )}
-      </div>
-
-      {/* Hint Display */}
-      {hintText && (
-        <div className="hint-display mb-4 p-3 bg-gray-800/50 border border-gray-700 rounded text-sm italic text-gray-300">
-          {hintText}
-        </div>
-      )}
-
-      {/* Grid Wrapper */}
-      <div className="grid-wrapper" style={{ gap: '0px' }}>
-        {/* Y-axis labels */}
-        <div className="y-axis-labels" style={{ 
-          display: 'flex', 
-          flexDirection: 'column',
-          gap: '0px',
-          paddingTop: '24px',
-          margin: 0
-        }}>
-          {renderYAxisLabels()}
-        </div>
-
-        {/* Main grid area */}
-        <div>
-          {/* X-axis labels */}
-          <div className="x-axis-labels" style={{ 
-            display: 'flex',
-            gap: '0px',
-            marginBottom: '4px',
-            paddingLeft: '0px'
-          }}>
-            {renderXAxisLabels()}
-          </div>
-
-          {/* Grid tiles */}
-          <div 
-            className="grid-tiles"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${width}, 64px)`,
-              gridTemplateRows: `repeat(${height}, 64px)`,
-              gap: '0px',
-              lineHeight: 0,
-              fontSize: 0,
-              margin: 0,
-              padding: 0
-            }}
-          >
-            {renderGrid()}
           </div>
         </div>
       </div>
