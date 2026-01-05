@@ -1,12 +1,12 @@
 {
   "whispering_woods": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 8,
+      "height": 8
     },
     "starting_position": [
-      3,
-      3
+      4,
+      4
     ],
     "tile_locations": {
       "3,3": {
@@ -407,17 +407,273 @@
         "abbreviation": "WT",
         "danger_level": 2,
         "encounter_chance": 0.15
+      },
+      "7,0": {
+        "type": "generic",
+        "name": "Forest Edge",
+        "description": "The eastern edge of the woods",
+        "abbreviation": "FE",
+        "danger_level": 2,
+        "encounter_chance": 0.15
+      },
+      "8,0": {
+        "type": "generic",
+        "name": "Eastern Border",
+        "description": "The far eastern border of the forest",
+        "abbreviation": "EB",
+        "danger_level": 2,
+        "encounter_chance": 0.15
+      },
+      "7,1": {
+        "type": "generic",
+        "name": "Quiet Corner",
+        "description": "A quiet corner of the woods",
+        "abbreviation": "QC",
+        "danger_level": 2,
+        "encounter_chance": 0.15
+      },
+      "8,1": {
+        "type": "generic",
+        "name": "Far Woods",
+        "description": "The far reaches of the forest",
+        "abbreviation": "FW",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "7,2": {
+        "type": "generic",
+        "name": "Tall Pines",
+        "description": "Exceptionally tall pine trees",
+        "abbreviation": "TP",
+        "danger_level": 2,
+        "encounter_chance": 0.15
+      },
+      "8,2": {
+        "type": "generic",
+        "name": "Deep Forest",
+        "description": "Deep into the eastern forest",
+        "abbreviation": "DF",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "7,3": {
+        "type": "generic",
+        "name": "Forest Path",
+        "description": "A winding forest path",
+        "abbreviation": "FP",
+        "danger_level": 2,
+        "encounter_chance": 0.15
+      },
+      "8,3": {
+        "type": "generic",
+        "name": "Woodland Deep",
+        "description": "The deepest part of the eastern woods",
+        "abbreviation": "WD",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "7,4": {
+        "type": "generic",
+        "name": "Moss Hollow",
+        "description": "A hollow filled with soft moss",
+        "abbreviation": "MH",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "8,4": {
+        "type": "generic",
+        "name": "Wild Grove",
+        "description": "A wild, untamed grove",
+        "abbreviation": "WG",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "7,5": {
+        "type": "generic",
+        "name": "Fern Valley",
+        "description": "A valley filled with ferns",
+        "abbreviation": "FV",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "8,5": {
+        "type": "generic",
+        "name": "Shadow Wood",
+        "description": "Dark shadows fill this wood",
+        "abbreviation": "SW",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "7,6": {
+        "type": "generic",
+        "name": "Southern Edge",
+        "description": "The southern edge of the eastern woods",
+        "abbreviation": "SE",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "8,6": {
+        "type": "generic",
+        "name": "Far South",
+        "description": "The far southeastern corner",
+        "abbreviation": "FS",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "0,7": {
+        "type": "generic",
+        "name": "Western Depths",
+        "description": "The deep western woods",
+        "abbreviation": "WD",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "1,7": {
+        "type": "generic",
+        "name": "Southern Woods",
+        "description": "The southern expanse of woods",
+        "abbreviation": "SW",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "2,7": {
+        "type": "generic",
+        "name": "Deep Thicket",
+        "description": "An especially thick part of the forest",
+        "abbreviation": "DT",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "3,7": {
+        "type": "generic",
+        "name": "Southern Trail",
+        "description": "A trail leading deeper south",
+        "abbreviation": "ST",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "4,7": {
+        "type": "generic",
+        "name": "Wild Path",
+        "description": "An overgrown path",
+        "abbreviation": "WP",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "5,7": {
+        "type": "generic",
+        "name": "Ancient Grove",
+        "description": "A grove of ancient trees",
+        "abbreviation": "AG",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "6,7": {
+        "type": "generic",
+        "name": "Distant Woods",
+        "description": "Far into the southern woods",
+        "abbreviation": "DW",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "7,7": {
+        "type": "generic",
+        "name": "Southern Depths",
+        "description": "The deep southern forest",
+        "abbreviation": "SD",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "8,7": {
+        "type": "generic",
+        "name": "Corner Woods",
+        "description": "The southeastern corner of the forest",
+        "abbreviation": "CW",
+        "danger_level": 2,
+        "encounter_chance": 0.3
+      },
+      "0,8": {
+        "type": "generic",
+        "name": "Southern Border",
+        "description": "The southernmost border",
+        "abbreviation": "SB",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "1,8": {
+        "type": "generic",
+        "name": "Far South Woods",
+        "description": "The far southern reaches",
+        "abbreviation": "FS",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "2,8": {
+        "type": "generic",
+        "name": "Deep South",
+        "description": "Deep in the southern forest",
+        "abbreviation": "DS",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "3,8": {
+        "type": "generic",
+        "name": "Forest End",
+        "description": "The southern end of the forest",
+        "abbreviation": "FE",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "4,8": {
+        "type": "generic",
+        "name": "Last Grove",
+        "description": "The last grove before open land",
+        "abbreviation": "LG",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "5,8": {
+        "type": "generic",
+        "name": "Final Woods",
+        "description": "The final stretch of woods",
+        "abbreviation": "FW",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "6,8": {
+        "type": "generic",
+        "name": "Boundary Trees",
+        "description": "Trees marking the southern boundary",
+        "abbreviation": "BT",
+        "danger_level": 2,
+        "encounter_chance": 0.2
+      },
+      "7,8": {
+        "type": "generic",
+        "name": "South Edge",
+        "description": "The southeastern edge",
+        "abbreviation": "SE",
+        "danger_level": 2,
+        "encounter_chance": 0.25
+      },
+      "8,8": {
+        "type": "generic",
+        "name": "Far Corner",
+        "description": "The farthest corner of the whispering woods",
+        "abbreviation": "FC",
+        "danger_level": 2,
+        "encounter_chance": 0.3
       }
     }
   },
   "twilight_wetlands": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 10,
+      "height": 10
     },
     "starting_position": [
-      3,
-      3
+      5,
+      4
     ],
     "tile_locations": {
       "3,3": {
@@ -820,12 +1076,12 @@
   },
   "highland_reaches": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 12,
+      "height": 12
     },
     "starting_position": [
-      3,
-      3
+      6,
+      5
     ],
     "tile_locations": {
       "3,3": {
@@ -1230,12 +1486,12 @@
   },
   "ashen_barrens": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 14,
+      "height": 14
     },
     "starting_position": [
-      3,
-      3
+      7,
+      5
     ],
     "tile_locations": {
       "3,3": {
@@ -1636,11 +1892,11 @@
   },
   "goblin_tunnels": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 12,
+      "height": 12
     },
     "starting_position": [
-      3,
+      6,
       0
     ],
     "tile_locations": {
@@ -2056,11 +2312,11 @@
   },
   "deep_caverns": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 16,
+      "height": 16
     },
     "starting_position": [
-      3,
+      8,
       3
     ],
     "tile_locations": {
@@ -2470,11 +2726,11 @@
   },
   "ancient_crypts": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 16,
+      "height": 16
     },
     "starting_position": [
-      3,
+      8,
       3
     ],
     "tile_locations": {
@@ -2879,11 +3135,11 @@
   },
   "cursed_swamp": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 14,
+      "height": 14
     },
     "starting_position": [
-      3,
+      7,
       3
     ],
     "tile_locations": {
@@ -3286,11 +3542,11 @@
   },
   "forsaken_ruins": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 14,
+      "height": 14
     },
     "starting_position": [
-      3,
+      7,
       3
     ],
     "tile_locations": {
@@ -3703,11 +3959,11 @@
   },
   "volcanic_peaks": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 18,
+      "height": 18
     },
     "starting_position": [
-      3,
+      9,
       3
     ],
     "tile_locations": {
@@ -4110,11 +4366,11 @@
   },
   "frozen_wastes": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 16,
+      "height": 16
     },
     "starting_position": [
-      3,
+      8,
       3
     ],
     "tile_locations": {
@@ -4516,11 +4772,11 @@
   },
   "void_realm": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 20,
+      "height": 20
     },
     "starting_position": [
-      3,
+      10,
       3
     ],
     "tile_locations": {
@@ -4922,11 +5178,11 @@
   },
   "brindlewatch": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 8,
+      "height": 8
     },
     "starting_position": [
-      3,
+      4,
       3
     ],
     "tile_locations": {
@@ -5331,11 +5587,11 @@
   },
   "infernal_rift": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 22,
+      "height": 22
     },
     "starting_position": [
-      3,
+      11,
       3
     ],
     "tile_locations": {
@@ -5739,11 +5995,11 @@
   },
   "tempest_spire": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 18,
+      "height": 18
     },
     "starting_position": [
-      3,
+      9,
       3
     ],
     "tile_locations": {
@@ -6147,11 +6403,11 @@
   },
   "crystalline_caverns": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 16,
+      "height": 16
     },
     "starting_position": [
-      3,
+      8,
       3
     ],
     "tile_locations": {
@@ -6554,11 +6810,11 @@
   },
   "clockwork_citadel": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 18,
+      "height": 18
     },
     "starting_position": [
-      3,
+      9,
       3
     ],
     "tile_locations": {
@@ -6962,11 +7218,11 @@
   },
   "verdant_expanse": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 10,
+      "height": 10
     },
     "starting_position": [
-      3,
+      5,
       3
     ],
     "tile_locations": {
@@ -7370,11 +7626,11 @@
   },
   "abyssal_trench": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 24,
+      "height": 24
     },
     "starting_position": [
-      3,
+      12,
       3
     ],
     "tile_locations": {
@@ -7778,11 +8034,11 @@
   },
   "dragons_roost": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 26,
+      "height": 26
     },
     "starting_position": [
-      3,
+      13,
       3
     ],
     "tile_locations": {
@@ -8186,11 +8442,11 @@
   },
   "ethereal_realm": {
     "grid_size": {
-      "width": 7,
-      "height": 7
+      "width": 28,
+      "height": 28
     },
     "starting_position": [
-      3,
+      14,
       3
     ],
     "tile_locations": {
