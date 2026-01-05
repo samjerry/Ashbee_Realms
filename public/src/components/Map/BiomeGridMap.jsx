@@ -134,14 +134,21 @@ const BiomeGridMap = ({
   // Attach wheel listener with passive: false to allow preventDefault
   useEffect(() => {
     const viewport = viewportRef.current;
-    ifconst wheelHandler = (e) => {
+    if (viewport) {
+      const wheelHandler = (e) => {
         handleWheel(e);
       };
       viewport.addEventListener('wheel', wheelHandler, { passive: false });
       return () => viewport.removeEventListener('wheel', wheelHandler);
     }
-  }, [handleWheel
-  }, []);
+  }, [handleWheel]);
+
+  // Center on player when grid loads
+  useEffect(() => {
+    if (playerPosition) {
+      setTimeout(centerOnPlayer, 100);
+    }
+  }, [biomeId, playerPosition]);
 
   // Center on player when grid loads
   useEffect(() => {
