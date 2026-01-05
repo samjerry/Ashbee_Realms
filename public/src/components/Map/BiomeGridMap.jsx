@@ -130,6 +130,15 @@ const BiomeGridMap = ({
     return () => window.removeEventListener('mouseup', handleMouseUp);
   }, []);
 
+  // Attach wheel listener with passive: false to allow preventDefault
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (viewport) {
+      viewport.addEventListener('wheel', handleWheel, { passive: false });
+      return () => viewport.removeEventListener('wheel', handleWheel);
+    }
+  }, []);
+
   // Center on player when grid loads
   useEffect(() => {
     if (playerPosition) {
@@ -233,7 +242,6 @@ const BiomeGridMap = ({
       <div 
         ref={viewportRef}
         className="grid-viewport"
-        onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         style={{
