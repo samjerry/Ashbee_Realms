@@ -380,8 +380,22 @@
 }
 
 .grid-viewport {
-  background: #050505;
   position: relative;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(139, 115, 85, 0.03) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(139, 115, 85, 0.03) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(139, 115, 85, 0.03) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(139, 115, 85, 0.03) 3px
+    );
 }
 
 .grid-viewport::before {
@@ -391,9 +405,10 @@
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.7rem;
-  color: #666;
+  color: #5a4a3a;
   padding: 4px 12px;
-  background: rgba(0,0,0,0.7);
+  background: rgba(244, 232, 208, 0.9);
+  border: 1px solid #8b7355;
   border-radius: 4px;
   pointer-events: none;
   z-index: 10;

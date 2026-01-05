@@ -193,11 +193,12 @@ const WorldMapGrid = ({ mapKnowledge, biomes, currentLocation, onSelectLocation 
             height: '600px',
             overflow: 'hidden',
             position: 'relative',
-            border: '2px solid #2a2a2a',
+            border: '2px solid #8b7355',
             borderRadius: '8px',
             cursor: isDragging ? 'grabbing' : 'grab',
             userSelect: 'none',
-            background: '#050505'
+            background: 'linear-gradient(to bottom, #f4e8d0 0%, #e8d7b8 50%, #f4e8d0 100%)',
+            boxShadow: 'inset 0 0 50px rgba(0,0,0,0.1), inset 0 0 20px rgba(139,115,85,0.2)'
           }}
         >
           {/* Pannable and Zoomable Container */}
