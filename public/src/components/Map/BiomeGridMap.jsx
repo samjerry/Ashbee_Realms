@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import BiomeGridCell from './BiomeGridCell';
 import { coordToKey } from '../../utils/tileHelpers';
 
@@ -70,12 +70,13 @@ const BiomeGridMap = ({
     }
   }, [hoveredTile]);
 
-  // Handle zoom with mouse wheel
-  const handleWheel = (e) => {
+  // Handle zoom with mouse wheel - useCallback to ensure stable reference for event listener
+  const handleWheel = useCallback((e) => {
     e.preventDefault();
+    e.stopPropagation();
     const delta = -e.deltaY * 0.001;
     setZoom(prevZoom => Math.min(Math.max(0.3, prevZoom + delta), 3));
-  };
+  }, []);
 
   // Handle pan start
   const handleMouseDown = (e) => {
@@ -133,10 +134,13 @@ const BiomeGridMap = ({
   // Attach wheel listener with passive: false to allow preventDefault
   useEffect(() => {
     const viewport = viewportRef.current;
-    if (viewport) {
-      viewport.addEventListener('wheel', handleWheel, { passive: false });
-      return () => viewport.removeEventListener('wheel', handleWheel);
+    ifconst wheelHandler = (e) => {
+        handleWheel(e);
+      };
+      viewport.addEventListener('wheel', wheelHandler, { passive: false });
+      return () => viewport.removeEventListener('wheel', wheelHandler);
     }
+  }, [handleWheel
   }, []);
 
   // Center on player when grid loads
