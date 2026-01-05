@@ -377,7 +377,26 @@
 .grid-wrapper {
   display: flex;
   gap: 0px;
-  overflow-x: auto;
+}
+
+.grid-viewport {
+  background: #050505;
+  position: relative;
+}
+
+.grid-viewport::before {
+  content: 'Scroll to zoom • Click and drag to pan';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: #666;
+  padding: 4px 12px;
+  background: rgba(0,0,0,0.7);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .grid-tiles {
